@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>JapaneseOfflineEvents</AssemblyName>
+    <RootNamespace>JapaneseOfflineEvents</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BepInEx.Core">
+      <HintPath>$(JapaneseRoot)\BepInEx\core\BepInEx.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx.Unity.IL2CPP">
+      <HintPath>$(JapaneseRoot)\BepInEx\core\BepInEx.Unity.IL2CPP.dll</HintPath>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(JapaneseRoot)\BepInEx\core\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppInterop.Runtime">
+      <HintPath>$(JapaneseRoot)\BepInEx\core\Il2CppInterop.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Blend">
+      <HintPath>$(JapaneseRoot)\BepInEx\interop\Blend.dll</HintPath>
+    </Reference>
+    <Reference Include="UniTask">
+      <HintPath>$(JapaneseRoot)\BepInEx\interop\UniTask.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2Cppmscorlib">
+      <HintPath>$(JapaneseRoot)\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem">
+      <HintPath>$(JapaneseRoot)\BepInEx\interop\Il2CppSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="30C69F71B6C673D4405EAA8ADD0EEC89">
+      <HintPath>$(JapaneseRoot)\BepInEx\interop\30C69F71B6C673D4405EAA8ADD0EEC89.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Addressables">
+      <HintPath>$(JapaneseRoot)\BepInEx\interop\Unity.Addressables.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ResourceManager">
+      <HintPath>$(JapaneseRoot)\BepInEx\interop\Unity.ResourceManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Protobuf">
+      <HintPath>$(JapaneseRoot)\BepInEx\interop\Google.Protobuf.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
