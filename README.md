@@ -1,6 +1,30 @@
 # WARNING: ENTIRELY LLM-GENERATED
 Use at own risk, provided as-is.
 
+## TLDR:
+1. Copy contents of `game-root` next to `AtelierResleriana.exe`.
+2. Copy contents of `BepInEx/plugins` into the game's `BepInEx/plugins` directory.
+3. Launch the game normally once and log in. It should create a `profile.bin`.
+4. Close the game, launch `AtelierReslerianaJapaneseOffline.bat` and log in. It should create a `aes-material.json` which is your profile's encryption key. You should be able to view characters etc.
+5. (Optional) If you want to turn your `profile.bin` into a "master-save" with all characters, events completed, bond stories, etc. then close the game and run `ProfileEditor.bat`. Make sure to do this after step 4 as the program will need your profile's encryption key. Note that some parts of this are untested. Then you can use `AtelierReslerianaJapaneseOffline.bat`.
+6. If you want to overwrite your profile with another login, rename/delete `profile.bin` and `aes-material.json` then perform steps 3-5 again. Every online play should create a folder like `japanese-capture/session-*` so you can manually replace the `profile.bin` and `aes-material.json` from there if you want.
+
+## How you can help
+1. Run `JapaneseCaptureObserver.exe` and play the game normally online.
+2. Send the `japanese-capture/session-*` data to me (maybe zip the whole folder).
+
+What I'm looking for specifically.
+- In combat, attack of every character (Skill 1, Skill 2, Burst)
+  - In particular the ones unavailable now (especially Dark Memories)
+- Entering every fight in general
+  - Training quests, material quests, dungeons (+ event dungeons), event battles, elemental tower, etc., just anything that involves a fight.
+
+However, everything may be useful! Just try entering every single screen you can think of and send the data.
+
+The rest of this README is LLM-generated.
+
+Additionally, there should be a bunch of "Home Scene" scenes that have a white thumbnail, because they are story-based scenes that were never intended to be selectable. I'm looking for high quality (4K?) screenshots of these scenes so I can replace the thumbnails. Just change to the scene, hide the UI (button should be on the right side, just a bit above the middle), and take a screenshot.
+
 # Atelier Resleriana Japanese Offline Toolkit
 
 This folder contains the shareable runtime files for the Japanese Steam installation. It does not contain a personal `profile.bin`, capture session, AES material, or anonymization sidecar.
