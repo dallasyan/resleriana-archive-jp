@@ -18,6 +18,7 @@ What I'm looking for specifically.
   - In particular the ones unavailable now (especially Dark Memories), but it would be easiest if someone (or a small group of people) have all the characters between them and can coordinate getting data for every attack.
 - Entering every fight in general
   - Training quests, material quests, dungeons (+ event dungeons), event battles, elemental tower, etc., just anything that involves a fight. Ideally complete the fight too and let the enemies do some attacks.
+- New-player data, e.g. first sign-in and playing through the story etc. The more you can get from the beginning the better!
 
 However, everything may be useful! Just try entering every single screen you can think of and send the data.
 
