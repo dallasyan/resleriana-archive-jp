@@ -1,3 +1,6 @@
+# WARNING: ENTIRELY LLM-GENERATED
+Use at own risk, provided as-is.
+
 # Atelier Resleriana Japanese Offline Toolkit
 
 This folder contains the shareable runtime files for the Japanese Steam installation. It does not contain a personal `profile.bin`, capture session, AES material, or anonymization sidecar.
