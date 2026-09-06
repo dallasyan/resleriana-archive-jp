@@ -15,15 +15,15 @@ Use at own risk, provided as-is.
 
 What I'm looking for specifically.
 - In combat, attack of every character (Skill 1, Skill 2, Burst)
-  - In particular the ones unavailable now (especially Dark Memories)
+  - In particular the ones unavailable now (especially Dark Memories), but it would be easiest if someone (or a small group of people) have all the characters between them and can coordinate getting data for every attack.
 - Entering every fight in general
-  - Training quests, material quests, dungeons (+ event dungeons), event battles, elemental tower, etc., just anything that involves a fight.
+  - Training quests, material quests, dungeons (+ event dungeons), event battles, elemental tower, etc., just anything that involves a fight. Ideally complete the fight too and let the enemies do some attacks.
 
 However, everything may be useful! Just try entering every single screen you can think of and send the data.
 
-The rest of this README is LLM-generated.
-
 Additionally, there should be a bunch of "Home Scene" scenes that have a white thumbnail, because they are story-based scenes that were never intended to be selectable. I'm looking for high quality (4K?) screenshots of these scenes so I can replace the thumbnails. Just change to the scene, hide the UI (button should be on the right side, just a bit above the middle), and take a screenshot.
+
+The rest of this README is LLM-generated.
 
 # Atelier Resleriana Japanese Offline Toolkit
 
