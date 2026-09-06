@@ -11,7 +11,7 @@ Use at own risk, provided as-is.
 
 ## How you can help
 1. Run `JapaneseCaptureObserver.exe` and play the game normally online.
-2. Send the `japanese-capture/session-*` data to me (maybe zip the whole folder).
+2. Send the `japanese-capture/session-*` data to me (maybe zip the whole folder). (Note the session will still be recorded without `JapaneseCaptureObserver.exe` running, the executable just adds more data to the folder. It may still be valuable without it.)
 
 What I'm looking for specifically.
 - In combat, attack of every character (Skill 1, Skill 2, Burst)
