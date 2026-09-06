@@ -5,7 +5,7 @@ Use at own risk, provided as-is.
 1. Copy contents of `game-root` next to `AtelierResleriana.exe`.
 2. Copy contents of `BepInEx/plugins` into the game's `BepInEx/plugins` directory.
 3. Launch the game normally once and log in. It should create a `profile.bin`.
-4. Close the game, launch `AtelierReslerianaJapaneseOffline.bat` and log in. It should create a `aes-material.json` which is your profile's encryption key. You should be able to view characters etc.
+4. Close the game, launch `AtelierReslerianaJapaneseOffline.bat` and log in. When you launch the exe, there should be a popup on Steam with something like "do you want to run the game with custom argument `-japanese-offline`?", click yes/continue. This flag is to tell the offline plugins to run and make sure they don't run when you are playing normally online. After logging in it should create a `aes-material.json` which is your profile's encryption key. You should be able to view characters etc.
 5. (Optional) If you want to turn your `profile.bin` into a "master-save" with all characters, events completed, bond stories, etc. then close the game and run `ProfileEditor.bat`. Make sure to do this after step 4 as the program will need your profile's encryption key. Note that some parts of this are untested. Then you can use `AtelierReslerianaJapaneseOffline.bat`.
 6. If you want to overwrite your profile with another login, rename/delete `profile.bin` and `aes-material.json` then perform steps 3-5 again. Every online play should create a folder like `japanese-capture/session-*` so you can manually replace the `profile.bin` and `aes-material.json` from there if you want.
 
