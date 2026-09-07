@@ -407,8 +407,9 @@ def is_skin_request_plaintext(data: bytes) -> bool:
                 inner_fields = read_wire_fields(bytes(value))
             except ValueError:
                 return False
-            if not any(inner_number == 1 and inner_type == 0 for inner_number, inner_type, _ in inner_fields):
-                return False
+            continue
+        # Newer client builds may add optional fields to this request.
+        if field_number > 0 and wire_type in (0, 1, 2, 5):
             continue
         return False
     return character_id_seen
@@ -556,22 +557,52 @@ def make_expedition_special_reward_response(response_body: bytes, reward_item_id
 
 def make_changed_resources_response(
     profile: bytes | None = None,
+    characters: list[bytes] | None = None,
+    parties: list[bytes] | None = None,
+    party_members: list[bytes] | None = None,
+    equipment_presets: list[bytes] | None = None,
     chara_homes: list[bytes] | None = None,
     response_key: bytes = SKIN_RESPONSE_KEY,
     response_iv: bytes = SKIN_RESPONSE_IV,
     response_marker: int = SKIN_RESPONSE_MARKER,
 ) -> bytes:
-    resources = bytearray()
-    if profile is not None:
-        resources.extend(write_field(39, 2, profile))
-    for chara_home in chara_homes or []:
-        resources.extend(write_field(61, 2, chara_home))
-    plaintext = write_field(1, 2, bytes(resources))
+    plaintext = make_changed_resources_plaintext(
+        profile=profile,
+        characters=characters,
+        parties=parties,
+        party_members=party_members,
+        equipment_presets=equipment_presets,
+        chara_homes=chara_homes,
+    )
     return bytes([response_marker]) + aes_encrypt(
         pkcs7_pad(gzip.compress(plaintext, mtime=0)),
         response_key,
         response_iv,
     )
+
+
+def make_changed_resources_plaintext(
+    profile: bytes | None = None,
+    characters: list[bytes] | None = None,
+    parties: list[bytes] | None = None,
+    party_members: list[bytes] | None = None,
+    equipment_presets: list[bytes] | None = None,
+    chara_homes: list[bytes] | None = None,
+) -> bytes:
+    resources = bytearray()
+    for character in characters or []:
+        resources.extend(write_field(2, 2, character))
+    for party in parties or []:
+        resources.extend(write_field(9, 2, party))
+    for party_member in party_members or []:
+        resources.extend(write_field(24, 2, party_member))
+    for equipment_preset in equipment_presets or []:
+        resources.extend(write_field(26, 2, equipment_preset))
+    if profile is not None:
+        resources.extend(write_field(39, 2, profile))
+    for chara_home in chara_homes or []:
+        resources.extend(write_field(61, 2, chara_home))
+    return write_field(1, 2, bytes(resources))
 
 
 def load_home_profile_state(profile_path: Path) -> tuple[bytes, dict[int, bytes], list[int]]:
@@ -680,6 +711,126 @@ def is_selected_home_request(data: bytes) -> bool:
     return bool(fields)
 
 
+def is_exploration_start_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    if not fields:
+        return False
+    for number, wire_type, value in fields:
+        if number in (1, 2) and wire_type == 0:
+            continue
+        if number == 7 and wire_type == 2:
+            try:
+                read_wire_fields(bytes(value))
+            except ValueError:
+                return False
+            continue
+        return False
+    values = {
+        number: int(value)
+        for number, wire_type, value in fields
+        if wire_type == 0
+    }
+    return values.get(1, 0) > 0 and values.get(2, 0) > 0
+
+
+def is_exploration_finish_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    return (
+        len(fields) == 1
+        and fields[0][0] == 1
+        and fields[0][1] == 0
+        and 0 < int(fields[0][2])
+    )
+
+
+def is_party_bulk_update_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    if not fields:
+        return False
+    for number, wire_type, value in fields:
+        if number in (1, 2, 5) and wire_type == 0:
+            continue
+        if number == 3 and wire_type == 2:
+            try:
+                read_wire_fields(bytes(value))
+            except ValueError:
+                return False
+            continue
+        if number == 4 and wire_type in (0, 2):
+            if wire_type == 2:
+                try:
+                    read_varints(bytes(value))
+                except ValueError:
+                    return False
+            continue
+        return False
+    return any(number == 1 and wire_type == 0 for number, wire_type, _ in fields) and any(
+        number == 2 and wire_type == 0 for number, wire_type, _ in fields
+    )
+
+
+def is_party_battle_tools_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    return bool(fields) and all(
+        (number in (1, 3) and wire_type == 0) or (number == 2 and wire_type in (0, 2))
+        for number, wire_type, _ in fields
+    ) and any(number == 1 for number, _, _ in fields) and any(number == 3 for number, _, _ in fields)
+
+
+def is_character_equip_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    return bool(fields) and all(
+        (number in (1, 2) and wire_type == 0) or (number == 3 and wire_type == 2)
+        for number, wire_type, _ in fields
+    ) and any(number == 1 for number, _, _ in fields) and any(number == 2 for number, _, _ in fields)
+
+
+def is_character_memoria_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    return bool(fields) and all(
+        (number == 1 and wire_type == 0) or (number == 2 and wire_type == 2)
+        for number, wire_type, _ in fields
+    ) and any(number == 1 for number, _, _ in fields)
+
+
+def is_equipment_preset_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    return bool(fields) and all(
+        (number == 1 and wire_type == 0) or (number in (2, 3, 4, 5) and wire_type == 2)
+        for number, wire_type, _ in fields
+    ) and any(number == 1 for number, _, _ in fields)
+
+
+def read_varints(data: bytes) -> list[int]:
+    values = []
+    offset = 0
+    while offset < len(data):
+        value, offset = read_varint(data, offset)
+        values.append(value)
+    return values
+
+
 _CAPTURED_RESPONSE_MATERIALS: tuple[
     dict[tuple[str, bytes, bytes], tuple[bytes, bytes, int]],
     dict[str, tuple[bytes, bytes, int]],
@@ -700,6 +851,13 @@ def captured_response_material(
             "/chara_home/register": is_home_register_request,
             "/profile/update_chara_home_favorite_character_list": is_favorite_request,
             "/profile/update_selected_home_id": is_selected_home_request,
+            "/exploration/start": is_exploration_start_request,
+            "/exploration/finish": is_exploration_finish_request,
+            "/party/bulk_update": is_party_bulk_update_request,
+            "/party/battle_tools_set": is_party_battle_tools_request,
+            "/character/equip": is_character_equip_request,
+            "/character/memoria_set": is_character_memoria_request,
+            "/equipment_preset/bulk_set": is_equipment_preset_request,
         }
         keys, ivs = observed_aes_candidates()
         sequences = observed_aes_sequences()
@@ -810,6 +968,27 @@ def load_profile_character_records(profile_path: Path) -> dict[int, bytes]:
     return characters
 
 
+def load_profile_equipment_preset_records(profile_path: Path) -> dict[int, bytes]:
+    plaintext = decrypt_profile_plaintext(profile_path.read_bytes())
+    resources = next(
+        bytes(value)
+        for field_number, wire_type, value in read_wire_fields(plaintext)
+        if field_number == 1 and wire_type == 2
+    )
+    presets = {}
+    for field_number, wire_type, value in read_wire_fields(resources):
+        if field_number != 26 or wire_type != 2:
+            continue
+        preset = bytes(value)
+        number = next(
+            int(inner_value)
+            for inner_number, inner_type, inner_value in read_wire_fields(preset)
+            if inner_number == 1 and inner_type == 0
+        )
+        presets[number] = preset
+    return presets
+
+
 def character_with_skin(record: bytes | None, character_id: int, skin_id: int | None) -> bytes:
     fields = read_wire_fields(record) if record is not None else []
     output = bytearray()
@@ -832,6 +1011,16 @@ def character_with_skin(record: bytes | None, character_id: int, skin_id: int | 
     return bytes(output)
 
 
+def character_skin_id(record: bytes) -> int | None:
+    for field_number, wire_type, value in read_wire_fields(record):
+        if field_number != 34 or wire_type != 2:
+            continue
+        for inner_number, inner_type, inner_value in read_wire_fields(bytes(value)):
+            if inner_number == 1 and inner_type == 0:
+                return int(inner_value)
+    return None
+
+
 def make_skin_response(
     character_records: dict[int, bytes],
     character_id: int,
@@ -840,8 +1029,16 @@ def make_skin_response(
     response_iv: bytes = SKIN_RESPONSE_IV,
     response_marker: int = SKIN_RESPONSE_MARKER,
 ) -> bytes:
-    character = character_with_skin(character_records.get(character_id), character_id, skin_id)
-    resources = write_field(2, 2, character)
+    changed_characters = [
+        character_with_skin(character_records.get(character_id), character_id, skin_id)
+    ]
+    if skin_id is not None:
+        changed_characters.extend(
+            character_with_skin(record, other_character_id, None)
+            for other_character_id, record in character_records.items()
+            if other_character_id != character_id and character_skin_id(record) == skin_id
+        )
+    resources = b"".join(write_field(2, 2, character) for character in changed_characters)
     plaintext = write_field(1, 2, resources)
     compressed = gzip.compress(plaintext, mtime=0)
     return bytes([response_marker]) + aes_encrypt(
@@ -849,6 +1046,189 @@ def make_skin_response(
         response_key,
         response_iv,
     )
+
+
+def message_field(data: bytes, field_number: int) -> bytes | None:
+    return next(
+        (
+            bytes(value)
+            for number, wire_type, value in read_wire_fields(data)
+            if number == field_number and wire_type == 2
+        ),
+        None,
+    )
+
+
+def varint_values(data: bytes, field_number: int) -> list[int]:
+    values = []
+    for number, wire_type, value in read_wire_fields(data):
+        if number != field_number:
+            continue
+        if wire_type == 0:
+            values.append(int(value))
+        elif wire_type == 2:
+            values.extend(read_varints(bytes(value)))
+    return values
+
+
+def replace_message_field_in_place(data: bytes, field_number: int, value: bytes | None) -> bytes:
+    output = bytearray()
+    replaced = False
+    for number, wire_type, field_value in read_wire_fields(data):
+        if number == field_number:
+            if value is not None and not replaced:
+                output.extend(write_field(field_number, 2, value))
+                replaced = True
+            continue
+        output.extend(write_field(number, wire_type, field_value))
+    if value is not None and not replaced:
+        output.extend(write_field(field_number, 2, value))
+    return bytes(output)
+
+
+def character_with_equipment(
+    record: bytes | None,
+    character_id: int,
+    field_number: int,
+    value: bytes | None,
+) -> bytes:
+    character = record or write_field(1, 0, character_id)
+    character = replace_message_field_in_place(character, field_number, value)
+    if not any(number == 1 and wire_type == 0 for number, wire_type, _ in read_wire_fields(character)):
+        character = write_field(1, 0, character_id) + character
+    return character
+
+
+def party_member_from_request(data: bytes, party_type: int, number: int, position: int) -> bytes:
+    member = bytearray()
+    member.extend(write_field(1, 0, party_type))
+    member.extend(write_field(2, 0, number))
+    member.extend(write_field(3, 0, position))
+    output_fields = {
+        1: 4,
+        2: 5,
+        3: 6,
+        4: 7,
+        5: 8,
+    }
+    for source_field, target_field in output_fields.items():
+        value = message_field(data, source_field)
+        if value is not None:
+            member.extend(write_field(target_field, 2, value))
+    return bytes(member)
+
+
+def party_from_request(
+    party_type: int,
+    number: int,
+    battle_tool_entity_ids: list[int],
+    leader_position: int | None,
+) -> bytes:
+    party = bytearray()
+    party.extend(write_field(1, 0, number))
+    for entity_id in battle_tool_entity_ids:
+        party.extend(write_field(4, 0, entity_id))
+    party.extend(write_field(5, 0, party_type))
+    if leader_position is not None:
+        party.extend(write_field(6, 0, leader_position))
+    return bytes(party)
+
+
+EXPLORATION_ROUTE_TYPE_VALUES = {
+    "gathering": 0,
+    "battle": 1,
+    "talk": 2,
+}
+
+
+def exploration_routes(quest_id: int) -> list[dict[str, int | str]]:
+    path = GAME_DIR / "exploration-routes-jp.json"
+    try:
+        routes = json.loads(path.read_text(encoding="utf-8"))
+        values = routes.get(str(quest_id), [])
+        return [
+            {
+                "area_id": int(value["area_id"]),
+                "number": int(value.get("number", 0)),
+                "route_type": str(value["route_type"]),
+            }
+            for value in values
+        ]
+    except (OSError, TypeError, ValueError, json.JSONDecodeError, KeyError):
+        return []
+
+
+def exploration_party_status_from_progress(progress: bytes) -> bytes | None:
+    return next(
+        (
+            bytes(value)
+            for field_number, wire_type, value in read_wire_fields(progress)
+            if field_number == 14 and wire_type == 2
+        ),
+        None,
+    )
+
+
+def exploration_progress_from_response(data: bytes) -> tuple[bytes, bytes] | None:
+    try:
+        resources = next(
+            bytes(value)
+            for field_number, wire_type, value in read_wire_fields(data)
+            if field_number == 1 and wire_type == 2
+        )
+        progress = next(
+            bytes(value)
+            for field_number, wire_type, value in read_wire_fields(resources)
+            if field_number == 25 and wire_type == 2
+        )
+    except (StopIteration, ValueError):
+        return None
+    party_status = exploration_party_status_from_progress(progress)
+    return progress, party_status or b""
+
+
+def default_exploration_party_status(slot_count: int = 5) -> bytes:
+    status = bytearray()
+    for _ in range(slot_count):
+        status.extend(write_field(1, 0, 1))
+        status.extend(write_field(2, 2, b""))
+        status.extend(write_field(4, 0, 0))
+    return bytes(status)
+
+
+def make_exploration_progress(
+    quest_id: int,
+    party_number: int,
+    routes: list[dict[str, int | str]],
+    party_status: bytes,
+    control_character_id: bytes | None = None,
+) -> tuple[bytes, int]:
+    if not routes:
+        routes = [{"area_id": quest_id * 10 + 1, "number": 0, "route_type": "gathering"}]
+    route_values = [EXPLORATION_ROUTE_TYPE_VALUES.get(str(route["route_type"]), 0) for route in routes]
+    progress = bytearray()
+    progress.extend(write_field(1, 0, quest_id))
+    progress.extend(write_field(2, 0, int(routes[0]["area_id"])))
+    for route_value in route_values:
+        progress.extend(write_field(3, 0, route_value))
+    for _ in routes:
+        progress.extend(write_field(4, 0, 0))
+    progress.extend(write_field(5, 0, party_number))
+    if control_character_id is not None:
+        progress.extend(write_field(7, 2, control_character_id))
+    for _ in routes:
+        progress.extend(write_field(12, 0, 0))
+    progress.extend(write_field(14, 2, party_status or default_exploration_party_status()))
+    return bytes(progress), int(routes[0]["area_id"])
+
+
+def make_exploration_start_response(progress: bytes) -> bytes:
+    resources = write_field(25, 2, progress)
+    return write_field(1, 2, resources)
+
+
+def make_exploration_finish_response() -> bytes:
+    return write_field(2, 2, b"")
 
 
 class Replay:
@@ -860,11 +1240,14 @@ class Replay:
         )
         self.used: set[int] = set()
         self.character_records: dict[int, bytes] | None = None
+        self.equipment_preset_records: dict[int, bytes] | None = None
         self.home_state_loaded = False
         self.home_profile = b""
         self.home_records: dict[int, bytes] = {}
         self.home_favorite_character_ids: list[int] = []
         self.last_selected_home_field = 10
+        self.exploration_templates: dict[tuple[int, int], tuple[bytes, bytes]] = {}
+        self.exploration_fallback_template: tuple[bytes, bytes] | None = None
         self.expedition_special_reward_ids = expedition_special_reward_ids()
         self.expedition_special_reward_index = 0
         self.log_path = GAME_DIR / "offline-replay.log"
@@ -916,6 +1299,13 @@ class Replay:
             character_id, skin_id, response_key, response_iv, response_marker = decode_skin_request(request_body)
             if self.character_records is None:
                 self.character_records = load_profile_character_records(GAME_DIR / "profile.bin")
+            cleared_character_ids = []
+            if skin_id is not None:
+                cleared_character_ids = [
+                    other_character_id
+                    for other_character_id, record in self.character_records.items()
+                    if other_character_id != character_id and character_skin_id(record) == skin_id
+                ]
             response = make_skin_response(
                 self.character_records,
                 character_id,
@@ -924,14 +1314,197 @@ class Replay:
                 response_iv,
                 response_marker,
             )
+            for other_character_id in cleared_character_ids:
+                self.character_records[other_character_id] = character_with_skin(
+                    self.character_records[other_character_id],
+                    other_character_id,
+                    None,
+                )
+            self.character_records[character_id] = character_with_skin(
+                self.character_records.get(character_id),
+                character_id,
+                skin_id,
+            )
             self.log(
                 f"LOCAL-SKIN host={flow.request.host} method=POST path=/character/skin_set "
-                f"status=200 character_id={character_id} skin_id={skin_id if skin_id is not None else 'default'}"
+                f"status=200 character_id={character_id} skin_id={skin_id if skin_id is not None else 'default'} "
+                f"cleared_character_ids={','.join(str(value) for value in cleared_character_ids) or 'none'}"
             )
             return response
         except (OSError, RuntimeError, ValueError, StopIteration) as error:
-            self.log(f"SKIN-KEY-WAIT-FAILED path=/character/skin_set reason={type(error).__name__}:{error}")
+            request_body = flow.request.raw_content or b""
+            self.log(
+                f"SKIN-KEY-WAIT-FAILED path=/character/skin_set reason={type(error).__name__}:{error} "
+                f"body={len(request_body)} hash={hashlib.sha256(request_body).hexdigest()}"
+            )
             raise
+
+    def party_response(self, flow: http.HTTPFlow) -> bytes:
+        path = urlsplit(flow.request.pretty_url).path
+        request_body = flow.request.raw_content or b""
+        validators = {
+            "/party/bulk_update": is_party_bulk_update_request,
+            "/party/battle_tools_set": is_party_battle_tools_request,
+            "/character/equip": is_character_equip_request,
+            "/character/memoria_set": is_character_memoria_request,
+            "/equipment_preset/bulk_set": is_equipment_preset_request,
+        }
+        plaintext, response_key, response_iv, response_marker = decrypt_request_with_response_material(
+            request_body,
+            validators[path],
+            path,
+        )
+
+        if path == "/party/bulk_update":
+            values = {
+                number: int(value)
+                for number, wire_type, value in read_wire_fields(plaintext)
+                if wire_type == 0
+            }
+            member_payloads = [
+                bytes(value)
+                for number, wire_type, value in read_wire_fields(plaintext)
+                if number == 3 and wire_type == 2
+            ]
+            party_members = [
+                party_member_from_request(member, values[1], values[2], position)
+                for position, member in enumerate(member_payloads, 1)
+            ]
+            party = party_from_request(
+                values[1],
+                values[2],
+                varint_values(plaintext, 4),
+                values.get(5),
+            )
+            self.log(
+                f"LOCAL-PARTY-BULK host={flow.request.host} method=POST path={path} status=200 "
+                f"party_type={values[1]} number={values[2]} members={len(party_members)}"
+            )
+            return self.changed_resources_encrypted_response(
+                response_key,
+                response_iv,
+                response_marker,
+                parties=[party],
+                party_members=party_members,
+            )
+
+        if path == "/party/battle_tools_set":
+            values = {
+                number: int(value)
+                for number, wire_type, value in read_wire_fields(plaintext)
+                if wire_type == 0
+            }
+            party = party_from_request(
+                values[3],
+                values[1],
+                varint_values(plaintext, 2),
+                None,
+            )
+            self.log(
+                f"LOCAL-PARTY-TOOLS host={flow.request.host} method=POST path={path} status=200 "
+                f"party_type={values[3]} number={values[1]} tools={len(varint_values(plaintext, 2))}"
+            )
+            return self.changed_resources_encrypted_response(
+                response_key,
+                response_iv,
+                response_marker,
+                parties=[party],
+            )
+
+        if path == "/equipment_preset/bulk_set":
+            preset_number = next(
+                int(value)
+                for number, wire_type, value in read_wire_fields(plaintext)
+                if number == 1 and wire_type == 0
+            )
+            if self.equipment_preset_records is None:
+                self.equipment_preset_records = load_profile_equipment_preset_records(GAME_DIR / "profile.bin")
+            preset = self.equipment_preset_records.get(preset_number, write_field(1, 0, preset_number))
+            for source_field, target_field in ((2, 3), (3, 4), (4, 5), (5, 6)):
+                preset = replace_message_field_in_place(preset, target_field, message_field(plaintext, source_field))
+            self.equipment_preset_records[preset_number] = preset
+            self.log(
+                f"LOCAL-EQUIPMENT-PRESET host={flow.request.host} method=POST path={path} status=200 "
+                f"preset_number={preset_number}"
+            )
+            return self.changed_resources_encrypted_response(
+                response_key,
+                response_iv,
+                response_marker,
+                equipment_presets=[preset],
+            )
+
+        if self.character_records is None:
+            self.character_records = load_profile_character_records(GAME_DIR / "profile.bin")
+        character_id = next(
+            int(value)
+            for number, wire_type, value in read_wire_fields(plaintext)
+            if number == 1 and wire_type == 0
+        )
+        record = self.character_records.get(character_id)
+        if path == "/character/equip":
+            slot_type = next(
+                int(value)
+                for number, wire_type, value in read_wire_fields(plaintext)
+                if number == 2 and wire_type == 0
+            )
+            if slot_type not in (1, 2, 3):
+                raise ValueError(f"unsupported character equipment slot: {slot_type}")
+            character = character_with_equipment(
+                record,
+                character_id,
+                slot_type + 2,
+                message_field(plaintext, 3),
+            )
+            self.character_records[character_id] = character
+            self.log(
+                f"LOCAL-CHARACTER-EQUIP host={flow.request.host} method=POST path={path} status=200 "
+                f"character_id={character_id} slot_type={slot_type}"
+            )
+        else:
+            character = character_with_equipment(
+                record,
+                character_id,
+                28,
+                message_field(plaintext, 2),
+            )
+            self.character_records[character_id] = character
+            self.log(
+                f"LOCAL-CHARACTER-MEMORIA host={flow.request.host} method=POST path={path} status=200 "
+                f"character_id={character_id}"
+            )
+        return self.changed_resources_encrypted_response(
+            response_key,
+            response_iv,
+            response_marker,
+            characters=[character],
+        )
+
+    def changed_resources_encrypted_response(
+        self,
+        response_key: bytes,
+        response_iv: bytes,
+        response_marker: int,
+        profile: bytes | None = None,
+        characters: list[bytes] | None = None,
+        parties: list[bytes] | None = None,
+        party_members: list[bytes] | None = None,
+        equipment_presets: list[bytes] | None = None,
+        chara_homes: list[bytes] | None = None,
+    ) -> bytes:
+        plaintext = make_changed_resources_plaintext(
+            profile=profile,
+            characters=characters,
+            parties=parties,
+            party_members=party_members,
+            equipment_presets=equipment_presets,
+            chara_homes=chara_homes,
+        )
+        return bytes([response_marker]) + aes_encrypt(
+            pkcs7_pad(gzip.compress(plaintext, mtime=0)),
+            response_key,
+            response_iv,
+        )
 
     def expedition_reward_response(self, record: Record) -> bytes:
         if not self.expedition_special_reward_ids:
@@ -970,6 +1543,149 @@ class Replay:
                 self.last_selected_home_field = 10
         except (OSError, RuntimeError, ValueError, StopIteration) as error:
             self.log(f"HOME-STATE-LOAD-FAILED reason={type(error).__name__}:{error}")
+
+    def exploration_template(self, quest_id: int, party_number: int) -> tuple[bytes, bytes] | None:
+        cache_key = (quest_id, party_number)
+        if cache_key in self.exploration_templates:
+            return self.exploration_templates[cache_key]
+
+        capture_root = GAME_DIR / "japanese-capture"
+        sessions = sorted(
+            (path for path in capture_root.glob("session-*") if path.is_dir()),
+            key=lambda path: path.stat().st_mtime,
+            reverse=True,
+        )
+        fallback: tuple[bytes, bytes] | None = None
+        for session in sessions:
+            for metadata_path in sorted(session.glob("[0-9][0-9][0-9][0-9].txt"), reverse=True):
+                try:
+                    record = parse_record(metadata_path)
+                except (OSError, ValueError, KeyError):
+                    continue
+                if record.path != "/exploration/start" or not record.response_body:
+                    continue
+                try:
+                    request_plaintext, _, _, _ = decrypt_request_with_response_material(
+                        record.request_body,
+                        is_exploration_start_request,
+                        record.path,
+                    )
+                    request_values = {
+                        number: int(value)
+                        for number, wire_type, value in read_wire_fields(request_plaintext)
+                        if wire_type == 0
+                    }
+                    _, response_plaintext, _, _ = decrypt_api_response(record.response_body)
+                    template = exploration_progress_from_response(response_plaintext)
+                    if template is None:
+                        continue
+                    template_progress, party_status = template
+                    template_key = (request_values.get(1, 0), request_values.get(2, 0))
+                    if template_key not in self.exploration_templates:
+                        self.exploration_templates[template_key] = (template_progress, party_status)
+                    if fallback is None:
+                        fallback = (template_progress, party_status)
+                except (OSError, RuntimeError, ValueError, StopIteration):
+                    continue
+
+        self.exploration_fallback_template = fallback
+        return self.exploration_templates.get(cache_key, fallback)
+
+    def exploration_start_response(self, flow: http.HTTPFlow) -> bytes:
+        request_body = flow.request.raw_content or b""
+        request_plaintext, response_key, response_iv, response_marker = decrypt_request_with_response_material(
+            request_body,
+            is_exploration_start_request,
+            "/exploration/start",
+        )
+        values = {
+            number: int(value)
+            for number, wire_type, value in read_wire_fields(request_plaintext)
+            if wire_type == 0
+        }
+        quest_id = values[1]
+        party_number = values[2]
+        control_character_id = next(
+            (
+                bytes(value)
+                for number, wire_type, value in read_wire_fields(request_plaintext)
+                if number == 7 and wire_type == 2
+            ),
+            None,
+        )
+        route_data = exploration_routes(quest_id)
+        template = self.exploration_template(quest_id, party_number)
+        template_exact = (quest_id, party_number) in self.exploration_templates
+        template_progress, party_status = template or (b"", b"")
+        if not route_data and template_exact and template_progress:
+            template_area_id = next(
+                (
+                    int(value)
+                    for number, wire_type, value in read_wire_fields(template_progress)
+                    if number == 2 and wire_type == 0
+                ),
+                quest_id * 10 + 1,
+            )
+            template_route_type = next(
+                (
+                    {
+                        0: "gathering",
+                        1: "battle",
+                        2: "talk",
+                    }.get(int(value), "gathering")
+                    for number, wire_type, value in read_wire_fields(template_progress)
+                    if number == 3 and wire_type == 0
+                ),
+                "gathering",
+            )
+            route_data = [
+                {
+                    "area_id": template_area_id,
+                    "number": 0,
+                    "route_type": template_route_type,
+                }
+            ]
+        if not party_status:
+            party_status = default_exploration_party_status()
+        progress, area_id = make_exploration_progress(
+            quest_id,
+            party_number,
+            route_data,
+            party_status,
+            control_character_id,
+        )
+        self.log(
+            f"LOCAL-EXPLORATION-START host={flow.request.host} method=POST "
+            f"path=/exploration/start status=200 quest_id={quest_id} party_number={party_number} "
+            f"area_id={area_id} route_count={len(route_data)} template={template_exact}"
+        )
+        return bytes([response_marker]) + aes_encrypt(
+            pkcs7_pad(gzip.compress(make_exploration_start_response(progress), mtime=0)),
+            response_key,
+            response_iv,
+        )
+
+    def exploration_finish_response(self, flow: http.HTTPFlow) -> bytes:
+        request_body = flow.request.raw_content or b""
+        request_plaintext, response_key, response_iv, response_marker = decrypt_request_with_response_material(
+            request_body,
+            is_exploration_finish_request,
+            "/exploration/finish",
+        )
+        quest_id = next(
+            int(value)
+            for number, wire_type, value in read_wire_fields(request_plaintext)
+            if number == 1 and wire_type == 0
+        )
+        self.log(
+            f"LOCAL-EXPLORATION-FINISH host={flow.request.host} method=POST "
+            f"path=/exploration/finish status=200 quest_id={quest_id} changed_resources=empty"
+        )
+        return bytes([response_marker]) + aes_encrypt(
+            pkcs7_pad(gzip.compress(make_exploration_finish_response(), mtime=0)),
+            response_key,
+            response_iv,
+        )
 
     def home_response(self, flow: http.HTTPFlow) -> bytes:
         self.ensure_home_state()
@@ -1136,10 +1852,79 @@ class Replay:
                 },
             )
             return
+        if method == "POST" and path == "/exploration/start":
+            try:
+                response_body = self.exploration_start_response(flow)
+            except (OSError, RuntimeError, ValueError, StopIteration) as error:
+                self.log(f"EXPLORATION-START-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time())),
+                },
+            )
+            return
+        if method == "POST" and path == "/exploration/finish":
+            try:
+                response_body = self.exploration_finish_response(flow)
+            except (OSError, RuntimeError, ValueError, StopIteration) as error:
+                self.log(f"EXPLORATION-FINISH-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time())),
+                },
+            )
+            return
         if method == "POST" and path == "/character/skin_set":
             try:
                 response_body = self.skin_response(flow)
             except (OSError, RuntimeError, ValueError, StopIteration):
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time())),
+                },
+            )
+            return
+        if method == "POST" and path in {
+            "/party/bulk_update",
+            "/party/battle_tools_set",
+            "/character/equip",
+            "/character/memoria_set",
+            "/equipment_preset/bulk_set",
+        }:
+            try:
+                response_body = self.party_response(flow)
+            except (OSError, RuntimeError, ValueError, StopIteration) as error:
+                self.log(f"PARTY-UPDATE-FAILED path={path} reason={type(error).__name__}:{error}")
                 flow.response = http.Response.make(
                     503,
                     b"",

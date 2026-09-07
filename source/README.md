@@ -10,16 +10,27 @@ game-root/
   StartJapaneseReplayProxy.bat
   ProfileEditor.bat
   replay_japanese.py
+  analyze_japanese_capture.py
+  generate_exploration_routes.py
+  exploration-routes-jp.json
   expedition-special-rewards.json
 tools/
   frida_capture_japanese.py
   JapaneseOffline/ForceProxy/
   JapaneseOffline/Events/
+  JapaneseOffline/analyze_japanese_capture.py
+  JapaneseOffline/generate_exploration_routes.py
   JapaneseProfileCapture/
   JapaneseProfileEditor/
 ```
 
 `frida_capture_japanese.py` is the source used to build `JapaneseCaptureObserver.exe`.
+
+The observer resolves the directory beside its executable when frozen and accepts `--game-root`; the packaged offline launcher passes its own directory explicitly. It does not contain a fixed Steam installation path.
+
+`analyze_japanese_capture.py` decodes named Japanese dungeon and battle protobuf requests/responses from the capture sessions written by `JapaneseProfileCapture`. It reports key fingerprints rather than AES keys. `exploration-routes-jp.json` is generated from Japanese `exploration_area.json` and is used by the offline dungeon-start handler.
+
+The replay currently synthesizes dungeon start/finish and profile-backed party, equipment, Memoria, battle-tool, and equipment-preset updates. Dungeon movement, dungeon rewards, and battle action responses remain capture/replay work for a later stage.
 
 `tools/JapaneseProfileEditor/profile_editor.py` is the source used to build `ProfileEditor.exe`. Its bundled data comes from the parent package's `profile-editor/profile-descriptors.pb`, `profile-editor/historical-event-state.json`, and `profile-editor/master` directory.
 
@@ -38,9 +49,9 @@ tools/JapaneseProfileCapture/JapaneseProfileCapture.csproj
 Use a .NET 6 SDK and set `JapaneseRoot` to the installed Japanese game directory:
 
 ```powershell
-dotnet build "source\tools\JapaneseProfileCapture\JapaneseProfileCapture.csproj" -c Release /p:JapaneseRoot="C:\path\to\AtelierResleriana"
-dotnet build "source\tools\JapaneseOffline\ForceProxy\ForceProxy.csproj" -c Release /p:JapaneseRoot="C:\path\to\AtelierResleriana"
-dotnet build "source\tools\JapaneseOffline\Events\JapaneseOfflineEvents.csproj" -c Release /p:JapaneseRoot="C:\path\to\AtelierResleriana"
+dotnet build "source\tools\JapaneseProfileCapture\JapaneseProfileCapture.csproj" -c Release /p:JapaneseRoot="<game-root>"
+dotnet build "source\tools\JapaneseOffline\ForceProxy\ForceProxy.csproj" -c Release /p:JapaneseRoot="<game-root>"
+dotnet build "source\tools\JapaneseOffline\Events\JapaneseOfflineEvents.csproj" -c Release /p:JapaneseRoot="<game-root>"
 ```
 
 Copy the resulting DLLs into the parent package's `BepInEx/plugins` directory or directly into the game's `BepInEx/plugins` directory.

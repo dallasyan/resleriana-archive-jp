@@ -26,7 +26,6 @@ TOP_LEVEL_MESSAGE = "blend.api.UserLogInResponse"
 DEFAULT_ANONYMIZED_SESSION_TOKEN = "00000000-0000-4000-8000-000000000000"
 MAX_CHARACTER_LEVEL = 100
 CHARACTER_STORY_BASE_CONDITION = 2
-DEFAULT_WINDOWS_GAME_ROOT = Path(r"C:\Program Files (x86)\Steam\steamapps\common\AtelierResleriana")
 
 
 def default_game_root() -> Path:
@@ -34,9 +33,11 @@ def default_game_root() -> Path:
     configured_root = os.environ.get("JAPANESE_GAME_DIR")
     if configured_root:
         candidates.append(Path(configured_root))
+    if getattr(sys, "frozen", False):
+        candidates.append(Path(sys.executable).resolve().parent)
     candidates.append(Path.cwd())
-    candidates.extend(Path(__file__).resolve().parents)
-    candidates.append(DEFAULT_WINDOWS_GAME_ROOT)
+    source_root = Path(__file__).resolve().parent
+    candidates.extend((source_root / "game-root", source_root.parent / "game-root"))
 
     for root in candidates:
         if (root / "profile.bin").is_file():
@@ -44,7 +45,7 @@ def default_game_root() -> Path:
     for root in candidates:
         if (root / "AtelierResleriana.exe").is_file():
             return root
-    return candidates[0]
+    return candidates[0] if candidates else Path.cwd()
 
 
 def default_profile_path() -> Path:

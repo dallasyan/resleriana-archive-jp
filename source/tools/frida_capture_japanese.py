@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 import pathlib
 import sys
 import tempfile
@@ -19,14 +20,27 @@ HOOKS = {
     0x85D9AC0: (1,),  # AesCryptoServiceProvider.set_Key
     0x85D9890: (1, 2),  # AesCryptoServiceProvider.CreateDecryptor(key, iv)
 }
-DEFAULT_GAME_ROOT = pathlib.Path(r"C:\Program Files (x86)\Steam\steamapps\common\AtelierResleriana")
+
+
+def default_game_root() -> pathlib.Path:
+    candidates = []
+    configured_root = pathlib.Path(os.environ["JAPANESE_GAME_DIR"]) if os.environ.get("JAPANESE_GAME_DIR") else None
+    if configured_root is not None:
+        candidates.append(configured_root)
+    if getattr(sys, "frozen", False):
+        return pathlib.Path(sys.executable).resolve().parent
+    candidates.extend((pathlib.Path.cwd(), pathlib.Path(__file__).resolve().parent))
+    for candidate in candidates:
+        if (candidate / "AtelierResleriana.exe").is_file() or (candidate / "japanese-capture").is_dir():
+            return candidate
+    return candidates[0]
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--process", default="AtelierResleriana.exe")
     parser.add_argument("--output", help="observer output directory; defaults under the Windows temporary directory")
-    parser.add_argument("--game-root", default=str(DEFAULT_GAME_ROOT), help="Japanese game directory")
+    parser.add_argument("--game-root", default=str(default_game_root()), help="Japanese game directory")
     parser.add_argument("--seconds", type=float, default=3600)
     args = parser.parse_args()
 

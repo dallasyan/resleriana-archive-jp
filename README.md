@@ -39,6 +39,10 @@ The normal workflow does not require Python. `ProfileEditor.exe` includes the pr
 
 Dynamic costume and Home responses use the root/selected-session AES material and the full observer history. When captured request/response pairs are available, the replay uses endpoint-specific response keys and envelope markers; otherwise it derives a fallback response key from the matching request-key sequence.
 
+The package also handles Japanese dungeon entry through `/exploration/start` and a safe empty-resource `/exploration/finish` response. It uses the selected dungeon's `quest_id`, party number, bundled `exploration-routes-jp.json`, and the profile/capture party state. Dungeon movement, dungeon gathering rewards, and dungeon battles remain pending battle-response work.
+
+Party editing is locally synthesized for `/party/bulk_update`, `/party/battle_tools_set`, `/character/equip`, `/character/memoria_set`, and `/equipment_preset/bulk_set`, using the active profile and request fields.
+
 The `source` directory contains the source code for the custom scripts, compiled editor, observer, and BepInEx plugins. It also includes rebuild instructions. Third-party binaries such as `mitmdump.exe` and BepInEx/Unity libraries are not included as source.
 
 ## Online Capture
@@ -58,7 +62,7 @@ Run `JapaneseCaptureObserver.exe` before an online Steam launch if fresh AES mat
 3. Close the game, then double-click `ProfileEditor.bat`. It updates the game-root profile in place and creates a timestamped backup.
 4. Double-click `AtelierReslerianaJapaneseOffline.bat` again to play offline with the completed profile.
 
-No environment variables or absolute paths are required when the files are copied beside `AtelierResleriana.exe`. The batch files use their own directory as the game root.
+No environment variables or absolute paths are required when the files are copied beside `AtelierResleriana.exe`. The batch files use their own directory as the game root, and the native observer receives that adjacent directory explicitly with `--game-root`.
 
 Create `offline-session.txt` in the game root from `offline-session.example.txt` when a fixed capture session should be used. Otherwise the newest `japanese-capture/session-*` directory is selected.
 
@@ -86,8 +90,8 @@ Advanced source usage that writes a separate output profile:
 
 ```text
 python profile-editor/profile_editor.py complete-collection \
-  "C:\\path\\to\\profile.bin" \
-  "C:\\path\\to\\profile-complete.bin"
+  "<game-root>\\profile.bin" \
+  "<game-root>\\profile-complete.bin"
 ```
 
 The bundled `profile-editor/master` directory is used automatically. Use `--master-root` to select another master-data directory.
