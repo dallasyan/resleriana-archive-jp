@@ -36,6 +36,8 @@ This folder contains the shareable runtime files for the Japanese Steam installa
 
 The normal workflow does not require Python. `ProfileEditor.exe` includes the profile editor, protobuf descriptors, event state, and required master data. The package expects the game to have BepInEx installed and uses the directory containing the batch files as the game root. The offline launcher must be used instead of Steam for offline runs.
 
+Dynamic costume and Home responses use the root/selected-session AES material and the full observer history. When captured request/response pairs are available, the replay uses endpoint-specific response keys and envelope markers; otherwise it derives a fallback response key from the matching request-key sequence.
+
 The `source` directory contains the source code for the custom scripts, compiled editor, observer, and BepInEx plugins. It also includes rebuild instructions. Third-party binaries such as `mitmdump.exe` and BepInEx/Unity libraries are not included as source.
 
 ## Online Capture

@@ -113,22 +113,44 @@ API_AES_IVS = tuple(
 )
 
 
-def observed_aes_candidates() -> tuple[tuple[bytes, ...], tuple[bytes, ...]]:
-    keys = list(API_AES_KEYS)
-    ivs = list(API_AES_IVS)
+def observed_aes_sequences() -> tuple[tuple[tuple[bytes, ...], tuple[bytes, ...]], ...]:
     material_root = GAME_DIR / "japanese-capture"
     material_paths = []
+    selected_material_path: Path | None = None
+    try:
+        selected_material_path = session_directory() / "aes-material.json"
+    except (FileNotFoundError, OSError):
+        pass
+    root_material_path = GAME_DIR / "aes-material.json"
+    prioritized_material_paths = [root_material_path, selected_material_path]
+    for prioritized_path in prioritized_material_paths:
+        if prioritized_path is None or not prioritized_path.is_file():
+            continue
+        material_paths.append(prioritized_path)
+    priority_count = len(material_paths)
     for material_path in material_root.rglob("aes-material.json"):
+        if selected_material_path is not None and material_path == selected_material_path:
+            continue
+        if material_path not in material_paths:
+            material_paths.append(material_path)
+    historical_material_paths = []
+    for material_path in material_paths[priority_count:]:
         try:
-            material_paths.append((material_path.stat().st_mtime, material_path))
+            historical_material_paths.append((material_path.stat().st_mtime, material_path))
         except OSError:
             continue
-    for _, material_path in sorted(material_paths, reverse=True)[:MAX_LIVE_MATERIAL_FILES]:
+    material_paths = material_paths[:priority_count] + [
+        material_path for _, material_path in sorted(historical_material_paths, reverse=True)
+    ]
+    sequences = []
+    for material_path in material_paths:
         try:
             material = json.loads(material_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             continue
 
+        material_keys = []
+        material_ivs = []
         key_values = material.get("key_candidates") or ([material["key"]] if material.get("key") else [])
         iv_values = material.get("iv_candidates") or ([material["iv"]] if material.get("iv") else [])
         for value in key_values:
@@ -136,13 +158,29 @@ def observed_aes_candidates() -> tuple[tuple[bytes, ...], tuple[bytes, ...]]:
                 key = bytes.fromhex(value)
             except (TypeError, ValueError):
                 continue
-            if key not in keys:
-                keys.append(key)
+            if key not in material_keys:
+                material_keys.append(key)
         for value in iv_values:
             try:
                 iv = bytes.fromhex(value)
             except (TypeError, ValueError):
                 continue
+            if iv not in material_ivs:
+                material_ivs.append(iv)
+        if material_keys and material_ivs:
+            sequences.append((tuple(material_keys), tuple(material_ivs)))
+    sequences.append((API_AES_KEYS, API_AES_IVS))
+    return tuple(sequences)
+
+
+def observed_aes_candidates() -> tuple[tuple[bytes, ...], tuple[bytes, ...]]:
+    keys = []
+    ivs = []
+    for sequence_keys, sequence_ivs in observed_aes_sequences():
+        for key in sequence_keys:
+            if key not in keys:
+                keys.append(key)
+        for iv in sequence_ivs:
             if iv not in ivs:
                 ivs.append(iv)
     return tuple(keys), tuple(ivs)
@@ -151,7 +189,6 @@ SKIN_RESPONSE_KEY = bytes.fromhex("5243d4cb0e4a3fbec976b5bcfe02a2ff")
 SKIN_RESPONSE_IV = bytes.fromhex("65a99b89a634fca3193c5212e5219378")
 SKIN_KEY_WAIT_SECONDS = 3.0
 SKIN_KEY_RETRY_INTERVAL = 0.1
-MAX_LIVE_MATERIAL_FILES = 12
 @dataclass
 class Record:
     number: int
@@ -415,36 +452,49 @@ def aes_encrypt(data: bytes, key: bytes, iv: bytes) -> bytes:
     raise RuntimeError("no AES implementation is available")
 
 
-def decrypt_direct_candidates(data: bytes) -> bytes:
+def decrypt_request_with_response_material(
+    data: bytes,
+    validator,
+    response_path: str | None = None,
+) -> tuple[bytes, bytes, bytes, int]:
+    if not data:
+        return b"", SKIN_RESPONSE_KEY, SKIN_RESPONSE_IV, SKIN_RESPONSE_MARKER
     if len(data) < 17 or (len(data) - 1) % 16:
         raise ValueError("encrypted request has an invalid size")
-    keys, ivs = observed_aes_candidates()
-    for key in keys:
-        for iv in ivs:
-            try:
-                plaintext = pkcs7_unpad(aes_decrypt(data[1:], key, iv))
-                if is_skin_request_plaintext(plaintext):
-                    return plaintext
-            except (RuntimeError, ValueError):
-                continue
+    for keys, ivs in observed_aes_sequences():
+        for key_index, key in enumerate(keys):
+            for iv in ivs:
+                try:
+                    plaintext = pkcs7_unpad(aes_decrypt(data[1:], key, iv))
+                    if validator(plaintext):
+                        if key_index + 1 < len(keys):
+                            response_key = keys[key_index + 1]
+                        else:
+                            response_key = next(
+                                (
+                                    API_AES_KEYS[index + 1]
+                                    for index, candidate in enumerate(API_AES_KEYS[:-1])
+                                    if candidate == key
+                                ),
+                                SKIN_RESPONSE_KEY,
+                            )
+                        response_marker = SKIN_RESPONSE_MARKER
+                        if response_path is not None:
+                            captured_material = captured_response_material(response_path, key, iv)
+                            if captured_material is not None:
+                                response_key, iv, response_marker = captured_material
+                        return plaintext, response_key, iv, response_marker
+                except (RuntimeError, ValueError):
+                    continue
     raise ValueError("could not decrypt request")
+
+
+def decrypt_direct_candidates(data: bytes) -> tuple[bytes, bytes, bytes, int]:
+    return decrypt_request_with_response_material(data, is_skin_request_plaintext, "/character/skin_set")
 
 
 def decrypt_request_plaintext(data: bytes, validator) -> bytes:
-    if not data:
-        return b""
-    if len(data) < 17 or (len(data) - 1) % 16:
-        raise ValueError("encrypted request has an invalid size")
-    keys, ivs = observed_aes_candidates()
-    for key in keys:
-        for iv in ivs:
-            try:
-                plaintext = pkcs7_unpad(aes_decrypt(data[1:], key, iv))
-                if validator(plaintext):
-                    return plaintext
-            except (RuntimeError, ValueError):
-                continue
-    raise ValueError("could not decrypt request")
+    return decrypt_request_with_response_material(data, validator)[0]
 
 
 def replace_repeated_varint_field(data: bytes, field_number: int, values: list[int]) -> bytes:
@@ -507,6 +557,9 @@ def make_expedition_special_reward_response(response_body: bytes, reward_item_id
 def make_changed_resources_response(
     profile: bytes | None = None,
     chara_homes: list[bytes] | None = None,
+    response_key: bytes = SKIN_RESPONSE_KEY,
+    response_iv: bytes = SKIN_RESPONSE_IV,
+    response_marker: int = SKIN_RESPONSE_MARKER,
 ) -> bytes:
     resources = bytearray()
     if profile is not None:
@@ -514,10 +567,10 @@ def make_changed_resources_response(
     for chara_home in chara_homes or []:
         resources.extend(write_field(61, 2, chara_home))
     plaintext = write_field(1, 2, bytes(resources))
-    return bytes([SKIN_RESPONSE_MARKER]) + aes_encrypt(
+    return bytes([response_marker]) + aes_encrypt(
         pkcs7_pad(gzip.compress(plaintext, mtime=0)),
-        SKIN_RESPONSE_KEY,
-        SKIN_RESPONSE_IV,
+        response_key,
+        response_iv,
     )
 
 
@@ -565,12 +618,12 @@ def decrypt_profile_plaintext(data: bytes) -> bytes:
     raise ValueError("could not decrypt profile")
 
 
-def decode_skin_request(data: bytes) -> tuple[int, int | None]:
+def decode_skin_request(data: bytes) -> tuple[int, int | None, bytes, bytes, int]:
     deadline = time.monotonic() + SKIN_KEY_WAIT_SECONDS
     last_error: ValueError | None = None
     while True:
         try:
-            plaintext = decrypt_direct_candidates(data)
+            plaintext, response_key, response_iv, response_marker = decrypt_direct_candidates(data)
             character_id = None
             skin_id = None
             for field_number, wire_type, value in read_wire_fields(plaintext):
@@ -581,7 +634,7 @@ def decode_skin_request(data: bytes) -> tuple[int, int | None]:
                         if inner_number == 1 and inner_type == 0:
                             skin_id = int(inner_value)
             if character_id is not None:
-                return character_id, skin_id
+                return character_id, skin_id, response_key, response_iv, response_marker
             last_error = ValueError("skin request has no character_id")
         except ValueError as error:
             last_error = error
@@ -627,6 +680,99 @@ def is_selected_home_request(data: bytes) -> bool:
     return bool(fields)
 
 
+_CAPTURED_RESPONSE_MATERIALS: tuple[
+    dict[tuple[str, bytes, bytes], tuple[bytes, bytes, int]],
+    dict[str, tuple[bytes, bytes, int]],
+] | None = None
+
+
+def captured_response_material(
+    response_path: str,
+    request_key: bytes | None = None,
+    request_iv: bytes | None = None,
+) -> tuple[bytes, bytes, int] | None:
+    global _CAPTURED_RESPONSE_MATERIALS
+    if _CAPTURED_RESPONSE_MATERIALS is None:
+        exact_materials: dict[tuple[str, bytes, bytes], tuple[bytes, bytes, int]] = {}
+        default_materials: dict[str, tuple[bytes, bytes, int]] = {}
+        validators = {
+            "/character/skin_set": is_skin_request_plaintext,
+            "/chara_home/register": is_home_register_request,
+            "/profile/update_chara_home_favorite_character_list": is_favorite_request,
+            "/profile/update_selected_home_id": is_selected_home_request,
+        }
+        keys, ivs = observed_aes_candidates()
+        sequences = observed_aes_sequences()
+        sessions = sorted(
+            (path for path in (GAME_DIR / "japanese-capture").glob("session-*") if path.is_dir()),
+            key=lambda path: path.stat().st_mtime,
+            reverse=True,
+        )
+        for session in sessions:
+            for metadata_path in sorted(session.glob("[0-9][0-9][0-9][0-9].txt"), reverse=True):
+                record = parse_record(metadata_path)
+                validator = validators.get(record.path)
+                if validator is None or not record.response_body:
+                    continue
+
+                response_key = response_iv = None
+                response_marker = record.response_body[0]
+                for key in keys:
+                    for iv in ivs:
+                        try:
+                            compressed = pkcs7_unpad(aes_decrypt(record.response_body[1:], key, iv))
+                            plaintext = gzip.decompress(compressed)
+                            read_wire_fields(plaintext)
+                            response_key = key
+                            response_iv = iv
+                            break
+                        except (RuntimeError, OSError, EOFError, ValueError):
+                            continue
+                    if response_key is not None:
+                        break
+                if response_key is None or not record.request_body:
+                    default_materials.setdefault(
+                        record.path,
+                        (response_key or SKIN_RESPONSE_KEY, response_iv or SKIN_RESPONSE_IV, response_marker),
+                    )
+                    continue
+
+                request_material = None
+                for sequence_keys, sequence_ivs in sequences:
+                    for request_key_candidate in sequence_keys:
+                        for request_iv_candidate in sequence_ivs:
+                            try:
+                                plaintext = pkcs7_unpad(
+                                    aes_decrypt(record.request_body[1:], request_key_candidate, request_iv_candidate)
+                                )
+                                if validator(plaintext):
+                                    request_material = (request_key_candidate, request_iv_candidate)
+                                    break
+                            except (RuntimeError, ValueError):
+                                continue
+                        if request_material is not None:
+                            break
+                    if request_material is not None:
+                        break
+                if request_material is not None:
+                    exact_materials.setdefault(
+                        (record.path, request_material[0], request_material[1]),
+                        (response_key, response_iv, response_marker),
+                    )
+                    default_materials.setdefault(
+                        record.path,
+                        (response_key, response_iv, response_marker),
+                    )
+        _CAPTURED_RESPONSE_MATERIALS = (exact_materials, default_materials)
+
+    exact_materials, default_materials = _CAPTURED_RESPONSE_MATERIALS
+    if request_key is not None and request_iv is not None:
+        material = exact_materials.get((response_path, request_key, request_iv))
+        if material is not None:
+            return material
+    return default_materials.get(response_path)
+
+
 def varint_field(data: bytes, field_number: int, default: int = 0) -> int:
     for number, wire_type, value in read_wire_fields(data):
         if number == field_number and wire_type == 0:
@@ -668,30 +814,40 @@ def character_with_skin(record: bytes | None, character_id: int, skin_id: int | 
     fields = read_wire_fields(record) if record is not None else []
     output = bytearray()
     has_character_id = False
+    has_skin = False
     for field_number, wire_type, value in fields:
         if field_number == 1:
             output.extend(write_field(1, 0, character_id))
             has_character_id = True
         elif field_number == 34:
-            continue
+            has_skin = True
+            if skin_id is not None:
+                output.extend(write_field(34, 2, write_field(1, 0, skin_id)))
         elif wire_type in (0, 1, 2, 5):
             output.extend(write_field(field_number, wire_type, value))
     if not has_character_id:
         output[:0] = write_field(1, 0, character_id)
-    if skin_id is not None:
+    if skin_id is not None and not has_skin:
         output.extend(write_field(34, 2, write_field(1, 0, skin_id)))
     return bytes(output)
 
 
-def make_skin_response(character_records: dict[int, bytes], character_id: int, skin_id: int | None) -> bytes:
+def make_skin_response(
+    character_records: dict[int, bytes],
+    character_id: int,
+    skin_id: int | None,
+    response_key: bytes = SKIN_RESPONSE_KEY,
+    response_iv: bytes = SKIN_RESPONSE_IV,
+    response_marker: int = SKIN_RESPONSE_MARKER,
+) -> bytes:
     character = character_with_skin(character_records.get(character_id), character_id, skin_id)
     resources = write_field(2, 2, character)
     plaintext = write_field(1, 2, resources)
     compressed = gzip.compress(plaintext, mtime=0)
-    return bytes([SKIN_RESPONSE_MARKER]) + aes_encrypt(
+    return bytes([response_marker]) + aes_encrypt(
         pkcs7_pad(compressed),
-        SKIN_RESPONSE_KEY,
-        SKIN_RESPONSE_IV,
+        response_key,
+        response_iv,
     )
 
 
@@ -757,10 +913,17 @@ class Replay:
     def skin_response(self, flow: http.HTTPFlow) -> bytes:
         request_body = flow.request.raw_content or b""
         try:
-            character_id, skin_id = decode_skin_request(request_body)
+            character_id, skin_id, response_key, response_iv, response_marker = decode_skin_request(request_body)
             if self.character_records is None:
                 self.character_records = load_profile_character_records(GAME_DIR / "profile.bin")
-            response = make_skin_response(self.character_records, character_id, skin_id)
+            response = make_skin_response(
+                self.character_records,
+                character_id,
+                skin_id,
+                response_key,
+                response_iv,
+                response_marker,
+            )
             self.log(
                 f"LOCAL-SKIN host={flow.request.host} method=POST path=/character/skin_set "
                 f"status=200 character_id={character_id} skin_id={skin_id if skin_id is not None else 'default'}"
@@ -812,9 +975,16 @@ class Replay:
         self.ensure_home_state()
         path = urlsplit(flow.request.pretty_url).path
         request_body = flow.request.raw_content or b""
+        response_key = SKIN_RESPONSE_KEY
+        response_iv = SKIN_RESPONSE_IV
+        response_marker = SKIN_RESPONSE_MARKER
 
         if path == "/chara_home/register":
-            plaintext = decrypt_request_plaintext(request_body, is_home_register_request)
+            plaintext, response_key, response_iv, response_marker = decrypt_request_with_response_material(
+                request_body,
+                is_home_register_request,
+                path,
+            )
             values = {
                 number: int(value)
                 for number, wire_type, value in read_wire_fields(plaintext)
@@ -837,10 +1007,19 @@ class Replay:
                 f"slot_id={slot_id} character_id={values[2]} background_id={values.get(6, 0)} "
                 f"motion_id={values.get(3, 0)} camera_id={values.get(4, 0)} bgm_id={values.get(5, 0)}"
             )
-            return make_changed_resources_response(chara_homes=list(self.home_records.values()))
+            return make_changed_resources_response(
+                chara_homes=list(self.home_records.values()),
+                response_key=response_key,
+                response_iv=response_iv,
+                response_marker=response_marker,
+            )
 
         if path == "/profile/update_chara_home_favorite_character_list":
-            plaintext = decrypt_request_plaintext(request_body, is_favorite_request)
+            plaintext, response_key, response_iv, response_marker = decrypt_request_with_response_material(
+                request_body,
+                is_favorite_request,
+                path,
+            )
             character_id = varint_field(plaintext, 1)
             if character_id in self.home_favorite_character_ids:
                 self.home_favorite_character_ids.remove(character_id)
@@ -855,11 +1034,20 @@ class Replay:
                 f"LOCAL-HOME-FAVORITE host={flow.request.host} method=POST path={path} status=200 "
                 f"character_id={character_id} favorited={character_id in self.home_favorite_character_ids}"
             )
-            return make_changed_resources_response(profile=self.home_profile)
+            return make_changed_resources_response(
+                profile=self.home_profile,
+                response_key=response_key,
+                response_iv=response_iv,
+                response_marker=response_marker,
+            )
 
         if path == "/profile/update_selected_home_id":
             if request_body:
-                plaintext = decrypt_request_plaintext(request_body, is_selected_home_request)
+                plaintext, response_key, response_iv, response_marker = decrypt_request_with_response_material(
+                    request_body,
+                    is_selected_home_request,
+                    path,
+                )
                 selected_field = 10 if nested_varint_field(plaintext, 1, 1) is not None else 11
                 selected_home_id = nested_varint_field(plaintext, 1, 1)
                 if selected_home_id is None:
@@ -895,7 +1083,16 @@ class Replay:
                     f"LOCAL-HOME-SELECT host={flow.request.host} method=POST path={path} status=200 "
                     "selection=default cleared_profile_fields=10,11"
                 )
-            return make_changed_resources_response(profile=self.home_profile)
+            if not request_body:
+                captured_material = captured_response_material(path)
+                if captured_material is not None:
+                    response_key, response_iv, response_marker = captured_material
+            return make_changed_resources_response(
+                profile=self.home_profile,
+                response_key=response_key,
+                response_iv=response_iv,
+                response_marker=response_marker,
+            )
 
         raise ValueError(f"unsupported home endpoint: {path}")
 
