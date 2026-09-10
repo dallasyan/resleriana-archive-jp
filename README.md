@@ -1,43 +1,24 @@
-# WARNING: ENTIRELY LLM-GENERATED
-Use at own risk, provided as-is.
-
-## TLDR:
-1. Copy contents of `game-root` next to `AtelierResleriana.exe`.
-2. Copy contents of `BepInEx/plugins` into the game's `BepInEx/plugins` directory.
-3. Launch the game normally once and log in. It should create a `profile.bin`.
-4. Close the game, launch `AtelierReslerianaJapaneseOffline.bat` and log in. When you launch the exe, there should be a popup on Steam with something like "do you want to run the game with custom argument `-japanese-offline`?", click yes/continue. This flag is to tell the offline plugins to run and make sure they don't run when you are playing normally online. After logging in it should create a `aes-material.json` which is your profile's encryption key. You should be able to view characters etc. Note when you close the game, one of the terminals won't close. It'll say "Press enter to close" and you just do what it says.
-5. (Optional) If you want to turn your `profile.bin` into a "master-save" with all characters, events completed, bond stories, etc. then close the game and run `ProfileEditor.bat`. Make sure to do this after step 4 as the program will need your profile's encryption key. Note that some parts of this are untested. Then you can use `AtelierReslerianaJapaneseOffline.bat`.
-6. If you want to overwrite your profile with another login, rename/delete `profile.bin` and `aes-material.json` then perform steps 3-5 again. Every online play should create a folder like `japanese-capture/session-*` so you can manually replace the `profile.bin` and `aes-material.json` from there if you want.
-
-## How you can help
-1. Run `JapaneseCaptureObserver.exe` and play the game normally online.
-2. Send the `japanese-capture/session-*` data to me (maybe zip the whole folder). (Note the session will still be recorded without `JapaneseCaptureObserver.exe` running, the executable just adds more data to the folder. It may still be valuable without it.)
-
-What I'm looking for specifically.
-- In combat, attack of every character (Skill 1, Skill 2, Burst)
-  - In particular the ones unavailable now (especially Dark Memories), but it would be easiest if someone (or a small group of people) have all the characters between them and can coordinate getting data for every attack.
-- Entering every fight in general
-  - Training quests, material quests, dungeons (+ event dungeons), event battles, elemental tower, etc., just anything that involves a fight. Ideally complete the fight too and let the enemies do some attacks.
-- New-player data, e.g. first sign-in and playing through the story etc. The more you can get from the beginning the better!
-
-However, everything may be useful! Just try entering every single screen you can think of and send the data.
-
-Additionally, there should be a bunch of "Home Scene" scenes that have a white thumbnail, because they are story-based scenes that were never intended to be selectable. I'm looking for high quality (4K?) screenshots of these scenes so I can replace the thumbnails. Just change to the scene, hide the UI (button should be on the right side, just a bit above the middle), and take a screenshot.
-
-The rest of this README is LLM-generated.
-
 # Atelier Resleriana Japanese Offline Toolkit
 
 This folder contains the shareable runtime files for the Japanese Steam installation. It does not contain a personal `profile.bin`, capture session, AES material, or anonymization sidecar.
 
-## Install
+## Recommended Workflow
 
 1. Copy the contents of `game-root` into the Japanese game directory beside `AtelierResleriana.exe`.
 2. Copy the contents of `BepInEx/plugins` into the game's `BepInEx/plugins` directory.
+3. Launch the game normally through Steam and log in once. `JapaneseProfileCapture.dll` saves the online profile in `japanese-capture\session-*` and creates the game-root `profile.bin` only if one does not already exist.
+4. Close the game and double-click `AtelierReslerianaJapaneseOffline.bat`. It starts the local proxy, game, and native observer automatically. Log in once through the offline game so the observer captures the current offline crypto material.
+5. Close the game. Optionally double-click `ProfileEditor.bat` to create the complete profile. It uses the newest offline observer material and creates a backup automatically.
+6. Double-click `AtelierReslerianaJapaneseOffline.bat` again to play offline.
+7. Optionally double-click `ShareProfile.bat` when a profile should be normalized for sharing. Share only the resulting `profile.bin`.
 
-The normal workflow does not require Python. `ProfileEditor.exe` includes the profile editor, protobuf descriptors, event state, and required master data. The package expects the game to have BepInEx installed and uses the directory containing the batch files as the game root. The offline launcher must be used instead of Steam for offline runs.
+The normal workflow requires no Python, environment variables, command-line arguments, or manual proxy setup. Do not use Steam for offline launches. `ProfileEditor.exe` is bundled; `ProfileEditor.bat` and `ShareProfile.bat` are the intended entry points.
 
-Dynamic costume and Home responses use the root/selected-session AES material and the full observer history. When captured request/response pairs are available, the replay uses endpoint-specific response keys and envelope markers; otherwise it derives a fallback response key from the matching request-key sequence.
+Generated costume and Home responses use only the newest `native-observer-*\aes-material.json` from the current offline run. The profile's online session and historical sessions are not used for generated API crypto.
+
+Generated `/login_bonus/receive` returns a regular daily-login state. Captured-response replay is an optional developer/diagnostic mode and is not required for the recommended workflow.
+
+`game-root\japanese-masterdata.bytes` and the encrypted payload variants contain the current Japanese master data. The offline proxy serves the matching encrypted payload through the client's normal master-data update request, so the localization plugin can translate the loaded data before user-data initialization.
 
 The package also handles Japanese dungeon entry through `/exploration/start` and a safe empty-resource `/exploration/finish` response. It uses the selected dungeon's `quest_id`, party number, bundled `exploration-routes-jp.json`, and the profile/capture party state. Dungeon movement, dungeon gathering rewards, and dungeon battles remain pending battle-response work.
 
@@ -45,40 +26,35 @@ Party editing is locally synthesized for `/party/bulk_update`, `/party/battle_to
 
 The `source` directory contains the source code for the custom scripts, compiled editor, observer, and BepInEx plugins. It also includes rebuild instructions. Third-party binaries such as `mitmdump.exe` and BepInEx/Unity libraries are not included as source.
 
-## Online Capture
+## Optional Online Capture
 
 `JapaneseProfileCapture.dll` watches successful Japanese login responses. It always saves a session copy under `japanese-capture/session-*`. If the game-root `profile.bin` does not exist, the first successful online login creates it from that session copy. An existing root profile is never overwritten.
 
-When the native observer has captured a complete key/IV pair, it saves `aes-material.json` beside the session profile and, once the root profile exists, beside the game-root `profile.bin`.
+The native observer always saves current-run material under `japanese-capture\native-observer-*`. If the game-root `aes-material.json` does not already exist, it also creates that file for the profile editor; it never overwrites an existing root file.
 
 Offline Expedition reward collection is configured by `game-root/expedition-special-rewards.json`. The replay rotates through the seven valuable items associated with expedition sites 50-56 and marks each response as a rare special reward. The offline events plugin separately rotates the weighted `ExpeditionTimelineGroup` keys used by the client presentation, since changing the item ID alone does not change the cutscene. This is intended to trigger the special-reward presentation/cutscene and must be verified in-game.
 
-Run `JapaneseCaptureObserver.exe` before an online Steam launch if fresh AES material is needed. The observer saves material into the newest capture session and does not launch or patch the game.
+For optional online analysis, double-click `JapaneseCaptureObserver.exe` before launching the game through Steam. It does not launch or patch the game.
 
-## Recommended Workflow
+## Advanced Diagnostics
 
-1. Launch the game normally through Steam and log in once. `JapaneseProfileCapture.dll` saves the session profile and creates the game-root profile if it does not already exist.
-2. Close the game and double-click `AtelierReslerianaJapaneseOffline.bat`. The local proxy and native observer start automatically. Log in through the offline game once so the observer can capture the profile AES material.
-3. Close the game, then double-click `ProfileEditor.bat`. It updates the game-root profile in place and creates a timestamped backup.
-4. Double-click `AtelierReslerianaJapaneseOffline.bat` again to play offline with the completed profile.
-
-No environment variables or absolute paths are required when the files are copied beside `AtelierResleriana.exe`. The batch files use their own directory as the game root, and the native observer receives that adjacent directory explicitly with `--game-root`.
-
-Create `offline-session.txt` in the game root from `offline-session.example.txt` when a fixed capture session should be used. Otherwise the newest `japanese-capture/session-*` directory is selected.
-
-Manual offline launch:
+The following are not required for normal use:
 
 ```text
-AtelierReslerianaJapaneseOffline.bat
+AtelierReslerianaJapaneseOffline.bat -replay
 ```
 
-The launcher starts the local replay proxy, sets `JAPANESE_OFFLINE=1`, starts the game, and stops the proxy when the game exits. It also starts the capture observer if it is present and not already running.
+`-replay`, `offline-session.txt`, `StartJapaneseReplayProxy.bat`, Python commands, and manual proxy commands are for development and capture analysis only. The launcher starts the local replay proxy, sets `JAPANESE_OFFLINE=1`, starts the game, and starts the observer when it is present and not already running.
 
 ## Profile Editor
 
 The editor supports inspection, targeted edits, historical event state, collection unlocks, progression maximization, Bond chapters, and Character Stories. The normal entry point is `ProfileEditor.bat`; it runs the bundled `ProfileEditor.exe` against the game-root profile.
 
-The editor defaults to the game-root `profile.bin` and adjacent `aes-material.json` when `ProfileEditor.bat` runs from the game directory. `JAPANESE_GAME_DIR` is only needed for advanced use of the raw Python editor from another directory.
+The editor defaults to the game-root `profile.bin` and prefers the newest `native-observer-*\aes-material.json`; it falls back to an existing root `aes-material.json`. `JAPANESE_GAME_DIR` is only needed for advanced use of the raw Python editor from another directory.
+
+Profiles written by the bundled editor use the toolkit's canonical share-compatible API key/IV. Other users can use the resulting `profile.bin` without receiving the source user's capture session or AES-material file; the offline replay also normalizes shared profiles when serving `/user/log_in`.
+
+To prepare an existing profile specifically for sharing, run `ShareProfile.bat` from the source game directory, then distribute only `profile.bin`. A profile encrypted with an unknown legacy key cannot be converted by the recipient without the source user's AES material; normalize it before sharing.
 
 The editor can be run directly for the default game-root profile:
 

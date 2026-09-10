@@ -83,4 +83,4 @@ The changeable home records cover the Home Background Selection categories such 
 
 The `mod_timeline_states` records are the profile-side unlock state for photo-mode scenes such as "In Front of Friends". Adding them does not deduct wallet currency; the purchase cost in master data is a storefront condition used when the state is absent.
 
-For a new online capture, run the native observer with `--game-root` pointing to the Japanese installation. It will save `aes-material.json` into the newest `japanese-capture/session-*` directory and, once the root `profile.bin` exists, beside that profile in the game root. The editor automatically uses the root pair when no profile or key path is supplied.
+For an offline run, the native observer writes `aes-material.json` into the newest `japanese-capture/native-observer-*` directory and creates the root pair only when it is absent. The editor prefers the newest native-observer material when no key path is supplied, then falls back to the root pair. Online `session-*` material is not used implicitly.

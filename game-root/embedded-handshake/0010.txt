@@ -1,0 +1,23 @@
+URL=https://game.resleriana.jp/mail/open
+METHOD=Post
+STATUS=200
+REQUEST_BYTES=17
+RESPONSE_BYTES=1809
+REQUEST_HEADERS_BEGIN
+Content-Type: application/octet-stream
+x-client-version: 2.16.0-VG7E5UIT7PQG3XSU
+x-asset-version: 1787706536_QVzMLXDQ2KLO9bgR
+x-master-data-version: 1787730744__RjK13fBy4f67c4c
+x-user-id: 531692152193
+x-session-token: 216c0769-57e6-4c80-a5fc-2314143e4a0c
+x-request-id: 6b75ceb2-3d50-4ae9-a596-e2309594b8ab
+x-platform: steam
+Host: game.resleriana.jp
+Accept-Encoding: gzip, identity
+Connection: Keep-Alive, TE
+Keep-Alive: timeout=21
+TE: identity
+User-Agent: BestHTTP/2 v2.5.4
+Content-Length: 17
+
+REQUEST_HEADERS_END

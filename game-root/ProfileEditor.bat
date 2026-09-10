@@ -12,11 +12,6 @@ if not exist "%ROOT%profile.bin" (
     echo Run the game online once first, then run this file again.
     goto failed
 )
-if not exist "%ROOT%aes-material.json" (
-    echo No game-root aes-material.json was found.
-    echo Run AtelierReslerianaOffline.bat once and log in so the observer can capture it.
-    goto failed
-)
 tasklist /FI "IMAGENAME eq AtelierResleriana.exe" | find /I "AtelierResleriana.exe" >nul
 if not errorlevel 1 (
     echo Close Atelier Resleriana before editing profile.bin.

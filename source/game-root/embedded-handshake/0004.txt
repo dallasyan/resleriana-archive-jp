@@ -1,0 +1,23 @@
+URL=https://game.resleriana.jp/user/log_in
+METHOD=Post
+STATUS=409
+REQUEST_BYTES=0
+RESPONSE_BYTES=133
+REQUEST_HEADERS_BEGIN
+Content-Type: application/octet-stream
+x-client-version: 2.16.0-VG7E5UIT7PQG3XSU
+x-asset-version: (empty)
+x-master-data-version: (empty)
+x-user-id: 100000000001
+x-session-token: 11111111-1111-4111-8111-111111111111
+x-request-id: 00000000-0000-0000-0000-000000000000
+x-platform: steam
+Host: game.resleriana.jp
+Accept-Encoding: gzip, identity
+Connection: Keep-Alive, TE
+Keep-Alive: timeout=21
+TE: identity
+User-Agent: BestHTTP/2 v2.5.4
+Content-Length: 0
+
+REQUEST_HEADERS_END

@@ -9,6 +9,7 @@ game-root/
   AtelierReslerianaJapaneseOffline.bat
   StartJapaneseReplayProxy.bat
   ProfileEditor.bat
+  ShareProfile.bat
   replay_japanese.py
   analyze_japanese_capture.py
   generate_exploration_routes.py
@@ -32,7 +33,13 @@ The observer resolves the directory beside its executable when frozen and accept
 
 The replay currently synthesizes dungeon start/finish and profile-backed party, equipment, Memoria, battle-tool, and equipment-preset updates. Dungeon movement, dungeon rewards, and battle action responses remain capture/replay work for a later stage.
 
+The source package's `game-root/japanese-masterdata.bytes` is the decrypted Japanese master-data payload; the encrypted payload variants are served by the offline proxy through the client's normal master-data update path before user-data initialization. Generated API crypto comes only from the current offline `native-observer-*` output.
+
 `tools/JapaneseProfileEditor/profile_editor.py` is the source used to build `ProfileEditor.exe`. Its bundled data comes from the parent package's `profile-editor/profile-descriptors.pb`, `profile-editor/historical-event-state.json`, and `profile-editor/master` directory.
+
+The editor re-encrypts edited profiles with the toolkit's canonical share-compatible API key/IV so a recipient does not need the original capture session or AES-material file.
+
+`ShareProfile.bat` runs `ProfileEditor.exe normalize --in-place` for an existing profile without applying the complete-collection edits.
 
 `JapaneseOfflineEvents.Plugin` includes the offline `ExpeditionTimelineGroup` selector patch. Its three timeline keys are derived from the Japanese `ExpeditionTimelineGroup.json` TextAsset and are rotated in memory during special-reward presentation.
 

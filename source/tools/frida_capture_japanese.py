@@ -42,7 +42,11 @@ def main():
     parser.add_argument("--output", help="observer output directory; defaults under the Windows temporary directory")
     parser.add_argument("--game-root", default=str(default_game_root()), help="Japanese game directory")
     parser.add_argument("--seconds", type=float, default=3600)
+    parser.add_argument("--keep-waiting", action="store_true", help="keep observing across temporary game-process gaps")
+    parser.add_argument("--stop-file", help="stop after the launcher signals that the game has exited")
     args = parser.parse_args()
+    keep_waiting = args.keep_waiting or os.environ.get("JAPANESE_OFFLINE") == "1"
+    print(f"Observer keep-waiting: {keep_waiting}", flush=True)
 
     game_root = pathlib.Path(args.game_root)
     base_output = pathlib.Path(args.output) if args.output else game_root / "japanese-capture" / f"native-observer-{time.strftime('%Y%m%d-%H%M%S')}"
@@ -82,13 +86,12 @@ def main():
         except OSError as error:
             print(f"Could not save AES material to {path}: {error}", flush=True)
 
-    def persist_material():
-        capture_root = game_root / "japanese-capture"
-        sessions = sorted(capture_root.glob("session-*"), key=lambda path: path.stat().st_mtime)
-        if sessions:
-            save_material(sessions[-1] / "aes-material.json")
-        if material["key"] and material["iv"] and (game_root / "profile.bin").is_file():
-            save_material(game_root / "aes-material.json")
+    def persist_root_material_if_missing():
+        root_material_path = game_root / "aes-material.json"
+        if not material["key"] or not material["iv"] or root_material_path.exists():
+            return
+        save_material(root_material_path)
+
     device = frida.get_local_device()
     process = None
     deadline = time.monotonic() + args.seconds
@@ -165,14 +168,14 @@ def main():
             if value not in material["key_candidates"]:
                 material["key_candidates"].append(value)
             save_material(material_path)
-            persist_material()
+            persist_root_material_if_missing()
         elif rva in ("0x85d9ab0", "0x85d9890") and payload.get("arg") == 2:
             value = (data or b"").hex()
             material["iv"] = value
             if value not in material["iv_candidates"]:
                 material["iv_candidates"].append(value)
             save_material(material_path)
-            persist_material()
+            persist_root_material_if_missing()
 
         path = output / f"rva-{payload['rva']}-arg-{payload['arg']}-{sequence:04d}-{payload['length']}.bin"
         sequence += 1
@@ -193,6 +196,8 @@ def main():
     missing_since = None
     try:
         while time.monotonic() < deadline:
+            if args.stop_file and pathlib.Path(args.stop_file).is_file():
+                break
             candidates = [
                 candidate
                 for candidate in device.enumerate_processes()
@@ -201,7 +206,7 @@ def main():
             if candidates:
                 attached_any = True
                 missing_since = None
-            elif attached_any:
+            elif attached_any and not keep_waiting:
                 missing_since = missing_since or time.monotonic()
                 if time.monotonic() - missing_since >= 3:
                     break
@@ -215,14 +220,20 @@ def main():
                         print(f"Could not attach to PID {candidate.pid}: {error}", flush=True)
             time.sleep(0.25)
     finally:
-        persist_material()
+        save_material(material_path)
+        persist_root_material_if_missing()
         for session in sessions:
             session.detach()
 
 
 if __name__ == "__main__":
-    main()
-    if getattr(sys, "frozen", False) and sys.stdin is not None and sys.stdin.isatty():
+    try:
+        main()
+    except Exception as error:
+        print(f"Observer failed: {type(error).__name__}: {error}", flush=True)
+        if not getattr(sys, "frozen", False):
+            raise
+    if getattr(sys, "frozen", False) and os.environ.get("JAPANESE_OFFLINE") != "1":
         try:
             input("Capture complete. Press Enter to close... ")
         except EOFError:

@@ -22,6 +22,9 @@ from google.protobuf import descriptor_pb2, descriptor_pool, json_format, messag
 
 DEFAULT_KEY = bytes.fromhex("2c332f491d4bea9813f6fac5db3ee8f9")
 DEFAULT_IV = bytes.fromhex("65a99b89a634fca3193c5212e5219378")
+# Profiles produced by the editor can be shared without the source user's AES material.
+SHARE_PROFILE_KEY = bytes.fromhex("5243d4cb0e4a3fbec976b5bcfe02a2ff")
+SHARE_PROFILE_IV = bytes.fromhex("65a99b89a634fca3193c5212e5219378")
 TOP_LEVEL_MESSAGE = "blend.api.UserLogInResponse"
 DEFAULT_ANONYMIZED_SESSION_TOKEN = "00000000-0000-4000-8000-000000000000"
 MAX_CHARACTER_LEVEL = 100
@@ -50,6 +53,24 @@ def default_game_root() -> Path:
 
 def default_profile_path() -> Path:
     return default_game_root() / "profile.bin"
+
+
+def default_observer_material_path(profile_path: Path) -> Path | None:
+    capture_roots = (profile_path.parent / "japanese-capture",)
+    observers = sorted(
+        (
+            directory / "aes-material.json"
+            for capture_root in capture_roots
+            for directory in capture_root.glob("native-observer-*")
+            if directory.is_dir() and (directory / "aes-material.json").is_file()
+        ),
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
+    )
+    if observers:
+        return observers[0]
+    root_material = profile_path.parent / "aes-material.json"
+    return root_material if root_material.is_file() else None
 
 
 def parse_hex(value: str, name: str) -> bytes:
@@ -83,6 +104,12 @@ def load_material(path: Path) -> tuple[list[bytes], list[bytes]]:
     ivs = [parse_hex(value, "iv") for value in iv_values]
     if not keys or not ivs:
         raise ValueError(f"key material file has no usable key/IV candidates: {path}")
+    for key in (SHARE_PROFILE_KEY, DEFAULT_KEY):
+        if key not in keys:
+            keys.append(key)
+    for iv in (SHARE_PROFILE_IV, DEFAULT_IV):
+        if iv not in ivs:
+            ivs.append(iv)
     return keys, ivs
 
 
@@ -1022,6 +1049,24 @@ def main() -> int:
     add_common_arguments(complete_parser)
     add_identity_arguments(complete_parser)
 
+    normalize_parser = subparsers.add_parser(
+        "normalize",
+        help="re-encrypt a profile into the share-compatible format without changing its data",
+    )
+    normalize_parser.add_argument("profile", type=Path, nargs="?", help="defaults to the game-root profile.bin")
+    normalize_parser.add_argument("output", type=Path, nargs="?")
+    normalize_parser.add_argument(
+        "--in-place",
+        action="store_true",
+        help="replace the source profile after creating a timestamped backup",
+    )
+    normalize_parser.add_argument(
+        "--backup-dir",
+        type=Path,
+        help="backup directory for --in-place; defaults to profile-backups beside the profile",
+    )
+    add_common_arguments(normalize_parser)
+
     args = parser.parse_args()
     args.profile = args.profile or default_profile_path()
     if args.command == "export" and args.json_output is None:
@@ -1034,12 +1079,12 @@ def main() -> int:
     elif args.key_file:
         keys, ivs = load_material(args.key_file)
     else:
-        default_key_file = args.profile.parent / "aes-material.json"
-        if default_key_file.is_file():
-            keys, ivs = load_material(default_key_file)
+        observer_material = default_observer_material_path(args.profile)
+        if observer_material is not None:
+            keys, ivs = load_material(observer_material)
         else:
-            keys = [DEFAULT_KEY]
-            ivs = [DEFAULT_IV]
+            keys = [SHARE_PROFILE_KEY, DEFAULT_KEY]
+            ivs = [SHARE_PROFILE_IV, DEFAULT_IV]
 
     protobuf_data, marker, key, iv = decrypt_with_candidates(args.profile.read_bytes(), keys, ivs)
     pool = load_descriptor_pool(args.descriptors)
@@ -1055,7 +1100,7 @@ def main() -> int:
             encoding="utf-8",
         )
         print(f"wrote {args.json_output}")
-    elif args.command in ("edit", "complete-collection"):
+    elif args.command in ("edit", "complete-collection", "normalize"):
         if args.in_place and args.output is not None:
             raise ValueError("--in-place cannot be combined with an output path")
         if not args.in_place and args.output is None:
@@ -1068,7 +1113,7 @@ def main() -> int:
                 print(f"applied state manifest: new_quest_states={added_quests} new_revived_events={added_events}")
             for assignment in args.set:
                 apply_set(message, assignment)
-        else:
+        elif args.command == "complete-collection":
             added_quests, added_events = apply_state_file(message, args.state_file)
             (
                 added_characters,
@@ -1117,8 +1162,14 @@ def main() -> int:
                 f"new_quest_states={added_quests} "
                 f"new_revived_events={added_events}"
             )
-        apply_player_name(message, args.player_name)
-        encrypted = encrypt_profile(message.SerializeToString(), key, iv, marker)
+        if args.command != "normalize":
+            apply_player_name(message, args.player_name)
+        encrypted = encrypt_profile(
+            message.SerializeToString(),
+            key,
+            iv,
+            marker,
+        )
         output = args.profile if args.in_place else args.output
         if output is None:
             raise ValueError("missing profile output")
@@ -1135,7 +1186,7 @@ def main() -> int:
         else:
             output.write_bytes(encrypted)
             print(f"wrote {output} bytes={len(encrypted)}")
-        if args.player_id is not None:
+        if getattr(args, "player_id", None) is not None:
             anonymization_file = args.anonymization_file or args.profile.with_name("profile-anonymization.json")
             write_player_id_override(anonymization_file, args.player_id)
             print(f"wrote player ID override {anonymization_file}")

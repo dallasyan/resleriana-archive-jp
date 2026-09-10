@@ -4,7 +4,6 @@ using BepInEx.Unity.IL2CPP;
 using BestHTTP;
 using HarmonyLib;
 using Il2CppInterop.Runtime;
-using System.Text.Json;
 using System.Reflection;
 using System.Threading;
 
@@ -159,60 +158,11 @@ public sealed class Plugin : BasePlugin
                     log?.LogInfo($"Preserved existing game-root profile: {rootProfilePath}");
                 }
 
-                CopySessionMaterialToRoot();
             }
         }
         catch (Exception ex)
         {
             log?.LogError($"Could not save captured response: {ex}");
-        }
-    }
-
-    private static void CopySessionMaterialToRoot()
-    {
-        var sessionMaterialPath = Path.Combine(sessionDirectory, "aes-material.json");
-        if (!File.Exists(sessionMaterialPath) || !HasCompleteMaterial(sessionMaterialPath))
-            return;
-
-        var rootMaterialPath = Path.Combine(Paths.GameRootPath, "aes-material.json");
-        var temporaryPath = rootMaterialPath + ".tmp";
-        try
-        {
-            File.Copy(sessionMaterialPath, temporaryPath, true);
-            File.Move(temporaryPath, rootMaterialPath, true);
-            log?.LogInfo($"Saved profile AES material beside game-root profile: {rootMaterialPath}");
-        }
-        catch (Exception ex)
-        {
-            log?.LogWarning($"Could not save game-root profile AES material: {ex.Message}");
-            try
-            {
-                if (File.Exists(temporaryPath))
-                    File.Delete(temporaryPath);
-            }
-            catch
-            {
-                // Preserve the original capture error without masking it with cleanup failure.
-            }
-        }
-    }
-
-    private static bool HasCompleteMaterial(string path)
-    {
-        try
-        {
-            using var document = JsonDocument.Parse(File.ReadAllText(path));
-            var root = document.RootElement;
-            return root.TryGetProperty("key", out var key)
-                && key.ValueKind == JsonValueKind.String
-                && !string.IsNullOrWhiteSpace(key.GetString())
-                && root.TryGetProperty("iv", out var iv)
-                && iv.ValueKind == JsonValueKind.String
-                && !string.IsNullOrWhiteSpace(iv.GetString());
-        }
-        catch (Exception)
-        {
-            return false;
         }
     }
 

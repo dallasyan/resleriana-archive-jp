@@ -1,0 +1,21 @@
+URL=https://game.resleriana.jp/refund_info/get_country_code
+METHOD=Post
+STATUS=200
+REQUEST_BYTES=0
+RESPONSE_BYTES=0
+REQUEST_HEADERS_BEGIN
+Content-Type: application/octet-stream
+x-client-version: 2.16.0-VG7E5UIT7PQG3XSU
+x-asset-version: (empty)
+x-master-data-version: (empty)
+x-request-id: f79d5e05-db23-4790-98c5-201b9dbe158b
+x-platform: steam
+Host: game.resleriana.jp
+Accept-Encoding: gzip, identity
+Connection: Keep-Alive, TE
+Keep-Alive: timeout=21
+TE: identity
+User-Agent: BestHTTP/2 v2.5.4
+Content-Length: 0
+
+REQUEST_HEADERS_END

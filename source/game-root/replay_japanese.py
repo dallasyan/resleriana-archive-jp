@@ -2,6 +2,7 @@ import hashlib
 import gzip
 import json
 import os
+import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -27,6 +28,27 @@ except ImportError:
 BASE_DIR = Path(__file__).resolve().parent
 GAME_DIR = Path(os.environ.get("JAPANESE_GAME_DIR", str(BASE_DIR.parent.parent if BASE_DIR.name == "JapaneseOffline" else BASE_DIR)))
 EXPEDITION_REWARD_PATH = "/expedition/reward_receive"
+REPLAY_MODE = os.environ.get("JAPANESE_REPLAY_MODE", "generated").strip().lower() == "replay"
+HYBRID_MODE = os.environ.get("JAPANESE_REPLAY_MODE", "generated").strip().lower() == "hybrid"
+HYBRID_HANDSHAKE_PATHS = {"/status", "/refund_info/get_country_code", "/auth/sign_in", "/user/log_in"}
+HYBRID_INIT_PATHS = {
+    "/login_bonus/receive",
+    "/web_session/token",
+    "/external_purchase/receive",
+    "/mail/list",
+    "/mail/open",
+}
+HYBRID_PROFILE_KEY = bytes.fromhex("cb0e4a3fbec976b5bcfe02a2ff5243d4")
+HYBRID_PROFILE_IV = bytes.fromhex("65a99b89a634fca3193c5212e5219378")
+HYBRID_AUTH_KEY = bytes.fromhex("243d4cb0e4a3fbec976b5bcfe02a2ff5")
+HYBRID_AUTH_IV = bytes.fromhex("65a99b89a634fca3193c5212e5219378")
+HYBRID_RESPONSE_MARKER = 0x7B
+HYBRID_PROFILE_MARKER = 0x13
+DEFAULT_ASSET_VERSION = "1787706536_QVzMLXDQ2KLO9bgR"
+DEFAULT_MASTER_DATA_VERSION = "1787730744__RjK13fBy4f67c4c"
+LOCAL_ENCRYPTED_MASTER_DATA_NAME = "japanese-masterdata-encrypted.bytes"
+LOCAL_EMPTY_VERSION_MASTER_DATA_NAME = "japanese-masterdata-encrypted-empty-version.bytes"
+LOCAL_EMPTY_TOKEN_MASTER_DATA_NAME = "japanese-masterdata-encrypted-empty-token.bytes"
 DEFAULT_EXPEDITION_SPECIAL_REWARD_IDS = (1074, 1075, 1076, 1077, 1078, 1079, 1080)
 REUSABLE_PATHS = {
     "/status",
@@ -42,135 +64,52 @@ REUSABLE_PATHS = {
 # Captured successful no-op RecipeLearnResponse: changed_resources is present but empty.
 OFFLINE_RECIPE_LEARN_RESPONSE = bytes.fromhex("14fc17f3894a4c3227473e9d04d1f1ac5c")
 
-# These candidates were observed by the native observer for the Japanese API crypto layer.
-API_AES_KEYS = tuple(
-    bytes.fromhex(value)
-    for value in (
-        "b14682ecddfdad0d87a7986516d4ab70",
-        "976b5bcfe02a2ff5243d4cb0e4a3fbec",
-        "b5bcfe02a2ff5243d4cb0e4a3fbec976",
-        "c3928fefb25dad6f3f80a8bfd490f532",
-        "80a8bfd490f532c3928fefb25dad6f3f",
-        "5c3c5345e14f8ec025ee22a481746c0a",
-        "28fefb25dad6f3f80a8bfd490f532c39",
-        "6587251fdf64bb5ade7f01517fa921ea",
-        "43d4cb0e4a3fbec976b5bcfe02a2ff52",
-        "df58bb67dd1f258665e923a97d53027e",
-        "fea487a9961c947f7d92ed6b79fc0545",
-        "e923a97d53027edf58bb67dd1f258665",
-        "c09fb7d62ed9f747c961997a48ea5f54",
-        "6cfba3e4b0ccbd24752faa604fdbeb17",
-        "f491d4bea9813f6fac5db3ee8f92c332",
-        "ed6b79fc0545fea487a9961c947f7d92",
-        "5db3ee8f92c332f491d4bea9813f6fac",
-        "3f80a8bfd490f532c3928fefb25dad6f",
-        "a5f54c09fb7d62ed9f747c961997a48e",
-        "3d4cb0e4a3fbec976b5bcfe02a2ff524",
-        "e4b0ccbd24752faa604fdbeb176cfba3",
-        "5243d4cb0e4a3fbec976b5bcfe02a2ff",
-        "76cfba3e4b0ccbd24752faa604fdbeb1",
-        "91d4bea9813f6fac5db3ee8f92c332f4",
-        "5e923a97d53027edf58bb67dd1f25866",
-        "fe02a2ff5243d4cb0e4a3fbec976b5bc",
-        "545fea487a9961c947f7d92ed6b79fc0",
-        "c332f491d4bea9813f6fac5db3ee8f92",
-        "d4cb0e4a3fbec976b5bcfe02a2ff5243",
-        "90f532c3928fefb25dad6f3f80a8bfd4",
-        "ea9813f6fac5db3ee8f92c332f491d4b",
-        "2c332f491d4bea9813f6fac5db3ee8f9",
-        "58bb67dd1f258665e923a97d53027edf",
-        "c947f7d92ed6b79fc0545fea487a9961",
-        "a48ea5f54c09fb7d62ed9f747c961997",
-        "961c947f7d92ed6b79fc0545fea487a9",
-        "32c3928fefb25dad6f3f80a8bfd490f5",
-        "db3ee8f92c332f491d4bea9813f6fac5",
-        "8ea5f54c09fb7d62ed9f747c961997a4",
-        "ea5f54c09fb7d62ed9f747c961997a48",
-        "f54c09fb7d62ed9f747c961997a48ea5",
-        "9fc0545fea487a9961c947f7d92ed6b7",
-        "9961c947f7d92ed6b79fc0545fea487a",
-        "a3fbec976b5bcfe02a2ff5243d4cb0e4",
-        "bcfe02a2ff5243d4cb0e4a3fbec976b5",
-        "2c3928fefb25dad6f3f80a8bfd490f53",
-        "5f54c09fb7d62ed9f747c961997a48ea",
-        "747c961997a48ea5f54c09fb7d62ed9f",
-        "04fdbeb176cfba3e4b0ccbd24752faa6",
-        "a6587251fdf64bb5ade7f01517fa921e",
-        "2ed6b79fc0545fea487a9961c947f7d9",
-        "a9961c947f7d92ed6b79fc0545fea487",
-        "b25dad6f3f80a8bfd490f532c3928fef",
-        "fb7d62ed9f747c961997a48ea5f54c09",
-        "c0545fea487a9961c947f7d92ed6b79f",
+CURRENT_OBSERVER_WAIT_SECONDS = 10.0
+
+
+def current_observer_directory() -> Path:
+    roots = (GAME_DIR / "japanese-capture",)
+    candidates = sorted(
+        (
+            directory
+            for root in roots
+            for directory in root.glob("native-observer-*")
+            if directory.is_dir()
+        ),
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
     )
-)
-API_AES_IVS = tuple(
-    bytes.fromhex(value)
-    for value in (
-        "f8598d383b3a01e4db69b8eb0a402390",
-        "65a99b89a634fca3193c5212e5219378",
-        "6376e8c14c960811e899e562c56c9480",
-    )
-)
+    if not candidates:
+        raise ValueError("current offline native observer has not produced aes-material.json")
+    return candidates[0]
+
+
+def current_observer_material() -> tuple[tuple[bytes, ...], tuple[bytes, ...], bytes, bytes]:
+    deadline = time.monotonic() + CURRENT_OBSERVER_WAIT_SECONDS
+    last_error: Exception | None = None
+    while True:
+        try:
+            material_path = current_observer_directory() / "aes-material.json"
+            material = json.loads(material_path.read_text(encoding="utf-8"))
+            key_values = material.get("key_candidates") or ([material["key"]] if material.get("key") else [])
+            iv_values = material.get("iv_candidates") or ([material["iv"]] if material.get("iv") else [])
+            keys = tuple(dict.fromkeys(bytes.fromhex(value) for value in key_values))
+            ivs = tuple(dict.fromkeys(bytes.fromhex(value) for value in iv_values))
+            if not keys or not ivs:
+                raise ValueError(f"observer material has no key/IV candidates: {material_path}")
+            primary_key = bytes.fromhex(material.get("key") or key_values[0])
+            primary_iv = bytes.fromhex(material.get("iv") or iv_values[0])
+            return keys, ivs, primary_key, primary_iv
+        except (FileNotFoundError, OSError, KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
+            last_error = error
+            if time.monotonic() >= deadline:
+                raise ValueError(f"could not load current offline observer material: {last_error}") from error
+            time.sleep(0.1)
 
 
 def observed_aes_sequences() -> tuple[tuple[tuple[bytes, ...], tuple[bytes, ...]], ...]:
-    material_root = GAME_DIR / "japanese-capture"
-    material_paths = []
-    selected_material_path: Path | None = None
-    try:
-        selected_material_path = session_directory() / "aes-material.json"
-    except (FileNotFoundError, OSError):
-        pass
-    root_material_path = GAME_DIR / "aes-material.json"
-    prioritized_material_paths = [root_material_path, selected_material_path]
-    for prioritized_path in prioritized_material_paths:
-        if prioritized_path is None or not prioritized_path.is_file():
-            continue
-        material_paths.append(prioritized_path)
-    priority_count = len(material_paths)
-    for material_path in material_root.rglob("aes-material.json"):
-        if selected_material_path is not None and material_path == selected_material_path:
-            continue
-        if material_path not in material_paths:
-            material_paths.append(material_path)
-    historical_material_paths = []
-    for material_path in material_paths[priority_count:]:
-        try:
-            historical_material_paths.append((material_path.stat().st_mtime, material_path))
-        except OSError:
-            continue
-    material_paths = material_paths[:priority_count] + [
-        material_path for _, material_path in sorted(historical_material_paths, reverse=True)
-    ]
-    sequences = []
-    for material_path in material_paths:
-        try:
-            material = json.loads(material_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            continue
-
-        material_keys = []
-        material_ivs = []
-        key_values = material.get("key_candidates") or ([material["key"]] if material.get("key") else [])
-        iv_values = material.get("iv_candidates") or ([material["iv"]] if material.get("iv") else [])
-        for value in key_values:
-            try:
-                key = bytes.fromhex(value)
-            except (TypeError, ValueError):
-                continue
-            if key not in material_keys:
-                material_keys.append(key)
-        for value in iv_values:
-            try:
-                iv = bytes.fromhex(value)
-            except (TypeError, ValueError):
-                continue
-            if iv not in material_ivs:
-                material_ivs.append(iv)
-        if material_keys and material_ivs:
-            sequences.append((tuple(material_keys), tuple(material_ivs)))
-    sequences.append((API_AES_KEYS, API_AES_IVS))
-    return tuple(sequences)
+    keys, ivs, _, _ = current_observer_material()
+    return ((keys, ivs),)
 
 
 def observed_aes_candidates() -> tuple[tuple[bytes, ...], tuple[bytes, ...]]:
@@ -185,10 +124,26 @@ def observed_aes_candidates() -> tuple[tuple[bytes, ...], tuple[bytes, ...]]:
                 ivs.append(iv)
     return tuple(keys), tuple(ivs)
 SKIN_RESPONSE_MARKER = 0x7B
-SKIN_RESPONSE_KEY = bytes.fromhex("5243d4cb0e4a3fbec976b5bcfe02a2ff")
-SKIN_RESPONSE_IV = bytes.fromhex("65a99b89a634fca3193c5212e5219378")
 SKIN_KEY_WAIT_SECONDS = 3.0
 SKIN_KEY_RETRY_INTERVAL = 0.1
+PROFILE_KEY_WAIT_SECONDS = 3.0
+last_response_material: tuple[bytes, bytes, int] | None = None
+auth_response_count = 0
+
+
+def observer_response_material() -> tuple[bytes, bytes, int]:
+    _, _, key, iv = current_observer_material()
+    return key, iv, SKIN_RESPONSE_MARKER
+
+
+def response_material() -> tuple[bytes, bytes, int]:
+    return last_response_material or observer_response_material()
+
+
+def remember_response_material(material: tuple[bytes, bytes, int]) -> tuple[bytes, bytes, int]:
+    global last_response_material
+    last_response_material = material
+    return material
 @dataclass
 class Record:
     number: int
@@ -211,20 +166,39 @@ class Record:
 def session_directory() -> Path:
     configured = os.environ.get("JAPANESE_CAPTURE_SESSION")
     if configured:
-        return Path(configured)
+        configured_path = Path(configured)
+        if configured_path.is_dir():
+            return configured_path
 
-    root = GAME_DIR / "japanese-capture"
     configured_file = GAME_DIR / "offline-session.txt"
     if configured_file.exists():
         configured_value = configured_file.read_text(encoding="utf-8").strip()
         if configured_value:
             configured_path = Path(configured_value)
-            return configured_path if configured_path.is_absolute() else root / configured_value
+            if configured_path.is_absolute() and configured_path.is_dir():
+                return configured_path
+            if not configured_path.is_absolute():
+                for root in capture_roots():
+                    candidate = root / configured_value
+                    if candidate.is_dir():
+                        return candidate
 
-    sessions = sorted(root.glob("session-*"), key=lambda path: path.stat().st_mtime)
+    sessions = sorted(
+        (
+            session
+            for root in capture_roots()
+            for session in root.glob("session-*")
+            if session.is_dir()
+        ),
+        key=lambda path: path.stat().st_mtime,
+    )
     if not sessions:
-        raise FileNotFoundError(f"no capture sessions found in {root}")
+        return GAME_DIR / "japanese-capture"
     return sessions[-1]
+
+
+def capture_roots() -> list[Path]:
+    return [GAME_DIR / "japanese-capture"]
 
 
 def parse_record(metadata_path: Path) -> Record:
@@ -340,6 +314,136 @@ def decrypt_api_response(data: bytes) -> tuple[int, bytes, bytes, bytes]:
 def encrypt_api_response(marker: int, plaintext: bytes, key: bytes, iv: bytes) -> bytes:
     compressed = gzip.compress(plaintext, mtime=0)
     return bytes([marker]) + aes_encrypt(pkcs7_pad(compressed), key, iv)
+
+
+def default_encrypted_empty_response() -> bytes:
+    response_key, response_iv, response_marker = response_material()
+    return encrypt_api_response(
+        response_marker,
+        b"",
+        response_key,
+        response_iv,
+    )
+
+
+def default_login_bonus_response() -> bytes:
+    response_key, response_iv, response_marker = response_material()
+    login_bonus = b"".join(
+        (
+            write_field(1, 0, 1),
+            write_field(2, 0, 581),
+            write_field(3, 2, write_field(1, 0, 100003)),
+            write_field(4, 0, 5),
+        )
+    )
+    plaintext = b"".join(
+        (
+            write_field(1, 2, login_bonus),
+            write_field(2, 2, b""),
+        )
+    )
+    return encrypt_api_response(
+        response_marker,
+        plaintext,
+        response_key,
+        response_iv,
+    )
+
+
+def default_auth_response(request_body: bytes = b"") -> bytes:
+    global auth_response_count
+    if request_body:
+        try:
+            _, response_key, _, response_marker = remember_response_material(
+                decrypt_request_with_response_material(
+                    request_body,
+                    is_api_message,
+                    "/auth/sign_in",
+                )[1:]
+            )
+            _, _, _, response_iv = current_observer_material()
+            remember_response_material((response_key, response_iv, response_marker))
+        except ValueError:
+            keys, _, primary_key, primary_iv = current_observer_material()
+            primary_index = keys.index(primary_key)
+            response_index = min(primary_index + auth_response_count, len(keys) - 1)
+            auth_response_count += 1
+            response_key, response_iv, response_marker = remember_response_material(
+                (keys[response_index], primary_iv, SKIN_RESPONSE_MARKER)
+            )
+    else:
+        response_key, response_iv, response_marker = response_material()
+    session_token = "00000000-0000-4000-8000-000000000000"
+    player_id = 0
+    override_path = GAME_DIR / "profile-anonymization.json"
+    try:
+        override = json.loads(override_path.read_text(encoding="utf-8"))
+        player_id = int(override.get("player_id", player_id))
+        session_token = str(override.get("session_token", session_token))
+    except (OSError, TypeError, ValueError, KeyError, json.JSONDecodeError):
+        pass
+    plaintext = b"".join(
+        (
+            write_field(1, 2, session_token.encode("utf-8")),
+            write_field(2, 0, 1),
+            write_field(3, 0, player_id),
+            write_field(4, 0, 1),
+        )
+    )
+    return encrypt_api_response(
+        response_marker,
+        plaintext,
+        response_key,
+        response_iv,
+    )
+
+
+def hybrid_auth_response() -> bytes:
+    plaintext = b"".join(
+        (
+            write_field(1, 2, b"00000000-0000-4000-8000-000000000000"),
+            write_field(2, 0, 1),
+            write_field(3, 0, 0),
+            write_field(4, 0, 1),
+        )
+    )
+    return encrypt_api_response(
+        HYBRID_RESPONSE_MARKER,
+        plaintext,
+        HYBRID_AUTH_KEY,
+        HYBRID_AUTH_IV,
+    )
+
+
+def profile_response(
+    profile_path: Path,
+    target_response: bytes | None = None,
+) -> tuple[bytes, bool]:
+    profile = b""
+    deadline = time.monotonic() + PROFILE_KEY_WAIT_SECONDS
+    while True:
+        try:
+            profile = profile_path.read_bytes()
+            profile_plaintext = decrypt_profile_plaintext(profile)
+            response_key, response_iv, marker = response_material()
+            if target_response:
+                try:
+                    marker, _, response_key, response_iv = decrypt_api_response(target_response)
+                    remember_response_material((response_key, response_iv, marker))
+                    return encrypt_api_response(marker, profile_plaintext, response_key, response_iv), True
+                except (RuntimeError, OSError, EOFError, ValueError):
+                    pass
+            return encrypt_api_response(marker, profile_plaintext, response_key, response_iv), True
+        except (OSError, RuntimeError, ValueError, StopIteration) as error:
+            if HYBRID_MODE and target_response:
+                print(f"HYBRID-PROFILE-DECRYPT-FAILED {type(error).__name__}: {error}", file=sys.stderr)
+            if time.monotonic() >= deadline:
+                return profile, False
+            time.sleep(SKIN_KEY_RETRY_INTERVAL)
+
+
+def default_profile_response(profile_path: Path) -> tuple[bytes, bool]:
+    return profile_response(profile_path)
 
 
 def requested_home_icon_id() -> int | None:
@@ -459,7 +563,8 @@ def decrypt_request_with_response_material(
     response_path: str | None = None,
 ) -> tuple[bytes, bytes, bytes, int]:
     if not data:
-        return b"", SKIN_RESPONSE_KEY, SKIN_RESPONSE_IV, SKIN_RESPONSE_MARKER
+        response_key, response_iv, response_marker = response_material()
+        return b"", response_key, response_iv, response_marker
     if len(data) < 17 or (len(data) - 1) % 16:
         raise ValueError("encrypted request has an invalid size")
     for keys, ivs in observed_aes_sequences():
@@ -468,23 +573,20 @@ def decrypt_request_with_response_material(
                 try:
                     plaintext = pkcs7_unpad(aes_decrypt(data[1:], key, iv))
                     if validator(plaintext):
-                        if key_index + 1 < len(keys):
-                            response_key = keys[key_index + 1]
-                        else:
-                            response_key = next(
-                                (
-                                    API_AES_KEYS[index + 1]
-                                    for index, candidate in enumerate(API_AES_KEYS[:-1])
-                                    if candidate == key
-                                ),
-                                SKIN_RESPONSE_KEY,
-                            )
+                        response_key = None
+                        response_iv = iv
                         response_marker = SKIN_RESPONSE_MARKER
-                        if response_path is not None:
+                        if REPLAY_MODE and response_path is not None:
                             captured_material = captured_response_material(response_path, key, iv)
                             if captured_material is not None:
-                                response_key, iv, response_marker = captured_material
-                        return plaintext, response_key, iv, response_marker
+                                response_key, response_iv, response_marker = captured_material
+                        if response_key is None:
+                            if key_index + 1 >= len(keys):
+                                raise ValueError(
+                                    "current offline observer material has no response-key candidate after the request key"
+                                )
+                            response_key = keys[key_index + 1]
+                        return plaintext, response_key, response_iv, response_marker
                 except (RuntimeError, ValueError):
                     continue
     raise ValueError("could not decrypt request")
@@ -562,10 +664,12 @@ def make_changed_resources_response(
     party_members: list[bytes] | None = None,
     equipment_presets: list[bytes] | None = None,
     chara_homes: list[bytes] | None = None,
-    response_key: bytes = SKIN_RESPONSE_KEY,
-    response_iv: bytes = SKIN_RESPONSE_IV,
-    response_marker: int = SKIN_RESPONSE_MARKER,
+    response_key: bytes | None = None,
+    response_iv: bytes | None = None,
+    response_marker: int | None = None,
 ) -> bytes:
+    if response_key is None or response_iv is None or response_marker is None:
+        response_key, response_iv, response_marker = response_material()
     plaintext = make_changed_resources_plaintext(
         profile=profile,
         characters=characters,
@@ -638,7 +742,27 @@ def load_home_profile_state(profile_path: Path) -> tuple[bytes, dict[int, bytes]
 def decrypt_profile_plaintext(data: bytes) -> bytes:
     if len(data) < 17 or (len(data) - 1) % 16:
         raise ValueError("profile has an invalid size")
-    keys, ivs = observed_aes_candidates()
+    key_values: list[bytes] = []
+    iv_values: list[bytes] = []
+    try:
+        observed_keys, observed_ivs = observed_aes_candidates()
+        key_values.extend(observed_keys)
+        iv_values.extend(observed_ivs)
+    except ValueError:
+        pass
+    if HYBRID_MODE:
+        try:
+            root_material = json.loads((GAME_DIR / "aes-material.json").read_text(encoding="utf-8"))
+            key_values.extend(bytes.fromhex(value) for value in root_material.get("key_candidates", []))
+            iv_values.extend(bytes.fromhex(value) for value in root_material.get("iv_candidates", []))
+            if root_material.get("key"):
+                key_values.append(bytes.fromhex(root_material["key"]))
+            if root_material.get("iv"):
+                iv_values.append(bytes.fromhex(root_material["iv"]))
+        except (OSError, TypeError, ValueError, KeyError, json.JSONDecodeError):
+            pass
+    keys = tuple(dict.fromkeys(key_values))
+    ivs = tuple(dict.fromkeys(iv_values))
     for key in keys:
         for iv in ivs:
             try:
@@ -822,6 +946,13 @@ def is_equipment_preset_request(data: bytes) -> bool:
     ) and any(number == 1 for number, _, _ in fields)
 
 
+def is_api_message(data: bytes) -> bool:
+    try:
+        return bool(read_wire_fields(data))
+    except ValueError:
+        return False
+
+
 def read_varints(data: bytes) -> list[int]:
     values = []
     offset = 0
@@ -842,11 +973,19 @@ def captured_response_material(
     request_key: bytes | None = None,
     request_iv: bytes | None = None,
 ) -> tuple[bytes, bytes, int] | None:
+    if not REPLAY_MODE:
+        return None
+
     global _CAPTURED_RESPONSE_MATERIALS
     if _CAPTURED_RESPONSE_MATERIALS is None:
         exact_materials: dict[tuple[str, bytes, bytes], tuple[bytes, bytes, int]] = {}
         default_materials: dict[str, tuple[bytes, bytes, int]] = {}
         validators = {
+            "/auth/sign_in": is_api_message,
+            "/user/log_in": is_api_message,
+            "/login_bonus/receive": is_api_message,
+            "/external_purchase/receive": is_api_message,
+            "/web_session/token": is_api_message,
             "/character/skin_set": is_skin_request_plaintext,
             "/chara_home/register": is_home_register_request,
             "/profile/update_chara_home_favorite_character_list": is_favorite_request,
@@ -862,7 +1001,12 @@ def captured_response_material(
         keys, ivs = observed_aes_candidates()
         sequences = observed_aes_sequences()
         sessions = sorted(
-            (path for path in (GAME_DIR / "japanese-capture").glob("session-*") if path.is_dir()),
+            (
+                session
+                for root in capture_roots()
+                for session in root.glob("session-*")
+                if session.is_dir()
+            ),
             key=lambda path: path.stat().st_mtime,
             reverse=True,
         )
@@ -889,10 +1033,11 @@ def captured_response_material(
                     if response_key is not None:
                         break
                 if response_key is None or not record.request_body:
-                    default_materials.setdefault(
-                        record.path,
-                        (response_key or SKIN_RESPONSE_KEY, response_iv or SKIN_RESPONSE_IV, response_marker),
-                    )
+                    if response_key is not None and response_iv is not None:
+                        default_materials.setdefault(
+                            record.path,
+                            (response_key, response_iv, response_marker),
+                        )
                     continue
 
                 request_material = None
@@ -1025,10 +1170,12 @@ def make_skin_response(
     character_records: dict[int, bytes],
     character_id: int,
     skin_id: int | None,
-    response_key: bytes = SKIN_RESPONSE_KEY,
-    response_iv: bytes = SKIN_RESPONSE_IV,
-    response_marker: int = SKIN_RESPONSE_MARKER,
+    response_key: bytes | None = None,
+    response_iv: bytes | None = None,
+    response_marker: int | None = None,
 ) -> bytes:
+    if response_key is None or response_iv is None or response_marker is None:
+        response_key, response_iv, response_marker = response_material()
     changed_characters = [
         character_with_skin(character_records.get(character_id), character_id, skin_id)
     ]
@@ -1250,8 +1397,15 @@ class Replay:
         self.exploration_fallback_template: tuple[bytes, bytes] | None = None
         self.expedition_special_reward_ids = expedition_special_reward_ids()
         self.expedition_special_reward_index = 0
+        self.default_login_attempts = 0
+        self.hybrid_logged_in = False
         self.log_path = GAME_DIR / "offline-replay.log"
-        self.log(f"loaded session={self.session} records={len(self.records)}")
+        self.log(
+            f"loaded session={self.session} records={len(self.records)} "
+            f"capture_fallback={not bool(self.records)} mode={'replay' if REPLAY_MODE else 'generated'}"
+        )
+        if not self.records:
+            self.log("CAPTURE-SESSION-MISSING using profile/default offline responses")
 
     def log(self, message: str) -> None:
         with self.log_path.open("a", encoding="utf-8") as handle:
@@ -1549,9 +1703,13 @@ class Replay:
         if cache_key in self.exploration_templates:
             return self.exploration_templates[cache_key]
 
-        capture_root = GAME_DIR / "japanese-capture"
         sessions = sorted(
-            (path for path in capture_root.glob("session-*") if path.is_dir()),
+            (
+                session
+                for root in capture_roots()
+                for session in root.glob("session-*")
+                if session.is_dir()
+            ),
             key=lambda path: path.stat().st_mtime,
             reverse=True,
         )
@@ -1691,9 +1849,7 @@ class Replay:
         self.ensure_home_state()
         path = urlsplit(flow.request.pretty_url).path
         request_body = flow.request.raw_content or b""
-        response_key = SKIN_RESPONSE_KEY
-        response_iv = SKIN_RESPONSE_IV
-        response_marker = SKIN_RESPONSE_MARKER
+        response_key, response_iv, response_marker = response_material()
 
         if path == "/chara_home/register":
             plaintext, response_key, response_iv, response_marker = decrypt_request_with_response_material(
@@ -1800,9 +1956,7 @@ class Replay:
                     "selection=default cleared_profile_fields=10,11"
                 )
             if not request_body:
-                captured_material = captured_response_material(path)
-                if captured_material is not None:
-                    response_key, response_iv, response_marker = captured_material
+                response_key, response_iv, response_marker = response_material()
             return make_changed_resources_response(
                 profile=self.home_profile,
                 response_key=response_key,
@@ -1838,9 +1992,141 @@ class Replay:
             self.log(f"AUTH-ID-OVERRIDE-FAILED reason={type(error).__name__}:{error}")
             return response_body
 
+    def default_response(self, flow: http.HTTPFlow) -> bool:
+        path = urlsplit(flow.request.pretty_url).path
+        timestamp = str(int(time.time()))
+        if path == "/status":
+            flow.response = http.Response.make(
+                200,
+                b'{"terms_of_service_version":"2026_08_27","gdpr_privacy_policy_version":"","title":{"timeline_asset_path_hash":"4783682884224829538","id":2,"bgm_path_hash":"7852695906499225647"},"device_auth":"enabled"}\n',
+                {"Content-Type": "application/json; charset=utf-8"},
+            )
+            self.log("DEFAULT path=/status status=200")
+            return True
+        if path == "/refund_info/get_country_code":
+            flow.response = http.Response.make(
+                200,
+                b"",
+                {"Content-Type": "application/octet-stream", "x-server-timestamp": timestamp},
+            )
+            self.log("DEFAULT path=/refund_info/get_country_code status=200")
+            return True
+        if path == "/auth/sign_in":
+            flow.response = http.Response.make(
+                200,
+                default_auth_response(flow.request.raw_content or b""),
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": timestamp,
+                },
+            )
+            self.log("DEFAULT path=/auth/sign_in status=200")
+            return True
+        if path == "/user/log_in":
+            profile_path = GAME_DIR / "profile.bin"
+            if not profile_path.is_file():
+                return False
+            asset_version = flow.request.headers.get("x-asset-version", "").strip()
+            master_data_version = flow.request.headers.get("x-master-data-version", "").strip()
+            self.default_login_attempts += 1
+            if self.default_login_attempts == 1 or not asset_version:
+                response_body = json.dumps(
+                    {
+                        "code": "requires_assets_updates",
+                        "master_data_version": master_data_version or DEFAULT_MASTER_DATA_VERSION,
+                        "asset_version": DEFAULT_ASSET_VERSION,
+                    },
+                    separators=(",", ":"),
+                ).encode("utf-8") + b"\n"
+                flow.response = http.Response.make(
+                    409,
+                    response_body,
+                    {"Content-Type": "application/json; charset=utf-8"},
+                )
+                self.log("DEFAULT path=/user/log_in status=409 code=requires_assets_updates")
+                return True
+            response_body, reencrypted = default_profile_response(profile_path)
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": timestamp,
+                },
+            )
+            self.log(
+                f"DEFAULT PROFILE path={profile_path} bytes={len(response_body)} "
+                f"reencrypted={reencrypted}"
+            )
+            return True
+        if path in {
+            "/login_bonus/receive",
+            "/external_purchase/receive",
+            "/web_session/token",
+            EXPEDITION_REWARD_PATH,
+        }:
+            response_body = (
+                default_login_bonus_response()
+                if path == "/login_bonus/receive"
+                else default_encrypted_empty_response()
+            )
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": timestamp,
+                },
+            )
+            self.log(f"DEFAULT path={path} status=200")
+            return True
+        return False
+
+    def recorded_response(self, flow: http.HTTPFlow, record: Record) -> None:
+        response_body = record.response_body
+        if record.path == "/auth/sign_in" and record.status == 200 and not HYBRID_MODE:
+            response_body = self.auth_response(response_body)
+        if record.path == "/user/log_in" and record.status == 200:
+            profile_path = GAME_DIR / "profile.bin"
+            if profile_path.exists():
+                response_body = profile_path.read_bytes()
+                self.log(f"PROFILE path={profile_path} bytes={len(response_body)} direct=True")
+        is_json = response_body.startswith((b"{", b"["))
+        headers = {
+            "Content-Type": "application/json; charset=utf-8"
+            if is_json
+            else "application/octet-stream",
+            "x-server-timestamp": str(int(time.time())),
+        }
+        if not is_json and record.path != "/external_purchase/receive":
+            headers["X-Content-Encoding"] = "gzip"
+        flow.response = http.Response.make(record.status, response_body, headers)
+
     def respond(self, flow: http.HTTPFlow) -> None:
         path = urlsplit(flow.request.pretty_url).path
         method = flow.request.method.upper()
+        if HYBRID_MODE and method == "POST" and path == "/auth/sign_in":
+            self.hybrid_logged_in = False
+        if REPLAY_MODE:
+            record = self.choose(flow)
+            if record is not None:
+                self.recorded_response(flow, record)
+                return
+        if HYBRID_MODE and (
+            not self.hybrid_logged_in
+            or path in {"/status", "/refund_info/get_country_code", "/auth/sign_in"}
+            or path in HYBRID_INIT_PATHS
+        ) and path in HYBRID_HANDSHAKE_PATHS | HYBRID_INIT_PATHS:
+            record = self.choose(flow)
+            if record is not None:
+                self.recorded_response(flow, record)
+                if path == "/user/log_in" and record.status == 200:
+                    self.hybrid_logged_in = True
+                    self.log("HYBRID login handshake complete; switching to generated responses")
+                return
         if method == "POST" and path == "/recipe/learn":
             self.log(f"LOCAL host={flow.request.host} method={method} path={path} status=200 body={len(flow.request.raw_content or b'')}")
             flow.response = http.Response.make(
@@ -1941,7 +2227,7 @@ class Replay:
                 },
             )
             return
-        if method == "POST" and path == EXPEDITION_REWARD_PATH:
+        if REPLAY_MODE and method == "POST" and path == EXPEDITION_REWARD_PATH:
             record = self.choose(flow)
             if record is None:
                 flow.response = http.Response.make(
@@ -1991,6 +2277,17 @@ class Replay:
             )
             return
 
+        if not REPLAY_MODE:
+            if self.default_response(flow):
+                return
+            self.log(f"GENERATED-MISS host={flow.request.host} method={method} path={path}")
+            flow.response = http.Response.make(
+                503,
+                b"",
+                {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+            )
+            return
+
         record = self.choose(flow)
         if record is None:
             flow.response = http.Response.make(
@@ -1999,25 +2296,7 @@ class Replay:
                 {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
             )
             return
-
-        response_body = record.response_body
-        if record.path == "/auth/sign_in" and record.status == 200:
-            response_body = self.auth_response(response_body)
-        if record.path == "/user/log_in" and record.status == 200:
-            profile_path = GAME_DIR / "profile.bin"
-            if profile_path.exists():
-                response_body = profile_path.read_bytes()
-                self.log(f"PROFILE path={profile_path} bytes={len(response_body)}")
-        is_json = response_body.startswith((b"{", b"["))
-        headers = {
-            "Content-Type": "application/json; charset=utf-8"
-            if is_json
-            else "application/octet-stream",
-            "x-server-timestamp": str(int(time.time())),
-        }
-        if not is_json and record.path != "/external_purchase/receive":
-            headers["X-Content-Encoding"] = "gzip"
-        flow.response = http.Response.make(record.status, response_body, headers)
+        self.recorded_response(flow, record)
 
 
 replay = Replay()
@@ -2027,6 +2306,28 @@ def request(flow: http.HTTPFlow):
     original_host = flow.request.headers.get("x-offline-original-host", flow.request.host).lower()
     if original_host == "game.resleriana.jp":
         replay.respond(flow)
+    elif original_host == "cdn.resleriana.jp" and urlsplit(flow.request.pretty_url).path.startswith("/master_data/"):
+        master_data_version = urlsplit(flow.request.pretty_url).path.removeprefix("/master_data/").strip("/")
+        if master_data_version == "(empty)":
+            filename = LOCAL_EMPTY_TOKEN_MASTER_DATA_NAME
+        elif master_data_version:
+            filename = LOCAL_ENCRYPTED_MASTER_DATA_NAME
+        else:
+            filename = LOCAL_EMPTY_VERSION_MASTER_DATA_NAME
+        master_data_path = GAME_DIR / filename
+        if master_data_path.is_file():
+            replay.log(
+                f"MASTER-DATA {flow.request.pretty_url} version={master_data_version or '(empty)'} "
+                + f"source={master_data_path}"
+            )
+            flow.response = http.Response.make(
+                200,
+                master_data_path.read_bytes(),
+                {"Content-Type": "application/octet-stream"},
+            )
+        else:
+            replay.log(f"MASTER-DATA-MISSING {master_data_path}")
+            flow.response = http.Response.make(503, b"", {"Content-Type": "application/octet-stream"})
     elif flow.request.pretty_url.lower().split("?", 1)[0].endswith("/manifest.json"):
         manifest = GAME_DIR / "AtelierResleriana_Data" / "ABCache" / "manifest.json"
         replay.log(f"MANIFEST {flow.request.pretty_url}")
