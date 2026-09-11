@@ -28,14 +28,14 @@ Apply targeted edits to a new encrypted profile:
 python profile_editor.py edit "path\to\profile.bin" "path\to\profile-edited.bin" --set resources.wallet.<field>=123
 ```
 
-When the profile path is omitted, the editor uses `profile.bin` in the detected Japanese game root. Set `JAPANESE_GAME_DIR` to select a specific game root. When `aes-material.json` is beside the selected profile, it is loaded automatically; profiles captured in another session can use the observer's material with `--key-file`, or explicit `--key` and `--iv` values.
+When the profile path is omitted, the editor uses `profile.bin` in the detected Japanese game root. Set `JAPANESE_GAME_DIR` to select a specific game root. The editor selects the Japanese AES key from the profile's first-byte marker and uses the fixed Japanese IV; no `aes-material.json` is required.
 
 The input profile is never overwritten by the `edit` command.
 
 To anonymize the profile display name and the offline replay's player ID, supply both identity options to `edit` or `complete-collection`:
 
 ```text
-python profile_editor.py edit "path\to\profile.bin" --in-place --player-name "Offline Player" --player-id 900000000001 --key-file "path\to\aes-material.json"
+python profile_editor.py edit "path\to\profile.bin" --in-place --player-name "Offline Player" --player-id 900000000001
 ```
 
 `--player-name` changes `resources.profile.name` inside `profile.bin`. The player ID is not stored in `profile.bin`; `--player-id` writes `profile-anonymization.json` beside the input profile, and the offline replay patches the captured `/auth/sign_in` response from that sidecar. The sidecar also replaces the captured session token with a synthetic offline token. Apostrophes are preserved in the sidecar text. The protocol carries `user_id` as an integer, so a zero-padded ID is transmitted as numeric zero even though the requested display text is retained in the sidecar. Use `--anonymization-file` when the sidecar should be written elsewhere. The active profile is not changed until these values are supplied.
@@ -56,7 +56,7 @@ To unlock historical event stories and their post-battle chapters from the check
 
 ```text
 python generate_event_state.py --output historical-event-state.json
-python profile_editor.py edit "path\to\profile.bin" --in-place --state-file historical-event-state.json --key-file "path\to\aes-material.json"
+python profile_editor.py edit "path\to\profile.bin" --in-place --state-file historical-event-state.json
 ```
 
 The default manifest leaves `revived_events` unchanged because those entries represent completed revival state. Use `--include-revived-events` only when that behavior is intentional.
@@ -64,7 +64,7 @@ The default manifest leaves `revived_events` unchanged because those entries rep
 To unlock and maximize every character and Memoria, complete every Bond chapter and Character Story, add every Japanese recipe, every Japanese character skin/costume, every home background, every receivable photo background, every receivable pose/expression motion, every mod-timeline state, and historical event quest state, write a new profile:
 
 ```text
-python profile_editor.py complete-collection "path\to\profile.bin" "path\to\profile-complete.bin" --key-file "path\to\aes-material.json"
+python profile_editor.py complete-collection "path\to\profile.bin" "path\to\profile-complete.bin"
 ```
 
 For the default game-root profile and key, the equivalent in-place command is:
@@ -83,4 +83,4 @@ The changeable home records cover the Home Background Selection categories such 
 
 The `mod_timeline_states` records are the profile-side unlock state for photo-mode scenes such as "In Front of Friends". Adding them does not deduct wallet currency; the purchase cost in master data is a storefront condition used when the state is absent.
 
-For an offline run, the native observer writes `aes-material.json` into the newest `japanese-capture/native-observer-*` directory and creates the root pair only when it is absent. The editor prefers the newest native-observer material when no key path is supplied, then falls back to the root pair. Online `session-*` material is not used implicitly.
+The editor uses the built-in Japanese 256-key table and fixed IV. Native observer output and online `session-*` material are not needed for normal profile inspection or editing.
