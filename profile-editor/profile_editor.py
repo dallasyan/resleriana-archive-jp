@@ -25,6 +25,23 @@ DEFAULT_IV = bytes.fromhex("65a99b89a634fca3193c5212e5219378")
 # Profiles produced by the editor can be shared without the source user's AES material.
 SHARE_PROFILE_KEY = bytes.fromhex("5243d4cb0e4a3fbec976b5bcfe02a2ff")
 SHARE_PROFILE_IV = bytes.fromhex("65a99b89a634fca3193c5212e5219378")
+JAPANESE_AES_IV = SHARE_PROFILE_IV
+
+
+def rotate_key(key: bytes, count: int) -> bytes:
+    value = int.from_bytes(key, "big")
+    value = ((value << count) & ((1 << 128) - 1)) | (value >> (128 - count))
+    return value.to_bytes(16, "big")
+
+
+JAPANESE_AES_KEYS = tuple(
+    rotate_key(seed, rotation)
+    for seed in (
+        bytes.fromhex("487a9961c947f7d92ed6b79fc0545fea"),
+        bytes.fromhex("ea5f54c09fb7d62ed9f747c961997a48"),
+    )
+    for rotation in range(128)
+)
 TOP_LEVEL_MESSAGE = "blend.api.UserLogInResponse"
 DEFAULT_ANONYMIZED_SESSION_TOKEN = "00000000-0000-4000-8000-000000000000"
 MAX_CHARACTER_LEVEL = 100
@@ -140,6 +157,12 @@ def decrypt_profile(data: bytes, key: bytes, iv: bytes) -> tuple[bytes, int]:
 
 
 def decrypt_with_candidates(data: bytes, keys: list[bytes], ivs: list[bytes]):
+    marker = data[0] if data else -1
+    if 0 <= marker < len(JAPANESE_AES_KEYS):
+        try:
+            return (*decrypt_profile(data, JAPANESE_AES_KEYS[marker], JAPANESE_AES_IV), JAPANESE_AES_KEYS[marker], JAPANESE_AES_IV)
+        except ValueError:
+            pass
     last_error = None
     for key in keys:
         for iv in ivs:
@@ -153,7 +176,8 @@ def decrypt_with_candidates(data: bytes, keys: list[bytes], ivs: list[bytes]):
 
 def encrypt_profile(protobuf_data: bytes, key: bytes, iv: bytes, marker: int) -> bytes:
     compressed = gzip.compress(protobuf_data, mtime=0)
-    ciphertext = AES.new(key, AES.MODE_CBC, iv).encrypt(pkcs7_pad(compressed))
+    response_key = JAPANESE_AES_KEYS[marker]
+    ciphertext = AES.new(response_key, AES.MODE_CBC, JAPANESE_AES_IV).encrypt(pkcs7_pad(compressed))
     return bytes([marker]) + ciphertext
 
 

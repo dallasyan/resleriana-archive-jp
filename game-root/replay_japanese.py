@@ -374,15 +374,12 @@ def default_auth_response(request_body: bytes = b"") -> bytes:
                     "/auth/sign_in",
                 )[1:]
             )
-            _, _, _, response_iv = current_observer_material()
-            remember_response_material((response_key, response_iv, response_marker))
+            remember_response_material((response_key, JAPANESE_AES_IV, response_marker))
         except ValueError:
-            keys, _, primary_key, primary_iv = current_observer_material()
-            primary_index = keys.index(primary_key)
-            response_index = min(primary_index + auth_response_count, len(keys) - 1)
+            response_index = (request_body[0] + 1) & 0xFF
             auth_response_count += 1
             response_key, response_iv, response_marker = remember_response_material(
-                (keys[response_index], primary_iv, SKIN_RESPONSE_MARKER)
+                (JAPANESE_AES_KEYS[response_index], JAPANESE_AES_IV, response_index)
             )
     else:
         response_key, response_iv, response_marker = response_material()
@@ -749,35 +746,14 @@ def load_home_profile_state(profile_path: Path) -> tuple[bytes, dict[int, bytes]
 def decrypt_profile_plaintext(data: bytes) -> bytes:
     if len(data) < 17 or (len(data) - 1) % 16:
         raise ValueError("profile has an invalid size")
-    key_values: list[bytes] = []
-    iv_values: list[bytes] = []
+    marker = data[0]
+    if marker >= len(JAPANESE_AES_KEYS):
+        raise ValueError("profile has an invalid AES marker")
     try:
-        observed_keys, observed_ivs = observed_aes_candidates()
-        key_values.extend(observed_keys)
-        iv_values.extend(observed_ivs)
-    except ValueError:
-        pass
-    if HYBRID_MODE:
-        try:
-            root_material = json.loads((GAME_DIR / "aes-material.json").read_text(encoding="utf-8"))
-            key_values.extend(bytes.fromhex(value) for value in root_material.get("key_candidates", []))
-            iv_values.extend(bytes.fromhex(value) for value in root_material.get("iv_candidates", []))
-            if root_material.get("key"):
-                key_values.append(bytes.fromhex(root_material["key"]))
-            if root_material.get("iv"):
-                iv_values.append(bytes.fromhex(root_material["iv"]))
-        except (OSError, TypeError, ValueError, KeyError, json.JSONDecodeError):
-            pass
-    keys = tuple(dict.fromkeys(key_values))
-    ivs = tuple(dict.fromkeys(iv_values))
-    for key in keys:
-        for iv in ivs:
-            try:
-                compressed = pkcs7_unpad(aes_decrypt(data[1:], key, iv))
-                return gzip.decompress(compressed)
-            except (RuntimeError, OSError, EOFError, ValueError):
-                continue
-    raise ValueError("could not decrypt profile")
+        compressed = pkcs7_unpad(aes_decrypt(data[1:], JAPANESE_AES_KEYS[marker], JAPANESE_AES_IV))
+        return gzip.decompress(compressed)
+    except (RuntimeError, OSError, EOFError, ValueError) as error:
+        raise ValueError("could not decrypt profile") from error
 
 
 def decode_skin_request(data: bytes) -> tuple[int, int | None, bytes, bytes, int]:
