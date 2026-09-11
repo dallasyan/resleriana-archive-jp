@@ -44,6 +44,23 @@ HYBRID_AUTH_KEY = bytes.fromhex("243d4cb0e4a3fbec976b5bcfe02a2ff5")
 HYBRID_AUTH_IV = bytes.fromhex("65a99b89a634fca3193c5212e5219378")
 HYBRID_RESPONSE_MARKER = 0x7B
 HYBRID_PROFILE_MARKER = 0x13
+JAPANESE_AES_IV = bytes.fromhex("65a99b89a634fca3193c5212e5219378")
+
+
+def rotate_key(key: bytes, count: int) -> bytes:
+    value = int.from_bytes(key, "big")
+    value = ((value << count) & ((1 << 128) - 1)) | (value >> (128 - count))
+    return value.to_bytes(16, "big")
+
+
+JAPANESE_AES_KEYS = tuple(
+    rotate_key(seed, rotation)
+    for seed in (
+        bytes.fromhex("487a9961c947f7d92ed6b79fc0545fea"),
+        bytes.fromhex("ea5f54c09fb7d62ed9f747c961997a48"),
+    )
+    for rotation in range(128)
+)
 DEFAULT_ASSET_VERSION = "1787706536_QVzMLXDQ2KLO9bgR"
 DEFAULT_MASTER_DATA_VERSION = "1787730744__RjK13fBy4f67c4c"
 LOCAL_ENCRYPTED_MASTER_DATA_NAME = "japanese-masterdata-encrypted.bytes"
@@ -108,8 +125,7 @@ def current_observer_material() -> tuple[tuple[bytes, ...], tuple[bytes, ...], b
 
 
 def observed_aes_sequences() -> tuple[tuple[tuple[bytes, ...], tuple[bytes, ...]], ...]:
-    keys, ivs, _, _ = current_observer_material()
-    return ((keys, ivs),)
+    return ((JAPANESE_AES_KEYS, (JAPANESE_AES_IV,)),)
 
 
 def observed_aes_candidates() -> tuple[tuple[bytes, ...], tuple[bytes, ...]]:
@@ -132,8 +148,7 @@ auth_response_count = 0
 
 
 def observer_response_material() -> tuple[bytes, bytes, int]:
-    _, _, key, iv = current_observer_material()
-    return key, iv, SKIN_RESPONSE_MARKER
+    return JAPANESE_AES_KEYS[SKIN_RESPONSE_MARKER], JAPANESE_AES_IV, SKIN_RESPONSE_MARKER
 
 
 def response_material() -> tuple[bytes, bytes, int]:
@@ -298,17 +313,15 @@ def write_field(field_number: int, wire_type: int, value: object) -> bytes:
 def decrypt_api_response(data: bytes) -> tuple[int, bytes, bytes, bytes]:
     if len(data) < 17 or (len(data) - 1) % 16:
         raise ValueError("encrypted API response has an invalid size")
-    keys, ivs = observed_aes_candidates()
-    for key in keys:
-        for iv in ivs:
-            try:
-                compressed = pkcs7_unpad(aes_decrypt(data[1:], key, iv))
-                plaintext = gzip.decompress(compressed)
-                read_wire_fields(plaintext)
-                return data[0], plaintext, key, iv
-            except (RuntimeError, OSError, EOFError, ValueError):
-                continue
-    raise ValueError("could not decrypt API response")
+    key = JAPANESE_AES_KEYS[data[0]]
+    iv = JAPANESE_AES_IV
+    try:
+        compressed = pkcs7_unpad(aes_decrypt(data[1:], key, iv))
+        plaintext = gzip.decompress(compressed)
+        read_wire_fields(plaintext)
+        return data[0], plaintext, key, iv
+    except (RuntimeError, OSError, EOFError, ValueError) as error:
+        raise ValueError("could not decrypt API response") from error
 
 
 def encrypt_api_response(marker: int, plaintext: bytes, key: bytes, iv: bytes) -> bytes:
@@ -567,29 +580,23 @@ def decrypt_request_with_response_material(
         return b"", response_key, response_iv, response_marker
     if len(data) < 17 or (len(data) - 1) % 16:
         raise ValueError("encrypted request has an invalid size")
-    for keys, ivs in observed_aes_sequences():
-        for key_index, key in enumerate(keys):
-            for iv in ivs:
-                try:
-                    plaintext = pkcs7_unpad(aes_decrypt(data[1:], key, iv))
-                    if validator(plaintext):
-                        response_key = None
-                        response_iv = iv
-                        response_marker = SKIN_RESPONSE_MARKER
-                        if REPLAY_MODE and response_path is not None:
-                            captured_material = captured_response_material(response_path, key, iv)
-                            if captured_material is not None:
-                                response_key, response_iv, response_marker = captured_material
-                        if response_key is None:
-                            if key_index + 1 >= len(keys):
-                                raise ValueError(
-                                    "current offline observer material has no response-key candidate after the request key"
-                                )
-                            response_key = keys[key_index + 1]
-                        return plaintext, response_key, response_iv, response_marker
-                except (RuntimeError, ValueError):
-                    continue
-    raise ValueError("could not decrypt request")
+    marker = data[0]
+    key = JAPANESE_AES_KEYS[marker]
+    iv = JAPANESE_AES_IV
+    try:
+        plaintext = pkcs7_unpad(aes_decrypt(data[1:], key, iv))
+        if not validator(plaintext):
+            raise ValueError("request plaintext failed validation")
+        response_key = JAPANESE_AES_KEYS[(marker + 1) & 0xFF]
+        response_marker = (marker + 1) & 0xFF
+        if REPLAY_MODE and response_path is not None:
+            captured_material = captured_response_material(response_path, key, iv)
+            if captured_material is not None:
+                response_key, response_iv, response_marker = captured_material
+                return plaintext, response_key, response_iv, response_marker
+        return plaintext, response_key, iv, response_marker
+    except (RuntimeError, ValueError) as error:
+        raise ValueError("could not decrypt request") from error
 
 
 def decrypt_direct_candidates(data: bytes) -> tuple[bytes, bytes, bytes, int]:
