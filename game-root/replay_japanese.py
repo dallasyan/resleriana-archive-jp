@@ -1178,6 +1178,44 @@ def make_skin_response(
     )
 
 
+def make_illustrated_book_response(profile_path: Path, request_body: bytes) -> bytes:
+    _, response_key, response_iv, response_marker = decrypt_request_with_response_material(
+        request_body,
+        is_api_message,
+        "/illustrated_book/start",
+    )
+    profile_plaintext = decrypt_profile_plaintext(profile_path.read_bytes())
+    resources = next(
+        bytes(value)
+        for number, wire, value in read_wire_fields(profile_plaintext)
+        if number == 1 and wire == 2
+    )
+    memoria_ids = []
+    for number, wire, value in read_wire_fields(resources):
+        if number != 29 or wire != 2:
+            continue
+        memoria_id = next(
+            int(inner_value)
+            for inner_number, inner_wire, inner_value in read_wire_fields(bytes(value))
+            if inner_number == 2 and inner_wire == 0
+        )
+        memoria_ids.append(memoria_id)
+    memoria_values = b"".join(
+        write_varint(memoria_id) for memoria_id in dict.fromkeys(memoria_ids)
+    )
+    treasure_values = b"".join(
+        write_varint(reward_id) for reward_id in DEFAULT_EXPEDITION_SPECIAL_REWARD_IDS
+    )
+    plaintext = b"".join(
+        (
+            write_field(1, 2, b""),
+            write_field(3, 2, memoria_values),
+            write_field(4, 2, treasure_values),
+        )
+    )
+    return encrypt_api_response(response_marker, plaintext, response_key, response_iv)
+
+
 def message_field(data: bytes, field_number: int) -> bytes | None:
     return next(
         (
@@ -2110,6 +2148,30 @@ class Replay:
                     self.hybrid_logged_in = True
                     self.log("HYBRID login handshake complete; switching to generated responses")
                 return
+        if method == "POST" and path == "/illustrated_book/start":
+            try:
+                response_body = make_illustrated_book_response(
+                    GAME_DIR / "profile.bin",
+                    flow.request.raw_content or b"",
+                )
+                flow.response = http.Response.make(
+                    200,
+                    response_body,
+                    {
+                        "Content-Type": "application/octet-stream",
+                        "X-Content-Encoding": "gzip",
+                        "x-server-timestamp": str(int(time.time())),
+                    },
+                )
+                self.log(f"LOCAL-ILLUSTRATED-BOOK path={path} status=200")
+            except (OSError, RuntimeError, ValueError, StopIteration) as error:
+                self.log(f"ILLUSTRATED-BOOK-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream"},
+                )
+            return
         if method == "POST" and path == "/recipe/learn":
             self.log(f"LOCAL host={flow.request.host} method={method} path={path} status=200 body={len(flow.request.raw_content or b'')}")
             flow.response = http.Response.make(

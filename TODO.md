@@ -1,5 +1,5 @@
 - Be able to exit dungeon without returning to main menu
 - Enter battles so people can view their characters
-- Synthesis cutscenes
+- Synthesis to view cutscenes
 - Gacha to view cutscenes
 - Costume synthesis???
