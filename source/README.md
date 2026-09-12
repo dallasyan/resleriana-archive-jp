@@ -2,6 +2,8 @@
 
 This directory contains the source code for the custom components shipped in the parent shareable toolkit. The runtime data used by the compiled profile editor remains in the sibling `profile-editor` directory, and the compiled runtime files remain in `game-root` and `BepInEx/plugins`.
 
+Use [`BUILDING.md`](BUILDING.md) for the verified build, data-bundling, synchronization, and archive commands. Do not substitute `dotnet build` for the Python or PyInstaller commands.
+
 ## Layout
 
 ```text
@@ -43,53 +45,18 @@ The editor selects the Japanese AES key from the profile marker and preserves th
 
 `JapaneseOfflineEvents.Plugin` includes the offline `ExpeditionTimelineGroup` selector patch. Its three timeline keys are derived from the Japanese `ExpeditionTimelineGroup.json` TextAsset and are rotated in memory during special-reward presentation.
 
-The three C# projects are BepInEx plugins:
+The C# projects are BepInEx plugins:
 
 ```text
 tools/JapaneseOffline/ForceProxy/ForceProxy.csproj
 tools/JapaneseOffline/Events/JapaneseOfflineEvents.csproj
 tools/JapaneseProfileCapture/JapaneseProfileCapture.csproj
+tools/JapaneseOffline/ClientRequestDiagnostics/ClientRequestDiagnostics.csproj
 ```
 
-## Rebuild BepInEx Plugins
+## Rebuild Components
 
-Use a .NET 6 SDK and set `JapaneseRoot` to the installed Japanese game directory:
-
-```powershell
-dotnet build "source\tools\JapaneseProfileCapture\JapaneseProfileCapture.csproj" -c Release /p:JapaneseRoot="<game-root>"
-dotnet build "source\tools\JapaneseOffline\ForceProxy\ForceProxy.csproj" -c Release /p:JapaneseRoot="<game-root>"
-dotnet build "source\tools\JapaneseOffline\Events\JapaneseOfflineEvents.csproj" -c Release /p:JapaneseRoot="<game-root>"
-```
-
-Copy the resulting DLLs into the parent package's `BepInEx/plugins` directory or directly into the game's `BepInEx/plugins` directory.
-
-## Rebuild ProfileEditor.exe
-
-The normal package does not require Python. Rebuilding the executable requires Python, `pycryptodome`, `protobuf`, and PyInstaller:
-
-```powershell
-python -m pip install -r "source\tools\JapaneseProfileEditor\requirements.txt"
-python -m pip install pyinstaller
-python -m PyInstaller --noconfirm --clean --onefile --console --name ProfileEditor `
-  --add-data "profile-editor\profile-descriptors.pb;." `
-  --add-data "profile-editor\historical-event-state.json;." `
-  --add-data "profile-editor\master;master" `
-  "source\tools\JapaneseProfileEditor\profile_editor.py"
-```
-
-Copy the resulting `ProfileEditor.exe` beside `AtelierResleriana.exe`.
-
-## Rebuild JapaneseCaptureObserver.exe
-
-The observer executable was built with Frida `16.7.19` and PyInstaller:
-
-```powershell
-python -m pip install frida==16.7.19 pyinstaller
-python -m PyInstaller --noconfirm --clean --onefile --console --name JapaneseCaptureObserver `
-  "source\tools\frida_capture_japanese.py"
-```
-
-Copy the resulting `JapaneseCaptureObserver.exe` beside `AtelierResleriana.exe`.
+See [`BUILDING.md`](BUILDING.md) for the exact verified commands. It covers all four BepInEx plugins, the required PyInstaller data files for `ProfileEditor.exe`, the optional observer, runtime synchronization, and `share.zip` creation.
 
 ## External Components
 

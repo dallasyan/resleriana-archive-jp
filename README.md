@@ -25,6 +25,8 @@ Party editing is locally synthesized for `/party/bulk_update`, `/party/battle_to
 
 The `source` directory contains the source code for the custom scripts, compiled editor, observer, and BepInEx plugins. It also includes rebuild instructions. Third-party binaries such as `mitmdump.exe` and BepInEx/Unity libraries are not included as source.
 
+For verified compilation and packaging commands, see `source\BUILDING.md`. The instructions include the required PyInstaller data files for `ProfileEditor.exe`.
+
 ## Optional Online Capture
 
 `JapaneseProfileCapture.dll` watches successful Japanese login responses. It always saves a session copy under `japanese-capture/session-*`. If the game-root `profile.bin` does not exist, the first successful online login creates it from that session copy. An existing root profile is never overwritten.
