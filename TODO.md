@@ -2,4 +2,5 @@
 - Enter battles so people can view their characters
 - Synthesis to view cutscenes
 - Gacha to view cutscenes
+- Reset story progress to before specific battles to view pre-battle cutscenes
 - Costume synthesis???
