@@ -27,6 +27,23 @@ The `source` directory contains the source code for the custom scripts, compiled
 
 For verified compilation and packaging commands, see `source\BUILDING.md`. The instructions include the required PyInstaller data files for `ProfileEditor.exe`.
 
+## How you can help
+1. Install this package and play the game normally online.
+2. Send the `japanese-capture/session-*` data to me (maybe zip the whole folder).
+
+What I'm looking for specifically.
+- In combat, attack of every character (Skill 1, Skill 2, Burst)
+  - In particular the ones unavailable now (especially Dark Memories), but it would be easiest if someone (or a small group of people) have all the characters between them and can coordinate getting data for every attack.
+- Entering every fight in general
+  - Training quests, material quests, dungeons (+ event dungeons), event battles, elemental tower, etc., just anything that involves a fight. Ideally complete the fight too and let the enemies do some attacks.
+- New-player data, e.g. first sign-in and playing through the story etc. The more you can get from the beginning the better!
+
+However, everything may be useful! Just try entering every single screen you can think of and send the data.
+
+Additionally, there should be a bunch of "Home Scene" scenes that have a white thumbnail, because they are story-based scenes that were never intended to be selectable. I'm looking for high quality (4K?) screenshots of these scenes so I can replace the thumbnails. Just change to the scene, hide the UI (button should be on the right side, just a bit above the middle), and take a screenshot.
+
+The rest of this README is LLM-generated.
+
 ## Optional Online Capture
 
 `JapaneseProfileCapture.dll` watches successful Japanese login responses. It always saves a session copy under `japanese-capture/session-*`. If the game-root `profile.bin` does not exist, the first successful online login creates it from that session copy. An existing root profile is never overwritten.
