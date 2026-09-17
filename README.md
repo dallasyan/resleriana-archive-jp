@@ -21,6 +21,21 @@ Generated `/login_bonus/receive` returns a regular daily-login state. Captured-r
 
 The package also handles Japanese dungeon entry through `/exploration/start` and a safe empty-resource `/exploration/finish` response. It uses the selected dungeon's `quest_id`, party number, bundled `exploration-routes-jp.json`, and the profile/capture party state. Dungeon movement, dungeon gathering rewards, and dungeon battles remain pending battle-response work.
 
+For capture analysis, `decrypt_japanese_capture.py` accepts a capture file or directory. A directory such as `session-20260909-094129-067` produces a sibling `decrypted-session-20260909-094129-067` directory containing decrypted payloads and recursive protobuf wire dumps:
+
+```powershell
+python decrypt_japanese_capture.py "path\to\session-20260909-094129-067"
+```
+
+For editable round trips, use `edit_japanese_capture.py`. It adds descriptor-backed JSON files when a known endpoint type is available. Edit the JSON or plaintext protobuf files, then rebuild a sibling encrypted session:
+
+```powershell
+python edit_japanese_capture.py decrypt "path\to\session-20260909-094129-067"
+python edit_japanese_capture.py encrypt "path\to\decrypted-session-20260909-094129-067"
+```
+
+The encrypt command writes `encrypted-session-20260909-094129-067`. Descriptor-backed JSON is available for the known battle, exploration, party, character, Home, recipe, gacha, and illustrated-book endpoints. Every other valid protobuf payload also receives an editable `.wire.json` representation that can be round-tripped without a descriptor.
+
 Party editing is locally synthesized for `/party/bulk_update`, `/party/battle_tools_set`, `/character/equip`, `/character/memoria_set`, and `/equipment_preset/bulk_set`, using the active profile and request fields.
 
 The `source` directory contains the source code for the custom scripts, compiled editor, observer, and BepInEx plugins. It also includes rebuild instructions. Third-party binaries such as `mitmdump.exe` and BepInEx/Unity libraries are not included as source.
@@ -92,6 +107,8 @@ game-root/
   ProfileEditor.bat
   ProfileEditor.exe
   replay_japanese.py
+  decrypt_japanese_capture.py
+  edit_japanese_capture.py
   expedition-special-rewards.json
   mitmdump.exe
   JapaneseCaptureObserver.exe

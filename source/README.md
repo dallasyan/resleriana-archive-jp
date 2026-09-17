@@ -14,6 +14,8 @@ game-root/
   ShareProfile.bat
   replay_japanese.py
   analyze_japanese_capture.py
+  decrypt_japanese_capture.py
+  edit_japanese_capture.py
   generate_exploration_routes.py
   exploration-routes-jp.json
   expedition-special-rewards.json
@@ -22,6 +24,8 @@ tools/
   JapaneseOffline/ForceProxy/
   JapaneseOffline/Events/
   JapaneseOffline/analyze_japanese_capture.py
+  JapaneseOffline/decrypt_japanese_capture.py
+  JapaneseOffline/edit_japanese_capture.py
   JapaneseOffline/generate_exploration_routes.py
   JapaneseProfileCapture/
   JapaneseProfileEditor/
