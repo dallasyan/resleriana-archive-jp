@@ -4,6 +4,8 @@ This directory contains the source code for the custom components shipped in the
 
 Use [`BUILDING.md`](BUILDING.md) for the verified build, data-bundling, synchronization, and archive commands. Do not substitute `dotnet build` for the Python or PyInstaller commands.
 
+The parent package's [`ENDPOINTS.md`](../ENDPOINTS.md) tracks route coverage against the reference server/API schemas and observed Japanese routes, with battle endpoints maintained separately.
+
 ## Layout
 
 ```text
@@ -12,6 +14,7 @@ game-root/
   StartJapaneseReplayProxy.bat
   ProfileEditor.bat
   ShareProfile.bat
+  starter-profile.bin
   replay_japanese.py
   analyze_japanese_capture.py
   decrypt_japanese_capture.py
@@ -19,6 +22,7 @@ game-root/
   generate_exploration_routes.py
   exploration-routes-jp.json
   expedition-special-rewards.json
+  progression-master/*.json
 tools/
   frida_capture_japanese.py
   JapaneseOffline/ForceProxy/
@@ -26,6 +30,7 @@ tools/
   JapaneseOffline/analyze_japanese_capture.py
   JapaneseOffline/decrypt_japanese_capture.py
   JapaneseOffline/edit_japanese_capture.py
+  JapaneseOffline/create_starter_profile.py
   JapaneseOffline/generate_exploration_routes.py
   JapaneseProfileCapture/
   JapaneseProfileEditor/
@@ -37,7 +42,9 @@ The observer resolves the directory beside its executable when frozen and accept
 
 `analyze_japanese_capture.py` decodes named Japanese dungeon and battle protobuf requests/responses from the capture sessions written by `JapaneseProfileCapture`. It reports key fingerprints rather than AES keys. `exploration-routes-jp.json` is generated from Japanese `exploration_area.json` and is used by the offline dungeon-start handler.
 
-The replay currently synthesizes dungeon start/finish and profile-backed party, equipment, Memoria, battle-tool, and equipment-preset updates. Dungeon movement, dungeon rewards, and battle action responses remain capture/replay work for a later stage.
+The replay currently synthesizes dungeon start/finish, character EXP/rarity enhancement, normal/EX/Neo growboard progression, level-limit release and enhancement reset, Memoria enhancement/limit-break/lock/sale, and profile-backed party, equipment, battle-tool, and equipment-preset updates. Japanese progression tables are bundled under `game-root/progression-master`. `create_starter_profile.py` builds the scrubbed `starter-profile.bin` from a fresh signup profile; keep the input capture private. Dungeon movement, dungeon rewards, and battle action responses remain capture/replay work for a later stage.
+
+Generated-mode `ChangedResourcesResponse` updates for supported profile-backed endpoints are merged into the existing profile and atomically saved. A timestamped pre-session backup is created under `profile-backups` at generated/hybrid proxy-session startup. Full `-replay` mode does not back up or persist profile changes. Failed backup creation blocks generated-mode profile writes.
 
 The source package's `game-root/japanese-masterdata.bytes` is the decrypted Japanese master-data payload; the encrypted payload variants are served by the offline proxy through the client's normal master-data update path before user-data initialization. Generated API crypto uses the built-in Japanese 256-key table and fixed IV; the native observer is optional diagnostics.
 

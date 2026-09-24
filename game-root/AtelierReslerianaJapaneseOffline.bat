@@ -8,6 +8,13 @@ if /I "%~1"=="-generated" set "JAPANESE_REPLAY_MODE=generated"
 if /I "%~1"=="-replay" set "JAPANESE_REPLAY_MODE=replay"
 set "JAPANESE_GAME_DIR=%ROOT%"
 set "JAPANESE_OFFLINE=1"
+if /I "%JAPANESE_REPLAY_MODE%"=="replay" goto profile_seed_done
+if exist "%GAME_ROOT%\profile.bin" goto profile_seed_done
+if not exist "%ROOT%starter-profile.bin" goto starter_profile_missing
+copy /b "%ROOT%starter-profile.bin" "%GAME_ROOT%\profile.bin" >nul
+if errorlevel 1 goto starter_profile_copy_failed
+echo Installed the sanitized pre-tutorial starter profile.
+:profile_seed_done
 set "OBSERVER_LAUNCHED=0"
 set "OBSERVER_STOP_FILE=%GAME_ROOT%\japanese-capture\offline-observer-stop.txt"
 set "OBSERVER_OUTPUT=%GAME_ROOT%\japanese-capture\native-observer-offline-%RANDOM%-%RANDOM%"
@@ -74,6 +81,16 @@ exit 0
 :proxy_failed
 echo Japanese offline replay failed to start on port 8080.
 echo Check offline-proxy.log for the proxy startup error.
+pause
+exit 1
+
+:starter_profile_missing
+echo No profile.bin or starter-profile.bin was found in the game directory.
+pause
+exit 1
+
+:starter_profile_copy_failed
+echo Failed to install starter-profile.bin as profile.bin.
 pause
 exit 1
 

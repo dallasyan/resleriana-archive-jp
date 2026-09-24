@@ -30,8 +30,34 @@ ENDPOINT_TYPES = {
     "/exploration/skip": ("blend.api.ExplorationSkipRequest", "blend.api.ExplorationSkipResponse"),
     "/party/bulk_update": ("blend.api.PartyBulkUpdateRequest", "blend.api.ChangedResourcesResponse"),
     "/party/battle_tools_set": ("blend.api.PartyBattleToolsSetRequest", "blend.api.ChangedResourcesResponse"),
+    "/character/enhance": ("blend.api.CharacterEnhanceRequest", "blend.api.ChangedResourcesResponse"),
+    "/character/rarity_enhance": ("blend.api.CharacterRarityEnhanceRequest", "blend.api.ChangedResourcesResponse"),
+    "/character/growboard_page_release": (
+        "blend.api.CharacterGrowboardPageReleaseRequest", "blend.api.ChangedResourcesResponse"
+    ),
+    "/character/growboard_bulk_release": (
+        "blend.api.CharacterGrowboardBulkReleaseRequest", "blend.api.ChangedResourcesResponse"
+    ),
+    "/character/enhancement_reset": (
+        "blend.api.CharacterEnhancementResetRequest", "blend.api.CharacterEnhancementResetResponse"
+    ),
+    "/character/level_limit_release": (
+        "blend.api.CharacterLevelLimitReleaseRequest", "blend.api.ChangedResourcesResponse"
+    ),
+    "/character/bulk_set": ("blend.api.CharacterBulkSetRequest", "blend.api.ChangedResourcesResponse"),
     "/character/equip": ("blend.api.CharacterEquipRequest", "blend.api.ChangedResourcesResponse"),
     "/character/memoria_set": ("blend.api.CharacterMemoriaSetRequest", "blend.api.ChangedResourcesResponse"),
+    "/equipment_preset/equip": ("blend.api.EquipmentPresetEquipRequest", "blend.api.ChangedResourcesResponse"),
+    "/equipment_preset/memoria_set": (
+        "blend.api.EquipmentPresetMemoriaSetRequest", "blend.api.ChangedResourcesResponse"
+    ),
+    "/equipment_preset/update_name": (
+        "blend.api.EquipmentPresetUpdateNameRequest", "blend.api.ChangedResourcesResponse"
+    ),
+    "/memoria/enhance": ("blend.api.MemoriaEnhanceRequest", "blend.api.MemoriaEnhanceResponse"),
+    "/memoria/limit_break": ("blend.api.MemoriaLimitBreakRequest", "blend.api.MemoriaLimitBreakResponse"),
+    "/memoria/lock": ("blend.api.MemoriaLockRequest", "blend.api.ChangedResourcesResponse"),
+    "/memoria/sell": ("blend.api.MemoriaSellRequest", "blend.api.MemoriaSellResponse"),
     "/battle/attack": ("blend.api.BattleAttackRequest", "blend.api.BattleAttackResponse"),
     "/battle/resume": ("google.protobuf.Empty", "blend.api.BattleResumeResponse"),
     "/battle/retire": ("google.protobuf.Empty", "blend.api.ChangedResourcesResponse"),

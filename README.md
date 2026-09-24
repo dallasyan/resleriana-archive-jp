@@ -1,19 +1,25 @@
 # Atelier Resleriana Japanese Offline Toolkit
 
-This folder contains the shareable runtime files for the Japanese Steam installation. It does not contain a personal `profile.bin`, capture session, or personal AES material. The included anonymization sidecar contains only synthetic identity values.
+This folder contains the shareable runtime files for the Japanese Steam installation. It does not contain a personal `profile.bin`, capture session, or personal AES material. It does include a synthetic, pre-tutorial `starter-profile.bin` with scrubbed identity fields. The included anonymization sidecar contains only synthetic identity values.
 
 ## Recommended Workflow
 
 1. Copy the contents of `game-root` into the Japanese game directory beside `AtelierResleriana.exe`.
 2. Copy the contents of `BepInEx/plugins` into the game's `BepInEx/plugins` directory.
-3. Launch the game normally through Steam and log in once. `JapaneseProfileCapture.dll` saves the online profile in `japanese-capture\session-*` and creates the game-root `profile.bin` only if one does not already exist.
-4. Close the game. Optionally double-click `ProfileEditor.bat` to create the complete profile. It preserves the profile's marker-selected Japanese AES format and creates a backup automatically.
-5. Double-click `AtelierReslerianaJapaneseOffline.bat` to play offline. No initial offline session or AES observation run is required.
+3. Optional: launch through Steam and log in if you want to use your own online profile. `JapaneseProfileCapture.dll` saves it in `japanese-capture\session-*` and creates the game-root `profile.bin` only if one does not already exist. Skip this step to use the bundled fresh starter profile.
+4. Optional: close the game and double-click `ProfileEditor.bat` to create a complete profile from your own captured profile. It preserves the profile's marker-selected Japanese AES format and creates a backup automatically.
+5. Double-click `AtelierReslerianaJapaneseOffline.bat` to play offline. If the game directory has no `profile.bin`, the launcher installs the bundled synthetic starter profile. Existing profiles are not overwritten, and `-replay` does not seed or write a profile.
 6. Optionally double-click `ShareProfile.bat` when a profile should be prepared for sharing. Share only the resulting `profile.bin`.
 
 The normal workflow requires no Python, environment variables, command-line arguments, or manual proxy setup. Do not use Steam for offline launches. `ProfileEditor.exe` is bundled; `ProfileEditor.bat` and `ShareProfile.bat` are the intended entry points.
 
 Japanese API encryption uses the built-in 256-key table derived from the two Japanese server seed families and the fixed IV. The native observer is not required for normal offline API crypto.
+
+See `ENDPOINTS.md` for the generated/hybrid endpoint coverage tracker. It is based on the reference server routes/API schemas and supplemented with observed Japanese-only routes; battle endpoints have a separate progress section.
+
+Generated-mode profile-backed changes persist to the game-root `profile.bin`. At each generated/hybrid proxy-session start, the launcher creates one timestamped backup in `profile-backups` before any profile mutation. `-replay` mode does not create a profile backup or persist replayed/generated profile changes. Currently persisted generated changes include costume selection, party/member and battle-tool edits, character equipment, EXP/rarity/growboard/level-limit progression and enhancement resets, equipment presets, Memoria enhancement/limit-break/lock/sale, Home configuration/favorites/selection, and exploration start state. If the session-start backup cannot be created, generated-mode profile writes are refused and the failure is logged in `offline-replay.log`.
+
+Character enhancement, rarity enhancement, all three growboard types, level-limit release, and enhancement-reset handlers use Japanese tables bundled under `game-root\progression-master`. Memoria enhancement, limit-break, and sale handlers use the same tables. The share package contains master tables and the scrubbed starter profile, not capture sessions or personal profile snapshots.
 
 Generated `/login_bonus/receive` returns a regular daily-login state. Captured-response replay is an optional developer/diagnostic mode and is not required for the recommended workflow.
 
@@ -34,9 +40,9 @@ python edit_japanese_capture.py decrypt "path\to\session-20260909-094129-067"
 python edit_japanese_capture.py encrypt "path\to\decrypted-session-20260909-094129-067"
 ```
 
-The encrypt command writes `encrypted-session-20260909-094129-067`. Descriptor-backed JSON is available for the known battle, exploration, party, character, Home, recipe, gacha, and illustrated-book endpoints. Every other valid protobuf payload also receives an editable `.wire.json` representation that can be round-tripped without a descriptor.
+The encrypt command writes `encrypted-session-20260909-094129-067`. Descriptor-backed JSON is available for the known battle, exploration, party, character, Memoria, Home, recipe, gacha, and illustrated-book endpoints. Every other valid protobuf payload also receives an editable `.wire.json` representation that can be round-tripped without a descriptor.
 
-Party editing is locally synthesized for `/party/bulk_update`, `/party/battle_tools_set`, `/character/equip`, `/character/memoria_set`, and `/equipment_preset/bulk_set`, using the active profile and request fields.
+Party and equipment editing is locally synthesized for `/party/bulk_update`, `/party/battle_tools_set`, `/character/bulk_set`, `/character/equip`, `/character/memoria_set`, and `/equipment_preset/bulk_set`, using the active profile and request fields. Character and Memoria progression endpoints use the active profile plus Japanese master tables and persist generated changes.
 
 The `source` directory contains the source code for the custom scripts, compiled editor, observer, and BepInEx plugins. It also includes rebuild instructions. Third-party binaries such as `mitmdump.exe` and BepInEx/Unity libraries are not included as source.
 
@@ -123,10 +129,12 @@ game-root/
   StartJapaneseReplayProxy.bat
   ProfileEditor.bat
   ProfileEditor.exe
+  starter-profile.bin
   replay_japanese.py
   decrypt_japanese_capture.py
   edit_japanese_capture.py
   expedition-special-rewards.json
+  progression-master/*.json
   mitmdump.exe
   JapaneseCaptureObserver.exe
 BepInEx/plugins/

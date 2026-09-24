@@ -17,6 +17,8 @@ Do not run `dotnet build` against a `.py` file. Python tools are built with Pyth
 
 ```powershell
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\replay_japanese.py"
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\edit_japanese_capture.py"
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\create_starter_profile.py"
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseProfileEditor\profile_editor.py"
 ```
 
@@ -47,6 +49,16 @@ The editor requires `pycryptodome`, `protobuf`, and PyInstaller. Its data files 
 
 The Japanese key table and fixed IV are compiled into the editor. An AES key file is not required for normal profile operations.
 
+## Synthetic Starter Profile
+
+The package's `game-root\starter-profile.bin` is generated from an encrypted new-signup profile captured before tutorial progress. The generator accepts only profiles with `tutorial_step=0`, rank 1, and one starter character. It preserves the profile marker while replacing the player name, clearing memo and birthday fields, and normalizing the account creation timestamp. Never bundle the input capture or original profile.
+
+```powershell
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" "tools\JapaneseOffline\create_starter_profile.py" "<private-session>\profile.bin" "tools\JapaneseToolkit\share\game-root\starter-profile.bin" --name "Offline"
+```
+
+The normal launcher copies this starter file to `profile.bin` only when no profile exists. It does not seed full `-replay` mode or overwrite an existing profile.
+
 ## JapaneseCaptureObserver.exe
 
 The observer is optional diagnostics. It requires Frida `16.7.19` and PyInstaller.
@@ -66,6 +78,21 @@ Copy-Item $replay "tools\JapaneseOffline\dist\replay_japanese.py" -Force
 Copy-Item $replay "tools\JapaneseToolkit\share\game-root\replay_japanese.py" -Force
 Copy-Item $replay "tools\JapaneseToolkit\share\source\game-root\replay_japanese.py" -Force
 Copy-Item $replay "C:\Program Files (x86)\Steam\steamapps\common\AtelierResleriana\replay_japanese.py" -Force
+$captureEditor = "tools\JapaneseOffline\edit_japanese_capture.py"
+Copy-Item $captureEditor "tools\JapaneseOffline\dist\edit_japanese_capture.py" -Force
+Copy-Item $captureEditor "tools\JapaneseToolkit\share\game-root\edit_japanese_capture.py" -Force
+Copy-Item $captureEditor "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\edit_japanese_capture.py" -Force
+$starterProfileTool = "tools\JapaneseOffline\create_starter_profile.py"
+Copy-Item $starterProfileTool "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\create_starter_profile.py" -Force
+$offlineLauncher = "tools\JapaneseToolkit\share\game-root\AtelierReslerianaJapaneseOffline.bat"
+Copy-Item $offlineLauncher "tools\JapaneseToolkit\share\source\game-root\AtelierReslerianaJapaneseOffline.bat" -Force
+Copy-Item $offlineLauncher "C:\Program Files (x86)\Steam\steamapps\common\AtelierResleriana\AtelierReslerianaJapaneseOffline.bat" -Force
+Copy-Item "tools\JapaneseToolkit\share\game-root\starter-profile.bin" "tools\JapaneseToolkit\share\source\game-root\starter-profile.bin" -Force
+Copy-Item "tools\JapaneseToolkit\share\game-root\starter-profile.bin" "C:\Program Files (x86)\Steam\steamapps\common\AtelierResleriana\starter-profile.bin" -Force
+$progressionMaster = "tools\JapaneseToolkit\share\game-root\progression-master"
+Copy-Item $progressionMaster "tools\JapaneseOffline\dist" -Recurse -Force
+Copy-Item $progressionMaster "tools\JapaneseToolkit\share\source\game-root" -Recurse -Force
+Copy-Item $progressionMaster "C:\Program Files (x86)\Steam\steamapps\common\AtelierResleriana" -Recurse -Force
 ```
 
 After all files are synchronized, rebuild the share archive:
