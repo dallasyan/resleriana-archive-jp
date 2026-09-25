@@ -42,7 +42,7 @@ The observer resolves the directory beside its executable when frozen and accept
 
 `analyze_japanese_capture.py` decodes named Japanese dungeon and battle protobuf requests/responses from the capture sessions written by `JapaneseProfileCapture`. It reports key fingerprints rather than AES keys. `exploration-routes-jp.json` is generated from Japanese `exploration_area.json` and is used by the offline dungeon-start handler.
 
-The replay currently synthesizes dungeon start/finish, character EXP/rarity enhancement, normal/EX/Neo growboard progression, level-limit release and enhancement reset, Memoria enhancement/limit-break/lock/sale, and profile-backed party, equipment, battle-tool, and equipment-preset updates. Japanese progression tables are bundled under `game-root/progression-master`. `create_starter_profile.py` builds the scrubbed `starter-profile.bin` from a fresh signup profile; keep the input capture private. Dungeon movement, dungeon rewards, and battle action responses remain capture/replay work for a later stage.
+The replay currently synthesizes dungeon start/finish, character EXP/rarity enhancement, normal/EX/Neo growboard progression, level-limit release and enhancement reset, Memoria progression, equipment-preset edits, Battle/Equipment Tool lock and conversion, Mana-item use, and Japanese ship-party, support-tool, cannon, and ship-part upgrades. Japanese progression, tool-conversion, and ship-part tables are bundled under `game-root/progression-master`. `create_starter_profile.py` builds the scrubbed `starter-profile.bin` from a fresh signup profile; keep the input capture private. Dungeon movement, dungeon rewards, and battle action responses remain capture/replay work for a later stage.
 
 Generated-mode `ChangedResourcesResponse` updates for supported profile-backed endpoints are merged into the existing profile and atomically saved. A timestamped pre-session backup is created under `profile-backups` at generated/hybrid proxy-session startup. Full `-replay` mode does not back up or persist profile changes. Failed backup creation blocks generated-mode profile writes.
 
@@ -54,7 +54,7 @@ The editor selects the Japanese AES key from the profile marker and preserves th
 
 `ShareProfile.bat` runs `ProfileEditor.exe normalize --in-place` for an existing profile without applying the complete-collection edits.
 
-`JapaneseOfflineEvents.Plugin` includes the offline `ExpeditionTimelineGroup` selector patch. Its three timeline keys are derived from the Japanese `ExpeditionTimelineGroup.json` TextAsset and are rotated in memory during special-reward presentation.
+`JapaneseOfflineEvents.Plugin` includes the offline `ExpeditionTimelineGroup` selector patch. Its three timeline keys are derived from the Japanese `ExpeditionTimelineGroup.json` TextAsset and are rotated in memory during special-reward presentation. An opt-in `-gacha-timeline-trace` flag logs Japanese gacha phase/branch lookups during selected-session replay without mutating the results.
 
 The C# projects are BepInEx plugins:
 

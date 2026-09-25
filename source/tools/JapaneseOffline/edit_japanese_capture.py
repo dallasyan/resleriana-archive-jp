@@ -16,6 +16,11 @@ from decrypt_japanese_capture import AES_IV, AES_KEYS, format_fields, read_wire_
 
 ENDPOINT_TYPES = {
     "/login_bonus/receive": ("google.protobuf.Empty", "blend.api.LoginBonusReceiveResponse"),
+    "/gacha/list": ("google.protobuf.Empty", "blend.api.GachaListResponse"),
+    "/gacha/execute": ("blend.api.GachaExecuteRequest", "blend.api.GachaExecuteResponse"),
+    "/gacha/wish_list_set": (
+        "blend.api.GachaWishListSetRequest", "blend.api.GachaWishListSetResponse"
+    ),
     "/recipe/learn": ("blend.api.RecipeLearnRequest", "blend.api.ChangedResourcesResponse"),
     "/illustrated_book/start": ("blend.api.IllustratedBookStartRequest", "blend.api.IllustratedBookStartResponse"),
     "/character/skin_set": ("blend.api.CharacterSkinSetRequest", "blend.api.ChangedResourcesResponse"),

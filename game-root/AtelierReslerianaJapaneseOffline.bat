@@ -3,9 +3,18 @@ set "ROOT=%~dp0"
 set "GAME_ROOT=%ROOT:~0,-1%"
 cd /d "%ROOT%"
 set "JAPANESE_REPLAY_MODE=hybrid"
-set "JAPANESE_CAPTURE_SESSION=%ROOT%embedded-handshake"
 if /I "%~1"=="-generated" set "JAPANESE_REPLAY_MODE=generated"
 if /I "%~1"=="-replay" set "JAPANESE_REPLAY_MODE=replay"
+if /I "%~2"=="-generated" set "JAPANESE_REPLAY_MODE=generated"
+if /I "%~2"=="-replay" set "JAPANESE_REPLAY_MODE=replay"
+set "JAPANESE_GACHA_TIMELINE_TRACE="
+if /I "%~1"=="-gacha-timeline-trace" set "JAPANESE_GACHA_TIMELINE_TRACE=1"
+if /I "%~2"=="-gacha-timeline-trace" set "JAPANESE_GACHA_TIMELINE_TRACE=1"
+if /I "%JAPANESE_REPLAY_MODE%"=="replay" (
+    set "JAPANESE_CAPTURE_SESSION="
+) else (
+    set "JAPANESE_CAPTURE_SESSION=%ROOT%embedded-handshake"
+)
 set "JAPANESE_GAME_DIR=%ROOT%"
 set "JAPANESE_OFFLINE=1"
 if /I "%JAPANESE_REPLAY_MODE%"=="replay" goto profile_seed_done
@@ -24,6 +33,7 @@ taskkill /IM JapaneseCaptureObserver.exe /T >nul 2>&1
 for /f "tokens=5" %%P in ('netstat -ano ^| findstr /R /C:":8080 .*LISTENING"') do taskkill /PID %%P /T /F >nul 2>&1
 
 echo Starting Japanese offline mode: %JAPANESE_REPLAY_MODE%...
+if defined JAPANESE_GACHA_TIMELINE_TRACE echo Gacha timeline tracing enabled.
 start "Atelier Resleriana Japanese replay" /b "%ROOT%StartJapaneseProxy.bat"
 timeout /T 5 /NOBREAK >nul
 netstat -ano | findstr ":8080" | findstr "LISTENING" >nul

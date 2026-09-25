@@ -4,6 +4,7 @@ import json
 import os
 import sys
 import time
+import uuid
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -35,7 +36,6 @@ HYBRID_MODE = os.environ.get("JAPANESE_REPLAY_MODE", "generated").strip().lower(
 HYBRID_HANDSHAKE_PATHS = {"/status", "/refund_info/get_country_code", "/auth/sign_in", "/user/log_in"}
 HYBRID_INIT_PATHS = {
     "/login_bonus/receive",
-    "/web_session/token",
     "/external_purchase/receive",
     "/mail/list",
     "/mail/open",
@@ -76,7 +76,6 @@ REUSABLE_PATHS = {
     "/user/log_in",
     "/login_bonus/receive",
     "/external_purchase/receive",
-    "/web_session/token",
     EXPEDITION_REWARD_PATH,
 }
 
@@ -370,6 +369,17 @@ def default_login_bonus_response() -> bytes:
     return encrypt_api_response(
         response_marker,
         plaintext,
+        response_key,
+        response_iv,
+    )
+
+
+def default_web_session_token_response() -> bytes:
+    response_key, response_iv, response_marker = response_material()
+    token = str(uuid.uuid4()).encode("ascii")
+    return encrypt_api_response(
+        response_marker,
+        write_field(1, 2, token),
         response_key,
         response_iv,
     )
@@ -684,7 +694,12 @@ def make_changed_resources_response(
     total_task_counts: list[bytes] | None = None,
     parties: list[bytes] | None = None,
     party_members: list[bytes] | None = None,
+    equipment_tools: list[bytes] | None = None,
     equipment_presets: list[bytes] | None = None,
+    battle_tools: list[bytes] | None = None,
+    ships: list[bytes] | None = None,
+    ship_parties: list[bytes] | None = None,
+    ship_tools: list[bytes] | None = None,
     chara_homes: list[bytes] | None = None,
     growboard_role_rates: list[bytes] | None = None,
     deleted_resources: bytes | None = None,
@@ -706,7 +721,12 @@ def make_changed_resources_response(
         total_task_counts=total_task_counts,
         parties=parties,
         party_members=party_members,
+        equipment_tools=equipment_tools,
         equipment_presets=equipment_presets,
+        battle_tools=battle_tools,
+        ships=ships,
+        ship_parties=ship_parties,
+        ship_tools=ship_tools,
         chara_homes=chara_homes,
         growboard_role_rates=growboard_role_rates,
         deleted_resources=deleted_resources,
@@ -730,7 +750,12 @@ def make_changed_resources_plaintext(
     total_task_counts: list[bytes] | None = None,
     parties: list[bytes] | None = None,
     party_members: list[bytes] | None = None,
+    equipment_tools: list[bytes] | None = None,
     equipment_presets: list[bytes] | None = None,
+    battle_tools: list[bytes] | None = None,
+    ships: list[bytes] | None = None,
+    ship_parties: list[bytes] | None = None,
+    ship_tools: list[bytes] | None = None,
     chara_homes: list[bytes] | None = None,
     growboard_role_rates: list[bytes] | None = None,
     deleted_resources: bytes | None = None,
@@ -749,10 +774,14 @@ def make_changed_resources_plaintext(
         resources.extend(write_field(9, 2, party))
     for party_member in party_members or []:
         resources.extend(write_field(24, 2, party_member))
+    for equipment_tool in equipment_tools or []:
+        resources.extend(write_field(4, 2, equipment_tool))
     for growboard_role_rate in growboard_role_rates or []:
         resources.extend(write_field(14, 2, growboard_role_rate))
     for equipment_preset in equipment_presets or []:
         resources.extend(write_field(26, 2, equipment_preset))
+    for battle_tool in battle_tools or []:
+        resources.extend(write_field(11, 2, battle_tool))
     for memoria in memorias or []:
         resources.extend(write_field(29, 2, memoria))
     if status is not None:
@@ -761,6 +790,12 @@ def make_changed_resources_plaintext(
         resources.extend(write_field(32, 2, total_task_count))
     if profile is not None:
         resources.extend(write_field(39, 2, profile))
+    for ship in ships or []:
+        resources.extend(write_field(66, 2, ship))
+    for ship_party in ship_parties or []:
+        resources.extend(write_field(67, 2, ship_party))
+    for ship_tool in ship_tools or []:
+        resources.extend(write_field(68, 2, ship_tool))
     for chara_home in chara_homes or []:
         resources.extend(write_field(61, 2, chara_home))
     response = bytearray(write_field(1, 2, bytes(resources)))
@@ -799,6 +834,9 @@ PROFILE_REPEATED_KEYS: dict[int, tuple[int, ...]] = {
     46: (1,),      # CommunicationState.character_id
     47: (1,),      # CharacterStoryState.character_story_id
     61: (1,),      # CharaHome.slot_id
+    66: (1,),      # Ship.ship_id
+    67: (1,),      # ShipParty.number
+    68: (1,),      # ShipTool.entity_id
 }
 PROFILE_NESTED_MERGE_FIELDS = {1, 5, 6, 7, 39, 41}
 
@@ -1187,6 +1225,221 @@ def is_equipment_preset_request(data: bytes) -> bool:
     ) and any(number == 1 for number, _, _ in fields)
 
 
+def is_equipment_preset_equip_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    if not fields or any(number not in (1, 2, 3) for number, _, _ in fields):
+        return False
+    numbers = {number for number, _, _ in fields}
+    values = {
+        number: int(value)
+        for number, wire_type, value in fields
+        if wire_type == 0
+    }
+    if (
+        len(values) != sum(1 for number, wire_type, _ in fields if wire_type == 0)
+        or values.get(1, 0) <= 0
+        or values.get(2, 0) not in (1, 2, 3)
+        or any(number not in (1, 2, 3) or wire_type not in ((0,) if number in (1, 2) else (2,)) for number, wire_type, _ in fields)
+    ):
+        return False
+    if 3 in numbers:
+        try:
+            wrapped = read_wire_fields(message_field(data, 3) or b"")
+        except ValueError:
+            return False
+        if any(number != 1 or wire_type != 0 for number, wire_type, _ in wrapped):
+            return False
+    return True
+
+
+def is_equipment_preset_memoria_set_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    if not fields or any(number not in (1, 2) for number, _, _ in fields):
+        return False
+    if any(number == 1 and wire_type != 0 for number, wire_type, _ in fields):
+        return False
+    if any(number == 2 and wire_type != 2 for number, wire_type, _ in fields):
+        return False
+    if varint_field(data, 1, 0) <= 0:
+        return False
+    if any(number == 2 for number, _, _ in fields):
+        wrapped = message_field(data, 2) or b""
+        try:
+            inner = read_wire_fields(wrapped)
+        except ValueError:
+            return False
+        if any(number != 1 or wire_type != 0 for number, wire_type, _ in inner):
+            return False
+    return True
+
+
+def is_equipment_preset_update_name_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    if (
+        not fields
+        or any(number not in (1, 2) for number, _, _ in fields)
+        or not any(number == 1 and wire_type == 0 and int(value) > 0 for number, wire_type, value in fields)
+        or not any(number == 2 and wire_type == 2 for number, wire_type, _ in fields)
+        or any(
+            (number == 1 and wire_type != 0) or (number == 2 and wire_type != 2)
+            for number, wire_type, _ in fields
+        )
+    ):
+        return False
+    try:
+        message_field(data, 2).decode("utf-8")  # type: ignore[union-attr]
+    except (AttributeError, UnicodeDecodeError):
+        return False
+    return True
+
+
+def is_tool_lock_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    tool_entities = [bytes(value) for number, wire_type, value in fields if number == 1 and wire_type == 2]
+    values = {
+        number: int(value)
+        for number, wire_type, value in fields
+        if wire_type == 0
+    }
+    if (
+        not fields
+        or any(number not in (1, 2) for number, _, _ in fields)
+        or len(tool_entities) != 1
+        or any(number == 1 and wire_type != 2 for number, wire_type, _ in fields)
+        or any(number == 2 and (wire_type != 0 or int(value) not in (0, 1)) for number, wire_type, value in fields)
+    ):
+        return False
+    try:
+        entity = read_wire_fields(tool_entities[0])
+    except ValueError:
+        return False
+    entity_values = {
+        number: int(value)
+        for number, wire_type, value in entity
+        if wire_type == 0
+    }
+    return (
+        all(number in (1, 2) and wire_type == 0 for number, wire_type, _ in entity)
+        and entity_values.get(1, 0) in (6, 14)
+        and entity_values.get(2, 0) > 0
+        and values.get(2, 0) in (0, 1)
+    )
+
+
+def is_tool_convert_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    entities = [bytes(value) for number, wire_type, value in fields if number == 1 and wire_type == 2]
+    if not fields or len(entities) != len(fields) or not entities:
+        return False
+    seen: set[tuple[int, int]] = set()
+    for entity in entities:
+        try:
+            values = {
+                number: int(value)
+                for number, wire_type, value in read_wire_fields(entity)
+                if wire_type == 0
+            }
+            nested = read_wire_fields(entity)
+        except ValueError:
+            return False
+        if (
+            any(number not in (1, 2) or wire_type != 0 for number, wire_type, _ in nested)
+            or values.get(1, 0) not in (6, 14)
+            or values.get(2, 0) <= 0
+            or (values[1], values[2]) in seen
+        ):
+            return False
+        seen.add((values[1], values[2]))
+    return True
+
+
+def is_ship_bulk_update_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+        for number, wire_type, value in fields:
+            if number in (1, 5) and wire_type == 0:
+                if number == 5 and int(value) not in (0, 1):
+                    return False
+            elif number in (2, 4) and wire_type in (0, 2):
+                values = [int(value)] if wire_type == 0 else read_varints(bytes(value))
+                if any(value <= 0 for value in values):
+                    return False
+            elif number == 3 and wire_type == 2:
+                wrapped = read_wire_fields(bytes(value))
+                if any(inner_number != 1 or inner_type != 0 for inner_number, inner_type, _ in wrapped):
+                    return False
+            else:
+                return False
+    except ValueError:
+        return False
+    return (
+        bool(fields)
+        and any(number == 1 and wire_type == 0 and int(value) > 0 for number, wire_type, value in fields)
+        and any(number == 2 and wire_type in (0, 2) for number, wire_type, _ in fields)
+    )
+
+
+def is_ship_tools_set_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+        for number, wire_type, value in fields:
+            if number == 1 and wire_type == 0:
+                if int(value) <= 0:
+                    return False
+            elif number == 2 and wire_type in (0, 2):
+                values = [int(value)] if wire_type == 0 else read_varints(bytes(value))
+                if any(value <= 0 for value in values):
+                    return False
+            else:
+                return False
+    except ValueError:
+        return False
+    return bool(fields) and any(number == 1 and wire_type == 0 for number, wire_type, _ in fields)
+
+
+def is_ship_create_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    values = {number: int(value) for number, wire_type, value in fields if wire_type == 0}
+    return (
+        len(fields) == 2
+        and all(number in (1, 2) and wire_type == 0 for number, wire_type, _ in fields)
+        and values.get(1, 0) > 0
+        and values.get(2, 0) > 0
+    )
+
+
+def is_mana_use_item_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    values = {number: int(value) for number, wire_type, value in fields if wire_type == 0}
+    return (
+        len(fields) == 2
+        and all(number in (1, 2) and wire_type == 0 for number, wire_type, _ in fields)
+        and values.get(1, 0) > 0
+        and values.get(2, 0) > 0
+    )
+
+
 def is_character_bulk_set_request(data: bytes) -> bool:
     try:
         fields = read_wire_fields(data)
@@ -1451,7 +1704,6 @@ def captured_response_material(
             "/user/log_in": is_api_message,
             "/login_bonus/receive": is_api_message,
             "/external_purchase/receive": is_api_message,
-            "/web_session/token": is_api_message,
             "/character/skin_set": is_skin_request_plaintext,
             "/chara_home/register": is_home_register_request,
             "/profile/update_chara_home_favorite_character_list": is_favorite_request,
@@ -1464,6 +1716,15 @@ def captured_response_material(
             "/character/memoria_set": is_character_memoria_request,
             "/character/bulk_set": is_character_bulk_set_request,
             "/equipment_preset/bulk_set": is_equipment_preset_request,
+            "/equipment_preset/equip": is_equipment_preset_equip_request,
+            "/equipment_preset/memoria_set": is_equipment_preset_memoria_set_request,
+            "/equipment_preset/update_name": is_equipment_preset_update_name_request,
+            "/tool/lock": is_tool_lock_request,
+            "/tool/convert": is_tool_convert_request,
+            "/mana/use_item": is_mana_use_item_request,
+            "/ship/bulk_update": is_ship_bulk_update_request,
+            "/ship/ship_tools_set": is_ship_tools_set_request,
+            "/ship/create": is_ship_create_request,
             "/character/enhance": is_character_enhance_request,
             "/character/rarity_enhance": is_character_rarity_enhance_request,
             "/character/enhancement_reset": is_character_enhancement_reset_request,
@@ -1611,6 +1872,11 @@ def load_profile_equipment_preset_records(profile_path: Path) -> dict[int, bytes
     return presets
 
 
+def default_equipment_preset_record(number: int) -> bytes:
+    name = f"\u88c5\u5099\u30d7\u30ea\u30bb\u30c3\u30c8{number}".encode("utf-8")
+    return write_field(1, 0, number) + write_field(2, 2, name)
+
+
 def profile_resources(profile_plaintext: bytes) -> bytes:
     resources = message_field(profile_plaintext, 1)
     if resources is None:
@@ -1716,6 +1982,22 @@ def resource_reward(resource_type: int, quantity: int, resource_id: int | None =
         fields.extend(write_field(2, 0, resource_id))
     fields.extend(write_field(3, 0, quantity))
     return bytes(fields)
+
+
+def mana_status_after_delta(status: bytes, delta: int, now: int | None = None) -> tuple[bytes, int]:
+    """Apply Japanese hourly Mana regeneration, then a direct Mana change."""
+    now = int(time.time()) if now is None else int(now)
+    mana = varint_field(status, 4, 0)
+    updated_at = message_field(status, 15)
+    if mana < 20 and updated_at is not None:
+        last_updated = varint_field(updated_at, 1, 0)
+        mana += max(0, now - last_updated) // 3600
+    mana += delta
+    if mana < 0:
+        raise ValueError("Mana balance is below the requested cost")
+    timestamp = write_field(1, 0, now)
+    updated_status = write_field(4, 0, mana) + write_field(15, 2, timestamp)
+    return updated_status, mana
 
 
 def growboard_spec_for_request(
@@ -2058,6 +2340,12 @@ def replace_message_field_in_place(data: bytes, field_number: int, value: bytes 
     if value is not None and not replaced:
         output.extend(write_field(field_number, 2, value))
     return bytes(output)
+
+
+def replace_packed_varint_field(data: bytes, field_number: int, values: list[int]) -> bytes:
+    without_field = replace_message_field_in_place(data, field_number, None)
+    packed = b"".join(write_varint(value) for value in values)
+    return without_field + write_field(field_number, 2, packed)
 
 
 def character_with_equipment(
@@ -2403,6 +2691,9 @@ class Replay:
             "/character/memoria_set": is_character_memoria_request,
             "/character/bulk_set": is_character_bulk_set_request,
             "/equipment_preset/bulk_set": is_equipment_preset_request,
+            "/equipment_preset/equip": is_equipment_preset_equip_request,
+            "/equipment_preset/memoria_set": is_equipment_preset_memoria_set_request,
+            "/equipment_preset/update_name": is_equipment_preset_update_name_request,
         }
         plaintext, response_key, response_iv, response_marker = decrypt_request_with_response_material(
             request_body,
@@ -2466,7 +2757,7 @@ class Replay:
                 parties=[party],
             )
 
-        if path == "/equipment_preset/bulk_set":
+        if path.startswith("/equipment_preset/"):
             preset_number = next(
                 int(value)
                 for number, wire_type, value in read_wire_fields(plaintext)
@@ -2474,9 +2765,39 @@ class Replay:
             )
             if self.equipment_preset_records is None:
                 self.equipment_preset_records = load_profile_equipment_preset_records(GAME_DIR / "profile.bin")
-            preset = self.equipment_preset_records.get(preset_number, write_field(1, 0, preset_number))
-            for source_field, target_field in ((2, 3), (3, 4), (4, 5), (5, 6)):
-                preset = replace_message_field_in_place(preset, target_field, message_field(plaintext, source_field))
+            preset = self.equipment_preset_records.get(
+                preset_number,
+                default_equipment_preset_record(preset_number),
+            )
+            if path == "/equipment_preset/bulk_set":
+                for source_field, target_field in ((2, 3), (3, 4), (4, 5), (5, 6)):
+                    preset = replace_message_field_in_place(
+                        preset,
+                        target_field,
+                        message_field(plaintext, source_field),
+                    )
+            elif path == "/equipment_preset/equip":
+                slot_type = varint_field(plaintext, 2, 0)
+                if slot_type not in (1, 2, 3):
+                    raise ValueError(f"unsupported equipment preset slot type: {slot_type}")
+                preset = replace_message_field_in_place(
+                    preset,
+                    slot_type + 2,
+                    message_field(plaintext, 3),
+                )
+            elif path == "/equipment_preset/memoria_set":
+                preset = replace_message_field_in_place(
+                    preset,
+                    6,
+                    message_field(plaintext, 2),
+                )
+            else:
+                name = next(
+                    bytes(value)
+                    for number, wire_type, value in read_wire_fields(plaintext)
+                    if number == 2 and wire_type == 2
+                )
+                preset = replace_message_field_in_place(preset, 2, name)
             self.equipment_preset_records[preset_number] = preset
             self.log(
                 f"LOCAL-EQUIPMENT-PRESET host={flow.request.host} method=POST path={path} status=200 "
@@ -2546,6 +2867,334 @@ class Replay:
             response_iv,
             response_marker,
             characters=[character],
+        )
+
+    def tool_response(self, flow: http.HTTPFlow) -> bytes:
+        path = urlsplit(flow.request.pretty_url).path
+        validators = {
+            "/tool/lock": is_tool_lock_request,
+            "/tool/convert": is_tool_convert_request,
+        }
+        request_plaintext, response_key, response_iv, response_marker = decrypt_request_with_response_material(
+            flow.request.raw_content or b"",
+            validators[path],
+            path,
+        )
+        profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+
+        if path == "/tool/lock":
+            tool_entity = message_field(request_plaintext, 1)
+            if tool_entity is None:
+                raise ValueError("tool lock request has no ToolEntity")
+            tool_type = varint_field(tool_entity, 1, 0)
+            entity_id = varint_field(tool_entity, 2, 0)
+            is_locked = varint_field(request_plaintext, 2, 0) == 1
+            if tool_type == 14:
+                resource_field = 11
+                records = profile_resource_records(profile_plaintext, resource_field)
+                record = records.get(entity_id)
+                if record is None:
+                    raise ValueError(f"profile has no battle tool entity {entity_id}")
+                updated = b"".join(
+                    write_field(number, wire_type, value)
+                    for number, wire_type, value in read_wire_fields(record)
+                    if number != 8
+                )
+                if is_locked:
+                    updated += write_field(8, 0, 1)
+                self.log(f"LOCAL-TOOL-LOCK path={path} status=200 type={tool_type} locked={is_locked}")
+                return self.changed_resources_encrypted_response(
+                    response_key,
+                    response_iv,
+                    response_marker,
+                    battle_tools=[updated],
+                )
+            if tool_type == 6:
+                resource_field = 4
+                records = profile_resource_records(profile_plaintext, resource_field)
+                record = records.get(entity_id)
+                if record is None:
+                    raise ValueError(f"profile has no equipment tool entity {entity_id}")
+                updated = b"".join(
+                    write_field(number, wire_type, value)
+                    for number, wire_type, value in read_wire_fields(record)
+                    if number != 8
+                )
+                if is_locked:
+                    updated += write_field(8, 0, 1)
+                self.log(f"LOCAL-TOOL-LOCK path={path} status=200 type={tool_type} locked={is_locked}")
+                return self.changed_resources_encrypted_response(
+                    response_key,
+                    response_iv,
+                    response_marker,
+                    equipment_tools=[updated],
+                )
+            raise ValueError(f"unsupported ToolEntity type {tool_type}")
+
+        consumed_entities = [
+            bytes(value)
+            for number, wire_type, value in read_wire_fields(request_plaintext)
+            if number == 1 and wire_type == 2
+        ]
+        battle_tool_records = profile_resource_records(profile_plaintext, 11)
+        equipment_tool_records = profile_resource_records(profile_plaintext, 4)
+        tool_masters = {
+            14: progression_master_index("battle_tool"),
+            6: progression_master_index("equipment_tool"),
+        }
+        converted_entities = {14: [], 6: []}
+        reward_quantity = 0
+        for consumed_entity in consumed_entities:
+            tool_type = varint_field(consumed_entity, 1, 0)
+            entity_id = varint_field(consumed_entity, 2, 0)
+            records = battle_tool_records if tool_type == 14 else equipment_tool_records
+            tool_record = records.get(entity_id)
+            if tool_record is None:
+                raise ValueError(f"profile has no tool entity {entity_id} of type {tool_type}")
+            tool_id = varint_field(tool_record, 2, 0)
+            master = tool_masters[tool_type].get(tool_id)
+            if master is None:
+                raise ValueError(f"progression master has no tool {tool_id} of type {tool_type}")
+            rarity = int(master.get("rarity", 0))
+            converted_value = {1: 1, 2: 3}.get(rarity, 10)
+            trait_rank_total = sum(
+                varint_field(bytes(value), 2, 0)
+                for number, wire_type, value in read_wire_fields(tool_record)
+                if number == 5 and wire_type == 2
+            )
+            rank_total = progression_master_index("trait_rank_total").get(trait_rank_total + 1, {})
+            reward_field = (
+                "battle_tool_conversion_rewards"
+                if tool_type == 14
+                else "equipment_tool_conversion_rewards"
+            )
+            conversion_rewards = rank_total.get(reward_field) or []
+            if conversion_rewards:
+                converted_value += int(conversion_rewards[0].get("quantity", 0))
+            reward_quantity += converted_value
+            converted_entities[tool_type].append(entity_id)
+
+        item_records = profile_resource_records(profile_plaintext, 3)
+        changed_items = updated_reward_item_records(item_records, {134: reward_quantity})
+        reward_item = next(record for record in changed_items if varint_field(record, 1, 0) == 134)
+        task_records = profile_resource_records(profile_plaintext, 32)
+        total_converted_count = len(consumed_entities)
+        task_updates = [
+            total_task_count_record_at_value(task_records, 739, varint_field(reward_item, 3, 0)),
+            updated_total_task_count_record(task_records, 135, total_converted_count),
+        ]
+        deleted_resources = bytearray()
+        if converted_entities[6]:
+            deleted_resources.extend(
+                write_field(1, 2, b"".join(write_varint(value) for value in converted_entities[6]))
+            )
+        if converted_entities[14]:
+            deleted_resources.extend(
+                write_field(2, 2, b"".join(write_varint(value) for value in converted_entities[14]))
+            )
+        reward = resource_reward(5, reward_quantity, 134)
+        tool_conversion_limit_count = varint_field(profile_plaintext, 6, 100)
+        self.log(
+            f"LOCAL-TOOL-CONVERT path={path} status=200 tools={total_converted_count} "
+            f"reward={reward_quantity}"
+        )
+        return self.changed_resources_encrypted_response(
+            response_key,
+            response_iv,
+            response_marker,
+            items=changed_items,
+            total_task_counts=task_updates,
+            deleted_resources=bytes(deleted_resources),
+            extra_response_fields=[(3, 2, reward), (4, 0, tool_conversion_limit_count)],
+        )
+
+    def mana_response(self, flow: http.HTTPFlow) -> bytes:
+        request_plaintext, response_key, response_iv, response_marker = decrypt_request_with_response_material(
+            flow.request.raw_content or b"",
+            is_mana_use_item_request,
+            "/mana/use_item",
+        )
+        profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+        item_id = varint_field(request_plaintext, 1, 0)
+        count = varint_field(request_plaintext, 2, 0)
+        items = updated_consumed_item_records(
+            profile_resource_records(profile_plaintext, 3),
+            {item_id: count},
+        )
+        status = message_field(profile_resources(profile_plaintext), 6)
+        if status is None:
+            raise ValueError("profile has no Status message for Mana item use")
+        status, new_mana = mana_status_after_delta(status, count)
+        task_records = profile_resource_records(profile_plaintext, 32)
+        task_counts = [task_records[1]] if 1 in task_records else []
+        self.log(f"LOCAL-MANA-USE path=/mana/use_item status=200 item={item_id} count={count} mana={new_mana}")
+        return self.changed_resources_encrypted_response(
+            response_key,
+            response_iv,
+            response_marker,
+            items=items,
+            status=status,
+            total_task_counts=task_counts,
+        )
+
+    def ship_response(self, flow: http.HTTPFlow) -> bytes:
+        path = urlsplit(flow.request.pretty_url).path
+        validators = {
+            "/ship/bulk_update": is_ship_bulk_update_request,
+            "/ship/ship_tools_set": is_ship_tools_set_request,
+            "/ship/create": is_ship_create_request,
+        }
+        request_plaintext, response_key, response_iv, response_marker = decrypt_request_with_response_material(
+            flow.request.raw_content or b"",
+            validators[path],
+            path,
+        )
+        profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+
+        if path in ("/ship/bulk_update", "/ship/ship_tools_set"):
+            party_number = varint_field(request_plaintext, 1, 0)
+            party_records = profile_resource_records(profile_plaintext, 67)
+            party = party_records.get(party_number, write_field(1, 0, party_number))
+            if path == "/ship/bulk_update":
+                party = replace_packed_varint_field(party, 2, varint_values(request_plaintext, 2))
+                party = replace_message_field_in_place(party, 3, message_field(request_plaintext, 3))
+                party = replace_packed_varint_field(party, 4, varint_values(request_plaintext, 4))
+                task_records = profile_resource_records(profile_plaintext, 32)
+                task_count = updated_total_task_count_record(task_records, 2877)
+                task_counts = [task_count]
+            else:
+                selected_ship_tools = varint_values(request_plaintext, 2)
+                owned_ship_tools = profile_resource_records(profile_plaintext, 68)
+                if any(entity_id not in owned_ship_tools for entity_id in selected_ship_tools):
+                    raise ValueError("ship party references an unowned ship tool")
+                party = replace_packed_varint_field(party, 5, selected_ship_tools)
+                task_counts = []
+            self.log(
+                f"LOCAL-SHIP-PARTY path={path} status=200 party={party_number} "
+                f"members={len(varint_values(request_plaintext, 2)) if path.endswith('bulk_update') else 0}"
+            )
+            return self.changed_resources_encrypted_response(
+                response_key,
+                response_iv,
+                response_marker,
+                ship_parties=[party],
+                total_task_counts=task_counts,
+            )
+
+        part_id = varint_field(request_plaintext, 1, 0)
+        count = varint_field(request_plaintext, 2, 0)
+        part = progression_master_index("ship_part").get(part_id)
+        if part is None:
+            raise ValueError(f"Japanese ship-part master has no part {part_id}")
+        consumed_items: dict[int, int] = {}
+        mana_cost = 0
+        for cost in part.get("costs") or []:
+            resource_type = int(cost.get("type", 0))
+            resource_id = int(cost.get("id", 0))
+            quantity = int(cost.get("quantity", 0)) * count
+            if quantity <= 0:
+                continue
+            if resource_type == 5:
+                consumed_items[resource_id] = consumed_items.get(resource_id, 0) + quantity
+            elif resource_type == 9 and resource_id == 1:
+                mana_cost += quantity
+            else:
+                raise ValueError(
+                    f"unsupported ship-part cost type={resource_type} id={resource_id}"
+                )
+        item_records = profile_resource_records(profile_plaintext, 3)
+        changed_items = updated_consumed_item_records(item_records, consumed_items)
+        resources = profile_resources(profile_plaintext)
+        status_record = message_field(resources, 6)
+        if status_record is None:
+            raise ValueError("profile has no Status message for ship-part creation")
+        changed_status = (
+            mana_status_after_delta(status_record, -mana_cost)[0]
+            if mana_cost
+            else None
+        )
+        target = int(part.get("enhance_target", 0))
+        enhance_type = int(part.get("enhance_type", 0))
+        target_id = int(part.get("target_id", 0))
+        value = int(part.get("value", 0)) * count
+        if target == 1:
+            ship_records = profile_resource_records(profile_plaintext, 66)
+            ship = ship_records.get(target_id)
+            if ship is None:
+                raise ValueError(f"profile has no ship {target_id}")
+            if enhance_type == 1:
+                exp = varint_field(ship, 2, 0) + value
+                level_data = progression_master_index("ship_level")
+                derived_rank = max(
+                    (
+                        int(data.get("rank", 0))
+                        for data in level_data.values()
+                        if int(data.get("exp", 0)) <= exp
+                    ),
+                    default=varint_field(ship, 3, 1),
+                )
+                rank = max(varint_field(ship, 3, 1), derived_rank)
+            elif enhance_type == 2:
+                exp = varint_field(ship, 2, 0)
+                rank = varint_field(ship, 3, 1) + value
+            else:
+                raise ValueError(f"unsupported ship enhancement type {enhance_type}")
+            ship = replace_varint_field(ship, 2, exp)
+            ship = replace_varint_field(ship, 3, rank)
+            ship_records = [ship]
+            ship_tool_records = []
+            task_records = profile_resource_records(profile_plaintext, 32)
+            task_counts = [updated_total_task_count_record(task_records, 2875, count)]
+            if 2878 in task_records:
+                task_counts.append(task_records[2878])
+        elif target == 2:
+            ship_tools = profile_resource_records(profile_plaintext, 68)
+            matches = [
+                record
+                for record in ship_tools.values()
+                if varint_field(record, 2, 0) == target_id
+            ]
+            if len(matches) != 1:
+                raise ValueError(f"profile must contain one ship tool with tool_id={target_id}")
+            ship_tool = matches[0]
+            if enhance_type == 1:
+                exp = varint_field(ship_tool, 3, 0) + value
+                level_data = progression_master_index("ship_tool_level")
+                derived_rank = max(
+                    (
+                        int(data.get("rank", 0))
+                        for data in level_data.values()
+                        if int(data.get("exp", 0)) <= exp
+                    ),
+                    default=varint_field(ship_tool, 4, 1),
+                )
+                rank = max(varint_field(ship_tool, 4, 1), derived_rank)
+            elif enhance_type == 2:
+                exp = varint_field(ship_tool, 3, 0)
+                rank = varint_field(ship_tool, 4, 1) + value
+            else:
+                raise ValueError(f"unsupported ship-tool enhancement type {enhance_type}")
+            ship_tool = replace_varint_field(ship_tool, 3, exp)
+            ship_tool = replace_varint_field(ship_tool, 4, rank)
+            ship_records = []
+            ship_tool_records = [ship_tool]
+            task_counts = []
+        else:
+            raise ValueError(f"unsupported ship-part enhancement target {target}")
+
+        self.log(
+            f"LOCAL-SHIP-CREATE path={path} status=200 part={part_id} count={count} "
+            f"target={target} target_id={target_id}"
+        )
+        return self.changed_resources_encrypted_response(
+            response_key,
+            response_iv,
+            response_marker,
+            items=changed_items,
+            status=changed_status,
+            total_task_counts=task_counts,
+            ships=ship_records,
+            ship_tools=ship_tool_records,
         )
 
     def progression_response(self, flow: http.HTTPFlow) -> bytes:
@@ -3462,7 +4111,12 @@ class Replay:
         characters: list[bytes] | None = None,
         parties: list[bytes] | None = None,
         party_members: list[bytes] | None = None,
+        equipment_tools: list[bytes] | None = None,
         equipment_presets: list[bytes] | None = None,
+        battle_tools: list[bytes] | None = None,
+        ships: list[bytes] | None = None,
+        ship_parties: list[bytes] | None = None,
+        ship_tools: list[bytes] | None = None,
         chara_homes: list[bytes] | None = None,
         items: list[bytes] | None = None,
         character_pieces: list[bytes] | None = None,
@@ -3484,6 +4138,11 @@ class Replay:
             total_task_counts=total_task_counts,
             parties=parties,
             party_members=party_members,
+            equipment_tools=equipment_tools,
+            battle_tools=battle_tools,
+            ships=ships,
+            ship_parties=ship_parties,
+            ship_tools=ship_tools,
             growboard_role_rates=growboard_role_rates,
             equipment_presets=equipment_presets,
             chara_homes=chara_homes,
@@ -3903,10 +4562,21 @@ class Replay:
                 f"reencrypted={reencrypted}"
             )
             return True
+        if path == "/web_session/token":
+            flow.response = http.Response.make(
+                200,
+                default_web_session_token_response(),
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": timestamp,
+                },
+            )
+            self.log("DEFAULT path=/web_session/token status=200 token=synthetic")
+            return True
         if path in {
             "/login_bonus/receive",
             "/external_purchase/receive",
-            "/web_session/token",
             EXPEDITION_REWARD_PATH,
         }:
             response_body = (
@@ -4071,11 +4741,77 @@ class Replay:
             "/character/memoria_set",
             "/character/bulk_set",
             "/equipment_preset/bulk_set",
+            "/equipment_preset/equip",
+            "/equipment_preset/memoria_set",
+            "/equipment_preset/update_name",
         }:
             try:
                 response_body = self.party_response(flow)
-            except (OSError, RuntimeError, ValueError, StopIteration) as error:
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
                 self.log(f"PARTY-UPDATE-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time())),
+                },
+            )
+            return
+        if method == "POST" and path in {"/tool/lock", "/tool/convert"}:
+            try:
+                response_body = self.tool_response(flow)
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
+                self.log(f"TOOL-UPDATE-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time())),
+                },
+            )
+            return
+        if method == "POST" and path == "/mana/use_item":
+            try:
+                response_body = self.mana_response(flow)
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
+                self.log(f"MANA-USE-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time())),
+                },
+            )
+            return
+        if method == "POST" and path in {"/ship/bulk_update", "/ship/ship_tools_set", "/ship/create"}:
+            try:
+                response_body = self.ship_response(flow)
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
+                self.log(f"SHIP-UPDATE-FAILED path={path} reason={type(error).__name__}:{error}")
                 flow.response = http.Response.make(
                     503,
                     b"",

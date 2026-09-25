@@ -26,6 +26,9 @@ public sealed class Plugin : BasePlugin
     private static readonly HashSet<int> sourceEventDateOverrideLogged = new();
     private static readonly HashSet<int> episodeDateOverrideLogged = new();
     private static int expeditionTimelineIndex;
+    private static int gachaTimelineTraceCalls;
+    private static bool gachaTimelineBlendTypesLoaded;
+    private static Type[]? gachaTimelineBlendTypes;
     private static readonly (long First, long Second)[] ExpeditionTimelineKeys =
     {
         (8474723593597338938L, 2304692465143954913L),
@@ -44,6 +47,7 @@ public sealed class Plugin : BasePlugin
 
         var harmony = new Harmony("df.resleriana.japaneseofflineevents");
         PatchExpeditionTimelineSelection(harmony);
+        PatchGachaTimelineTrace(harmony);
         PatchBoolean(harmony, typeof(EHPBANEAIPE), "MFKPEBOEEMH", "event availability");
 
         foreach (var methodName in new[]
@@ -161,6 +165,312 @@ public sealed class Plugin : BasePlugin
                 log?.LogWarning($"Could not patch offline Expedition timeline selector {method}: {error.Message}");
             }
         }
+    }
+
+    private void PatchGachaTimelineTrace(Harmony harmony)
+    {
+        if (!string.Equals(
+            Environment.GetEnvironmentVariable("JAPANESE_GACHA_TIMELINE_TRACE"),
+            "1",
+            StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        Log.LogInfo("Offline gacha timeline trace enabled; no timeline data will be modified.");
+        foreach (var typeName in new[]
+        {
+            "GachaPerformTimelineFixDataManager",
+            "GachaTimelinePhaseFixDataManager",
+            "GachaTimelineBranchFixDataManager",
+            "GachaTimelineConditionFixDataManager",
+            "GachaTimelineConditionTeamFixDataManager",
+            "GachaProbabilityTableFixDataManager",
+        })
+        {
+            Type? type;
+            try
+            {
+                type = FindGachaTimelineManagerType(typeName);
+            }
+            catch (Exception error)
+            {
+                Log.LogWarning($"Could not resolve offline gacha timeline manager {typeName}: {error.GetType().Name}");
+                continue;
+            }
+
+            if (type is null)
+            {
+                Log.LogWarning($"Could not find offline gacha timeline manager {typeName}.");
+                continue;
+            }
+
+            MethodInfo[] methods;
+            try
+            {
+                methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly)
+                    .Where(method => method.ReturnType != typeof(void)
+                        && !method.ContainsGenericParameters
+                        && method.Name.StartsWith("Get", StringComparison.Ordinal)
+                        && method.Name.EndsWith("Data", StringComparison.Ordinal))
+                    .ToArray();
+            }
+            catch (Exception error)
+            {
+                Log.LogWarning($"Could not enumerate offline gacha timeline manager {typeName}: {error.GetType().Name}");
+                continue;
+            }
+
+            foreach (var method in methods)
+            {
+                try
+                {
+                    harmony.Patch(method, postfix: new HarmonyMethod(typeof(Plugin), nameof(TraceGachaTimelineData)));
+                    Log.LogInfo($"Tracing offline gacha timeline data method: {method}");
+                }
+                catch (Exception error)
+                {
+                    Log.LogWarning($"Could not trace offline gacha timeline data method {method}: {error.GetType().Name}");
+                }
+            }
+
+            if (methods.Length == 0)
+            {
+                Log.LogWarning($"No data lookup methods found on offline gacha timeline manager {typeName}.");
+            }
+        }
+    }
+
+    private static Type? FindGachaTimelineManagerType(string typeName)
+    {
+        var type = AccessTools.TypeByName(typeName);
+        if (type is not null)
+        {
+            return type;
+        }
+
+        if (!gachaTimelineBlendTypesLoaded)
+        {
+            gachaTimelineBlendTypesLoaded = true;
+            var blendAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .FirstOrDefault(assembly => string.Equals(assembly.GetName().Name, "Blend", StringComparison.Ordinal));
+            if (blendAssembly is not null)
+            {
+                try
+                {
+                    gachaTimelineBlendTypes = blendAssembly.GetTypes();
+                }
+                catch (ReflectionTypeLoadException error)
+                {
+                    gachaTimelineBlendTypes = error.Types.Where(candidate => candidate is not null).Cast<Type>().ToArray();
+                }
+            }
+        }
+
+        return gachaTimelineBlendTypes?.FirstOrDefault(candidate => string.Equals(candidate.Name, typeName, StringComparison.Ordinal));
+    }
+
+    private static void TraceGachaTimelineData(MethodBase __originalMethod, object[] __args, object? __result)
+    {
+        if (Interlocked.Increment(ref gachaTimelineTraceCalls) > 160)
+        {
+            return;
+        }
+
+        try
+        {
+            var arguments = string.Join(", ", (__args ?? Array.Empty<object>()).Select(SummarizeGachaTimelineValue));
+            log?.LogInfo(
+                $"[GachaTimelineTrace] {__originalMethod.DeclaringType?.FullName}.{__originalMethod.Name} "
+                + $"args=[{arguments}] result={SummarizeGachaTimelineValue(__result)}");
+        }
+        catch (Exception error)
+        {
+            log?.LogWarning($"[GachaTimelineTrace] Could not summarize a gacha data lookup: {error.GetType().Name}");
+        }
+    }
+
+    private static string SummarizeGachaTimelineValue(object? value)
+    {
+        if (value is null)
+        {
+            return "null";
+        }
+
+        var valueType = value.GetType();
+        if (IsGachaTraceScalar(valueType))
+        {
+            return FormatGachaTraceScalar(value);
+        }
+
+        var items = ReadGachaTraceItems(value);
+        if (items is not null)
+        {
+            var count = ReadGachaTraceCount(value) ?? items.Count;
+            return $"{valueType.Name}[count={count}; {string.Join(" | ", items.Select(item => item is null ? "null" : SummarizeGachaTimelineObject(item)))}]";
+        }
+
+        return SummarizeGachaTimelineObject(value);
+    }
+
+    private static string SummarizeGachaTimelineObject(object value)
+    {
+        var valueType = value.GetType();
+        var members = new List<string>();
+        const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+
+        foreach (var property in valueType.GetProperties(flags))
+        {
+            if (members.Count >= 24 || property.GetIndexParameters().Length != 0 || !IsGachaTraceScalar(property.PropertyType))
+            {
+                continue;
+            }
+
+            try
+            {
+                var propertyValue = property.GetValue(value);
+                if (!IsDefaultGachaTraceValue(propertyValue))
+                {
+                    members.Add($"{property.Name}={FormatGachaTraceScalar(propertyValue!)}");
+                }
+            }
+            catch
+            {
+                // A generated IL2CPP property may not be readable from this trace hook.
+            }
+        }
+
+        if (members.Count < 24)
+        {
+            foreach (var field in valueType.GetFields(flags))
+            {
+                if (members.Count >= 24 || !IsGachaTraceScalar(field.FieldType))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    var fieldValue = field.GetValue(value);
+                    if (!IsDefaultGachaTraceValue(fieldValue))
+                    {
+                        members.Add($"{field.Name}={FormatGachaTraceScalar(fieldValue!)}");
+                    }
+                }
+                catch
+                {
+                    // A generated IL2CPP field may not be readable from this trace hook.
+                }
+            }
+        }
+
+        return members.Count == 0
+            ? valueType.FullName ?? valueType.Name
+            : $"{valueType.Name}{{{string.Join(", ", members)}}}";
+    }
+
+    private static List<object?>? ReadGachaTraceItems(object value)
+    {
+        var items = new List<object?>();
+        if (value is System.Collections.IEnumerable enumerable)
+        {
+            foreach (var item in enumerable)
+            {
+                if (items.Count >= 8)
+                {
+                    break;
+                }
+
+                items.Add(item);
+            }
+
+            return items;
+        }
+
+        try
+        {
+            const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+            var getEnumerator = value.GetType().GetMethods(flags)
+                .FirstOrDefault(method => method.Name.EndsWith("GetEnumerator", StringComparison.Ordinal)
+                    && method.GetParameters().Length == 0);
+            var enumerator = getEnumerator?.Invoke(value, null);
+            if (enumerator is null)
+            {
+                return null;
+            }
+
+            var enumeratorType = enumerator.GetType();
+            var moveNext = enumeratorType.GetMethods(flags)
+                .FirstOrDefault(method => method.Name.EndsWith("MoveNext", StringComparison.Ordinal)
+                    && method.GetParameters().Length == 0);
+            var current = enumeratorType.GetProperties(flags)
+                .FirstOrDefault(property => property.Name.EndsWith("Current", StringComparison.Ordinal)
+                    && property.GetIndexParameters().Length == 0);
+            if (moveNext is null || current is null)
+            {
+                return null;
+            }
+
+            while (items.Count < 8 && moveNext.Invoke(enumerator, null) is true)
+            {
+                items.Add(current.GetValue(enumerator));
+            }
+
+            return items;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static int? ReadGachaTraceCount(object value)
+    {
+        try
+        {
+            var property = value.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .FirstOrDefault(candidate => candidate.Name.EndsWith("Count", StringComparison.Ordinal)
+                    && candidate.GetIndexParameters().Length == 0
+                    && candidate.PropertyType == typeof(int));
+            return property?.GetValue(value) as int?;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static bool IsGachaTraceScalar(Type type)
+    {
+        var scalarType = Nullable.GetUnderlyingType(type) ?? type;
+        return scalarType.IsPrimitive || scalarType.IsEnum || scalarType == typeof(string) || scalarType == typeof(decimal);
+    }
+
+    private static bool IsDefaultGachaTraceValue(object? value)
+    {
+        if (value is null || value is string text && text.Length == 0)
+        {
+            return true;
+        }
+
+        if (value is bool boolean)
+        {
+            return !boolean;
+        }
+
+        try
+        {
+            return Convert.ToDecimal(value, System.Globalization.CultureInfo.InvariantCulture) == decimal.Zero;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static string FormatGachaTraceScalar(object value)
+    {
+        return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
     }
 
     private static void RotateExpeditionTimeline(ref HomeMenuScenePerform.DIDFNDGNMDN __result)

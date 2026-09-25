@@ -20,6 +20,8 @@ Do not run `dotnet build` against a `.py` file. Python tools are built with Pyth
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\edit_japanese_capture.py"
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\create_starter_profile.py"
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseProfileEditor\profile_editor.py"
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\tests\test_replay_progression.py"
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m unittest discover -s "tools\JapaneseOffline\tests" -p "test_replay_progression.py"
 ```
 
 Remove generated `__pycache__` directories when preparing a package.
@@ -58,6 +60,8 @@ The package's `game-root\starter-profile.bin` is generated from an encrypted new
 ```
 
 The normal launcher copies this starter file to `profile.bin` only when no profile exists. It does not seed full `-replay` mode or overwrite an existing profile.
+
+`progression-master` also contains Japanese `battle_tool.json`, `equipment_tool.json`, `trait_rank_total.json`, `ship_part.json`, `ship_level.json`, and `ship_tool_level.json` tables used by generated tool-conversion and ship-upgrade handlers. Keep these files synchronized across `dist`, share runtime/source, and the installed game.
 
 ## JapaneseCaptureObserver.exe
 

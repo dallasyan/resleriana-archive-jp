@@ -106,6 +106,37 @@ A separate local upgrade session added 23 progression operations. The raw sessio
 | `/character/level_limit_release` | 4 |
 | `/character/rarity_enhance` | 1 |
 
+## Supplemental Ship and Equipment Progression Capture
+
+A local three-session Japanese capture on 2026-09-25 covered ship/subspace equipment and character/equipment/Memoria configuration. The captured profile snapshots remain private; only endpoint names and operation counts are tracked here.
+
+| Endpoint | Captured operations |
+|---|---:|
+| `/character/bulk_set` | 1 |
+| `/character/equip` | 2 |
+| `/character/memoria_set` | 1 |
+| `/equipment_preset/bulk_set` | 1 |
+| `/equipment_preset/equip` | 1 |
+| `/equipment_preset/memoria_set` | 1 |
+| `/mana/use_item` | 1 |
+| `/party/bulk_update` | 2 |
+| `/ship/bulk_update` | 4 |
+| `/ship/create` | 3 |
+| `/ship/ship_tools_set` | 1 |
+| `/tool/convert` | 2 |
+| `/tool/lock` | 2 |
+
+## Supplemental Gacha Capture
+
+A local Japanese session on 2026-09-25 recorded 24 pulls from one banner, three gacha-list refreshes, wishlist changes, and the associated web-session token requests. Pull results and profile data remain private. The captured GachaListResponse includes exact rates and card lists for five standard and 22 mixed-wishlist sets. Japanese `gacha_rate.json`/`gacha_deck.json` provide rate-set/deck categories, priorities, pickup/wishlist flags, card types, and rarities; they do not enumerate explicit card-pool membership or calculated per-card percentages.
+
+| Endpoint | Captured operations |
+|---|---:|
+| `/gacha/execute` | 24 |
+| `/gacha/list` | 3 |
+| `/gacha/wish_list_set` | 4 |
+| `/web_session/token` | 28 |
+
 ## Status Legend
 
 - **Implemented**: a generated handler is present in `tools/JapaneseOffline/replay_japanese.py`.
@@ -125,7 +156,7 @@ A separate local upgrade session added 23 progression operations. The raw sessio
 | `/user/log_in` | Hybrid capture; generated handler | Asset negotiation followed by the current game-root `profile.bin`. |
 | `/login_bonus/receive` | Hybrid capture; generated stub | Generated mode returns a fixed regular bonus response. |
 | `/external_purchase/receive` | Hybrid capture; generated empty response | The captured/generated empty form is a 17-byte encrypted envelope and omits `X-Content-Encoding: gzip`. |
-| `/web_session/token` | Hybrid capture; generated empty response | No web session is created. |
+| `/web_session/token` | Generated | Returns a fresh synthetic UUID in `WebSessionTokenResponse`; the route supplies a web-session credential, not article content. |
 | `/character/skin_set` | Generated | Mutates the active profile and persists it. |
 | `/party/bulk_update` | Generated | Updates parties and party members; persists changes. |
 | `/party/battle_tools_set` | Generated | Updates assigned battle tools; persists changes. |
@@ -133,6 +164,9 @@ A separate local upgrade session added 23 progression operations. The raw sessio
 | `/character/equip` | Generated | Updates equipment; persists changes. |
 | `/character/memoria_set` | Generated | Updates equipped Memoria; persists changes. |
 | `/equipment_preset/bulk_set` | Generated | Updates equipment presets; persists changes. |
+| `/equipment_preset/equip` | Generated | Sets or clears one equipment slot in a preset; persists changes. |
+| `/equipment_preset/memoria_set` | Generated | Sets or clears the Memoria in a preset; persists changes. |
+| `/equipment_preset/update_name` | Generated (schema-backed) | Updates a preset display name; Japanese capture evidence is not yet available. |
 | `/character/enhance` | Generated | Consumes EXP items, caps EXP one point below the threshold from `growboard_level_limit + level_limit_increase_value + 1`, charges 10% of item EXP in Cole, updates level/milestone missions, and persists. |
 | `/character/rarity_enhance` | Generated | Uses Japanese rarity/piece/additional-cost tables; updates character, pieces, Neo maximum page, items, Cole, awaken totals, and character-specific awaken tasks. |
 | `/character/enhancement_reset` | Generated | Captured level-only/full reset refunds EXP items, Cole, released panel costs, and mission progress. Resetting after level-limit release uses the Japanese step-cost table; that combined case is not separately captured. |
@@ -143,6 +177,8 @@ A separate local upgrade session added 23 progression operations. The raw sessio
 | `/memoria/limit_break` | Generated | Consumes duplicate Memoria entities, updates limit break/task progress, reports deletions, and persists. |
 | `/memoria/lock` | Generated | Updates the selected Memoria lock state and persists. |
 | `/memoria/sell` | Generated | Sells unlocked Memoria using Japanese rarity values; returns Cole reward/deletions and persists. |
+| `/tool/lock` | Generated | Locks or unlocks a Battle Tool or Equipment Tool; persists changes. |
+| `/tool/convert` | Generated | Converts Battle Tools or Equipment Tools using Japanese rarity/trait-rank rewards, removes converted entities, and persists. |
 | `/chara_home/register` | Generated | Updates Home configuration; persists changes. |
 | `/profile/update_chara_home_favorite_character_list` | Generated | Updates Home favorites; persists changes. |
 | `/profile/update_selected_home_id` | Generated | Updates selected Home; persists changes. |
@@ -151,6 +187,10 @@ A separate local upgrade session added 23 progression operations. The raw sessio
 | `/exploration/start` | Generated | Starts exploration from the selected profile party and route table; persists progress. |
 | `/exploration/finish` | Partial/stub | Returns an empty successful finish response. |
 | `/expedition/reward_receive` | Partial/stub | Generated mode returns an empty response; special reward patch is available only in replay mode. |
+| `/mana/use_item` | Generated | Consumes Mana items, applies Japanese hourly regeneration, updates Mana, and persists. |
+| `/ship/bulk_update` | Generated (Japanese capture) | Updates ship-party characters and Memoria selections; persists changes. |
+| `/ship/ship_tools_set` | Generated (Japanese capture) | Updates ship-party support/cannon selections; persists changes. |
+| `/ship/create` | Generated (Japanese capture) | Applies Japanese ship-part costs to Mana/items and advances ship/ship-tool EXP or rank; persists changes. |
 | `/quest/talk_event/finish` | Client bypass | Offline Events plugin bypasses the client request. |
 | CDN `/master_data/*`, `/manifest.json` | Generated/local asset | Served by the mitmproxy addon, outside the game API `Replay.respond` route table. |
 
@@ -184,11 +224,7 @@ These routes are not currently implemented by the generated/hybrid Japanese repl
 
 ### Character, equipment, and Memoria progression
 
-- [ ] `/equipment_preset/equip`
-- [ ] `/equipment_preset/memoria_set`
-- [ ] `/equipment_preset/update_name`
-- [ ] `/tool/convert`
-- [ ] `/tool/lock` (Japanese capture only)
+- All currently implemented routes in this section are listed under **Currently Covered** above.
 
 ### Profile, mail, mission, and progression
 
@@ -219,7 +255,6 @@ These routes are not currently implemented by the generated/hybrid Japanese repl
 
 - [ ] `/dish/order` (also observed in Japanese captures)
 - [ ] `/mana/purchase`
-- [ ] `/mana/use_item` (Japanese capture only)
 - [ ] `/stamina/purchase` (also observed in Japanese captures)
 - [ ] `/stamina/use_item`
 - [ ] `/stamina/use_spare_stamina`
@@ -233,14 +268,13 @@ These routes are not currently implemented by the generated/hybrid Japanese repl
 - [ ] `/synthesis/combination_ranking` (also observed in Japanese captures)
 - [ ] `/synthesis/execute_rental` (also observed in Japanese captures)
 - [ ] `/synthesis/execute_easy`
-- [ ] `/gacha/list` (Japanese capture only; absent from reference route registry)
-- [ ] `/gacha/execute` (Japanese capture only; absent from reference route registry)
+- [ ] `/gacha/list` (Japanese capture only; captured rates are calculated in the response, not explicit percentage fields in the master tables)
+- [ ] `/gacha/execute` (Japanese capture only; the latest session covers 10-draws on the guaranteed 3-star character banner)
 - [ ] `/gacha/wish_list_set` (Japanese capture only)
 - [ ] `/growth_pack/bulk_receive` (Japanese capture only)
 - [ ] `/emblem/acquisition_drama` (Japanese capture only)
 - [ ] `/recipe/favorite` (Japanese capture only)
 - [ ] `/recipe/count_reward_receive` (Japanese capture only)
-- [ ] `/ship/create` (Japanese capture only; absent from reference route registry)
 - [ ] `/event/top` (Japanese capture only; absent from reference route registry)
 - [ ] `/auth/sign_up` (Japanese capture only)
 - [ ] `/user/unlink_steam` (Japanese capture only)

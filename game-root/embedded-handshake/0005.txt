@@ -8,9 +8,6 @@ Content-Type: application/octet-stream
 x-client-version: 2.16.0-VG7E5UIT7PQG3XSU
 x-asset-version: 1787706536_QVzMLXDQ2KLO9bgR
 x-master-data-version: 1787730744__RjK13fBy4f67c4c
-x-user-id: 100000000001
-x-session-token: 11111111-1111-4111-8111-111111111111
-x-request-id: 00000000-0000-0000-0000-000000000000
 x-platform: steam
 Host: game.resleriana.jp
 Accept-Encoding: gzip, identity
