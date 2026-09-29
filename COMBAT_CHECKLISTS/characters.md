@@ -2,223 +2,223 @@
 
 # Characters (216)
 
-Status: Implemented = resolves fully in the sim; Partial = resolves generically with some effects records-only; Missing = not implemented; Unsure = needs capture confirmation. EN is filled only where a local mapping exists; blank EN means untranslated proper noun.
+Status: Implemented = resolves fully in the sim; Partial = resolves generically with some effects records-only; Missing = not implemented; Unsure = needs capture confirmation. EN is filled only where a local mapping exists; blank EN means untranslated proper noun. Notes name the specific missing effect/ability IDs and the open value, duration, condition, or target questions for mapped parts.
 
 | id | ja | en | role | status | note |
 |---|---|---|---|---|---|
-| 10101 | マリー | Marie | Breaker | Implemented | skills/burst/active/extra resolve; 3/3 abilities parsed |
-| 10102 | マリー | Marie | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 10103 | マリー | Marie | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 10104 | マリー | Marie | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 10199 | マリー | Marie | Breaker | Implemented | skills/burst/active/extra resolve; 3/3 abilities parsed |
-| 10201 | シア | Schea | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 10301 | ミュー | Mu | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 10701 | ルーウェン | Ruven | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 12001 | エリー | Elie | Supporter | Implemented | skills/burst/active/extra resolve; 3/3 abilities parsed |
-| 13401 | リリー | Lilie | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 15101 | ユーディー | Judie | Defender | Implemented | skills/burst/active/extra resolve; 3/3 abilities parsed |
-| 15102 | ユーディー | Judie | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 16501 | ヴィオラート | Viorate | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 22001 | ヴェイン | Vayne | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 23501 | ロゼ | Raze | Breaker | Implemented | skills/burst/active/extra resolve; 2/3 abilities parsed |
-| 25501 | ロロナ | Rorona | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 25502 | ロロナ | Rorona | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 25503 | ロロナ | Rorona | Supporter | Implemented | skills/burst/active/extra resolve; 2/3 abilities parsed |
-| 25504 | ロロナ | Rorona | Defender | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 25505 | ロロナ | Rorona | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 25506 | ロロナ | Rorona | Supporter | Implemented | skills/burst/active/extra resolve; 0/2 abilities parsed |
-| 25601 | クーデリア | Cordelia | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 25801 | イクセル | Iksel | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 25901 | ステルク | Sterk | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 26501 | エスティ | Esty | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 26901 | トトリ | Totori | Supporter | Implemented | skills/burst/active/extra resolve; 3/3 abilities parsed |
-| 26902 | トトリ | Totori | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 26903 | トトリ | Totori | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 26904 | トトリ | Totori | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 27001 | ミミ | Mimi | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 27002 | ミミ | Mimi | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 28401 | メルル | Meruru | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 28402 | メルル | Meruru | Attacker | Implemented | skills/burst/active/extra resolve; 3/3 abilities parsed |
-| 29201 | アーシャ | Ayesha | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 29202 | アーシャ | Ayesha | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 29203 | アーシャ | Ayesha | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 29301 | ウィルベル | Wilbell | Attacker | Implemented | skills/burst/active/extra resolve; 2/3 abilities parsed |
-| 29302 | ウィルベル | Wilbell | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 29401 | レジナ | Regina | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 29501 | リンカ | Linca | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 29502 | リンカ | Linca | Breaker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 29601 | ニオ | Nio | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 29701 | マリオン | Marion | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 29702 | マリオン | Marion | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 29801 | オディーリア | Odelia | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 29901 | キースグリフ | Keithgriff | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 30901 | エスカ | Escha | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 30902 | エスカ | Escha | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 30903 | エスカ | Escha | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 31001 | ロジー | Logy | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 31002 | ロジー | Logy | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 32201 | シャリステラ | Shallistera | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 32202 | シャリステラ | Shallistera | Supporter | Implemented | skills/burst/active/extra resolve; 3/3 abilities parsed |
-| 32203 | シャリステラ | Shallistera | Breaker | Implemented | skills/burst/active/extra resolve; 0/2 abilities parsed |
-| 32301 | シャルロッテ | Shallotte | Breaker | Implemented | skills/burst/active/extra resolve; 3/3 abilities parsed |
-| 32401 | ミルカ | Miruca | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 32501 | ユリエ | Jurie | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 33001 | ナディ | Nady | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 33401 | ソフィー | Sophie | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 33402 | ソフィー | Sophie | Supporter | Implemented | skills/burst/active/extra resolve; 2/3 abilities parsed |
-| 33403 | ソフィー | Sophie | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 33404 | ソフィー | Sophie | Defender | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 33501 | プラフタ | Plachta | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 33502 | プラフタ | Plachta | Supporter | Implemented | skills/burst/active/extra resolve; 2/3 abilities parsed |
-| 33503 | プラフタ | Plachta | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 33504 | プラフタ | Plachta | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 33601 | モニカ | Monika | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 33701 | コルネリア | Corneria | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 33801 | オスカー | Oskar | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 33901 | テス | Tess | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 35001 | フィリス | Firis | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 35002 | フィリス | Firis | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 35003 | フィリス | Firis | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 35101 | イルメリア | Ilmeria | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 37401 | リディー | Lydie | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 37402 | リディー | Lydie | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 37501 | スール | Suelle | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 37502 | スール | Suelle | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 39901 | ライザ | Ryza | Attacker | Implemented | skills/burst/active/extra resolve; 3/3 abilities parsed |
-| 39902 | ライザ | Ryza | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 39903 | ライザ | Ryza | Breaker | Implemented | skills/burst/active/extra resolve; 2/3 abilities parsed |
-| 39904 | ライザ | Ryza | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 39905 | ライザ | Ryza | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 39906 | ライザ | Ryza | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 39907 | ライザ | Ryza | Defender | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 40001 | クラウディア | Klaudia | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 40002 | クラウディア | Klaudia | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 40003 | クラウディア | Klaudia | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 40004 | クラウディア | Klaudia | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 40005 | クラウディア | Klaudia | Attacker | Implemented | skills/burst/active/extra resolve; 0/2 abilities parsed |
-| 40101 | リラ | Lila | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 40102 | リラ | Lila | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 40201 | レント | Lent | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 40301 | タオ | Tao | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 40401 | アンペル | Empel | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 40402 | アンペル | Empel | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 41501 | パトリツィア | Patricia | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43101 | レスナ | Resna | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43102 | レスナ | Resna | Supporter | Implemented | skills/burst/active/extra resolve; 3/3 abilities parsed |
-| 43103 | レスナ | Resna | Attacker | Implemented | skills/burst/active/extra resolve; 2/3 abilities parsed |
-| 43104 | レスナ | Resna | Attacker | Implemented | skills/burst/active/extra resolve; 2/3 abilities parsed |
-| 43105 | レスナ | Resna | Breaker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 43106 | レスナ | Resna | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 43107 | レスナ | Resna | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43108 | レスナ | Resna | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43109 | レスナ | Resna | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 43110 | レスナ | Resna | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 43111 | レスナ | Resna | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 43201 | ヴァレリア | Valeria | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43202 | ヴァレリア | Valeria | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43203 | ヴァレリア | Valeria | Attacker | Implemented | skills/burst/active/extra resolve; 2/3 abilities parsed |
-| 43204 | ヴァレリア | Valeria | Attacker | Implemented | skills/burst/active/extra resolve; 1/3 abilities parsed |
-| 43205 | ヴァレリア | Valeria | Breaker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 43206 | ヴァレリア | Valeria | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43207 | ヴァレリア | Valeria | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43208 | ヴァレリア | Valeria | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 43209 | ヴァレリア | Valeria | Attacker | Implemented | skills/burst/active/extra resolve; 0/2 abilities parsed |
-| 43301 | ロマン | Roman | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43302 | ロマン | Roman | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43303 | ロマン | Roman | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43401 | ユナ | Juna | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43402 | ユナ | Juna | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43403 | ユナ | Juna | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43404 | ユナ | Juna | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 43501 | ハイディ | Heidi | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43502 | ハイディ | Heidi | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43503 | ハイディ | Heidi | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43504 | ハイディ | Heidi | Breaker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 43505 | ハイディ | Heidi | Breaker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 43599 | ハイディ | Heidi | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43601 | フロッケ | Flocke | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43602 | フロッケ | Flocke | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43603 | フロッケ | Flocke | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43701 | ランツェ | Lanze | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43801 | イザナ | Izana | Attacker | Implemented | skills/burst/active/extra resolve; 2/3 abilities parsed |
-| 43802 | イザナ | Izana | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43803 | イザナ | Izana | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 43804 | イザナ | Izana | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 43805 | イザナ | Izana | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43806 | イザナ | Izana | Breaker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 43901 | ザスキア | Saskia | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 43902 | ザスキア | Saskia | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 43999 | ザスキア | Saskia | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 44001 | ヨハナ | Johanna | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 44002 | ヨハナ | Johanna | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 44003 | ヨハナ | Johanna | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 44004 | 鴉 | Crow | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 44005 | ヨハナ | Johanna | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 44101 | ジェロン | Geron | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 44102 | ジェロン | Geron | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 44201 | ララ | Lara | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 44202 | ララ | Lara | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 44203 | ララ | Lara | Defender | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 44204 | ララ | Lara | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 44301 | エレン | Eren | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 44401 | ミーケ | Mieke | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 44501 | ディオーナ | Diona | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 44601 | マクダ | Magda | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 44701 | ブラッド | Brad | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 44801 | アンチュ | Antje | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 44802 | アンチュ | Antje | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 44803 | アンチュ | Antje | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 44804 | アンチュ | Antje | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 44901 | ワルター | Walther | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 44902 | ワルター | Walther | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 45001 | クリセルダ | Criselda | Breaker | Implemented | skills/burst/active/extra resolve; 0/2 abilities parsed |
-| 45002 | クリセルダ | Criselda | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 45003 | クリセルダ | Criselda | Breaker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 45004 | クリセルダ | Criselda | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 45101 | ベップ | Bepp | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 45102 | ベップ | Bepp | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 45201 | アルビーナ | Alvina | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 45202 | アルビーナ | Alvina | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 45203 | アルビーナ | Alvina | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 45301 | ヤンネ | Janne | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 45302 | ヤンネ | Janne | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 45401 | イェルカ | Jelka | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 45402 | イェルカ | Jelka | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 45599 | アウグスト | August | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 45601 | 鬼門 | Kimon | Attacker | Implemented | skills/burst/active/extra resolve; 0/2 abilities parsed |
-| 45602 | 鬼門 | Kimon | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 45701 | 永遠 | Towa | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 45801 | 鏑矢 | Kaburaya | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 45901 | 千歳 | Chitose | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 46001 | ゴゥ | Gou | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 46002 | ゴゥ | Gou | Breaker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 46101 | リーベ | Liebe | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 46102 | リーベ | Liebe | Defender | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 46201 | シトリン | Citrine | Attacker | Implemented | skills/burst/active/extra resolve; 0/2 abilities parsed |
-| 46202 | シトリン | Citrine | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 46401 | ティム | Tim | Supporter | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 46501 | タイニー | Tiny | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 46601 | ジョゼ | José | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 46701 | エルス | Els | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 46801 | カロリン | Caroline | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 46901 | ゼロ | Zero | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 47001 | メーヴェ | Mowen | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 47101 | ヘルト | Held | Breaker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 47201 | キューン | Quinn | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 47301 | ヤドヴィガ | Jadwiga | Breaker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 50101 | ユミア | Yumia | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 50201 | ヴィクトル | Viktor | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 50301 | レイニャ | Lenja | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 50401 | アイラ | Isla | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 50501 | ルトガー | Rutger | Defender | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 50601 | ニーナ | Nina | Supporter | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 60101 | リアス | Rias | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 60201 | スレイ | Slade | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 70101 | マリー・ローズ | Marie Rose | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 70201 | ほのか | Honoka | Breaker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 143204 | ヴァレリア | Valeria | Attacker | Implemented | skills/burst/active/extra resolve; 1/3 abilities parsed |
-| 144203 | ララ | Lara | Defender | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 144802 | アンチュ | Antje | Attacker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
-| 1039904 | ライザ | Ryza | Attacker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 1040003 | クラウディア | Klaudia | Breaker | Implemented | skills/burst/active/extra resolve; 2/2 abilities parsed |
-| 1043105 | レスナ | Resna | Breaker | Implemented | skills/burst/active/extra resolve; 1/2 abilities parsed |
+| 10101 | マリー | Marie | Breaker | Partial | done: normal skills; burst 14000281, 14000281, 14000281, 14000282, 14000283, 14000284, 14000285, 14002304; 1/3 abilities fully implemented; missing: abilities not fully implemented 1990057, 1990324; unsure: leader condition values estimated |
+| 10102 | マリー | Marie | Attacker | Implemented | done: normal skills; burst 14000826, 14000826, 14000826, 14000827, 14000828, 14000829, 14000830; 2/2 abilities fully implemented; unsure: leader condition values estimated |
+| 10103 | マリー | Marie | Attacker | Partial | done: normal skills; burst 14001339, 14001339, 14001339, 14001340, 14001341, 14001342, 14001343; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990197; unsure: leader condition values estimated |
+| 10104 | マリー | Marie | Attacker | Partial | done: normal skills; burst 14001809, 14001809, 14001809, 14001810, 14001811, 14001812, 14001813; missing: abilities not fully implemented 1990248, 1990249; unsure: leader condition values estimated |
+| 10199 | マリー | Marie | Breaker | Partial | done: normal skills; burst 14000281, 14000281, 14000281, 14000282, 14000283, 14000284, 14000285, 14002304; 1/3 abilities fully implemented; missing: abilities not fully implemented 1990057, 1990324; unsure: leader condition values estimated |
+| 10201 | シア | Schea | Supporter | Partial | done: normal skills; burst 14002209, 14002209, 14002209, 14002210, 14002211, 14002212, 14002213; missing: abilities not fully implemented 1990288, 1990289; unsure: leader condition values estimated |
+| 10301 | ミュー | Mu | Attacker | Partial | done: normal skills; burst 14000296, 14000296, 14000296, 14000297, 14000298, 14000299, 14000300; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990073; unsure: leader condition values estimated |
+| 10701 | ルーウェン | Ruven | Attacker | Partial | done: normal skills; burst 14000311, 14000311, 14000311, 14000312, 14000313, 14000314, 14000315; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990075; unsure: leader condition values estimated |
+| 12001 | エリー | Elie | Supporter | Partial | done: normal skills; burst 14000551, 14000551, 14000551, 14000552, 14000553, 14000554, 14000555, 14003143; 1/3 abilities fully implemented; missing: abilities not fully implemented 1990103, 1990387; unsure: leader condition values estimated |
+| 13401 | リリー | Lilie | Breaker | Partial | done: normal skills; burst 14000566, 14000566, 14000566, 14000567, 14000568, 14000569, 14000570; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990105; unsure: leader condition values estimated |
+| 15101 | ユーディー | Judie | Defender | Partial | done: normal skills; burst 14000011, 14000011, 14000011, 14000012, 14000013, 14000014, 14000015, 14003131; missing: abilities not fully implemented 1990052, 1990053, 1990386; unsure: leader condition values estimated |
+| 15102 | ユーディー | Judie | Attacker | Implemented | done: normal skills; burst 14001929, 14001929, 14001929, 14001930, 14001931, 14001932, 14001933; 2/2 abilities fully implemented; unsure: leader condition values estimated |
+| 16501 | ヴィオラート | Viorate | Attacker | Partial | done: normal skills; burst 14000326, 14000326, 14000326, 14000327, 14000328, 14000329, 14000330; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990077; unsure: leader condition values estimated |
+| 22001 | ヴェイン | Vayne | Attacker | Partial | done: normal skills; burst 14000116, 14000116, 14000116, 14000117, 14000118, 14000119, 14000120; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990033; unsure: leader condition values estimated |
+| 23501 | ロゼ | Raze | Breaker | Partial | done: normal skills; burst 14000026, 14000026, 14000026, 14000027, 14000028, 14000029, 14000030, 14003455; 1/3 abilities fully implemented; missing: abilities not fully implemented 1990020, 1990497; unsure: leader condition values estimated |
+| 25501 | ロロナ | Rorona | Attacker | Partial | done: normal skills; burst 14000131, 14000131, 14000131, 14000132, 14000133, 14000134, 14000135; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990035; unsure: leader condition values estimated |
+| 25502 | ロロナ | Rorona | Supporter | Partial | done: normal skills; burst 14000966, 14000966, 14000966, 14000967, 14000968, 14000969, 14000970; missing: abilities not fully implemented 1990156, 1990157; unsure: leader condition values estimated |
+| 25503 | ロロナ | Rorona | Supporter | Partial | done: normal skills; burst 14001199, 14001199, 14001199, 14001200, 14001201, 14001202, 14001203, 14003740; missing: abilities not fully implemented 1990189, 1990190, 1990541; unsure: leader condition values estimated |
+| 25504 | ロロナ | Rorona | Defender | Partial | done: normal skills; burst 14001794, 14001794, 14001794, 14001795, 14001796, 14001797, 14001798; missing: abilities not fully implemented 1990246, 1990247; unsure: leader condition values estimated |
+| 25505 | ロロナ | Rorona | Defender | Partial | done: normal skills; burst 14002903, 14002903, 14002903, 14002904, 14002905, 14002906, 14002907; missing: abilities not fully implemented 1990367, 1990368; unsure: leader condition values estimated |
+| 25506 | ロロナ | Rorona | Supporter | Partial | done: normal skills; burst 14003566, 14003566, 14003566, 14003567, 14003568, 14003569, 14003570; missing: abilities not fully implemented 1990510, 1990511; unsure: leader condition values estimated |
+| 25601 | クーデリア | Cordelia | Attacker | Partial | done: normal skills; burst 14000341, 14000341, 14000341, 14000342, 14000343, 14000344, 14000345; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990079; unsure: leader condition values estimated |
+| 25801 | イクセル | Iksel | Supporter | Partial | done: normal skills; burst 14000356, 14000356, 14000356, 14000357, 14000358, 14000359, 14000360; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990081; unsure: leader condition values estimated |
+| 25901 | ステルク | Sterk | Breaker | Partial | done: normal skills; burst 14000981, 14000981, 14000981, 14000982, 14000983, 14000984, 14000985; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990159; unsure: leader condition values estimated |
+| 26501 | エスティ | Esty | Attacker | Partial | done: normal skills; burst 14000371, 14000371, 14000371, 14000372, 14000373, 14000374, 14000375; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990083; unsure: leader condition values estimated |
+| 26901 | トトリ | Totori | Supporter | Partial | done: normal skills; burst 14000041, 14000041, 14000041, 14000042, 14000043, 14000044, 14000045, 14003510; 1/3 abilities fully implemented; missing: abilities not fully implemented 1990023, 1990505; unsure: leader condition values estimated |
+| 26902 | トトリ | Totori | Defender | Partial | done: normal skills; burst 14000951, 14000951, 14000951, 14000952, 14000953, 14000954, 14000955; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990154; unsure: leader condition values estimated |
+| 26903 | トトリ | Totori | Breaker | Partial | done: normal skills; burst 14001324, 14001324, 14001324, 14001325, 14001326, 14001327, 14001328; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990200; unsure: leader condition values estimated |
+| 26904 | トトリ | Totori | Supporter | Partial | done: normal skills; burst 14002883, 14002883, 14002883, 14002884, 14002885, 14002886, 14002887; actives 14002908; missing: abilities not fully implemented 1990364, 1990365; unsure: leader condition values estimated |
+| 27001 | ミミ | Mimi | Defender | Partial | done: normal skills; burst 14001169, 14001169, 14001169, 14001170, 14001171, 14001172, 14001173; missing: abilities not fully implemented 1990185, 1990186; unsure: leader condition values estimated |
+| 27002 | ミミ | Mimi | Breaker | Partial | done: normal skills; burst 14002868, 14002868, 14002868, 14002869, 14002870, 14002871, 14002872; missing: abilities not fully implemented 1990362, 1990363; unsure: leader condition values estimated |
+| 28401 | メルル | Meruru | Supporter | Partial | done: normal skills; burst 14000386, 14000386, 14000386, 14000387, 14000388, 14000389, 14000390; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990085; unsure: leader condition values estimated |
+| 28402 | メルル | Meruru | Attacker | Partial | done: normal skills; burst 14000681, 14000681, 14000681, 14000682, 14000683, 14000684, 14000685, 14002939; missing: abilities not fully implemented 1990118, 1990119, 1990366; unsure: leader condition values estimated |
+| 29201 | アーシャ | Ayesha | Supporter | Partial | done: normal skills; burst 14000146, 14000146, 14000146, 14000147, 14000148, 14000149, 14000150; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990037; unsure: leader condition values estimated |
+| 29202 | アーシャ | Ayesha | Defender | Partial | done: normal skills; burst 14000861, 14000861, 14000861, 14000862, 14000863, 14000864, 14000865; missing: abilities not fully implemented 1990140, 1990141; unsure: leader condition values estimated |
+| 29203 | アーシャ | Ayesha | Defender | Partial | done: normal skills; burst 14001689, 14001689, 14001689, 14001690, 14001691, 14001692, 14001693; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990232; unsure: leader condition values estimated |
+| 29301 | ウィルベル | Wilbell | Attacker | Partial | done: normal skills; burst 14000671, 14000671, 14000671, 14000672, 14000673, 14000674, 14000675, 14003467; missing: abilities not fully implemented 1990114, 1990115, 1990498; unsure: leader condition values estimated |
+| 29302 | ウィルベル | Wilbell | Supporter | Partial | done: normal skills; burst 14001499, 14001499, 14001499, 14001500, 14001501, 14001502, 14001503; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990217; unsure: leader condition values estimated |
+| 29401 | レジナ | Regina | Defender | Partial | done: normal skills; burst 14000596, 14000596, 14000596, 14000597, 14000598, 14000599, 14000600; missing: abilities not fully implemented 1990122, 1990123; unsure: leader condition values estimated |
+| 29501 | リンカ | Linca | Defender | Partial | done: normal skills; burst 14000401, 14000401, 14000401, 14000402, 14000403, 14000404, 14000405; missing: abilities not fully implemented 1990086, 1990087; unsure: leader condition values estimated |
+| 29502 | リンカ | Linca | Breaker | Partial | done: normal skills; burst 14001389, 14001389, 14001389, 14001390, 14001391, 14001392, 14001393; missing: abilities not fully implemented 1990204, 1990205; unsure: leader condition values estimated |
+| 29601 | ニオ | Nio | Defender | Partial | done: normal skills; burst 14000581, 14000581, 14000581, 14000582, 14000583, 14000584, 14000585; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990107; unsure: leader condition values estimated |
+| 29701 | マリオン | Marion | Breaker | Partial | done: normal skills; burst 14000416, 14000416, 14000416, 14000417, 14000418, 14000419, 14000420; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990089; unsure: leader condition values estimated |
+| 29702 | マリオン | Marion | Defender | Partial | done: normal skills; burst 14001454, 14001454, 14001454, 14001455, 14001456, 14001457, 14001458; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990208; unsure: leader condition values estimated |
+| 29801 | オディーリア | Odelia | Attacker | Partial | done: normal skills; burst 14000431, 14000431, 14000431, 14000432, 14000433, 14000434, 14000435; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990091; unsure: leader condition values estimated |
+| 29901 | キースグリフ | Keithgriff | Breaker | Partial | done: normal skills; burst 14000446, 14000446, 14000446, 14000447, 14000448, 14000449, 14000450; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990093; unsure: leader condition values estimated |
+| 30901 | エスカ | Escha | Breaker | Partial | done: normal skills; burst 14000191, 14000191, 14000191, 14000192, 14000193, 14000194, 14000195; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990043; unsure: leader condition values estimated |
+| 30902 | エスカ | Escha | Breaker | Implemented | done: normal skills; burst 14000696, 14000696, 14000696, 14000697, 14000698, 14000699, 14000700; 2/2 abilities fully implemented; unsure: leader condition values estimated |
+| 30903 | エスカ | Escha | Attacker | Partial | done: normal skills; burst 14001439, 14001439, 14001439, 14001440, 14001441, 14001442, 14001443; missing: abilities not fully implemented 1990206, 1990207; unsure: leader condition values estimated |
+| 31001 | ロジー | Logy | Attacker | Partial | done: normal skills; burst 14000056, 14000056, 14000056, 14000057, 14000058, 14000059, 14000060; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990025; unsure: leader condition values estimated |
+| 31002 | ロジー | Logy | Breaker | Implemented | done: normal skills; burst 14000936, 14000936, 14000936, 14000937, 14000938, 14000939, 14000940; 2/2 abilities fully implemented; unsure: leader condition values estimated |
+| 32201 | シャリステラ | Shallistera | Breaker | Partial | done: normal skills; burst 14000161, 14000161, 14000161, 14000162, 14000163, 14000164, 14000165; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990039; unsure: leader condition values estimated |
+| 32202 | シャリステラ | Shallistera | Supporter | Partial | done: normal skills; burst 14000876, 14000876, 14000876, 14000877, 14000878, 14000879, 14000880, 14003045; 1/3 abilities fully implemented; missing: abilities not fully implemented 1990143, 1990375; unsure: leader condition values estimated |
+| 32203 | シャリステラ | Shallistera | Breaker | Partial | done: normal skills; burst 14003536, 14003536, 14003536, 14003537, 14003538, 14003539, 14003540; missing: abilities not fully implemented 1990508, 1990509; unsure: leader condition values estimated |
+| 32301 | シャルロッテ | Shallotte | Breaker | Partial | done: normal skills; burst 14000891, 14000891, 14000891, 14000892, 14000893, 14000894, 14000895, 14003046; 1/3 abilities fully implemented; missing: abilities not fully implemented 1990145, 1990376; unsure: leader condition values estimated |
+| 32401 | ミルカ | Miruca | Supporter | Partial | done: normal skills; burst 14003856, 14003856, 14003856, 14003857, 14003858, 14003859, 14003860; missing: abilities not fully implemented 1990555, 1990556; unsure: leader condition values estimated |
+| 32501 | ユリエ | Jurie | Attacker | Partial | done: normal skills; burst 14003871, 14003871, 14003871, 14003872, 14003873, 14003874, 14003875; extra 14003876; missing: abilities not fully implemented 1990557, 1990558; unsure: leader condition values estimated |
+| 33001 | ナディ | Nady | Supporter | Partial | done: normal skills; burst 14000906, 14000906, 14000906, 14000907, 14000908, 14000909, 14000910; missing: abilities not fully implemented 1990146, 1990147; unsure: leader condition values estimated |
+| 33401 | ソフィー | Sophie | Defender | Partial | done: normal skills; burst 14000176, 14000176, 14000176, 14000177, 14000178, 14000179, 14000180; missing: abilities not fully implemented 1990040, 1990041; unsure: leader condition values estimated |
+| 33402 | ソフィー | Sophie | Supporter | Partial | done: normal skills; burst 14001124, 14001124, 14001124, 14001125, 14001126, 14001127, 14001128, 14002313; missing: abilities not fully implemented 1990177, 1990178, 1990305; unsure: leader condition values estimated |
+| 33403 | ソフィー | Sophie | Supporter | Partial | done: normal skills; burst 14001674, 14001674, 14001674, 14001675, 14001676, 14001677, 14001678; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990231; unsure: leader condition values estimated |
+| 33404 | ソフィー | Sophie | Defender | Partial | done: normal skills; burst 14003808, 14003808, 14003808, 14003809, 14003810, 14003811, 14003812; missing: abilities not fully implemented 1990549, 1990550; unsure: leader condition values estimated |
+| 33501 | プラフタ | Plachta | Breaker | Partial | done: normal skills; burst 14000611, 14000611, 14000611, 14000612, 14000613, 14000614, 14000615; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990109; unsure: leader condition values estimated |
+| 33502 | プラフタ | Plachta | Supporter | Partial | done: normal skills; burst 14000626, 14000626, 14000626, 14000627, 14000628, 14000629, 14000630, 14003295; missing: abilities not fully implemented 1990120, 1990121, 1990487; unsure: leader condition values estimated |
+| 33503 | プラフタ | Plachta | Defender | Partial | done: normal skills; burst 14002194, 14002194, 14002194, 14002195, 14002196, 14002197, 14002198; missing: abilities not fully implemented 1990292, 1990293; unsure: leader condition values estimated |
+| 33504 | プラフタ | Plachta | Attacker | Partial | done: normal skills; burst 14002741, 14002741, 14002741, 14002742, 14002743, 14002744, 14002745; missing: abilities not fully implemented 1990350, 1990351; unsure: leader condition values estimated |
+| 33601 | モニカ | Monika | Defender | Partial | done: normal skills; burst 14000071, 14000071, 14000071, 14000072, 14000073, 14000074, 14000075; missing: abilities not fully implemented 1990026, 1990027; unsure: leader condition values estimated |
+| 33701 | コルネリア | Corneria | Breaker | Partial | done: normal skills; burst 14000461, 14000461, 14000461, 14000462, 14000463, 14000464, 14000465; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990095; unsure: leader condition values estimated |
+| 33801 | オスカー | Oskar | Defender | Partial | done: normal skills; burst 14000476, 14000476, 14000476, 14000477, 14000478, 14000479, 14000480; missing: abilities not fully implemented 1990096, 1990097; unsure: leader condition values estimated |
+| 33901 | テス | Tess | Supporter | Partial | done: normal skills; burst 14000086, 14000086, 14000086, 14000087, 14000088, 14000089, 14000090; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990029; unsure: leader condition values estimated |
+| 35001 | フィリス | Firis | Attacker | Partial | done: normal skills; burst 14000491, 14000491, 14000491, 14000492, 14000493, 14000494, 14000495; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990099; unsure: leader condition values estimated |
+| 35002 | フィリス | Firis | Supporter | Partial | done: normal skills; burst 14001027, 14001027, 14001027, 14001028, 14001029, 14001030, 14001031; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990166; unsure: leader condition values estimated |
+| 35003 | フィリス | Firis | Attacker | Partial | done: normal skills; burst 14001979, 14001979, 14001979, 14001980, 14001981, 14001982, 14001983; missing: abilities not fully implemented 1990262, 1990263; unsure: leader condition values estimated |
+| 35101 | イルメリア | Ilmeria | Supporter | Partial | done: normal skills; burst 14002174, 14002174, 14002174, 14002175, 14002176, 14002177, 14002178; missing: abilities not fully implemented 1990290, 1990291; unsure: leader condition values estimated |
+| 37401 | リディー | Lydie | Supporter | Partial | done: normal skills; burst 14000536, 14000536, 14000536, 14000537, 14000538, 14000539, 14000540; missing: abilities not fully implemented 1990110, 1990111; unsure: leader condition values estimated |
+| 37402 | リディー | Lydie | Defender | Partial | done: normal skills; burst 14001012, 14001012, 14001012, 14001013, 14001014, 14001015, 14001016; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990162; unsure: leader condition values estimated |
+| 37501 | スール | Suelle | Attacker | Partial | done: normal skills; burst 14000521, 14000521, 14000521, 14000522, 14000523, 14000524, 14000525; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990113; unsure: leader condition values estimated |
+| 37502 | スール | Suelle | Attacker | Partial | done: normal skills; burst 14001077, 14001077, 14001077, 14001078, 14001079, 14001080, 14001081; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990170; unsure: leader condition values estimated |
+| 39901 | ライザ | Ryza | Attacker | Partial | done: normal skills; burst 14000266, 14000266, 14000266, 14000267, 14000268, 14000269, 14000270, 14002306; missing: abilities not fully implemented 1990050, 1990051, 1990298; unsure: leader condition values estimated |
+| 39902 | ライザ | Ryza | Breaker | Partial | done: normal skills; burst 14000726, 14000726, 14000726, 14000727, 14000728, 14000729, 14000730; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990126; unsure: leader condition values estimated |
+| 39903 | ライザ | Ryza | Breaker | Partial | done: normal skills; burst 14001184, 14001184, 14001184, 14001185, 14001186, 14001187, 14001188, 14002315; missing: abilities not fully implemented 1990187, 1990188, 1990307; unsure: leader condition values estimated |
+| 39904 | ライザ | Ryza | Attacker | Partial | done: normal skills; burst 14001544, 14001544, 14001544, 14001545, 14001546, 14001547, 14001548; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990220; unsure: leader condition values estimated |
+| 39905 | ライザ | Ryza | Breaker | Implemented | done: normal skills; burst 14001914, 14001914, 14001914, 14001915, 14001916, 14001917, 14001918; 2/2 abilities fully implemented; unsure: leader condition values estimated |
+| 39906 | ライザ | Ryza | Attacker | Partial | done: normal skills; burst 14002239, 14002239, 14002239, 14002240, 14002241, 14002242, 14002243; missing: abilities not fully implemented 1990296, 1990297; unsure: leader condition values estimated |
+| 39907 | ライザ | Ryza | Defender | Partial | done: normal skills; burst 14003581, 14003581, 14003581, 14003582, 14003583, 14003584, 14003585; missing: abilities not fully implemented 1990514, 1990515; unsure: leader condition values estimated |
+| 40001 | クラウディア | Klaudia | Supporter | Partial | done: normal skills; burst 14000656, 14000656, 14000656, 14000657, 14000658, 14000659, 14000660; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990117; unsure: leader condition values estimated |
+| 40002 | クラウディア | Klaudia | Supporter | Partial | done: normal skills; burst 14001294, 14001294, 14001294, 14001295, 14001296, 14001297, 14001298; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990194; unsure: leader condition values estimated |
+| 40003 | クラウディア | Klaudia | Breaker | Partial | done: normal skills; burst 14001614, 14001614, 14001614, 14001615, 14001616, 14001617, 14001618; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990222; unsure: leader condition values estimated |
+| 40004 | クラウディア | Klaudia | Supporter | Partial | done: normal skills; burst 14002224, 14002224, 14002224, 14002225, 14002226, 14002227, 14002228; missing: abilities not fully implemented 1990294, 1990295; unsure: leader condition values estimated |
+| 40005 | クラウディア | Klaudia | Attacker | Partial | done: normal skills; burst 14002633, 14002633, 14002633, 14002634, 14002635, 14002636, 14002637; missing: abilities not fully implemented 1990348, 1990349; unsure: leader condition values estimated |
+| 40101 | リラ | Lila | Breaker | Partial | done: normal skills; burst 14000756, 14000756, 14000756, 14000757, 14000758, 14000759, 14000760; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990131; unsure: leader condition values estimated |
+| 40102 | リラ | Lila | Defender | Partial | done: normal skills; burst 14002853, 14002853, 14002853, 14002854, 14002855, 14002856, 14002857; missing: abilities not fully implemented 1990358, 1990359; unsure: leader condition values estimated |
+| 40201 | レント | Lent | Defender | Partial | done: normal skills; burst 14000206, 14000206, 14000206, 14000207, 14000208, 14000209, 14000210; missing: abilities not fully implemented 1990044, 1990045; unsure: leader condition values estimated |
+| 40301 | タオ | Tao | Attacker | Partial | done: normal skills; burst 14000221, 14000221, 14000221, 14000222, 14000223, 14000224, 14000225; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990047; unsure: leader condition values estimated |
+| 40401 | アンペル | Empel | Supporter | Partial | done: normal skills; burst 14000741, 14000741, 14000741, 14000742, 14000743, 14000744, 14000745; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990129; unsure: leader condition values estimated |
+| 40402 | アンペル | Empel | Supporter | Partial | done: normal skills; burst 14002159, 14002159, 14002159, 14002160, 14002161, 14002162, 14002163; missing: abilities not fully implemented 1990286, 1990287; unsure: leader condition values estimated |
+| 41501 | パトリツィア | Patricia | Defender | Partial | done: normal skills; burst 14000811, 14000811, 14000811, 14000812, 14000813, 14000814, 14000815; extra 14000816, 14000817, 14000818, 14000819, 14000820; missing: abilities not fully implemented 1990134, 1990135; unsure: leader condition values estimated |
+| 43101 | レスナ | Resna | Attacker | Partial | done: normal skills; burst 14000251, 14000251, 14000251, 14000252, 14000253, 14000254, 14000255; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990055; unsure: leader condition values estimated |
+| 43102 | レスナ | Resna | Supporter | Partial | done: normal skills; burst 14000101, 14000101, 14000101, 14000102, 14000103, 14000104, 14000105, 14002305; 1/3 abilities fully implemented; missing: abilities not fully implemented 1990031, 1990325; unsure: leader condition values estimated |
+| 43103 | レスナ | Resna | Attacker | Partial | done: normal skills; burst 14000776, 14000776, 14000776, 14000777, 14000778, 14000779, 14000780, 14003337; 1/3 abilities fully implemented; missing: abilities not fully implemented 1990133, 1990492; unsure: leader condition values estimated |
+| 43104 | レスナ | Resna | Attacker | Partial | done: normal skills; burst 14001109, 14001109, 14001109, 14001110, 14001111, 14001112, 14001113, 14003782; 1/3 abilities fully implemented; missing: abilities not fully implemented 1990176, 1990542; unsure: leader condition values estimated |
+| 43105 | レスナ | Resna | Breaker | Partial | done: normal skills; burst 14001529, 14001529, 14001529, 14001530, 14001531, 14001532, 14001533; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990218; unsure: leader condition values estimated |
+| 43106 | レスナ | Resna | Attacker | Partial | done: normal skills; burst 14001704, 14001704, 14001704, 14001705, 14001706, 14001707, 14001708; missing: abilities not fully implemented 1990242, 1990236; unsure: leader condition values estimated |
+| 43107 | レスナ | Resna | Attacker | Partial | done: normal skills; burst 14001719, 14001719, 14001719, 14001720, 14001721, 14001722, 14001723; extra 12001699, 12001700, 12001701, 12001702, 12001703; missing: abilities not fully implemented 1990237, 1990243; unsure: leader condition values estimated |
+| 43108 | レスナ | Resna | Breaker | Partial | done: normal skills; burst 14002299, 14002299, 14002299, 14002300, 14002301, 14002302, 14002303; missing: abilities not fully implemented 1990328, 1990329; unsure: leader condition values estimated |
+| 43109 | レスナ | Resna | Supporter | Partial | done: normal skills; burst 14003170, 14003170, 14003170, 14003171, 14003172, 14003173, 14003174; missing: abilities not fully implemented 1990473, 1990474; unsure: leader condition values estimated |
+| 43110 | レスナ | Resna | Attacker | Partial | done: normal skills; burst 14003363, 14003363, 14003363, 14003364, 14003365, 14003366, 14003367; missing: abilities not fully implemented 1990495, 1990496; unsure: leader condition values estimated |
+| 43111 | レスナ | Resna | Supporter | Partial | done: normal skills; burst 14003551, 14003551, 14003551, 14003552, 14003553, 14003554, 14003555; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990513; unsure: leader condition values estimated |
+| 43201 | ヴァレリア | Valeria | Attacker | Partial | done: normal skills; burst 14000506, 14000506, 14000506, 14000507, 14000508, 14000509, 14000510; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990101; unsure: leader condition values estimated |
+| 43202 | ヴァレリア | Valeria | Attacker | Partial | done: normal skills; burst 14000236, 14000236, 14000236, 14000237, 14000238, 14000239, 14000240; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990049; unsure: leader condition values estimated |
+| 43203 | ヴァレリア | Valeria | Attacker | Partial | done: normal skills; burst 14000997, 14000997, 14000997, 14000998, 14000999, 14001000, 14001001, 14003679; extra 14001047, 14001048, 14001049, 14001050, 14001051, 14003680; 1/3 abilities fully implemented; missing: abilities not fully implemented 1990160, 1990526; unsure: leader condition values estimated |
+| 43204 | ヴァレリア | Valeria | Attacker | Partial | done: normal skills; burst 14001629, 14001629, 14001629, 14001630, 14001631, 14001632, 14001633, 14002320; missing: abilities not fully implemented 1990224, 1990225, 1990312; unsure: leader condition values estimated |
+| 43205 | ヴァレリア | Valeria | Breaker | Partial | done: normal skills; burst 14001749, 14001749, 14001749, 14001750, 14001751, 14001752, 14001753; missing: abilities not fully implemented 1990238, 1990244; unsure: leader condition values estimated |
+| 43206 | ヴァレリア | Valeria | Breaker | Partial | done: normal skills; burst 14001764, 14001764, 14001764, 14001765, 14001766, 14001767, 14001768; extra 12001744, 12001745, 12001746, 12001747, 12001748; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990239; unsure: leader condition values estimated |
+| 43207 | ヴァレリア | Valeria | Supporter | Partial | done: normal skills; burst 14002084, 14002084, 14002084, 14002085, 14002086, 14002087, 14002088; missing: abilities not fully implemented 1990276, 1990277; unsure: leader condition values estimated |
+| 43208 | ヴァレリア | Valeria | Attacker | Partial | done: normal skills; burst 14002336, 14002336, 14002336, 14002337, 14002338, 14002339, 14002340; extra 14002485, 14002486, 14002487, 14002488, 14002489; missing: abilities not fully implemented 1990330, 1990331; unsure: leader condition values estimated |
+| 43209 | ヴァレリア | Valeria | Attacker | Partial | done: normal skills; burst 14003521, 14003521, 14003521, 14003522, 14003523, 14003524, 14003525; missing: abilities not fully implemented 1990506, 1990507; unsure: leader condition values estimated |
+| 43301 | ロマン | Roman | Attacker | Implemented | done: normal skills; burst 14000846, 14000846, 14000846, 14000847, 14000848, 14000849, 14000850; 2/2 abilities fully implemented; unsure: leader condition values estimated |
+| 43302 | ロマン | Roman | Breaker | Partial | done: normal skills; burst 14001514, 14001514, 14001514, 14001515, 14001516, 14001517, 14001518; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990214; unsure: leader condition values estimated |
+| 43303 | ロマン | Roman | Defender | Partial | done: normal skills; burst 14001899, 14001899, 14001899, 14001900, 14001901, 14001902, 14001903; extra 14001964, 14001965, 14001966, 14001967, 14001968; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990252; unsure: leader condition values estimated |
+| 43401 | ユナ | Juna | Attacker | Implemented | done: normal skills; burst 14000921, 14000921, 14000921, 14000922, 14000923, 14000924, 14000925; 2/2 abilities fully implemented; unsure: leader condition values estimated |
+| 43402 | ユナ | Juna | Attacker | Partial | done: normal skills; burst 14001374, 14001374, 14001374, 14001375, 14001376, 14001377, 14001378; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990202; unsure: leader condition values estimated |
+| 43403 | ユナ | Juna | Defender | Partial | done: normal skills; burst 14002099, 14002099, 14002099, 14002100, 14002101, 14002102, 14002103; missing: abilities not fully implemented 1990278, 1990279; unsure: leader condition values estimated |
+| 43404 | ユナ | Juna | Supporter | Partial | done: normal skills; burst 14002786, 14002786, 14002786, 14002787, 14002788, 14002789, 14002790; missing: abilities not fully implemented 1990354, 1990355; unsure: leader condition values estimated |
+| 43501 | ハイディ | Heidi | Breaker | Implemented | done: normal skills; burst 14001042, 14001042, 14001042, 14001043, 14001044, 14001045, 14001046; 2/2 abilities fully implemented; unsure: leader condition values estimated |
+| 43502 | ハイディ | Heidi | Supporter | Partial | done: normal skills; burst 14001419, 14001419, 14001419, 14001420, 14001421, 14001422, 14001423; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990212; unsure: leader condition values estimated |
+| 43503 | ハイディ | Heidi | Attacker | Partial | done: normal skills; burst 14001944, 14001944, 14001944, 14001945, 14001946, 14001947, 14001948; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990258; unsure: leader condition values estimated |
+| 43504 | ハイディ | Heidi | Breaker | Partial | done: normal skills; burst 14002756, 14002756, 14002756, 14002757, 14002758, 14002759, 14002760; missing: abilities not fully implemented 1990346, 1990347; unsure: leader condition values estimated |
+| 43505 | ハイディ | Heidi | Breaker | Partial | done: normal skills; burst 14003766, 14003766, 14003766, 14003767, 14003768, 14003769, 14003770; missing: abilities not fully implemented 1990545, 1990546; unsure: leader condition values estimated |
+| 43599 | ハイディ | Heidi | Breaker | Implemented | done: normal skills; burst 14001042, 14001042, 14001042, 14001043, 14001044, 14001045, 14001046; 2/2 abilities fully implemented; unsure: leader condition values estimated |
+| 43601 | フロッケ | Flocke | Supporter | Implemented | done: normal skills; burst 14001062, 14001062, 14001062, 14001063, 14001064, 14001065, 14001066; 2/2 abilities fully implemented; unsure: leader condition values estimated |
+| 43602 | フロッケ | Flocke | Defender | Partial | done: normal skills; burst 14001959, 14001959, 14001959, 14001960, 14001961, 14001962, 14001963; missing: abilities not fully implemented 1990260, 1990261; unsure: leader condition values estimated |
+| 43603 | フロッケ | Flocke | Supporter | Partial | done: normal skills; burst 14002771, 14002771, 14002771, 14002772, 14002773, 14002774, 14002775; missing: abilities not fully implemented 1990352, 1990353; unsure: leader condition values estimated |
+| 43701 | ランツェ | Lanze | Attacker | Partial | done: normal skills; burst 14001309, 14001309, 14001309, 14001310, 14001311, 14001312, 14001313; extra 14001129, 14001130, 14001131, 14001132, 14001133; missing: abilities not fully implemented 1990199, 1990198; unsure: leader condition values estimated |
+| 43801 | イザナ | Izana | Attacker | Partial | done: normal skills; burst 14000711, 14000711, 14000711, 14000712, 14000713, 14000714, 14000715, 14003119; missing: abilities not fully implemented 1990124, 1990125, 1990385; unsure: leader condition values estimated |
+| 43802 | イザナ | Izana | Breaker | Partial | done: normal skills; burst 14001404, 14001404, 14001404, 14001405, 14001406, 14001407, 14001408; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990210; unsure: leader condition values estimated |
+| 43803 | イザナ | Izana | Attacker | Partial | done: normal skills; burst 14001884, 14001884, 14001884, 14001885, 14001886, 14001887, 14001888; missing: abilities not fully implemented 1990250, 1990251; unsure: leader condition values estimated |
+| 43804 | イザナ | Izana | Attacker | Partial | done: normal skills; burst 14002812, 14002812, 14002812, 14002813, 14002814, 14002815, 14002816; missing: abilities not fully implemented 1990356, 1990357; unsure: leader condition values estimated |
+| 43805 | イザナ | Izana | Breaker | Partial | done: normal skills; burst 14003348, 14003348, 14003348, 14003349, 14003350, 14003351, 14003352; missing: abilities not fully implemented 1990493, 1990494; unsure: leader condition values estimated |
+| 43806 | イザナ | Izana | Breaker | Partial | done: normal skills; burst 14003721, 14003721, 14003721, 14003722, 14003723, 14003724, 14003725; extra 14003728; missing: abilities not fully implemented 1990539, 1990540; unsure: leader condition values estimated |
+| 43901 | ザスキア | Saskia | Supporter | Partial | done: normal skills; burst 14001659, 14001659, 14001659, 14001660, 14001661, 14001662, 14001663; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990226; unsure: leader condition values estimated |
+| 43902 | ザスキア | Saskia | Attacker | Partial | done: normal skills; burst 14002129, 14002129, 14002129, 14002130, 14002131, 14002132, 14002133; extra 14002179, 14002180, 14002181, 14002182, 14002183; missing: abilities not fully implemented 1990282, 1990283; unsure: leader condition values estimated |
+| 43999 | ザスキア | Saskia | Supporter | Partial | done: normal skills; burst 14001659, 14001659, 14001659, 14001660, 14001661, 14001662, 14001663; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990226; unsure: leader condition values estimated |
+| 44001 | ヨハナ | Johanna | Attacker | Partial | done: normal skills; burst 14001644, 14001644, 14001644, 14001645, 14001646, 14001647, 14001648; missing: abilities not fully implemented 1990228, 1990229; unsure: leader condition values estimated |
+| 44002 | ヨハナ | Johanna | Attacker | Partial | done: normal skills; burst 14002827, 14002827, 14002827, 14002828, 14002829, 14002830, 14002831; extra 14002888, 14002889, 14002890, 14002891, 14002892; missing: abilities not fully implemented 1990360, 1990361; unsure: leader condition values estimated |
+| 44003 | ヨハナ | Johanna | Breaker | Partial | done: normal skills; burst 14002988, 14002988, 14002988, 14002989, 14002990, 14002991, 14002992; actives 14003047; missing: abilities not fully implemented 1990377, 1990378; unsure: leader condition values estimated |
+| 44004 | 鴉 | Crow | Supporter | Partial | done: normal skills; burst 14003230, 14003230, 14003230, 14003231, 14003232, 14003233, 14003234; missing: abilities not fully implemented 1990481, 1990482; unsure: leader condition values estimated |
+| 44005 | ヨハナ | Johanna | Supporter | Partial | done: normal skills; burst 14003706, 14003706, 14003706, 14003707, 14003708, 14003709, 14003710; extra 14003727; missing: abilities not fully implemented 1990537, 1990538; unsure: leader condition values estimated |
+| 44101 | ジェロン | Geron | Defender | Partial | done: normal skills; burst 14001779, 14001779, 14001779, 14001780, 14001781, 14001782, 14001783; missing: abilities not fully implemented 1990240, 1990241; unsure: leader condition values estimated |
+| 44102 | ジェロン | Geron | Attacker | Partial | done: normal skills; burst 14003439, 14003439, 14003439, 14003440, 14003441, 14003442, 14003443; missing: abilities not fully implemented 1990518, 1990519; unsure: leader condition values estimated |
+| 44201 | ララ | Lara | Attacker | Partial | done: normal skills; burst 14001734, 14001734, 14001734, 14001735, 14001736, 14001737, 14001738; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990234; unsure: leader condition values estimated |
+| 44202 | ララ | Lara | Breaker | Partial | done: normal skills; burst 14002144, 14002144, 14002144, 14002145, 14002146, 14002147, 14002148; missing: abilities not fully implemented 1990284, 1990285; unsure: leader condition values estimated |
+| 44203 | ララ | Lara | Defender | Partial | done: normal skills; burst 14002934, 14002934, 14002934, 14002935, 14002936, 14002937, 14002938; missing: abilities not fully implemented 1990371, 1990372; unsure: leader condition values estimated |
+| 44204 | ララ | Lara | Breaker | Partial | done: normal skills; burst 14003596, 14003596, 14003596, 14003597, 14003598, 14003599, 14003600; actives 14003632; missing: abilities not fully implemented 1990524, 1990525; unsure: leader condition values estimated |
+| 44301 | エレン | Eren | Attacker | Partial | done: normal skills; burst 14001214, 14001214, 14001214, 14001215, 14001216, 14001217, 14001218; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990192; unsure: leader condition values estimated |
+| 44401 | ミーケ | Mieke | Attacker | Partial | done: normal skills; burst 14001994, 14001994, 14001994, 14001995, 14001996, 14001997, 14001998; missing: abilities not fully implemented 1990264, 1990265; unsure: leader condition values estimated |
+| 44501 | ディオーナ | Diona | Supporter | Partial | done: normal skills; burst 14002009, 14002009, 14002009, 14002010, 14002011, 14002012, 14002013; missing: abilities not fully implemented 1990266, 1990267; unsure: leader condition values estimated |
+| 44601 | マクダ | Magda | Breaker | Partial | done: normal skills; burst 14002024, 14002024, 14002024, 14002025, 14002026, 14002027, 14002028; missing: abilities not fully implemented 1990270, 1990271; unsure: leader condition values estimated |
+| 44701 | ブラッド | Brad | Supporter | Partial | done: normal skills; burst 14002039, 14002039, 14002039, 14002040, 14002041, 14002042, 14002043; missing: abilities not fully implemented 1990268, 1990269; unsure: leader condition values estimated |
+| 44801 | アンチュ | Antje | Supporter | Partial | done: normal skills; burst 14002054, 14002054, 14002054, 14002055, 14002056, 14002057, 14002058; missing: abilities not fully implemented 1990272, 1990273; unsure: leader condition values estimated |
+| 44802 | アンチュ | Antje | Attacker | Partial | done: normal skills; burst 14002919, 14002919, 14002919, 14002920, 14002921, 14002922, 14002923; extra 14002977; missing: abilities not fully implemented 1990369, 1990370; unsure: leader condition values estimated |
+| 44803 | アンチュ | Antje | Supporter | Partial | done: normal skills; burst 14003321, 14003321, 14003321, 14003322, 14003323, 14003324, 14003325; missing: abilities not fully implemented 1990490, 1990491; unsure: leader condition values estimated |
+| 44804 | アンチュ | Antje | Supporter | Partial | done: normal skills; burst 14003494, 14003494, 14003494, 14003495, 14003496, 14003497, 14003498; actives 14003616; missing: abilities not fully implemented 1990522, 1990523; unsure: leader condition values estimated |
+| 44901 | ワルター | Walther | Attacker | Partial | done: normal skills; burst 14002069, 14002069, 14002069, 14002070, 14002071, 14002072, 14002073; missing: abilities not fully implemented 1990274, 1990275; unsure: leader condition values estimated |
+| 44902 | ワルター | Walther | Defender | Partial | done: normal skills; burst 14003409, 14003409, 14003409, 14003410, 14003411, 14003412, 14003413; missing: abilities not fully implemented 1990503, 1990504; unsure: leader condition values estimated |
+| 45001 | クリセルダ | Criselda | Breaker | Partial | done: normal skills; burst 14002114, 14002114, 14002114, 14002115, 14002116, 14002117, 14002118; missing: abilities not fully implemented 1990280, 1990281; unsure: leader condition values estimated |
+| 45002 | クリセルダ | Criselda | Supporter | Partial | done: normal skills; burst 14002972, 14002972, 14002972, 14002973, 14002974, 14002975, 14002976; missing: abilities not fully implemented 1990373, 1990374; unsure: leader condition values estimated |
+| 45003 | クリセルダ | Criselda | Breaker | Partial | done: normal skills; burst 14003306, 14003306, 14003306, 14003307, 14003308, 14003309, 14003310; actives 14003368; missing: abilities not fully implemented 1990488, 1990489; unsure: leader condition values estimated |
+| 45004 | クリセルダ | Criselda | Attacker | Partial | done: normal skills; burst 14003479, 14003479, 14003479, 14003480, 14003481, 14003482, 14003483; missing: abilities not fully implemented 1990520, 1990521; unsure: leader condition values estimated |
+| 45101 | ベップ | Bepp | Attacker | Partial | done: normal skills; burst 14002254, 14002254, 14002254, 14002255, 14002256, 14002257, 14002258; missing: abilities not fully implemented 1990320, 1990321; unsure: leader condition values estimated |
+| 45102 | ベップ | Bepp | Supporter | Partial | done: normal skills; burst 14003934, 14003934, 14003934, 14003935, 14003936, 14003937, 14003938; actives 14003939; missing: abilities not fully implemented 1990565, 1990566; unsure: leader condition values estimated |
+| 45201 | アルビーナ | Alvina | Supporter | Partial | done: normal skills; burst 14002269, 14002269, 14002269, 14002270, 14002271, 14002272, 14002273; missing: abilities not fully implemented 1990322, 1990323; unsure: leader condition values estimated |
+| 45202 | アルビーナ | Alvina | Supporter | Partial | done: normal skills; burst 14003200, 14003200, 14003200, 14003201, 14003202, 14003203, 14003204; missing: abilities not fully implemented 1990477, 1990478; unsure: leader condition values estimated |
+| 45203 | アルビーナ | Alvina | Supporter | Partial | done: normal skills; burst 14003823, 14003823, 14003823, 14003824, 14003825, 14003826, 14003827; actives 14003844; extra 14003843; missing: abilities not fully implemented 1990551, 1990552; unsure: leader condition values estimated |
+| 45301 | ヤンネ | Janne | Defender | Partial | done: normal skills; burst 14002284, 14002284, 14002284, 14002285, 14002286, 14002287, 14002288; missing: abilities not fully implemented 1990326, 1990327; unsure: leader condition values estimated |
+| 45302 | ヤンネ | Janne | Supporter | Partial | done: normal skills; burst 14003965, 14003965, 14003965, 14003966, 14003967, 14003968, 14003969; actives 14003970; missing: abilities not fully implemented 1990569, 1990570; unsure: leader condition values estimated |
+| 45401 | イェルカ | Jelka | Attacker | Partial | done: normal skills; burst 14003088, 14003088, 14003088, 14003089, 14003090, 14003091, 14003092; missing: abilities not fully implemented 1990390, 1990391; unsure: leader condition values estimated |
+| 45402 | イェルカ | Jelka | Attacker | Partial | done: normal skills; burst 14003215, 14003215, 14003215, 14003216, 14003217, 14003218, 14003219; missing: abilities not fully implemented 1990467, 1990468; unsure: leader condition values estimated |
+| 45599 | アウグスト | August | Supporter | Partial | done: normal skills; burst 14001659, 14001659, 14001659, 14001660, 14001661, 14001662, 14001663; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990226; unsure: leader condition values estimated |
+| 45601 | 鬼門 | Kimon | Attacker | Partial | done: normal skills; burst 14003003, 14003003, 14003003, 14003004, 14003005, 14003006, 14003007; missing: abilities not fully implemented 1990379, 1990380; unsure: leader condition values estimated |
+| 45602 | 鬼門 | Kimon | Attacker | Partial | done: normal skills; burst 14003691, 14003691, 14003691, 14003692, 14003693, 14003694, 14003695; extra 14003726; missing: abilities not fully implemented 1990535, 1990536; unsure: leader condition values estimated |
+| 45701 | 永遠 | Towa | Defender | Partial | done: normal skills; burst 14003018, 14003018, 14003018, 14003019, 14003020, 14003021, 14003022; missing: abilities not fully implemented 1990381, 1990382; unsure: leader condition values estimated |
+| 45801 | 鏑矢 | Kaburaya | Breaker | Partial | done: normal skills; burst 14003058, 14003058, 14003058, 14003059, 14003060, 14003061, 14003062; extra 14003144; missing: abilities not fully implemented 1990388, 1990389; unsure: leader condition values estimated |
+| 45901 | 千歳 | Chitose | Supporter | Partial | done: normal skills; burst 14003073, 14003073, 14003073, 14003074, 14003075, 14003076, 14003077; missing: abilities not fully implemented 1990383, 1990384; unsure: leader condition values estimated |
+| 46001 | ゴゥ | Gou | Defender | Partial | done: normal skills; burst 14003103, 14003103, 14003103, 14003104, 14003105, 14003106, 14003107; missing: abilities not fully implemented 1990469, 1990470; unsure: leader condition values estimated |
+| 46002 | ゴゥ | Gou | Breaker | Partial | done: normal skills; burst 14003275, 14003275, 14003275, 14003276, 14003277, 14003278, 14003279; missing: abilities not fully implemented 1990485, 1990486; unsure: leader condition values estimated |
+| 46101 | リーベ | Liebe | Supporter | Partial | done: normal skills; burst 14003245, 14003245, 14003245, 14003246, 14003247, 14003248, 14003249; actives 14003280; missing: abilities not fully implemented 1990479, 1990480; unsure: leader condition values estimated |
+| 46102 | リーベ | Liebe | Defender | Partial | done: normal skills; burst 14003643, 14003643, 14003643, 14003644, 14003645, 14003646, 14003647; missing: abilities not fully implemented 1990531, 1990532; unsure: leader condition values estimated |
+| 46201 | シトリン | Citrine | Attacker | Partial | done: normal skills; burst 14003260, 14003260, 14003260, 14003261, 14003262, 14003263, 14003264; missing: abilities not fully implemented 1990483, 1990484; unsure: leader condition values estimated |
+| 46202 | シトリン | Citrine | Supporter | Partial | done: normal skills; burst 14003793, 14003793, 14003793, 14003794, 14003795, 14003796, 14003797; missing: abilities not fully implemented 1990547, 1990548; unsure: leader condition values estimated |
+| 46401 | ティム | Tim | Supporter | Partial | done: normal skills; burst 14003424, 14003424, 14003424, 14003425, 14003426, 14003427, 14003428; missing: abilities not fully implemented 1990516, 1990517; unsure: leader condition values estimated |
+| 46501 | タイニー | Tiny | Supporter | Partial | done: normal skills; burst 14003611, 14003611, 14003611, 14003612, 14003613, 14003614, 14003615; missing: abilities not fully implemented 1990527, 1990528; unsure: leader condition values estimated |
+| 46601 | ジョゼ | José | Breaker | Partial | done: normal skills; burst 14003627, 14003627, 14003627, 14003628, 14003629, 14003630, 14003631; missing: abilities not fully implemented 1990529, 1990530; unsure: leader condition values estimated |
+| 46701 | エルス | Els | Attacker | Partial | done: normal skills; burst 14003658, 14003658, 14003658, 14003659, 14003660, 14003661, 14003662; extra 14003663, 14003664, 14003665, 14003666, 14003667; missing: abilities not fully implemented 1990533, 1990534; unsure: leader condition values estimated |
+| 46801 | カロリン | Caroline | Attacker | Partial | done: normal skills; burst 14003751, 14003751, 14003751, 14003752, 14003753, 14003754, 14003755; missing: abilities not fully implemented 1990543, 1990544; unsure: leader condition values estimated |
+| 46901 | ゼロ | Zero | Attacker | Partial | done: normal skills; burst 14003887, 14003887, 14003887, 14003888, 14003889, 14003890, 14003891; missing: abilities not fully implemented 1990559, 1990560; unsure: leader condition values estimated |
+| 47001 | メーヴェ | Mowen | Attacker | Partial | done: normal skills; burst 14003838, 14003838, 14003838, 14003839, 14003840, 14003841, 14003842; actives 14003845; missing: abilities not fully implemented 1990553, 1990554; unsure: leader condition values estimated |
+| 47101 | ヘルト | Held | Breaker | Partial | done: normal skills; burst 14003902, 14003902, 14003902, 14003903, 14003904, 14003905, 14003906; missing: abilities not fully implemented 1990561, 1990562; unsure: leader condition values estimated |
+| 47201 | キューン | Quinn | Attacker | Partial | done: normal skills; burst 14003917, 14003917, 14003917, 14003918, 14003919, 14003920, 14003921; extra 14003922, 14003923; missing: abilities not fully implemented 1990563, 1990564; unsure: leader condition values estimated |
+| 47301 | ヤドヴィガ | Jadwiga | Breaker | Partial | done: normal skills; burst 14003950, 14003950, 14003950, 14003951, 14003952, 14003953, 14003954; missing: abilities not fully implemented 1990567, 1990568; unsure: leader condition values estimated |
+| 50101 | ユミア | Yumia | Attacker | Partial | done: normal skills; burst 14002396, 14002396, 14002396, 14002397, 14002398, 14002399, 14002400; extra 14002551, 11002541, 11002542, 11002543, 11002544, 11002545, 12002546, 12002547 +3 more; missing: abilities not fully implemented 1990334, 1990335; unsure: leader condition values estimated |
+| 50201 | ヴィクトル | Viktor | Breaker | Partial | done: normal skills; burst 14002411, 14002411, 14002411, 14002412, 14002413, 14002414, 14002415; extra 14002586, 11002556, 11002557, 11002558, 11002559, 11002560, 12002561, 12002562 +3 more; missing: abilities not fully implemented 1990336, 1990337; unsure: leader condition values estimated |
+| 50301 | レイニャ | Lenja | Attacker | Partial | done: normal skills; burst 14002426, 14002426, 14002426, 14002427, 14002428, 14002429, 14002430; extra 14002622, 11002587, 11002588, 11002589, 11002590, 11002591, 12002592, 12002593 +3 more; missing: abilities not fully implemented 1990338, 1990339; unsure: leader condition values estimated |
+| 50401 | アイラ | Isla | Breaker | Partial | done: normal skills; burst 14002474, 14002474, 14002474, 14002475, 14002476, 14002477, 14002478; extra 14002648, 11002638, 11002639, 11002640, 11002641, 11002642, 12002643, 12002644 +3 more; missing: abilities not fully implemented 1990340, 1990341; unsure: leader condition values estimated |
+| 50501 | ルトガー | Rutger | Defender | Partial | done: normal skills; burst 14002500, 14002500, 14002500, 14002501, 14002502, 14002503, 14002504; extra 14002710, 11002490, 11002491, 11002492, 11002493, 11002494, 12002495, 12002496 +3 more; missing: abilities not fully implemented 1990344, 1990345; unsure: leader condition values estimated |
+| 50601 | ニーナ | Nina | Supporter | Partial | done: normal skills; burst 14002516, 14002516, 14002516, 14002517, 14002518, 14002519, 14002520; extra 14002679, 11002506, 11002507, 11002508, 11002509, 11002510, 12002511, 12002512 +3 more; missing: abilities not fully implemented 1990342, 1990343; unsure: leader condition values estimated |
+| 60101 | リアス | Rias | Attacker | Partial | done: normal skills; burst 14003379, 14003379, 14003379, 14003380, 14003381, 14003382, 14003383; missing: abilities not fully implemented 1990499, 1990500; unsure: leader condition values estimated |
+| 60201 | スレイ | Slade | Breaker | Partial | done: normal skills; burst 14003394, 14003394, 14003394, 14003395, 14003396, 14003397, 14003398; missing: abilities not fully implemented 1990501, 1990502; unsure: leader condition values estimated |
+| 70101 | マリー・ローズ | Marie Rose | Attacker | Partial | done: normal skills; burst 14003155, 14003155, 14003155, 14003156, 14003157, 14003158, 14003159; missing: abilities not fully implemented 1990471, 1990472; unsure: leader condition values estimated |
+| 70201 | ほのか | Honoka | Breaker | Partial | done: normal skills; burst 14003185, 14003185, 14003185, 14003186, 14003187, 14003188, 14003189; missing: abilities not fully implemented 1990475, 1990476; unsure: leader condition values estimated |
+| 143204 | ヴァレリア | Valeria | Attacker | Partial | done: normal skills; burst 14001629, 14001629, 14001629, 14001630, 14001631, 14001632, 14001633, 14002320; missing: abilities not fully implemented 1990224, 1990225, 1990312; unsure: leader condition values estimated |
+| 144203 | ララ | Lara | Defender | Partial | done: normal skills; burst 14002934, 14002934, 14002934, 14002935, 14002936, 14002937, 14002938; missing: abilities not fully implemented 1990371, 1990372; unsure: leader condition values estimated |
+| 144802 | アンチュ | Antje | Attacker | Partial | done: normal skills; burst 14002919, 14002919, 14002919, 14002920, 14002921, 14002922, 14002923; extra 14002977; missing: abilities not fully implemented 1990369, 1990370; unsure: leader condition values estimated |
+| 1039904 | ライザ | Ryza | Attacker | Partial | done: normal skills; burst 14001544, 14001544, 14001544, 14001545, 14001546, 14001547, 14001548; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990220; unsure: leader condition values estimated |
+| 1040003 | クラウディア | Klaudia | Breaker | Partial | done: normal skills; burst 14001614, 14001614, 14001614, 14001615, 14001616, 14001617, 14001618; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990222; unsure: leader condition values estimated |
+| 1043105 | レスナ | Resna | Breaker | Partial | done: normal skills; burst 14001529, 14001529, 14001529, 14001530, 14001531, 14001532, 14001533; 1/2 abilities fully implemented; missing: abilities not fully implemented 1990218; unsure: leader condition values estimated |

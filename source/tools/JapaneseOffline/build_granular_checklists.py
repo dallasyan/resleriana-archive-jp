@@ -140,7 +140,228 @@ def main() -> int:
     legend_status = ("Status: Implemented = resolves fully in the sim; Partial = resolves "
                      "generically with some effects records-only; Missing = not implemented; "
                      "Unsure = needs capture confirmation. EN is filled only where a local "
-                     "mapping exists; blank EN means untranslated proper noun.")
+                     "mapping exists; blank EN means untranslated proper noun. "
+                     "Notes name the specific missing effect/ability IDs and the open "
+                     "value, duration, condition, or target questions for mapped parts.")
+
+    # Runtime paths mirrored from battle_japanese.py so notes can distinguish
+    # implemented codes from ignored ones. Keep these sets aligned with the
+    # simulator when combat behavior changes.
+    SLOT_MOD_CODES = {
+        "skill_damage", "dealt_damage", "skill_power", "taken_damage",
+        "crit_rate", "crit_damage", "break_damage", "taken_break",
+        "taken_crit_damage", "penetration", "item_damage", "cannon_damage",
+        "item_crit", "cannon_crit", "burst_damage", "drain", "excess_crit",
+    }
+    START_STAT_CODES = {"stat_up", "stat_down"}
+    SPECIAL_MOD_CODES = {
+        "potency_given_plus", "potency_given_minus", "potency_received",
+        "ailment_rate", "burst_gain_down", "burst_stocks", "pioneer", "aggro",
+        "resist_up", "ailment_immune",
+    }
+    # ailment_resist as a battle-long mod is ignored: the sim only reads
+    # resist_up buffs for resistance and ailment_immune mods for immunity.
+    IGNORED_MOD_CODES = {"ailment_resist"}
+    TRIGGER_EXEC_OPS = {"lamp_light", "lamp_scaled", "range_swap"}
+    TRIGGER_ACTION_OPS = {"panel_skill", "extra_attack"}
+    # Trigger buff payloads executed immediately rather than granted.
+    TRIGGER_EXEC_BUFF_CODES = {
+        "heal", "item_gauge", "burst_gauge", "cleanse", "turn_swap",
+        "turn_erase", "delay_turn", "hasten_turn", "field", "revive",
+        "panel_generate", "panel_convert", "panel_enhance", "extra_attack",
+        "transform", "lamp", "pioneer", "drain", "accuracy_down", "resist_down",
+    }
+    TRIGGER_GRANT_CODES = {
+        "skill_damage", "skill_power", "crit_rate", "crit_damage",
+        "break_damage", "taken_break", "penetration", "taken_damage",
+        "dealt_damage", "stat_up", "stat_down", "heal_given", "heal_received",
+        "burst_damage", "resist_up", "ailment_resist", "panel_null",
+        "ailment", "ailment_dot", "regen", "barrier", "evade", "reflect",
+        "cover", "null_damage", "counter", "break_power",
+    }
+    SKILL_GRANT_CODES = {
+        "skill_damage", "dealt_damage", "skill_power", "crit_rate",
+        "crit_damage", "break_damage", "taken_break", "taken_crit_damage",
+        "penetration", "taken_damage", "burst_damage", "heal_given",
+        "heal_received", "ailment", "resist_up", "resist_down",
+        "target_debuff",
+    }
+    KNOWN_COND_NAMES = {
+        "role", "attr", "target_state", "target_broken", "hp_above",
+        "hp_below", "crit", "ko", "boss", "weak_hit", "scope", "skill_ids",
+        "panel", "tag_count", "gauge_above",
+    }
+    KNOWN_TRIGGER_EVENTS = {
+        "heal_received", "skill_use", "post_attack", "weak_hit", "crit",
+        "ko", "break_hit", "target_ailment_hit", "attacked", "panel_gain",
+        "turn_start", "pre_attack", "party_burst", "item_use",
+        "battle_start", "wave_start",
+    }
+
+    def fmt_ids(ids, cap=8):
+        ids = [str(x) for x in ids if x is not None and str(x) != ""]
+        if not ids:
+            return ""
+        shown = ", ".join(ids[:cap])
+        if len(ids) > cap:
+            shown += " +%d more" % (len(ids) - cap)
+        return shown
+
+    def cond_names(conds):
+        names = []
+        for cond in conds or []:
+            name = cond.get("cond") if isinstance(cond, dict) else None
+            if name and name not in names:
+                names.append(name)
+        return names
+
+    def unsure_flags(parsed):
+        """Open value/duration/condition/target questions for one parsed map."""
+        flags = []
+        if int(parsed.get("rate", 100) or 100) != 100:
+            flags.append("rate %s" % parsed.get("rate"))
+        if int(parsed.get("cap", 0) or 0):
+            flags.append("cap %s" % parsed.get("cap"))
+        if parsed.get("fixed"):
+            flags.append("fixed-value handling")
+        if int(parsed.get("dur_actions", 0) or 0) or int(parsed.get("dur_hits", 0) or 0):
+            flags.append("durations")
+        if parsed.get("perm"):
+            flags.append("permanence")
+        if parsed.get("placeholder"):
+            flags.append("placeholder value mapping")
+        if int(parsed.get("text_value", 0) or 0):
+            flags.append("explicit text value")
+        unknown_conds = [c for c in cond_names(parsed.get("conds")) if c not in KNOWN_COND_NAMES]
+        if unknown_conds:
+            flags.append("unmodeled conditions: %s" % ",".join(unknown_conds))
+        elif cond_names(parsed.get("conds")):
+            flags.append("conditions: %s" % ",".join(cond_names(parsed.get("conds"))))
+        target = parsed.get("target")
+        if target and target not in ("self", "context", "skill_target"):
+            flags.append("target: %s" % target)
+        return flags
+
+    def mod_handled(mod) -> bool:
+        code = mod.get("code")
+        return code in SLOT_MOD_CODES or code in START_STAT_CODES or code in SPECIAL_MOD_CODES
+
+    def trigger_handled(trig) -> bool:
+        op = trig.get("op")
+        if op in TRIGGER_EXEC_OPS or op in TRIGGER_ACTION_OPS or op == "lamp_bonus":
+            return True
+        if op == "buff":
+            code = (trig.get("buff", {}) or {}).get("code")
+            return code in TRIGGER_EXEC_BUFF_CODES or code in TRIGGER_GRANT_CODES
+        return False
+
+    def mod_gaps(mods):
+        """Classify battle-long mods into handled notes and gaps."""
+        handled = []
+        missing = []
+        unsure = []
+        for mod in mods or []:
+            code = mod.get("code")
+            label = "%s%s" % (code, ":%s" % mod.get("stat") if mod.get("stat") else "")
+            if mod_handled(mod):
+                handled.append(label)
+                if code == "resist_up":
+                    unsure.append("%s resist_up buff amounts ignored downstream" % label)
+                if code == "burst_stocks":
+                    unsure.append("%s start-stock values need capture confirmation" % label)
+            elif code in IGNORED_MOD_CODES:
+                missing.append("%s mod ignored (only buffs/immunity read)" % label)
+            else:
+                missing.append("%s mod ignored" % label)
+            for flag in unsure_flags(mod):
+                unsure.append("%s %s" % (label, flag))
+        return handled, missing, unsure
+
+    def trigger_gaps(triggers):
+        """Classify ability triggers into handled notes and gaps."""
+        handled = []
+        missing = []
+        unsure = []
+        for trig in triggers or []:
+            op = trig.get("op")
+            event = trig.get("event")
+            label = "%s@%s" % (op, event)
+            if op in TRIGGER_EXEC_OPS or op in TRIGGER_ACTION_OPS:
+                handled.append(label)
+            elif op == "lamp_bonus":
+                handled.append("%s (passive lamp data)" % label)
+            elif op == "buff":
+                buff = trig.get("buff", {}) or {}
+                code = buff.get("code")
+                if code in TRIGGER_EXEC_BUFF_CODES:
+                    handled.append("%s executes %s" % (label, code))
+                elif code in TRIGGER_GRANT_CODES:
+                    handled.append("%s grants %s" % (label, code))
+                else:
+                    missing.append("%s buff %s ignored" % (label, code))
+            elif not trigger_handled(trig):
+                missing.append("%s op ignored" % label)
+            if event not in KNOWN_TRIGGER_EVENTS and event is not None:
+                unsure.append("%s event never fired" % label)
+            for flag in unsure_flags(trig.get("buff", {}) if isinstance(trig.get("buff"), dict) else {}):
+                unsure.append("%s %s" % (label, flag))
+            for cond in cond_names(trig.get("conds")):
+                if cond not in KNOWN_COND_NAMES:
+                    unsure.append("%s unmodeled condition %s" % (label, cond))
+            if int(trig.get("uses_max", 0) or 0):
+                unsure.append("%s use cap %s" % (label, trig.get("uses_max")))
+        return handled, missing, unsure
+
+    def join_note(implemented, missing, unsure, cap_items=6, cap_chars=420):
+        """Compact implemented/missing/unsure note for one checklist row."""
+        parts = []
+        if implemented:
+            shown = implemented[:cap_items]
+            text = "done: %s" % "; ".join(shown)
+            if len(implemented) > cap_items:
+                text += " +%d more" % (len(implemented) - cap_items)
+            parts.append(text)
+        if missing:
+            shown = missing[:cap_items]
+            text = "missing: %s" % "; ".join(shown)
+            if len(missing) > cap_items:
+                text += " +%d more" % (len(missing) - cap_items)
+            parts.append(text)
+        if unsure:
+            seen = []
+            for item in unsure:
+                if item not in seen:
+                    seen.append(item)
+            shown = seen[:cap_items]
+            text = "unsure: %s" % "; ".join(shown)
+            if len(seen) > cap_items:
+                text += " +%d more" % (len(seen) - cap_items)
+            parts.append(text)
+        note = "; ".join(parts) if parts else "no parsed combat parts"
+        if len(note) > cap_chars:
+            note = note[:cap_chars].rstrip() + "…"
+        return note
+
+    # Full means every effect mapped, every parsed mod/trigger handled by
+    # the sim, AND any description parsed; anything less is Partial so
+    # missing parts stay visible per item.
+    def ability_full(aid: str) -> bool:
+        parsed = ability_parsed.get(str(aid), {})
+        fx = (abilities.get(str(aid)) or {}).get("effects") or []
+        fx_mapped = sum(1 for e in fx if effects.get(str(e.get("id")), {}).get("code") != "unmapped")
+        if fx_mapped != len(fx):
+            return False
+        if any(not mod_handled(m) for m in parsed.get("mods", [])):
+            return False
+        if any(not trigger_handled(t) for t in parsed.get("triggers", [])):
+            return False
+        desc = ((abilities.get(str(aid)) or {}).get("description") or "").strip()
+        if desc and not parsed.get("mods") and not parsed.get("triggers"):
+            return False
+        return True
+
+    def abilities_covered(abil) -> tuple[int, int]:
+        return (sum(1 for a in abil if ability_full(str(a))), len(abil))
 
     # -- characters ---------------------------------------------------------
     rows = []
@@ -155,18 +376,44 @@ def main() -> int:
         extra = row.get("extra_skill_ids") or []
         extra_ok = all(str(e) in slim_skill for e in extra)
         ab = row.get("ability_ids") or []
-        ab_mapped = sum(1 for a in ab if ability_parsed.get(str(a), {}).get("mods") or ability_parsed.get(str(a), {}).get("triggers"))
+        ab_mapped = sum(1 for a in ab if ability_full(str(a)))
+        ab_missing = [str(a) for a in ab if not ability_full(str(a))]
         leader = row.get("leader_skill") or {}
         leader_ok = bool(leader.get("abilities"))
-        if normal and burst_ok and (not actives or actives_ok) and (not extra or extra_ok):
-            status, note = "Implemented", "skills/burst/active/extra resolve; %d/%d abilities parsed" % (ab_mapped, len(ab))
+        done = []
+        if normal:
+            done.append("normal skills")
+        if burst_ok:
+            done.append("burst %s" % fmt_ids(burst))
+        if actives and actives_ok:
+            done.append("actives %s" % fmt_ids(actives))
+        if extra and extra_ok:
+            done.append("extra %s" % fmt_ids(extra))
+        if ab_mapped:
+            done.append("%d/%d abilities fully implemented" % (ab_mapped, len(ab)))
+        missing = []
+        if not normal:
+            missing.append("no normal skill tables")
+        if burst and not burst_ok:
+            missing.append("burst %s absent from skill map" % fmt_ids(burst))
+        if actives and not actives_ok:
+            missing.append("actives %s missing skill/limit rows" % fmt_ids(actives))
+        if extra and not extra_ok:
+            missing.append("extra %s absent from skill map" % fmt_ids(extra))
+        if ab_missing:
+            missing.append("abilities not fully implemented %s" % fmt_ids(ab_missing))
+        if not leader_ok:
+            missing.append("no leader skill")
+        unsure = []
+        if leader_ok:
+            unsure.append("leader condition values estimated")
+        if normal and burst_ok and (not actives or actives_ok) and (not extra or extra_ok) and not ab_missing:
+            status = "Implemented"
         elif normal:
-            status, note = "Partial", "core skills resolve; burst_ok=%s actives_ok=%s extra_ok=%s abilities=%d/%d" % (
-                burst_ok, actives_ok, extra_ok, ab_mapped, len(ab))
+            status = "Partial"
         else:
-            status, note = "Missing", "no normal skill tables"
-            if not leader_ok:
-                note += "; no leader skill"
+            status = "Missing"
+        note = join_note(done, missing, unsure)
         rows.append([cid, row.get("name") or "", en("character", cid),
                      EN_ROLES.get(row.get("role"), ""), status, note])
     rows.sort(key=lambda r: int(r[0]))
@@ -174,28 +421,100 @@ def main() -> int:
                 legend_status, ["id", "ja", "en", "role", "status", "note"], rows)
 
     # -- skills (ally prefixes) ----------------------------------------------
+    # Skill effect ids resolve through apply_skill_effects: state-table ids
+    # grant visible buffs (except special/dummy/counter_state), parsed grant
+    # codes become hidden slot buffs, timeline/gauge/field/cleanse codes
+    # execute immediately, and everything else is records-only.
+    SKILL_EXEC_CODES = {
+        "turn_swap", "turn_erase", "delay_turn", "hasten_turn",
+        "item_gauge", "burst_gauge", "break_gauge_heal", "field",
+        "cleanse", "dispel",
+    }
+    # Skill-summary behavior codes and their sim paths.
+    BEHAVIOR_DAMAGE_CODES = {
+        "atk_crit_damage", "atk_crit_rate", "atk_penetration",
+        "weak_break_up", "weak_dealt_up", "scaling_damage",
+    }
+    BEHAVIOR_POST_CODES = {
+        "post_heal_self", "post_heal_allies", "post_break_up_self",
+        "post_taken_up_target", "pre_resist_down_target", "item_gauge",
+        "turn_swap", "cleanse_self_pre", "extra_turn_grant",
+    }
     rows = []
     for sid in sorted([k for k in skills if k[:2] in ("11", "12", "14")], key=int):
         row = skills[sid]
         fx = row.get("effects") or []
-        mapped_fx = sum(1 for e in fx if effects.get(str(e.get("id")), {}).get("code") != "unmapped")
-        state_fx = sum(1 for e in fx if str(e.get("id")) in states)
-        beh = sid in behaviors
+        done, missing, unsure = [], [], []
+        for e in fx:
+            eid = str(e.get("id"))
+            parsed = effects.get(eid, {})
+            code = parsed.get("code", "unmapped")
+            label = "%s:%s" % (eid, code)
+            if code == "unmapped":
+                missing.append("%s unmapped" % eid)
+                continue
+            if eid in states:
+                kind = (states.get(eid) or {}).get("kind", "special")
+                if kind in ("special", "dummy", "counter_state"):
+                    missing.append("%s state %s records-only" % (eid, kind))
+                else:
+                    done.append("%s grants %s buff" % (eid, kind))
+                    if kind == "resist_up":
+                        unsure.append("%s resist amounts ignored downstream" % eid)
+                    if kind == "ailment":
+                        unsure.append("%s %s" % (label, "; ".join(unsure_flags(parsed)) or "application roll"))
+                    for flag in unsure_flags(parsed):
+                        unsure.append("%s %s" % (label, flag))
+                continue
+            if code in SKILL_GRANT_CODES:
+                done.append("%s hidden %s buff" % (eid, code))
+                for flag in unsure_flags(parsed):
+                    unsure.append("%s %s" % (label, flag))
+            elif code in SKILL_EXEC_CODES:
+                done.append("%s executes %s" % (eid, code))
+                for flag in unsure_flags(parsed):
+                    unsure.append("%s %s" % (label, flag))
+            else:
+                missing.append("%s %s records-only" % (eid, code))
+        beh = behaviors.get(sid, [])
+        for b in beh:
+            code = b.get("code")
+            if code in BEHAVIOR_DAMAGE_CODES:
+                done.append("behavior %s in damage calc" % code)
+                if code == "scaling_damage":
+                    unsure.append("behavior scaling_damage thresholds estimated (hp 50%%, foe counts)")
+                if code in ("weak_break_up", "weak_dealt_up"):
+                    unsure.append("behavior %s weakness determination" % code)
+            elif code in BEHAVIOR_POST_CODES:
+                if code == "extra_turn_grant":
+                    done.append("behavior extra_turn_grant gated on extra_skill, max 5/battle")
+                    unsure.append("behavior extra_turn_grant cond %s" % b.get("cond"))
+                else:
+                    done.append("behavior %s post-attack" % code)
+            elif code == "burst_gauge":
+                missing.append("behavior burst_gauge ignored by post-attack handler")
+            else:
+                missing.append("behavior %s ignored" % code)
         info = cmap_skills.get(sid, {})
         flags = ",".join(f for f, on in (
             ("lamp%d" % info.get("lamp_max", 0), info.get("lamp_max")),
             ("transform", info.get("transform")),
             ("range", info.get("range_move") or info.get("dest")),
             ("timeline", info.get("timeline"))) if on)
-        if beh and mapped_fx == len(fx):
-            status, note = "Implemented", "behavior-mapped" + ("; " + flags if flags else "")
-        elif not fx:
-            status, note = "Implemented", "no effects" + ("; " + flags if flags else "")
-        elif mapped_fx or state_fx or beh:
-            status, note = "Partial", "%d/%d effects mapped, %d state ids%s" % (
-                mapped_fx, len(fx), state_fx, "; " + flags if flags else "")
+        if flags:
+            done.append("flags: " + flags)
+        effect_kind = {1: "damage", 2: "heal", 3: "records-only"}.get(
+            row.get("skill_effect_type"), "type%s" % row.get("skill_effect_type"))
+        done.append("skill effect path: %s" % effect_kind)
+        if not fx and not beh:
+            status = "Implemented"
+        elif not missing:
+            status = "Implemented"
+        elif done:
+            status = "Partial"
         else:
-            status, note = "Partial", "records-only effects"
+            status = "Partial"
+        note = join_note(done, missing, unsure)
         rows.append([sid, row.get("name") or "", en("skill", sid),
                      "%s/%s" % (row.get("power"), row.get("break_power")),
                      "t%s/e%s" % (row.get("skill_target_type"), row.get("skill_effect_type")),
@@ -204,32 +523,43 @@ def main() -> int:
                 legend_status, ["id", "ja", "en", "power/break", "target/effect", "status", "note"], rows)
 
     # -- abilities ------------------------------------------------------------
-    def abilities_covered(abil) -> tuple[int, int]:
-        return (sum(1 for a in abil if ability_covered(str(a))[0]), len(abil))
-
+    # ability_full is defined once above (strict: every effect mapped and
+    # every parsed mod/trigger handled by the sim) and shared by all
+    # sections so verdicts stay consistent.
     def ability_covered(aid: str) -> tuple[bool, str]:
-        parsed = ability_parsed.get(aid, {})
+        parsed = ability_parsed.get(str(aid), {})
         mods, trigs = parsed.get("mods", []), parsed.get("triggers", [])
-        fx = (abilities.get(aid) or {}).get("effects") or []
-        fx_mapped = sum(1 for e in fx if effects.get(str(e.get("id")), {}).get("code") != "unmapped")
-        parts = []
-        if mods:
-            parts.append("%d mods" % len(mods))
-        if trigs:
-            parts.append("%d triggers" % len(trigs))
+        fx = (abilities.get(str(aid)) or {}).get("effects") or []
+        fx_ids = [str(e.get("id")) for e in fx]
+        fx_unmapped = [i for i in fx_ids if effects.get(i, {}).get("code") == "unmapped"]
+        fx_mapped = len(fx_ids) - len(fx_unmapped)
+        done, missing, unsure = mod_gaps(mods)
+        t_done, t_missing, t_unsure = trigger_gaps(trigs)
+        done.extend(t_done)
+        missing.extend(t_missing)
+        unsure.extend(t_unsure)
         if fx_mapped:
-            parts.append("%d/%d effect-desc mapped" % (fx_mapped, len(fx)))
-        if parts:
-            return True, "+".join(parts)
-        if fx:
-            return False, "unmapped description+effects"
-        return False, "no effects"
+            done.append("%d/%d description effects mapped" % (fx_mapped, len(fx_ids)))
+        if fx_unmapped:
+            missing.append("unmapped effect ids %s" % fmt_ids(fx_unmapped))
+        desc = ((abilities.get(str(aid)) or {}).get("description") or "").strip()
+        if desc and not mods and not trigs:
+            missing.append("description text unparsed")
+        note = join_note(done, missing, unsure)
+        covered = bool(done)
+        return covered, note
+
     rows = []
     for aid in sorted(abilities, key=int):
         row = abilities[aid]
         desc = (row.get("description") or "")[:140]
         covered, note = ability_covered(aid)
-        status = "Implemented" if covered else "Missing"
+        if ability_full(aid):
+            status = "Implemented"
+        elif covered:
+            status = "Partial"
+        else:
+            status = "Missing"
         rows.append([aid, desc, en("ability", aid), status, note])
     write_table(out / "abilities.md", "Abilities (7131)",
                 legend_status + " Description truncated to 140 chars.",
@@ -243,27 +573,72 @@ def main() -> int:
         ok_stats = all(k in status for k in ("hp", "attack", "defense"))
         ok_res = bool(row.get("resistance"))
         ok_ai = bool(row.get("enemy_ai_id"))
-        missing = [k for k, ok in (("stats", ok_stats), ("res", ok_res), ("ai", ok_ai)) if not ok]
+        burst = row.get("burst_skill_id")
+        burst_ok = (not burst) or (str(burst) in slim_skill)
+        extra = row.get("extra_skill_ids") or []
+        extra_ok = all(str(e) in slim_skill for e in extra)
+        done, missing, unsure = [], [], []
+        if ok_stats:
+            done.append("base stats present")
+            unsure.append("level scaling linear-growth estimated")
+        else:
+            missing.append("stats")
+        if ok_res:
+            done.append("resistances present")
+        else:
+            missing.append("res")
+        if ok_ai:
+            done.append("ai %s cycles in order, burst every 5 turns" % row.get("enemy_ai_id"))
+            unsure.append("ai sequencing vs telegraphs unconfirmed")
+        else:
+            missing.append("ai")
+        if burst and burst_ok:
+            done.append("burst %s in skill map" % burst)
+        elif burst:
+            missing.append("burst %s absent from skill map" % burst)
+        if extra and extra_ok:
+            done.append("extra %s in skill map" % fmt_ids(extra))
+        elif extra:
+            missing.append("extra %s absent from skill map" % fmt_ids(extra))
+        if row.get("break_gauge_coefficient") not in (None, 0):
+            unsure.append("break coefficient %s estimated" % row.get("break_gauge_coefficient"))
+        if row.get("hp_loop_type") not in (None, 0, 1):
+            unsure.append("hp loop type %s unconfirmed" % row.get("hp_loop_type"))
         status_label = "Implemented" if not missing else "Partial"
         rows.append([eid, row.get("name") or "", en("enemy", eid),
                      "lv-scaled" if ok_stats else "no-stats",
-                     "burst" if row.get("burst_skill_id") else "no-burst",
-                     status_label, "missing: " + ",".join(missing) if missing else "linear growth estimated"])
+                     "burst" if burst else "no-burst",
+                     status_label, join_note(done, missing, unsure)])
     write_table(out / "enemies.md", "Enemies",
                 legend_status, ["id", "ja", "en", "stats", "burst", "status", "note"], rows)
 
     # -- battle items ------------------------------------------------------------
     battle_tools = load(args.master, "battle_tool")
+    battle_traits = {str(r.get("id")): r for r in load(args.master, "battle_tool_trait")}
     rows = []
     tool_rows = battle_tools if isinstance(battle_tools, list) else battle_tools.values()
     for row in tool_rows:
         tid = str(row.get("id"))
         skill_ok = str(row.get("skill_id")) in slim_skill
-        traits = row.get("trait_filter_ids") or []
+        traits = [str(t) for t in (row.get("trait_filter_ids") or [])]
+        trait_unmapped = [t for t in traits
+                          if not any(effects.get(str(e.get("id")), {}).get("code") != "unmapped"
+                                     for e in (battle_traits.get(t, {}).get("effects") or []))]
+        done, missing, unsure = [], [], []
+        if skill_ok:
+            done.append("skill %s pooled item damage/heal" % row.get("skill_id"))
+        else:
+            missing.append("skill %s absent from skill map" % row.get("skill_id"))
+        if traits:
+            done.append("%d/%d traits parsed" % (len(traits) - len(trait_unmapped), len(traits)))
+        if trait_unmapped:
+            missing.append("unmapped traits %s" % fmt_ids(trait_unmapped))
+        unsure.append("usage count x%s per battle estimated" % row.get("usage_count"))
+        unsure.append("mix pairings use mixer-only stats")
         rows.append([tid, row.get("name") or "", en("battle_tool", tid),
                      str(row.get("skill_id")), "x%s" % row.get("usage_count"),
-                     "Implemented" if skill_ok else "Missing",
-                     "traits: %s" % ",".join(map(str, traits))])
+                     "Implemented" if skill_ok and not trait_unmapped else ("Partial" if skill_ok else "Missing"),
+                     join_note(done, missing, unsure)])
     rows.sort(key=lambda r: int(r[0]))
     write_table(out / "battle_items.md", "Battle items",
                 legend_status, ["id", "ja", "en", "skill", "uses", "status", "note"], rows)
@@ -275,14 +650,27 @@ def main() -> int:
     for row in eq_rows:
         eid = str(row.get("id"))
         buffs = row.get("status_buffs") or []
-        abil = row.get("ability_ids") or []
-        ab_mapped = abilities_covered(abil)[0]
-        if buffs and (not abil or ab_mapped == len(abil)):
-            status, note = "Implemented", "%d stat buffs, %d/%d abilities parsed" % (len(buffs), ab_mapped, len(abil))
-        elif buffs or ab_mapped:
-            status, note = "Partial", "%d stat buffs, %d/%d abilities parsed" % (len(buffs), ab_mapped, len(abil))
+        abil = [str(a) for a in (row.get("ability_ids") or [])]
+        ab_missing = [a for a in abil if not ability_full(a)]
+        done, missing, unsure = [], [], []
+        if buffs:
+            done.append("%d start stat buffs" % len(buffs))
+        if abil and not ab_missing:
+            done.append("%d/%d abilities parsed" % (len(abil), len(abil)))
+        elif ab_missing:
+            done.append("%d/%d abilities parsed" % (len(abil) - len(ab_missing), len(abil)))
+            missing.append("abilities not fully implemented %s" % fmt_ids(ab_missing))
+        if not buffs and not abil:
+            missing.append("no usable buffs/abilities")
+        if buffs:
+            unsure.append("flat start stats, growth scaling unconfirmed")
+        if buffs and (not abil or not ab_missing):
+            status = "Implemented"
+        elif buffs or (abil and len(ab_missing) != len(abil)):
+            status = "Partial"
         else:
-            status, note = "Missing", "no usable buffs/abilities"
+            status = "Missing"
+        note = join_note(done, missing, unsure)
         rows.append([eid, row.get("name") or "", en("equipment_tool", eid), status, note])
     rows.sort(key=lambda r: int(r[0]))
     write_table(out / "equipment.md", "Equipment",
@@ -295,14 +683,27 @@ def main() -> int:
     for row in mem_rows:
         mid = str(row.get("id"))
         buffs = row.get("status_buffs") or []
-        abil = row.get("ability_ids") or []
-        ab_mapped = abilities_covered(abil)[0]
-        if buffs and (not abil or ab_mapped == len(abil)):
-            status, note = "Implemented", "growth+%d buffs, %d/%d abilities parsed" % (len(buffs), ab_mapped, len(abil))
-        elif buffs or ab_mapped:
-            status, note = "Partial", "%d buffs, %d/%d abilities parsed" % (len(buffs), ab_mapped, len(abil))
+        abil = [str(a) for a in (row.get("ability_ids") or [])]
+        ab_missing = [a for a in abil if not ability_full(a)]
+        done, missing, unsure = [], [], []
+        if buffs:
+            done.append("growth+%d start stat buffs" % len(buffs))
+        if abil and not ab_missing:
+            done.append("%d/%d abilities parsed" % (len(abil), len(abil)))
+        elif ab_missing:
+            done.append("%d/%d abilities parsed" % (len(abil) - len(ab_missing), len(abil)))
+            missing.append("abilities not fully implemented %s" % fmt_ids(ab_missing))
+        if not buffs and not abil:
+            missing.append("no usable buffs/abilities")
+        if buffs:
+            unsure.append("limit-break growth scaling unconfirmed")
+        if buffs and (not abil or not ab_missing):
+            status = "Implemented"
+        elif buffs or (abil and len(ab_missing) != len(abil)):
+            status = "Partial"
         else:
-            status, note = "Missing", "no usable buffs/abilities"
+            status = "Missing"
+        note = join_note(done, missing, unsure)
         rows.append([mid, row.get("name") or "", en("memoria", mid), "r%s" % row.get("rarity"), status, note])
     rows.sort(key=lambda r: int(r[0]))
     write_table(out / "memoria.md", "Memoria",
@@ -319,17 +720,34 @@ def main() -> int:
         trows = traits if isinstance(traits, list) else traits.values()
         for row in trows:
             fx = row.get("effects") or []
-            mapped = sum(1 for e in fx if effects.get(str(e.get("id")), {}).get("code") != "unmapped")
-            abil = row.get("ability_ids") or []
-            ab_mapped = sum(1 for a in abil if trait_ability_covered(a))
-            total = len(fx) + len(abil)
-            got = mapped + ab_mapped
+            fx_ids = [str(e.get("id")) for e in fx]
+            fx_unmapped = [i for i in fx_ids if effects.get(i, {}).get("code") == "unmapped"]
+            abil = [str(a) for a in (row.get("ability_ids") or [])]
+            ab_missing = [a for a in abil if not trait_ability_covered(a)]
+            done, missing, unsure = [], [], []
+            fx_got = len(fx_ids) - len(fx_unmapped)
+            if fx_ids and fx_got:
+                done.append("%d/%d trait effects mapped" % (fx_got, len(fx_ids)))
+            if fx_unmapped:
+                missing.append("unmapped effect ids %s" % fmt_ids(fx_unmapped))
+            ab_got = len(abil) - len(ab_missing)
+            if abil and ab_got:
+                done.append("%d/%d trait abilities parsed" % (ab_got, len(abil)))
+            if ab_missing:
+                missing.append("unparsed abilities %s" % fmt_ids(ab_missing))
+            if not fx_ids and not abil:
+                missing.append("no effects or abilities")
+            if fx_ids or abil:
+                unsure.append("trait filter matching vs item seed unconfirmed")
+            total = len(fx_ids) + len(abil)
+            got = total - len(fx_unmapped) - len(ab_missing)
             if total and got == total:
-                status, note = "Implemented", "%d/%d parsed" % (got, total)
+                status = "Implemented"
             elif got:
-                status, note = "Partial", "%d/%d parsed" % (got, total)
+                status = "Partial"
             else:
-                status, note = "Missing", "unmapped"
+                status = "Missing"
+            note = join_note(done, missing, unsure)
             rows.append(["%s:%s" % (label, row.get("id")), row.get("name") or "",
                          en(tname, row.get("id")), status, note])
     rows.sort()
@@ -337,6 +755,13 @@ def main() -> int:
                 legend_status, ["id", "ja", "en", "status", "note"], rows)
 
     # -- panels --------------------------------------------------------------------------
+    # Panel acquisition runs grant_panel_op: slot/taken/stat/heal/ailment
+    # codes apply; crit_force and unmapped ops are records-only.
+    PANEL_HANDLED_CODES = {
+        "skill_damage", "skill_power", "crit_rate", "crit_damage",
+        "break_damage", "taken_break", "penetration", "taken_damage",
+        "stat_up", "stat_down", "heal", "ailment", "ailment_dot",
+    }
     panels = load(args.master, "timeline_panel")
     rows = []
     prows = panels if isinstance(panels, list) else panels.values()
@@ -344,19 +769,46 @@ def main() -> int:
         pid = str(row.get("id"))
         ops = panels.get(pid, {}).get("ops", []) if isinstance(panels, dict) else []
         parsed_ops = (cmap.get("panels", {}).get(pid, {}) or {}).get("ops", [])
-        unmapped = sum(1 for o in parsed_ops if (o.get("op") or o.get("code")) in (None, "unmapped", "unmapped_panel"))
-        if parsed_ops and not unmapped:
-            status, note = "Implemented", "%d ops" % len(parsed_ops)
-        elif parsed_ops:
-            status, note = "Partial", "%d/%d ops parsed" % (len(parsed_ops) - unmapped, len(parsed_ops))
+        done, missing, unsure = [], [], []
+        for op in parsed_ops:
+            code = op.get("op") or op.get("code")
+            if code in PANEL_HANDLED_CODES:
+                done.append("%s applies on acquisition" % code)
+                if int(op.get("text_value", 0) or 0):
+                    unsure.append("%s magnitude text_value %s" % (code, op.get("text_value")))
+                if int(op.get("dur_actions", 0) or 0) or int(op.get("dur_hits", 0) or 0):
+                    unsure.append("%s durations actions=%s hits=%s" % (
+                        code, op.get("dur_actions", 0), op.get("dur_hits", 0)))
+                elif code not in ("heal",):
+                    unsure.append("%s default 2-action duration" % code)
+                if op.get("holder") not in (None, "holder"):
+                    unsure.append("%s holder %s targeting" % (code, op.get("holder")))
+                if code == "heal" and not int(op.get("text_value", 0) or 0):
+                    unsure.append("heal defaults to 25%% max HP")
+                if code == "ailment":
+                    unsure.append("ailment %s rate %s" % (op.get("ailment"), op.get("rate")))
+            elif code in (None, "unmapped", "unmapped_panel"):
+                missing.append("unmapped panel op")
+            else:
+                missing.append("%s panel op records-only" % code)
+        if not parsed_ops:
+            missing.append("no parsed ops")
+        if parsed_ops and not missing:
+            status = "Implemented"
+        elif done:
+            status = "Partial"
         else:
-            status, note = "Missing", "no parsed ops"
+            status = "Missing"
+        note = join_note(done, missing, unsure)
         rows.append([pid, row.get("name") or "", en("timeline_panel", pid) or EN_PANELS.get(pid, ""), status, note])
     rows.sort(key=lambda r: int(r[0]))
     write_table(out / "panels.md", "Timeline panels",
                 legend_status, ["id", "ja", "en", "status", "note"], rows)
 
     # -- states ----------------------------------------------------------------------------
+    # State ids grant visible buffs via grant_state_buff (special/dummy/
+    # counter_state are records-only). Amounts and durations arrive with the
+    # triggering skill effect; the state row itself carries no magnitude.
     states = load(args.master, "state_change")
     srows = states if isinstance(states, list) else states.values()
     rows = []
@@ -365,15 +817,33 @@ def main() -> int:
         kind = (cmap.get("states", {}).get(sid, {}) or {}).get("kind", "special")
         ailment = (cmap.get("states", {}).get(sid, {}) or {}).get("ailment", "")
         en_name = en("state_change", sid) or EN_AILMENTS.get(ailment, "")
-        if kind in ("out", "taken"):
-            status, note = "Implemented", "kind=" + kind
-        elif kind in ("ailment", "regen", "barrier", "evade", "reflect", "cover",
-                      "null_damage", "resist_up", "panel_null", "range_in", "range_out"):
-            status, note = "Implemented", "kind=" + kind
-        elif kind in ("counter", "counter_state", "dummy", "special"):
-            status, note = "Partial", "kind=" + kind + " (display/counters only)"
+        done, missing, unsure = [], [], []
+        if kind in ("special", "dummy", "counter_state"):
+            missing.append("kind=%s never granted, records-only" % kind)
+            status = "Partial"
+        elif kind == "resist_up":
+            done.append("kind=resist_up granted as visible buff")
+            missing.append("resist_up buff amounts ignored downstream")
+            unsure.append("resist magnitude/duration need capture confirmation")
+            status = "Partial"
+        elif kind == "counter":
+            done.append("kind=counter granted and counterattacks")
+            unsure.append("counter magnitude/duration from triggering effect")
+            status = "Implemented"
+        elif kind in ("out", "taken", "ailment", "regen", "barrier", "evade",
+                      "reflect", "cover", "null_damage", "panel_null",
+                      "range_in", "range_out"):
+            done.append("kind=%s granted as visible buff" % kind)
+            unsure.append("magnitude/duration from triggering effect, potency-scaled")
+            if kind == "ailment":
+                unsure.append("ailment %s application roll" % (ailment or "unknown"))
+            if kind == "reflect":
+                unsure.append("reflect phys/magic/any split from state row")
+            status = "Implemented"
         else:
-            status, note = "Unsure", "kind=" + kind
+            missing.append("kind=%s unrecognized" % kind)
+            status = "Unsure"
+        note = join_note(done, missing, unsure)
         rows.append([sid, row.get("name") or "", en_name, status, note])
     rows.sort(key=lambda r: int(r[0]))
     write_table(out / "states.md", "Status effects",

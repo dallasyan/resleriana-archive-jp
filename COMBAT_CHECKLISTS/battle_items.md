@@ -2,352 +2,352 @@
 
 # Battle items
 
-Status: Implemented = resolves fully in the sim; Partial = resolves generically with some effects records-only; Missing = not implemented; Unsure = needs capture confirmation. EN is filled only where a local mapping exists; blank EN means untranslated proper noun.
+Status: Implemented = resolves fully in the sim; Partial = resolves generically with some effects records-only; Missing = not implemented; Unsure = needs capture confirmation. EN is filled only where a local mapping exists; blank EN means untranslated proper noun. Notes name the specific missing effect/ability IDs and the open value, duration, condition, or target questions for mapped parts.
 
 | id | ja | en | skill | uses | status | note |
 |---|---|---|---|---|---|---|
-| 1 | ヒーリングサルヴ | Healing Salve | 31549 | x2 | Implemented | traits: 4 |
-| 2 | フラム | Bomb | 31550 | x2 | Implemented | traits: 1 |
-| 3 | うに袋 | Uni Bag | 31551 | x2 | Implemented | traits: 1 |
-| 4 | ドライビスク | Dry Biscuit | 31552 | x2 | Implemented | traits: 4 |
-| 5 | 魔女の秘薬 | Witch's Potion | 31553 | x1 | Implemented | traits: 3 |
-| 6 | ナントカの秘薬 | Secret Remedy | 31554 | x1 | Implemented | traits: 2 |
-| 7 | クラフト | Craft | 31555 | x3 | Implemented | traits: 1 |
-| 8 | ドナーストーン | Lightning Bomb | 31556 | x3 | Implemented | traits: 1 |
-| 9 | ヒーリングベル | Healing Bell | 31914 | x2 | Implemented | traits: 4 |
-| 10 | ヒーリングベル | Healing Bell | 31557 | x2 | Implemented | traits: 4 |
-| 11 | 暗黒水 | Dark Water | 31915 | x2 | Implemented | traits: 3 |
-| 12 | 暗黒水 | Dark Water | 31558 | x2 | Implemented | traits: 3 |
-| 13 | 素朴な焼き菓子 | Simple Cookies | 31559 | x2 | Implemented | traits: 2 |
-| 14 | 神秘の羽衣 | Mystic Robe | 31560 | x2 | Implemented | traits: 2 |
-| 15 | ウォーパウダー | War Powder | 31916 | x2 | Implemented | traits: 2 |
-| 16 | ウォーパウダー | War Powder | 31561 | x2 | Implemented | traits: 2 |
-| 17 | たたかう魔剣 | Magic Sword | 31860 | x3 | Implemented | traits: 1 |
-| 18 | たたかう魔剣 | Magic Sword | 31861 | x3 | Implemented | traits: 1 |
-| 19 | ローゼフラム | Rose Bomb | 31862 | x3 | Implemented | traits: 1 |
-| 20 | ローゼフラム | Rose Bomb | 31863 | x3 | Implemented | traits: 1 |
-| 21 | エネルジアニカ | Energianica | 31864 | x3 | Implemented | traits: 4 |
-| 22 | エネルジアニカ | Energianica | 31865 | x3 | Implemented | traits: 4 |
-| 23 | 不幸の瓶詰め | Bottled Misfortune | 31866 | x2 | Implemented | traits: 3 |
-| 24 | 不幸の瓶詰め | Bottled Misfortune | 31867 | x2 | Implemented | traits: 3 |
-| 25 | 燃える水 | Flame Aqua | 31868 | x2 | Implemented | traits: 3 |
-| 26 | 燃える水 | Flame Aqua | 31869 | x2 | Implemented | traits: 3 |
-| 27 | 妙薬ドラッヘン | Drachen Elixir | 31870 | x2 | Implemented | traits: 2 |
-| 28 | 妙薬ドラッヘン | Drachen Elixir | 31871 | x2 | Implemented | traits: 2 |
-| 29 | 黄金エキススープ | Golden Extract Soup | 31872 | x2 | Implemented | traits: 2 |
-| 30 | 黄金エキススープ | Golden Extract Soup | 31873 | x2 | Implemented | traits: 2 |
-| 31 | スモークミート | Smoked Meat | 31874 | x2 | Implemented | traits: 2 |
-| 32 | スモークミート | Smoked Meat | 31875 | x2 | Implemented | traits: 2 |
-| 33 | 錬金キャンディ | Alchemy Candy | 31876 | x2 | Implemented | traits: 2 |
-| 34 | 錬金キャンディ | Alchemy Candy | 31877 | x2 | Implemented | traits: 2 |
-| 35 | 創世の槌 | Genesis Hammer | 31878 | x3 | Implemented | traits: 1 |
-| 36 | 創世の槌 | Genesis Hammer | 31879 | x3 | Implemented | traits: 1 |
-| 37 | リュミエールランス | Luminous Lance | 31880 | x3 | Implemented | traits: 1 |
-| 38 | リュミエールランス | Luminous Lance | 31881 | x3 | Implemented | traits: 1 |
-| 39 | レーツェルフト | Ratsel Luft | 31882 | x3 | Implemented | traits: 1 |
-| 40 | レーツェルフト | Ratsel Luft | 31883 | x3 | Implemented | traits: 1 |
-| 41 | クライトレヘルン | Kleid Ice Bomb | 31884 | x3 | Implemented | traits: 1 |
-| 42 | クライトレヘルン | Kleid Ice Bomb | 31885 | x3 | Implemented | traits: 1 |
-| 43 | シュトラプラジグ | Strahl Plajig | 31886 | x3 | Implemented | traits: 1 |
-| 44 | シュトラプラジグ | Strahl Plajig | 31887 | x3 | Implemented | traits: 1 |
-| 45 | 生きてるゴミ箱 | Living Trash Can | 31888 | x2 | Implemented | traits: 3 |
-| 46 | 生きてるゴミ箱 | Living Trash Can | 31889 | x2 | Implemented | traits: 3 |
-| 47 | かぼちゃドール | Pumpkin Doll | 31890 | x2 | Implemented | traits: 3 |
-| 48 | かぼちゃドール | Pumpkin Doll | 31891 | x2 | Implemented | traits: 3 |
-| 49 | イバラの抱擁 | Thorny Embrace | 31892 | x2 | Implemented | traits: 3 |
-| 50 | イバラの抱擁 | Thorny Embrace | 31893 | x2 | Implemented | traits: 3 |
-| 51 | 氷びし | Ice Caltrop | 31894 | x2 | Implemented | traits: 3 |
-| 52 | 氷びし | Ice Caltrop | 31895 | x2 | Implemented | traits: 3 |
-| 53 | ブリッツコア | Blitz Core | 31896 | x2 | Implemented | traits: 3 |
-| 54 | ブリッツコア | Blitz Core | 31897 | x2 | Implemented | traits: 3 |
-| 55 | 肉体活性の粉末 | Body Energy Powder | 31898 | x2 | Implemented | traits: 2 |
-| 56 | 肉体活性の粉末 | Body Energy Powder | 31899 | x2 | Implemented | traits: 2 |
-| 57 | 剛力の塗り薬 | Powerful Ointment | 31900 | x2 | Implemented | traits: 2 |
-| 58 | 剛力の塗り薬 | Powerful Ointment | 31901 | x2 | Implemented | traits: 2 |
-| 59 | トリトンのほら貝 | Triton's Trumpet | 31902 | x2 | Implemented | traits: 2 |
-| 60 | トリトンのほら貝 | Triton's Trumpet | 31903 | x2 | Implemented | traits: 2 |
-| 61 | 風繰り車 | Pinwheel | 31904 | x2 | Implemented | traits: 2 |
-| 62 | 風繰り車 | Pinwheel | 31905 | x2 | Implemented | traits: 2 |
-| 63 | シュネーシュトルム | Schnee Sturm | 31906 | x2 | Implemented | traits: 2 |
-| 64 | シュネーシュトルム | Schnee Sturm | 31907 | x2 | Implemented | traits: 2 |
-| 65 | 雷の呼び鈴 | Lightning Bell | 31908 | x2 | Implemented | traits: 2 |
-| 66 | 雷の呼び鈴 | Lightning Bell | 31909 | x2 | Implemented | traits: 2 |
-| 67 | レッドウォーパウダー | Red War Powder | 31910 | x2 | Implemented | traits: 2 |
-| 68 | レッドウォーパウダー | Red War Powder | 31911 | x2 | Implemented | traits: 2 |
-| 69 | リストレア薬瓶 | Restoration Bottle | 31912 | x3 | Implemented | traits: 4 |
-| 70 | リストレア薬瓶 | Restoration Bottle | 31913 | x3 | Implemented | traits: 4 |
-| 71 | エリキシル剤 | Elixir | 31918 | x3 | Implemented | traits: 4 |
-| 72 | エリキシル剤 | Elixir | 31917 | x3 | Implemented | traits: 4 |
-| 73 | 万物の写本 | Codex of Creation | 31919 | x2 | Implemented | traits: 3 |
-| 74 | 万物の写本 | Codex of Creation | 31920 | x2 | Implemented | traits: 3 |
-| 75 | ヒロイックガイスト | Heroic Geist | 31921 | x2 | Implemented | traits: 3 |
-| 76 | ヒロイックガイスト | Heroic Geist | 31922 | x2 | Implemented | traits: 3 |
-| 77 | 妖薬エボニアル | Miracle Ebonyal | 31924 | x2 | Implemented | traits: 2 |
-| 78 | 妖薬エボニアル | Miracle Ebonyal | 31923 | x2 | Implemented | traits: 2 |
-| 79 | 廻る魔剣 | Revolving Magic Sword | 31926 | x3 | Implemented | traits: 1 |
-| 80 | 廻る魔剣 | Revolving Magic Sword | 31925 | x3 | Implemented | traits: 1 |
-| 81 | トランヒールサルヴ | Tranquil Salve | 31928 | x3 | Implemented | traits: 4 |
-| 82 | トランヒールサルヴ | Tranquil Salve | 31927 | x3 | Implemented | traits: 4 |
-| 83 | ドナークリスタル | Lightning Crystal | 31930 | x3 | Implemented | traits: 1 |
-| 84 | ドナークリスタル | Lightning Crystal | 31929 | x3 | Implemented | traits: 1 |
-| 85 | 破壊の秘薬 | Potion of Destruction | 31932 | x2 | Implemented | traits: 2 |
-| 86 | 破壊の秘薬 | Potion of Destruction | 31931 | x2 | Implemented | traits: 2 |
-| 87 | プロテクトパウダー | Protection Powder | 31933 | x2 | Implemented | traits: 2 |
-| 88 | プロテクトパウダー | Protection Powder | 31934 | x2 | Implemented | traits: 2 |
-| 89 | ラーヴァキューブ | Lava Cube | 31935 | x3 | Implemented | traits: 1 |
-| 90 | ラーヴァキューブ | Lava Cube | 31936 | x3 | Implemented | traits: 1 |
-| 91 | カクテルレープ | Cocktail Leb | 31937 | x3 | Implemented | traits: 4 |
-| 92 | カクテルレープ | Cocktail Leb | 31938 | x3 | Implemented | traits: 4 |
-| 93 | シュタルレヘルン | Stahl Ice Bomb | 31939 | x3 | Implemented | traits: 1 |
-| 94 | シュタルレヘルン | Stahl Ice Bomb | 31940 | x3 | Implemented | traits: 1 |
-| 95 | 詰め合わせキャンディ | Assorted Candy | 31941 | x2 | Implemented | traits: 2 |
-| 96 | 詰め合わせキャンディ | Assorted Candy | 31942 | x2 | Implemented | traits: 2 |
-| 97 | さすらう地球儀 | Wandering Globe | 31943 | x1 | Implemented | traits: 1 |
-| 98 | さすらう地球儀 | Wandering Globe | 31944 | x1 | Implemented | traits: 1 |
-| 99 | グラスビーンズ | Grass Beans | 31946 | x3 | Implemented | traits: 4 |
-| 100 | 爆粉うに | Explosive Uni | 31947 | x3 | Implemented | traits: 1 |
-| 101 | クラフトリオ | Craftlio | 31948 | x3 | Implemented | traits: 1 |
-| 102 | ゆらぎの毒煙 | Poison Smoke | 31949 | x2 | Implemented | traits: 3 |
-| 103 | アスラドーナツ | Ashra Donut | 31950 | x2 | Implemented | traits: 2 |
-| 104 | 栄養剤 | Tonic | 31951 | x2 | Implemented | traits: 2 |
-| 105 | 栄養剤 | Tonic | 31952 | x2 | Implemented | traits: 2 |
-| 106 | 禁じられた秘薬 | Forbidden Elixir | 31953 | x2 | Implemented | traits: 3 |
-| 107 | 禁じられた秘薬 | Forbidden Elixir | 31954 | x2 | Implemented | traits: 3 |
-| 108 | リフュールボトル | Healing Elixir | 31955 | x3 | Implemented | traits: 4 |
-| 109 | リフュールボトル | Healing Elixir | 31956 | x3 | Implemented | traits: 4 |
-| 110 | 放電管 | Electrical Discharge Tube | 31957 | x3 | Implemented | traits: 1 |
-| 111 | 放電管 | Electrical Discharge Tube | 31958 | x3 | Implemented | traits: 1 |
-| 112 | 守護女神の盾 | Goddess Shield | 31959 | x2 | Implemented | traits: 2 |
-| 113 | 守護女神の盾 | Goddess Shield | 31960 | x2 | Implemented | traits: 2 |
-| 114 | 伝承のエリキシル剤 | Ancestral Elixir | 31961 | x3 | Implemented | traits: 4 |
-| 115 | 伝承のエリキシル剤 | Ancestral Elixir | 31962 | x3 | Implemented | traits: 4 |
-| 116 | 伝承の教典 | Ancestral Doctrine | 31963 | x2 | Implemented | traits: 2 |
-| 117 | 伝承の教典 | Ancestral Doctrine | 31964 | x2 | Implemented | traits: 2 |
-| 118 | 伝承の呪術書 | Ancestral Spellbook | 31965 | x1 | Implemented | traits: 3 |
-| 119 | 伝承の呪術書 | Ancestral Spellbook | 31966 | x1 | Implemented | traits: 3 |
-| 120 | フレアノヴァフラム | Flare Nova Bomb | 31967 | x2 | Implemented | traits: 1 |
-| 121 | フレアノヴァフラム | Flare Nova Bomb | 31968 | x2 | Implemented | traits: 1 |
-| 122 | ブリザードレヘルン | Blizzard Ice Bomb | 31969 | x2 | Implemented | traits: 1 |
-| 123 | ブリザードレヘルン | Blizzard Ice Bomb | 31970 | x2 | Implemented | traits: 1 |
-| 124 | グングニルプラジグ | Gungnir Plajig | 31971 | x2 | Implemented | traits: 1 |
-| 125 | グングニルプラジグ | Gungnir Plajig | 31972 | x2 | Implemented | traits: 1 |
-| 126 | トルネードルフト | Tornado Luft | 31973 | x2 | Implemented | traits: 1 |
-| 127 | トルネードルフト | Tornado Luft | 31974 | x2 | Implemented | traits: 1 |
-| 128 | シュレッドディザスター | Shred Disaster | 31975 | x2 | Implemented | traits: 1 |
-| 129 | シュレッドディザスター | Shred Disaster | 31976 | x2 | Implemented | traits: 1 |
-| 130 | ディスペアカノン | Despair Cannon | 31977 | x2 | Implemented | traits: 1 |
-| 131 | ディスペアカノン | Despair Cannon | 31978 | x2 | Implemented | traits: 1 |
-| 132 | カタストクラフト | Catastro Craft | 31979 | x2 | Implemented | traits: 1 |
-| 133 | カタストクラフト | Catastro Craft | 31980 | x2 | Implemented | traits: 1 |
-| 134 | クラフトリオ | Craftlio | 31981 | x3 | Implemented | traits: 1 |
-| 135 | ゆらぎの毒煙 | Poison Smoke | 31982 | x2 | Implemented | traits: 3 |
-| 136 | アスラドーナツ | Ashra Donut | 31983 | x2 | Implemented | traits: 2 |
-| 137 | 小悪魔のいたずら | Imp's Mischief | 31984 | x2 | Implemented | traits: 3 |
-| 138 | 小悪魔のいたずら | Imp's Mischief | 31985 | x2 | Implemented | traits: 3 |
-| 139 | オーカンルフェン | Orkanruf | 31986 | x3 | Implemented | traits: 1 |
-| 140 | オーカンルフェン | Orkanruf | 31987 | x3 | Implemented | traits: 1 |
-| 141 | 吸魂ひょうたん | Soul Absorbing Gourd | 31988 | x2 | Implemented | traits: 3 |
-| 142 | 吸魂ひょうたん | Soul Absorbing Gourd | 31989 | x2 | Implemented | traits: 3 |
-| 143 | ガラスのバラ | Glass Rose | 31990 | x3 | Implemented | traits: 1 |
-| 144 | ガラスのバラ | Glass Rose | 31991 | x3 | Implemented | traits: 1 |
-| 145 | ストラパール | Stellapearl | 31992 | x2 | Implemented | traits: 4 |
-| 146 | ストラパール | Stellapearl | 31993 | x2 | Implemented | traits: 4 |
-| 147 | みなぎるドリンク | Energizing Drink | 31994 | x2 | Implemented | traits: 4 |
-| 148 | みなぎるドリンク | Energizing Drink | 31995 | x2 | Implemented | traits: 4 |
-| 149 | テネブルランス | Ténèbres Lance | 31996 | x3 | Implemented | traits: 1 |
-| 150 | テネブルランス | Ténèbres Lance | 31997 | x3 | Implemented | traits: 1 |
-| 151 | 夢幻の羽衣 | Dream Raiment | 31998 | x2 | Implemented | traits: 2 |
-| 152 | 夢幻の羽衣 | Dream Raiment | 31999 | x2 | Implemented | traits: 2 |
-| 153 | 酸の霧雲 | Acid Fog | 32000 | x2 | Implemented | traits: 3 |
-| 154 | 酸の霧雲 | Acid Fog | 32001 | x2 | Implemented | traits: 3 |
-| 155 | ピュアアロマ | Pure Aroma | 32002 | x2 | Implemented | traits: 3 |
-| 156 | ピュアアロマ | Pure Aroma | 32003 | x2 | Implemented | traits: 3 |
-| 157 | まごころチョコレート | Wholehearted Chocolate | 32004 | x2 | Implemented | traits: 2 |
-| 158 | まごころチョコレート | Wholehearted Chocolate | 32005 | x2 | Implemented | traits: 2 |
-| 159 | 高火力錬金大砲 | High-Power Alchemy Cannon | 32006 | x3 | Implemented | traits: 1 |
-| 160 | 高火力錬金大砲 | High-Power Alchemy Cannon | 32007 | x3 | Implemented | traits: 1 |
-| 161 | 凍結破壊爆弾 | Freeze Blast Bomb | 32008 | x3 | Implemented | traits: 1 |
-| 162 | 凍結破壊爆弾 | Freeze Blast Bomb | 32009 | x3 | Implemented | traits: 1 |
-| 163 | 力のトーテム | Power Totem | 32010 | x2 | Implemented | traits: 2 |
-| 164 | 力のトーテム | Power Totem | 32011 | x2 | Implemented | traits: 2 |
-| 165 | 凶兆水 | Ominous Water | 32012 | x2 | Implemented | traits: 3 |
-| 166 | 凶兆水 | Ominous Water | 32013 | x2 | Implemented | traits: 3 |
-| 167 | ピロソティー | Piro Sotea | 32014 | x3 | Implemented | traits: 4 |
-| 168 | ピロソティー | Piro Sotea | 32015 | x3 | Implemented | traits: 4 |
-| 169 | つけもの石 | Weight Stone | 32016 | x3 | Implemented | traits: 1 |
-| 170 | つけもの石 | Weight Stone | 32017 | x3 | Implemented | traits: 1 |
-| 171 | 原初の力肉 | Strength Meat | 32018 | x1 | Implemented | traits: 2 |
-| 172 | 原初の力肉 | Strength Meat | 32019 | x1 | Implemented | traits: 2 |
-| 173 | 魔法の鎖 | Magic Chain | 32020 | x1 | Implemented | traits: 3 |
-| 174 | 魔法の鎖 | Magic Chain | 32021 | x1 | Implemented | traits: 3 |
-| 175 | シェルペルホルン | Shellper Horn | 32022 | x2 | Implemented | traits: 2 |
-| 176 | シェルペルホルン | Shellper Horn | 32023 | x2 | Implemented | traits: 2 |
-| 177 | アジルチャクラム | Agile Chakram | 32024 | x3 | Implemented | traits: 1 |
-| 178 | アジルチャクラム | Agile Chakram | 32025 | x3 | Implemented | traits: 1 |
-| 179 | 試作品うに袋 | Prototype Uni Bag | 32026 | x1 | Implemented | traits: 1 |
-| 180 | 試作品うに袋 | Prototype Uni Bag | 32027 | x1 | Implemented | traits: 1 |
-| 181 | 学生応援レッドゼリー | Student Support Red Jelly | 32028 | x2 | Implemented | traits: 2 |
-| 182 | 学生応援レッドゼリー | Student Support Red Jelly | 32029 | x2 | Implemented | traits: 2 |
-| 183 | 学生応援大盛定食 | Student Support Extra-Large Meal | 32030 | x2 | Implemented | traits: 4 |
-| 184 | 学生応援大盛定食 | Student Support Extra-Large Meal | 32031 | x2 | Implemented | traits: 4 |
-| 185 | 魔物除けスプレー | Monster Repellent Spray | 32032 | x2 | Implemented | traits: 3 |
-| 186 | 魔物除けスプレー | Monster Repellent Spray | 32033 | x2 | Implemented | traits: 3 |
-| 187 | 試作品ルフト | Prototype Luft | 32034 | x1 | Implemented | traits: 1 |
-| 188 | 試作品ルフト | Prototype Luft | 32035 | x1 | Implemented | traits: 1 |
-| 189 | 学生応援ブルーゼリー | Student Support Energy Drink | 32036 | x2 | Implemented | traits: 2 |
-| 190 | 学生応援ブルーゼリー | Student Support Energy Drink | 32037 | x2 | Implemented | traits: 2 |
-| 191 | 学生応援健康定食 | Student Support Balanced Meal | 32038 | x2 | Implemented | traits: 4 |
-| 192 | 学生応援健康定食 | Student Support Balanced Meal | 32039 | x2 | Implemented | traits: 4 |
-| 193 | 魔物集めトラップ | Monster Gathering Trap | 32040 | x2 | Implemented | traits: 3 |
-| 194 | 魔物集めトラップ | Monster Gathering Trap | 32041 | x2 | Implemented | traits: 3 |
-| 195 | 蛮勇の角笛 | Barbaric Horn Whistle | 32045 | x2 | Implemented | traits: 2 |
-| 196 | 蛮勇の角笛 | Barbaric Horn Whistle | 32046 | x2 | Implemented | traits: 2 |
-| 197 | フェーダクナイ | Feder Kunai | 32047 | x1 | Implemented | traits: 1 |
-| 198 | フェーダクナイ | Feder Kunai | 32048 | x1 | Implemented | traits: 1 |
-| 199 | 魔除けの霧吹き | Sprayer Talisman | 32049 | x3 | Implemented | traits: 2 |
-| 200 | 魔除けの霧吹き | Sprayer Talisman | 32050 | x3 | Implemented | traits: 2 |
-| 201 | 因果の鎖 | Chain of Karma | 32051 | x2 | Implemented | traits: 3 |
-| 202 | 因果の鎖 | Chain of Karma | 32052 | x2 | Implemented | traits: 3 |
-| 203 | エクサボム | Exa-Bomb | 32053 | x4 | Implemented | traits: 1 |
-| 204 | エクサボム | Exa-Bomb | 32054 | x4 | Implemented | traits: 1 |
-| 205 | 猛火の塗り薬 | Inferno Ointment | 32055 | x2 | Implemented | traits: 2 |
-| 206 | 猛火の塗り薬 | Inferno Ointment | 32056 | x2 | Implemented | traits: 2 |
-| 207 | メディアの秘毒 | Medea's Poison | 32057 | x2 | Implemented | traits: 3 |
-| 208 | メディアの秘毒 | Medea's Poison | 32058 | x2 | Implemented | traits: 3 |
-| 209 | しびれ毒液 | Numbing Venom | 32059 | x2 | Implemented | traits: 3 |
-| 210 | しびれ毒液 | Numbing Venom | 32060 | x2 | Implemented | traits: 3 |
-| 211 | 氷結の塗り薬 | Frozen Ointment | 32061 | x2 | Implemented | traits: 2 |
-| 212 | 氷結の塗り薬 | Frozen Ointment | 32062 | x2 | Implemented | traits: 2 |
-| 213 | 帯電の塗り薬 | Charged Ointment | 32063 | x2 | Implemented | traits: 2 |
-| 214 | 帯電の塗り薬 | Charged Ointment | 32064 | x2 | Implemented | traits: 2 |
-| 215 | ドナーシュテルン | Lightning Stern | 32065 | x4 | Implemented | traits: 1 |
-| 216 | ドナーシュテルン | Lightning Stern | 32066 | x4 | Implemented | traits: 1 |
-| 217 | エーテルインキ | Ether Ink | 32067 | x2 | Implemented | traits: 3 |
-| 218 | エーテルインキ | Ether Ink | 32068 | x2 | Implemented | traits: 3 |
-| 219 | 海の家特製かき氷 | Beach House Special Shaved Ice | 32069 | x4 | Implemented | traits: 1 |
-| 220 | 海の家特製かき氷 | Beach House Special Shaved Ice | 32070 | x4 | Implemented | traits: 1 |
-| 221 | 海の家特製オイル | Beach House Special Oil | 32071 | x5 | Implemented | traits: 2 |
-| 222 | 海の家特製オイル | Beach House Special Oil | 32072 | x5 | Implemented | traits: 2 |
-| 223 | 海の家特製焼きそば | Beach House Special Yakisoba | 32073 | x2 | Implemented | traits: 4 |
-| 224 | 海の家特製焼きそば | Beach House Special Yakisoba | 32074 | x2 | Implemented | traits: 4 |
-| 225 | 海の家特製トラップ | Beach House Special Trap | 32075 | x2 | Implemented | traits: 3 |
-| 226 | 海の家特製トラップ | Beach House Special Trap | 32076 | x2 | Implemented | traits: 3 |
-| 227 | フワットケーキ | Velvety Pancakes | 32077 | x2 | Implemented | traits: 2 |
-| 228 | フワットケーキ | Velvety Pancakes | 32078 | x2 | Implemented | traits: 2 |
-| 229 | クイーンズクレイブ | Queen's Craving | 32079 | x1 | Implemented | traits: 1 |
-| 230 | クイーンズクレイブ | Queen's Craving | 32080 | x1 | Implemented | traits: 1 |
-| 231 | 号令のホイッスル | Whistle of Command | 32081 | x2 | Implemented | traits: 2 |
-| 232 | 号令のホイッスル | Whistle of Command | 32082 | x2 | Implemented | traits: 2 |
-| 233 | ブランクシチュー | Blank Stew | 32083 | x3 | Implemented | traits: 4 |
-| 234 | ブランクシチュー | Blank Stew | 32084 | x3 | Implemented | traits: 4 |
-| 235 | プレーンワッフル | Plain Waffle | 32085 | x4 | Implemented | traits: 4 |
-| 236 | プレーンワッフル | Plain Waffle | 32086 | x4 | Implemented | traits: 4 |
-| 237 | 禁断の袋 | Forbidden Pouch | 32087 | x2 | Implemented | traits: 3 |
-| 238 | 禁断の袋 | Forbidden Pouch | 32088 | x2 | Implemented | traits: 3 |
-| 239 | 嘆きの毒煙瓶 | Bottle of Poison | 32089 | x2 | Implemented | traits: 3 |
-| 240 | 嘆きの毒煙瓶 | Bottle of Poison | 32090 | x2 | Implemented | traits: 3 |
-| 241 | スペシャルミート | Special Meat | 32091 | x1 | Implemented | traits: 2 |
-| 242 | スペシャルミート | Special Meat | 32092 | x1 | Implemented | traits: 2 |
-| 243 | フェアニヒターメテオール | Fair Nihiter Meteor | 32093 | x3 | Implemented | traits: 1 |
-| 244 | フェアニヒターメテオール | Fair Nihiter Meteor | 32094 | x3 | Implemented | traits: 1 |
-| 245 | 大巨人の鉄槌 | Giant's Iron Club | 32095 | x3 | Implemented | traits: 1 |
-| 246 | 大巨人の鉄槌 | Giant's Iron Club | 32096 | x3 | Implemented | traits: 1 |
-| 247 | 安らぎの灯火 | Tranquil Lamplight | 32097 | x2 | Implemented | traits: 2 |
-| 248 | 安らぎの灯火 | Tranquil Lamplight | 32098 | x2 | Implemented | traits: 2 |
-| 249 | きずなチョコレート | Bonds Chocolate | 32099 | x2 | Implemented | traits: 4 |
-| 250 | きずなチョコレート | Bonds Chocolate | 32100 | x2 | Implemented | traits: 4 |
-| 251 | カンタムフラム | Quantum Flame | 32101 | x2 | Implemented | traits: 1 |
-| 252 | カンタムフラム | Quantum Flame | 32102 | x2 | Implemented | traits: 1 |
-| 253 | アイスエイジレヘルン | Ice Age Ragnarok | 32103 | x2 | Implemented | traits: 1 |
-| 254 | アイスエイジレヘルン | Ice Age Ragnarok | 32104 | x2 | Implemented | traits: 1 |
-| 255 | ケラウノスプラジグ | Keraunos Plasig | 32105 | x2 | Implemented | traits: 1 |
-| 256 | ケラウノスプラジグ | Keraunos Plasig | 32106 | x2 | Implemented | traits: 1 |
-| 257 | ゲリラストームルフト | Guerilla Storm Luft | 32107 | x2 | Implemented | traits: 1 |
-| 258 | ゲリラストームルフト | Guerilla Storm Luft | 32108 | x2 | Implemented | traits: 1 |
-| 259 | 自走する鎖鎌 | Self-Propelled Sickle | 32109 | x2 | Implemented | traits: 1 |
-| 260 | 自走する鎖鎌 | Self-Propelled Sickle | 32110 | x2 | Implemented | traits: 1 |
-| 261 | 自立駆動型メテオール | Self-Propelled Meteor | 32111 | x2 | Implemented | traits: 1 |
-| 262 | 自立駆動型メテオール | Self-Propelled Meteor | 32112 | x2 | Implemented | traits: 1 |
-| 263 | 絡繰：針千本 | Binding: Thousand Needles | 32113 | x2 | Implemented | traits: 1 |
-| 264 | 絡繰：針千本 | Binding: Thousand Needles | 32114 | x2 | Implemented | traits: 1 |
-| 265 | 沈黙の丸薬 | Silence Pill | 32115 | x1 | Implemented | traits: 2 |
-| 266 | 沈黙の丸薬 | Silence Pill | 32116 | x1 | Implemented | traits: 2 |
-| 267 | うに袋ハイパー | Uni Bag Hyper | 32117 | x3 | Implemented | traits: 1 |
-| 268 | うに袋ハイパー | Uni Bag Hyper | 32118 | x3 | Implemented | traits: 1 |
-| 269 | 蠱惑の香炉 | Alluring Incense Burner | 32119 | x2 | Implemented | traits: 3 |
-| 270 | 蠱惑の香炉 | Alluring Incense Burner | 32120 | x2 | Implemented | traits: 3 |
-| 274 | 樹林の治療薬 | Woodland Remedy | 32121 | x2 | Implemented | traits: 4 |
-| 275 | 樹林の治療薬 | Woodland Remedy | 32122 | x2 | Implemented | traits: 4 |
-| 276 | エンハンスフルート | Enhancer Flute | 32123 | x3 | Implemented | traits: 2 |
-| 277 | エンハンスフルート | Enhancer Flute | 32124 | x3 | Implemented | traits: 2 |
-| 278 | ハピレスシャトル | Sadness Shuttle | 32125 | x2 | Implemented | traits: 3 |
-| 279 | ハピレスシャトル | Sadness Shuttle | 32126 | x2 | Implemented | traits: 3 |
-| 280 | 試作型旋風爆弾 | Prototype Tornado Bomb | 32127 | x3 | Implemented | traits: 1 |
-| 281 | 試作型旋風爆弾 | Prototype Tornado Bomb | 32128 | x3 | Implemented | traits: 1 |
-| 282 | コズミック・エナジー | Cosmic Energy | 32129 | x3 | Implemented | traits: 2 |
-| 283 | コズミック・エナジー | Cosmic Energy | 32130 | x3 | Implemented | traits: 2 |
-| 284 | リンゴのタルト | Apple Tart | 32131 | x3 | Implemented | traits: 4 |
-| 285 | リンゴのタルト | Apple Tart | 32132 | x3 | Implemented | traits: 4 |
-| 286 | 頭脳明晰の煎薬 | Brain Clarity Tonic | 32133 | x3 | Implemented | traits: 2 |
-| 287 | 頭脳明晰の煎薬 | Brain Clarity Tonic | 32134 | x3 | Implemented | traits: 2 |
-| 288 | カースオブプリンセス | Curse of Princess | 32135 | x1 | Implemented | traits: 3 |
-| 289 | カースオブプリンセス | Curse of Princess | 32136 | x1 | Implemented | traits: 3 |
-| 290 | ブルーナイトぷにカクテル | Blue Night Puni Cocktail | 32137 | x3 | Implemented | traits: 4 |
-| 291 | ブルーナイトぷにカクテル | Blue Night Puni Cocktail | 32138 | x3 | Implemented | traits: 4 |
-| 292 | 昔懐かし水爆弾 | Nostalgic Water Bomb | 32139 | x2 | Implemented | traits: 1 |
-| 293 | 昔懐かし水爆弾 | Nostalgic Water Bomb | 32140 | x2 | Implemented | traits: 1 |
-| 294 | 月欠けの闇霧 | Waning Moon Mist | 32141 | x5 | Implemented | traits: 3 |
-| 295 | 月欠けの闇霧 | Waning Moon Mist | 32142 | x5 | Implemented | traits: 3 |
-| 296 | 極上の奉献酒 | Supreme Offering Wine | 32143 | x2 | Implemented | traits: 4 |
-| 297 | 性命双修の香 | Life Cultivation Incense | 32144 | x3 | Implemented | traits: 4 |
-| 298 | 性命双修の香 | Life Cultivation Incense | 32145 | x3 | Implemented | traits: 4 |
-| 299 | トニトルスミレーヌ | Thunder Smile Rain | 32146 | x3 | Implemented | traits: 1 |
-| 300 | トニトルスミレーヌ | Thunder Smile Rain | 32147 | x3 | Implemented | traits: 1 |
-| 301 | 英雄降ろしの丸薬 | Hero-Slaying Pill | 32148 | x2 | Implemented | traits: 2 |
-| 302 | 英雄降ろしの丸薬 | Hero-Slaying Pill | 32149 | x2 | Implemented | traits: 2 |
-| 303 | アマ競技用スイカ | Flax Competition Watermelon | 32150 | x3 | Implemented | traits: 1 |
-| 304 | アマ競技用スイカ | Flax Competition Watermelon | 32151 | x3 | Implemented | traits: 1 |
-| 305 | ガッツ注入ドリンク | Guts Infusion Drink | 32152 | x3 | Implemented | traits: 2 |
-| 306 | ガッツ注入ドリンク | Guts Infusion Drink | 32153 | x3 | Implemented | traits: 2 |
-| 307 | モガ・トケール | Moga Tokale | 32154 | x2 | Implemented | traits: 3 |
-| 308 | モガ・トケール | Moga Tokale | 32155 | x2 | Implemented | traits: 3 |
-| 309 | マテリアルコレクター	 | Material Collector | 32156 | x1 | Implemented | traits: 2 |
-| 310 | マテリアルコレクター	 | Material Collector | 32157 | x1 | Implemented | traits: 2 |
-| 311 | せいなるおくりもの | Holy Gift | 32158 | x3 | Implemented | traits: 4 |
-| 312 | せいなるおくりもの | Holy Gift | 32159 | x3 | Implemented | traits: 4 |
-| 313 | はじけるおくりもの | Repelling Gift | 32160 | x2 | Implemented | traits: 3 |
-| 314 | はじけるおくりもの | Repelling Gift | 32161 | x2 | Implemented | traits: 3 |
-| 315 | 新春の黒箱 | New Year's Mystery Box | 32162 | x2 | Implemented | traits: 4 |
-| 316 | 新春の黒箱 | New Year's Mystery Box | 32163 | x2 | Implemented | traits: 4 |
-| 1004 | デコ魔導書 | Deco Grimoire | 32168 | x2 | Implemented | traits: 1 |
-| 1005 | デコ魔導書 | Deco Grimoire | 32169 | x2 | Implemented | traits: 1 |
-| 1006 | サンダーフィート | Thunder Feet | 32170 | x3 | Implemented | traits: 1 |
-| 1007 | サンダーフィート | Thunder Feet | 32171 | x3 | Implemented | traits: 1 |
-| 1008 | ローゼ・ショコラフラム | Rose Chocolat Bomb | 32172 | x3 | Implemented | traits: 2 |
-| 1009 | ローゼ・ショコラフラム | Rose Chocolat Bomb | 32173 | x3 | Implemented | traits: 2 |
-| 1010 | まごころビスケ | Sincere Biscuit | 32174 | x2 | Implemented | traits: 4 |
-| 1011 | まごころビスケ | Sincere Biscuit | 32175 | x2 | Implemented | traits: 4 |
-| 1012 | あやしいアイス | Soothing Ice Cream | 32176 | x2 | Implemented | traits: 3 |
-| 1013 | あやしいアイス | Soothing Ice Cream | 32177 | x2 | Implemented | traits: 3 |
-| 1014 | フィッシュレーション | Fish Ration | 32178 | x2 | Implemented | traits: 4 |
-| 1015 | フィッシュレーション | Fish Ration | 32179 | x2 | Implemented | traits: 4 |
-| 1016 | ホットチリミスト | Hot Chili Mist | 32180 | x2 | Implemented | traits: 3 |
-| 1017 | ホットチリミスト | Hot Chili Mist | 32181 | x2 | Implemented | traits: 3 |
-| 1018 | 地球儀 | Globe | 32182 | x3 | Implemented | traits: 1 |
-| 1019 | 地球儀 | Globe | 32183 | x3 | Implemented | traits: 1 |
-| 1020 | プリズムコア | Prism Core | 32184 | x2 | Implemented | traits: 1 |
-| 1021 | プリズムコア | Prism Core | 32185 | x2 | Implemented | traits: 1 |
-| 1022 | 神秘のアンク | Mystical Ankh | 32186 | x2 | Implemented | traits: 2 |
-| 1023 | 神秘のアンク | Mystical Ankh | 32187 | x2 | Implemented | traits: 2 |
-| 1024 | そよ風のアロマ | Gentle Breeze Aroma | 32188 | x2 | Implemented | traits: 2 |
-| 1025 | そよ風のアロマ | Gentle Breeze Aroma | 32189 | x2 | Implemented | traits: 2 |
-| 1026 | レーベシュトラル | Lebenshtrahl | 32190 | x2 | Implemented | traits: 4 |
-| 1027 | レーベシュトラル | Lebenshtrahl | 32191 | x2 | Implemented | traits: 4 |
-| 1028 | シェルバニブレッド | Shelbani Bread | 32192 | x3 | Implemented | traits: 4 |
-| 1029 | シェルバニブレッド | Shelbani Bread | 32193 | x3 | Implemented | traits: 4 |
-| 1030 | 古の獣の護符 | Ancient Beast Talisman | 32194 | x2 | Implemented | traits: 3 |
-| 1031 | 古の獣の護符 | Ancient Beast Talisman | 32195 | x2 | Implemented | traits: 3 |
-| 1032 | 禁忌の秘術書 | Forbidden Grimoire | 32196 | x1 | Implemented | traits: 1 |
-| 1033 | 禁忌の秘術書 | Forbidden Grimoire | 32197 | x1 | Implemented | traits: 1 |
-| 1034 | 偽りのブーケ | Fake Boo-kay | 32198 | x3 | Implemented | traits: 3 |
-| 1035 | 偽りのブーケ | Fake Boo-kay | 32199 | x3 | Implemented | traits: 3 |
+| 1 | ヒーリングサルヴ | Healing Salve | 31549 | x2 | Implemented | done: skill 31549 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 2 | フラム | Bomb | 31550 | x2 | Implemented | done: skill 31550 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 3 | うに袋 | Uni Bag | 31551 | x2 | Implemented | done: skill 31551 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 4 | ドライビスク | Dry Biscuit | 31552 | x2 | Implemented | done: skill 31552 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 5 | 魔女の秘薬 | Witch's Potion | 31553 | x1 | Implemented | done: skill 31553 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 6 | ナントカの秘薬 | Secret Remedy | 31554 | x1 | Implemented | done: skill 31554 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 7 | クラフト | Craft | 31555 | x3 | Implemented | done: skill 31555 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 8 | ドナーストーン | Lightning Bomb | 31556 | x3 | Implemented | done: skill 31556 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 9 | ヒーリングベル | Healing Bell | 31914 | x2 | Implemented | done: skill 31914 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 10 | ヒーリングベル | Healing Bell | 31557 | x2 | Implemented | done: skill 31557 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 11 | 暗黒水 | Dark Water | 31915 | x2 | Implemented | done: skill 31915 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 12 | 暗黒水 | Dark Water | 31558 | x2 | Implemented | done: skill 31558 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 13 | 素朴な焼き菓子 | Simple Cookies | 31559 | x2 | Implemented | done: skill 31559 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 14 | 神秘の羽衣 | Mystic Robe | 31560 | x2 | Implemented | done: skill 31560 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 15 | ウォーパウダー | War Powder | 31916 | x2 | Implemented | done: skill 31916 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 16 | ウォーパウダー | War Powder | 31561 | x2 | Implemented | done: skill 31561 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 17 | たたかう魔剣 | Magic Sword | 31860 | x3 | Implemented | done: skill 31860 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 18 | たたかう魔剣 | Magic Sword | 31861 | x3 | Implemented | done: skill 31861 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 19 | ローゼフラム | Rose Bomb | 31862 | x3 | Implemented | done: skill 31862 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 20 | ローゼフラム | Rose Bomb | 31863 | x3 | Implemented | done: skill 31863 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 21 | エネルジアニカ | Energianica | 31864 | x3 | Implemented | done: skill 31864 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 22 | エネルジアニカ | Energianica | 31865 | x3 | Implemented | done: skill 31865 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 23 | 不幸の瓶詰め | Bottled Misfortune | 31866 | x2 | Implemented | done: skill 31866 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 24 | 不幸の瓶詰め | Bottled Misfortune | 31867 | x2 | Implemented | done: skill 31867 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 25 | 燃える水 | Flame Aqua | 31868 | x2 | Implemented | done: skill 31868 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 26 | 燃える水 | Flame Aqua | 31869 | x2 | Implemented | done: skill 31869 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 27 | 妙薬ドラッヘン | Drachen Elixir | 31870 | x2 | Implemented | done: skill 31870 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 28 | 妙薬ドラッヘン | Drachen Elixir | 31871 | x2 | Implemented | done: skill 31871 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 29 | 黄金エキススープ | Golden Extract Soup | 31872 | x2 | Implemented | done: skill 31872 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 30 | 黄金エキススープ | Golden Extract Soup | 31873 | x2 | Implemented | done: skill 31873 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 31 | スモークミート | Smoked Meat | 31874 | x2 | Implemented | done: skill 31874 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 32 | スモークミート | Smoked Meat | 31875 | x2 | Implemented | done: skill 31875 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 33 | 錬金キャンディ | Alchemy Candy | 31876 | x2 | Implemented | done: skill 31876 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 34 | 錬金キャンディ | Alchemy Candy | 31877 | x2 | Implemented | done: skill 31877 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 35 | 創世の槌 | Genesis Hammer | 31878 | x3 | Implemented | done: skill 31878 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 36 | 創世の槌 | Genesis Hammer | 31879 | x3 | Implemented | done: skill 31879 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 37 | リュミエールランス | Luminous Lance | 31880 | x3 | Implemented | done: skill 31880 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 38 | リュミエールランス | Luminous Lance | 31881 | x3 | Implemented | done: skill 31881 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 39 | レーツェルフト | Ratsel Luft | 31882 | x3 | Implemented | done: skill 31882 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 40 | レーツェルフト | Ratsel Luft | 31883 | x3 | Implemented | done: skill 31883 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 41 | クライトレヘルン | Kleid Ice Bomb | 31884 | x3 | Implemented | done: skill 31884 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 42 | クライトレヘルン | Kleid Ice Bomb | 31885 | x3 | Implemented | done: skill 31885 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 43 | シュトラプラジグ | Strahl Plajig | 31886 | x3 | Implemented | done: skill 31886 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 44 | シュトラプラジグ | Strahl Plajig | 31887 | x3 | Implemented | done: skill 31887 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 45 | 生きてるゴミ箱 | Living Trash Can | 31888 | x2 | Implemented | done: skill 31888 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 46 | 生きてるゴミ箱 | Living Trash Can | 31889 | x2 | Implemented | done: skill 31889 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 47 | かぼちゃドール | Pumpkin Doll | 31890 | x2 | Implemented | done: skill 31890 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 48 | かぼちゃドール | Pumpkin Doll | 31891 | x2 | Implemented | done: skill 31891 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 49 | イバラの抱擁 | Thorny Embrace | 31892 | x2 | Implemented | done: skill 31892 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 50 | イバラの抱擁 | Thorny Embrace | 31893 | x2 | Implemented | done: skill 31893 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 51 | 氷びし | Ice Caltrop | 31894 | x2 | Implemented | done: skill 31894 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 52 | 氷びし | Ice Caltrop | 31895 | x2 | Implemented | done: skill 31895 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 53 | ブリッツコア | Blitz Core | 31896 | x2 | Implemented | done: skill 31896 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 54 | ブリッツコア | Blitz Core | 31897 | x2 | Implemented | done: skill 31897 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 55 | 肉体活性の粉末 | Body Energy Powder | 31898 | x2 | Implemented | done: skill 31898 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 56 | 肉体活性の粉末 | Body Energy Powder | 31899 | x2 | Implemented | done: skill 31899 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 57 | 剛力の塗り薬 | Powerful Ointment | 31900 | x2 | Implemented | done: skill 31900 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 58 | 剛力の塗り薬 | Powerful Ointment | 31901 | x2 | Implemented | done: skill 31901 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 59 | トリトンのほら貝 | Triton's Trumpet | 31902 | x2 | Implemented | done: skill 31902 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 60 | トリトンのほら貝 | Triton's Trumpet | 31903 | x2 | Implemented | done: skill 31903 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 61 | 風繰り車 | Pinwheel | 31904 | x2 | Implemented | done: skill 31904 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 62 | 風繰り車 | Pinwheel | 31905 | x2 | Implemented | done: skill 31905 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 63 | シュネーシュトルム | Schnee Sturm | 31906 | x2 | Implemented | done: skill 31906 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 64 | シュネーシュトルム | Schnee Sturm | 31907 | x2 | Implemented | done: skill 31907 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 65 | 雷の呼び鈴 | Lightning Bell | 31908 | x2 | Implemented | done: skill 31908 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 66 | 雷の呼び鈴 | Lightning Bell | 31909 | x2 | Implemented | done: skill 31909 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 67 | レッドウォーパウダー | Red War Powder | 31910 | x2 | Implemented | done: skill 31910 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 68 | レッドウォーパウダー | Red War Powder | 31911 | x2 | Implemented | done: skill 31911 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 69 | リストレア薬瓶 | Restoration Bottle | 31912 | x3 | Implemented | done: skill 31912 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 70 | リストレア薬瓶 | Restoration Bottle | 31913 | x3 | Implemented | done: skill 31913 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 71 | エリキシル剤 | Elixir | 31918 | x3 | Implemented | done: skill 31918 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 72 | エリキシル剤 | Elixir | 31917 | x3 | Implemented | done: skill 31917 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 73 | 万物の写本 | Codex of Creation | 31919 | x2 | Implemented | done: skill 31919 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 74 | 万物の写本 | Codex of Creation | 31920 | x2 | Implemented | done: skill 31920 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 75 | ヒロイックガイスト | Heroic Geist | 31921 | x2 | Implemented | done: skill 31921 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 76 | ヒロイックガイスト | Heroic Geist | 31922 | x2 | Implemented | done: skill 31922 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 77 | 妖薬エボニアル | Miracle Ebonyal | 31924 | x2 | Implemented | done: skill 31924 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 78 | 妖薬エボニアル | Miracle Ebonyal | 31923 | x2 | Implemented | done: skill 31923 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 79 | 廻る魔剣 | Revolving Magic Sword | 31926 | x3 | Implemented | done: skill 31926 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 80 | 廻る魔剣 | Revolving Magic Sword | 31925 | x3 | Implemented | done: skill 31925 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 81 | トランヒールサルヴ | Tranquil Salve | 31928 | x3 | Implemented | done: skill 31928 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 82 | トランヒールサルヴ | Tranquil Salve | 31927 | x3 | Implemented | done: skill 31927 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 83 | ドナークリスタル | Lightning Crystal | 31930 | x3 | Implemented | done: skill 31930 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 84 | ドナークリスタル | Lightning Crystal | 31929 | x3 | Implemented | done: skill 31929 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 85 | 破壊の秘薬 | Potion of Destruction | 31932 | x2 | Implemented | done: skill 31932 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 86 | 破壊の秘薬 | Potion of Destruction | 31931 | x2 | Implemented | done: skill 31931 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 87 | プロテクトパウダー | Protection Powder | 31933 | x2 | Implemented | done: skill 31933 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 88 | プロテクトパウダー | Protection Powder | 31934 | x2 | Implemented | done: skill 31934 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 89 | ラーヴァキューブ | Lava Cube | 31935 | x3 | Implemented | done: skill 31935 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 90 | ラーヴァキューブ | Lava Cube | 31936 | x3 | Implemented | done: skill 31936 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 91 | カクテルレープ | Cocktail Leb | 31937 | x3 | Implemented | done: skill 31937 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 92 | カクテルレープ | Cocktail Leb | 31938 | x3 | Implemented | done: skill 31938 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 93 | シュタルレヘルン | Stahl Ice Bomb | 31939 | x3 | Implemented | done: skill 31939 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 94 | シュタルレヘルン | Stahl Ice Bomb | 31940 | x3 | Implemented | done: skill 31940 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 95 | 詰め合わせキャンディ | Assorted Candy | 31941 | x2 | Implemented | done: skill 31941 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 96 | 詰め合わせキャンディ | Assorted Candy | 31942 | x2 | Implemented | done: skill 31942 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 97 | さすらう地球儀 | Wandering Globe | 31943 | x1 | Implemented | done: skill 31943 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 98 | さすらう地球儀 | Wandering Globe | 31944 | x1 | Implemented | done: skill 31944 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 99 | グラスビーンズ | Grass Beans | 31946 | x3 | Implemented | done: skill 31946 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 100 | 爆粉うに | Explosive Uni | 31947 | x3 | Implemented | done: skill 31947 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 101 | クラフトリオ | Craftlio | 31948 | x3 | Implemented | done: skill 31948 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 102 | ゆらぎの毒煙 | Poison Smoke | 31949 | x2 | Implemented | done: skill 31949 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 103 | アスラドーナツ | Ashra Donut | 31950 | x2 | Implemented | done: skill 31950 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 104 | 栄養剤 | Tonic | 31951 | x2 | Implemented | done: skill 31951 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 105 | 栄養剤 | Tonic | 31952 | x2 | Implemented | done: skill 31952 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 106 | 禁じられた秘薬 | Forbidden Elixir | 31953 | x2 | Implemented | done: skill 31953 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 107 | 禁じられた秘薬 | Forbidden Elixir | 31954 | x2 | Implemented | done: skill 31954 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 108 | リフュールボトル | Healing Elixir | 31955 | x3 | Implemented | done: skill 31955 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 109 | リフュールボトル | Healing Elixir | 31956 | x3 | Implemented | done: skill 31956 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 110 | 放電管 | Electrical Discharge Tube | 31957 | x3 | Implemented | done: skill 31957 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 111 | 放電管 | Electrical Discharge Tube | 31958 | x3 | Implemented | done: skill 31958 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 112 | 守護女神の盾 | Goddess Shield | 31959 | x2 | Implemented | done: skill 31959 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 113 | 守護女神の盾 | Goddess Shield | 31960 | x2 | Implemented | done: skill 31960 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 114 | 伝承のエリキシル剤 | Ancestral Elixir | 31961 | x3 | Implemented | done: skill 31961 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 115 | 伝承のエリキシル剤 | Ancestral Elixir | 31962 | x3 | Implemented | done: skill 31962 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 116 | 伝承の教典 | Ancestral Doctrine | 31963 | x2 | Implemented | done: skill 31963 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 117 | 伝承の教典 | Ancestral Doctrine | 31964 | x2 | Implemented | done: skill 31964 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 118 | 伝承の呪術書 | Ancestral Spellbook | 31965 | x1 | Implemented | done: skill 31965 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 119 | 伝承の呪術書 | Ancestral Spellbook | 31966 | x1 | Implemented | done: skill 31966 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 120 | フレアノヴァフラム | Flare Nova Bomb | 31967 | x2 | Implemented | done: skill 31967 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 121 | フレアノヴァフラム | Flare Nova Bomb | 31968 | x2 | Implemented | done: skill 31968 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 122 | ブリザードレヘルン | Blizzard Ice Bomb | 31969 | x2 | Implemented | done: skill 31969 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 123 | ブリザードレヘルン | Blizzard Ice Bomb | 31970 | x2 | Implemented | done: skill 31970 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 124 | グングニルプラジグ | Gungnir Plajig | 31971 | x2 | Implemented | done: skill 31971 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 125 | グングニルプラジグ | Gungnir Plajig | 31972 | x2 | Implemented | done: skill 31972 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 126 | トルネードルフト | Tornado Luft | 31973 | x2 | Implemented | done: skill 31973 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 127 | トルネードルフト | Tornado Luft | 31974 | x2 | Implemented | done: skill 31974 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 128 | シュレッドディザスター | Shred Disaster | 31975 | x2 | Implemented | done: skill 31975 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 129 | シュレッドディザスター | Shred Disaster | 31976 | x2 | Implemented | done: skill 31976 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 130 | ディスペアカノン | Despair Cannon | 31977 | x2 | Implemented | done: skill 31977 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 131 | ディスペアカノン | Despair Cannon | 31978 | x2 | Implemented | done: skill 31978 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 132 | カタストクラフト | Catastro Craft | 31979 | x2 | Implemented | done: skill 31979 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 133 | カタストクラフト | Catastro Craft | 31980 | x2 | Implemented | done: skill 31980 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 134 | クラフトリオ | Craftlio | 31981 | x3 | Implemented | done: skill 31981 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 135 | ゆらぎの毒煙 | Poison Smoke | 31982 | x2 | Implemented | done: skill 31982 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 136 | アスラドーナツ | Ashra Donut | 31983 | x2 | Implemented | done: skill 31983 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 137 | 小悪魔のいたずら | Imp's Mischief | 31984 | x2 | Implemented | done: skill 31984 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 138 | 小悪魔のいたずら | Imp's Mischief | 31985 | x2 | Implemented | done: skill 31985 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 139 | オーカンルフェン | Orkanruf | 31986 | x3 | Implemented | done: skill 31986 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 140 | オーカンルフェン | Orkanruf | 31987 | x3 | Implemented | done: skill 31987 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 141 | 吸魂ひょうたん | Soul Absorbing Gourd | 31988 | x2 | Implemented | done: skill 31988 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 142 | 吸魂ひょうたん | Soul Absorbing Gourd | 31989 | x2 | Implemented | done: skill 31989 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 143 | ガラスのバラ | Glass Rose | 31990 | x3 | Implemented | done: skill 31990 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 144 | ガラスのバラ | Glass Rose | 31991 | x3 | Implemented | done: skill 31991 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 145 | ストラパール | Stellapearl | 31992 | x2 | Implemented | done: skill 31992 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 146 | ストラパール | Stellapearl | 31993 | x2 | Implemented | done: skill 31993 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 147 | みなぎるドリンク | Energizing Drink | 31994 | x2 | Implemented | done: skill 31994 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 148 | みなぎるドリンク | Energizing Drink | 31995 | x2 | Implemented | done: skill 31995 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 149 | テネブルランス | Ténèbres Lance | 31996 | x3 | Implemented | done: skill 31996 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 150 | テネブルランス | Ténèbres Lance | 31997 | x3 | Implemented | done: skill 31997 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 151 | 夢幻の羽衣 | Dream Raiment | 31998 | x2 | Implemented | done: skill 31998 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 152 | 夢幻の羽衣 | Dream Raiment | 31999 | x2 | Implemented | done: skill 31999 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 153 | 酸の霧雲 | Acid Fog | 32000 | x2 | Implemented | done: skill 32000 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 154 | 酸の霧雲 | Acid Fog | 32001 | x2 | Implemented | done: skill 32001 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 155 | ピュアアロマ | Pure Aroma | 32002 | x2 | Implemented | done: skill 32002 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 156 | ピュアアロマ | Pure Aroma | 32003 | x2 | Implemented | done: skill 32003 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 157 | まごころチョコレート | Wholehearted Chocolate | 32004 | x2 | Implemented | done: skill 32004 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 158 | まごころチョコレート | Wholehearted Chocolate | 32005 | x2 | Implemented | done: skill 32005 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 159 | 高火力錬金大砲 | High-Power Alchemy Cannon | 32006 | x3 | Implemented | done: skill 32006 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 160 | 高火力錬金大砲 | High-Power Alchemy Cannon | 32007 | x3 | Implemented | done: skill 32007 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 161 | 凍結破壊爆弾 | Freeze Blast Bomb | 32008 | x3 | Implemented | done: skill 32008 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 162 | 凍結破壊爆弾 | Freeze Blast Bomb | 32009 | x3 | Implemented | done: skill 32009 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 163 | 力のトーテム | Power Totem | 32010 | x2 | Implemented | done: skill 32010 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 164 | 力のトーテム | Power Totem | 32011 | x2 | Implemented | done: skill 32011 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 165 | 凶兆水 | Ominous Water | 32012 | x2 | Implemented | done: skill 32012 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 166 | 凶兆水 | Ominous Water | 32013 | x2 | Implemented | done: skill 32013 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 167 | ピロソティー | Piro Sotea | 32014 | x3 | Implemented | done: skill 32014 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 168 | ピロソティー | Piro Sotea | 32015 | x3 | Implemented | done: skill 32015 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 169 | つけもの石 | Weight Stone | 32016 | x3 | Implemented | done: skill 32016 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 170 | つけもの石 | Weight Stone | 32017 | x3 | Implemented | done: skill 32017 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 171 | 原初の力肉 | Strength Meat | 32018 | x1 | Implemented | done: skill 32018 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 172 | 原初の力肉 | Strength Meat | 32019 | x1 | Implemented | done: skill 32019 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 173 | 魔法の鎖 | Magic Chain | 32020 | x1 | Implemented | done: skill 32020 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 174 | 魔法の鎖 | Magic Chain | 32021 | x1 | Implemented | done: skill 32021 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 175 | シェルペルホルン | Shellper Horn | 32022 | x2 | Implemented | done: skill 32022 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 176 | シェルペルホルン | Shellper Horn | 32023 | x2 | Implemented | done: skill 32023 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 177 | アジルチャクラム | Agile Chakram | 32024 | x3 | Implemented | done: skill 32024 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 178 | アジルチャクラム | Agile Chakram | 32025 | x3 | Implemented | done: skill 32025 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 179 | 試作品うに袋 | Prototype Uni Bag | 32026 | x1 | Implemented | done: skill 32026 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 180 | 試作品うに袋 | Prototype Uni Bag | 32027 | x1 | Implemented | done: skill 32027 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 181 | 学生応援レッドゼリー | Student Support Red Jelly | 32028 | x2 | Implemented | done: skill 32028 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 182 | 学生応援レッドゼリー | Student Support Red Jelly | 32029 | x2 | Implemented | done: skill 32029 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 183 | 学生応援大盛定食 | Student Support Extra-Large Meal | 32030 | x2 | Implemented | done: skill 32030 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 184 | 学生応援大盛定食 | Student Support Extra-Large Meal | 32031 | x2 | Implemented | done: skill 32031 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 185 | 魔物除けスプレー | Monster Repellent Spray | 32032 | x2 | Implemented | done: skill 32032 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 186 | 魔物除けスプレー | Monster Repellent Spray | 32033 | x2 | Implemented | done: skill 32033 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 187 | 試作品ルフト | Prototype Luft | 32034 | x1 | Implemented | done: skill 32034 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 188 | 試作品ルフト | Prototype Luft | 32035 | x1 | Implemented | done: skill 32035 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 189 | 学生応援ブルーゼリー | Student Support Energy Drink | 32036 | x2 | Implemented | done: skill 32036 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 190 | 学生応援ブルーゼリー | Student Support Energy Drink | 32037 | x2 | Implemented | done: skill 32037 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 191 | 学生応援健康定食 | Student Support Balanced Meal | 32038 | x2 | Implemented | done: skill 32038 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 192 | 学生応援健康定食 | Student Support Balanced Meal | 32039 | x2 | Implemented | done: skill 32039 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 193 | 魔物集めトラップ | Monster Gathering Trap | 32040 | x2 | Implemented | done: skill 32040 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 194 | 魔物集めトラップ | Monster Gathering Trap | 32041 | x2 | Implemented | done: skill 32041 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 195 | 蛮勇の角笛 | Barbaric Horn Whistle | 32045 | x2 | Implemented | done: skill 32045 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 196 | 蛮勇の角笛 | Barbaric Horn Whistle | 32046 | x2 | Implemented | done: skill 32046 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 197 | フェーダクナイ | Feder Kunai | 32047 | x1 | Implemented | done: skill 32047 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 198 | フェーダクナイ | Feder Kunai | 32048 | x1 | Implemented | done: skill 32048 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 199 | 魔除けの霧吹き | Sprayer Talisman | 32049 | x3 | Implemented | done: skill 32049 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 200 | 魔除けの霧吹き | Sprayer Talisman | 32050 | x3 | Implemented | done: skill 32050 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 201 | 因果の鎖 | Chain of Karma | 32051 | x2 | Implemented | done: skill 32051 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 202 | 因果の鎖 | Chain of Karma | 32052 | x2 | Implemented | done: skill 32052 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 203 | エクサボム | Exa-Bomb | 32053 | x4 | Implemented | done: skill 32053 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x4 per battle estimated; mix pairings use mixer-only stats |
+| 204 | エクサボム | Exa-Bomb | 32054 | x4 | Implemented | done: skill 32054 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x4 per battle estimated; mix pairings use mixer-only stats |
+| 205 | 猛火の塗り薬 | Inferno Ointment | 32055 | x2 | Implemented | done: skill 32055 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 206 | 猛火の塗り薬 | Inferno Ointment | 32056 | x2 | Implemented | done: skill 32056 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 207 | メディアの秘毒 | Medea's Poison | 32057 | x2 | Implemented | done: skill 32057 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 208 | メディアの秘毒 | Medea's Poison | 32058 | x2 | Implemented | done: skill 32058 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 209 | しびれ毒液 | Numbing Venom | 32059 | x2 | Implemented | done: skill 32059 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 210 | しびれ毒液 | Numbing Venom | 32060 | x2 | Implemented | done: skill 32060 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 211 | 氷結の塗り薬 | Frozen Ointment | 32061 | x2 | Implemented | done: skill 32061 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 212 | 氷結の塗り薬 | Frozen Ointment | 32062 | x2 | Implemented | done: skill 32062 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 213 | 帯電の塗り薬 | Charged Ointment | 32063 | x2 | Implemented | done: skill 32063 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 214 | 帯電の塗り薬 | Charged Ointment | 32064 | x2 | Implemented | done: skill 32064 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 215 | ドナーシュテルン | Lightning Stern | 32065 | x4 | Implemented | done: skill 32065 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x4 per battle estimated; mix pairings use mixer-only stats |
+| 216 | ドナーシュテルン | Lightning Stern | 32066 | x4 | Implemented | done: skill 32066 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x4 per battle estimated; mix pairings use mixer-only stats |
+| 217 | エーテルインキ | Ether Ink | 32067 | x2 | Implemented | done: skill 32067 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 218 | エーテルインキ | Ether Ink | 32068 | x2 | Implemented | done: skill 32068 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 219 | 海の家特製かき氷 | Beach House Special Shaved Ice | 32069 | x4 | Implemented | done: skill 32069 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x4 per battle estimated; mix pairings use mixer-only stats |
+| 220 | 海の家特製かき氷 | Beach House Special Shaved Ice | 32070 | x4 | Implemented | done: skill 32070 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x4 per battle estimated; mix pairings use mixer-only stats |
+| 221 | 海の家特製オイル | Beach House Special Oil | 32071 | x5 | Implemented | done: skill 32071 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x5 per battle estimated; mix pairings use mixer-only stats |
+| 222 | 海の家特製オイル | Beach House Special Oil | 32072 | x5 | Implemented | done: skill 32072 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x5 per battle estimated; mix pairings use mixer-only stats |
+| 223 | 海の家特製焼きそば | Beach House Special Yakisoba | 32073 | x2 | Implemented | done: skill 32073 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 224 | 海の家特製焼きそば | Beach House Special Yakisoba | 32074 | x2 | Implemented | done: skill 32074 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 225 | 海の家特製トラップ | Beach House Special Trap | 32075 | x2 | Implemented | done: skill 32075 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 226 | 海の家特製トラップ | Beach House Special Trap | 32076 | x2 | Implemented | done: skill 32076 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 227 | フワットケーキ | Velvety Pancakes | 32077 | x2 | Implemented | done: skill 32077 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 228 | フワットケーキ | Velvety Pancakes | 32078 | x2 | Implemented | done: skill 32078 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 229 | クイーンズクレイブ | Queen's Craving | 32079 | x1 | Implemented | done: skill 32079 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 230 | クイーンズクレイブ | Queen's Craving | 32080 | x1 | Implemented | done: skill 32080 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 231 | 号令のホイッスル | Whistle of Command | 32081 | x2 | Implemented | done: skill 32081 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 232 | 号令のホイッスル | Whistle of Command | 32082 | x2 | Implemented | done: skill 32082 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 233 | ブランクシチュー | Blank Stew | 32083 | x3 | Implemented | done: skill 32083 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 234 | ブランクシチュー | Blank Stew | 32084 | x3 | Implemented | done: skill 32084 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 235 | プレーンワッフル | Plain Waffle | 32085 | x4 | Implemented | done: skill 32085 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x4 per battle estimated; mix pairings use mixer-only stats |
+| 236 | プレーンワッフル | Plain Waffle | 32086 | x4 | Implemented | done: skill 32086 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x4 per battle estimated; mix pairings use mixer-only stats |
+| 237 | 禁断の袋 | Forbidden Pouch | 32087 | x2 | Implemented | done: skill 32087 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 238 | 禁断の袋 | Forbidden Pouch | 32088 | x2 | Implemented | done: skill 32088 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 239 | 嘆きの毒煙瓶 | Bottle of Poison | 32089 | x2 | Implemented | done: skill 32089 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 240 | 嘆きの毒煙瓶 | Bottle of Poison | 32090 | x2 | Implemented | done: skill 32090 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 241 | スペシャルミート | Special Meat | 32091 | x1 | Implemented | done: skill 32091 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 242 | スペシャルミート | Special Meat | 32092 | x1 | Implemented | done: skill 32092 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 243 | フェアニヒターメテオール | Fair Nihiter Meteor | 32093 | x3 | Implemented | done: skill 32093 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 244 | フェアニヒターメテオール | Fair Nihiter Meteor | 32094 | x3 | Implemented | done: skill 32094 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 245 | 大巨人の鉄槌 | Giant's Iron Club | 32095 | x3 | Implemented | done: skill 32095 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 246 | 大巨人の鉄槌 | Giant's Iron Club | 32096 | x3 | Implemented | done: skill 32096 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 247 | 安らぎの灯火 | Tranquil Lamplight | 32097 | x2 | Implemented | done: skill 32097 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 248 | 安らぎの灯火 | Tranquil Lamplight | 32098 | x2 | Implemented | done: skill 32098 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 249 | きずなチョコレート | Bonds Chocolate | 32099 | x2 | Implemented | done: skill 32099 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 250 | きずなチョコレート | Bonds Chocolate | 32100 | x2 | Implemented | done: skill 32100 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 251 | カンタムフラム | Quantum Flame | 32101 | x2 | Implemented | done: skill 32101 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 252 | カンタムフラム | Quantum Flame | 32102 | x2 | Implemented | done: skill 32102 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 253 | アイスエイジレヘルン | Ice Age Ragnarok | 32103 | x2 | Implemented | done: skill 32103 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 254 | アイスエイジレヘルン | Ice Age Ragnarok | 32104 | x2 | Implemented | done: skill 32104 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 255 | ケラウノスプラジグ | Keraunos Plasig | 32105 | x2 | Implemented | done: skill 32105 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 256 | ケラウノスプラジグ | Keraunos Plasig | 32106 | x2 | Implemented | done: skill 32106 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 257 | ゲリラストームルフト | Guerilla Storm Luft | 32107 | x2 | Implemented | done: skill 32107 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 258 | ゲリラストームルフト | Guerilla Storm Luft | 32108 | x2 | Implemented | done: skill 32108 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 259 | 自走する鎖鎌 | Self-Propelled Sickle | 32109 | x2 | Implemented | done: skill 32109 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 260 | 自走する鎖鎌 | Self-Propelled Sickle | 32110 | x2 | Implemented | done: skill 32110 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 261 | 自立駆動型メテオール | Self-Propelled Meteor | 32111 | x2 | Implemented | done: skill 32111 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 262 | 自立駆動型メテオール | Self-Propelled Meteor | 32112 | x2 | Implemented | done: skill 32112 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 263 | 絡繰：針千本 | Binding: Thousand Needles | 32113 | x2 | Implemented | done: skill 32113 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 264 | 絡繰：針千本 | Binding: Thousand Needles | 32114 | x2 | Implemented | done: skill 32114 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 265 | 沈黙の丸薬 | Silence Pill | 32115 | x1 | Implemented | done: skill 32115 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 266 | 沈黙の丸薬 | Silence Pill | 32116 | x1 | Implemented | done: skill 32116 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 267 | うに袋ハイパー | Uni Bag Hyper | 32117 | x3 | Implemented | done: skill 32117 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 268 | うに袋ハイパー | Uni Bag Hyper | 32118 | x3 | Implemented | done: skill 32118 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 269 | 蠱惑の香炉 | Alluring Incense Burner | 32119 | x2 | Implemented | done: skill 32119 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 270 | 蠱惑の香炉 | Alluring Incense Burner | 32120 | x2 | Implemented | done: skill 32120 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 274 | 樹林の治療薬 | Woodland Remedy | 32121 | x2 | Implemented | done: skill 32121 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 275 | 樹林の治療薬 | Woodland Remedy | 32122 | x2 | Implemented | done: skill 32122 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 276 | エンハンスフルート | Enhancer Flute | 32123 | x3 | Implemented | done: skill 32123 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 277 | エンハンスフルート | Enhancer Flute | 32124 | x3 | Implemented | done: skill 32124 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 278 | ハピレスシャトル | Sadness Shuttle | 32125 | x2 | Implemented | done: skill 32125 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 279 | ハピレスシャトル | Sadness Shuttle | 32126 | x2 | Implemented | done: skill 32126 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 280 | 試作型旋風爆弾 | Prototype Tornado Bomb | 32127 | x3 | Implemented | done: skill 32127 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 281 | 試作型旋風爆弾 | Prototype Tornado Bomb | 32128 | x3 | Implemented | done: skill 32128 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 282 | コズミック・エナジー | Cosmic Energy | 32129 | x3 | Implemented | done: skill 32129 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 283 | コズミック・エナジー | Cosmic Energy | 32130 | x3 | Implemented | done: skill 32130 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 284 | リンゴのタルト | Apple Tart | 32131 | x3 | Implemented | done: skill 32131 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 285 | リンゴのタルト | Apple Tart | 32132 | x3 | Implemented | done: skill 32132 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 286 | 頭脳明晰の煎薬 | Brain Clarity Tonic | 32133 | x3 | Implemented | done: skill 32133 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 287 | 頭脳明晰の煎薬 | Brain Clarity Tonic | 32134 | x3 | Implemented | done: skill 32134 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 288 | カースオブプリンセス | Curse of Princess | 32135 | x1 | Implemented | done: skill 32135 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 289 | カースオブプリンセス | Curse of Princess | 32136 | x1 | Implemented | done: skill 32136 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 290 | ブルーナイトぷにカクテル | Blue Night Puni Cocktail | 32137 | x3 | Implemented | done: skill 32137 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 291 | ブルーナイトぷにカクテル | Blue Night Puni Cocktail | 32138 | x3 | Implemented | done: skill 32138 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 292 | 昔懐かし水爆弾 | Nostalgic Water Bomb | 32139 | x2 | Implemented | done: skill 32139 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 293 | 昔懐かし水爆弾 | Nostalgic Water Bomb | 32140 | x2 | Implemented | done: skill 32140 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 294 | 月欠けの闇霧 | Waning Moon Mist | 32141 | x5 | Implemented | done: skill 32141 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x5 per battle estimated; mix pairings use mixer-only stats |
+| 295 | 月欠けの闇霧 | Waning Moon Mist | 32142 | x5 | Implemented | done: skill 32142 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x5 per battle estimated; mix pairings use mixer-only stats |
+| 296 | 極上の奉献酒 | Supreme Offering Wine | 32143 | x2 | Implemented | done: skill 32143 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 297 | 性命双修の香 | Life Cultivation Incense | 32144 | x3 | Implemented | done: skill 32144 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 298 | 性命双修の香 | Life Cultivation Incense | 32145 | x3 | Implemented | done: skill 32145 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 299 | トニトルスミレーヌ | Thunder Smile Rain | 32146 | x3 | Implemented | done: skill 32146 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 300 | トニトルスミレーヌ | Thunder Smile Rain | 32147 | x3 | Implemented | done: skill 32147 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 301 | 英雄降ろしの丸薬 | Hero-Slaying Pill | 32148 | x2 | Implemented | done: skill 32148 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 302 | 英雄降ろしの丸薬 | Hero-Slaying Pill | 32149 | x2 | Implemented | done: skill 32149 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 303 | アマ競技用スイカ | Flax Competition Watermelon | 32150 | x3 | Implemented | done: skill 32150 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 304 | アマ競技用スイカ | Flax Competition Watermelon | 32151 | x3 | Implemented | done: skill 32151 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 305 | ガッツ注入ドリンク | Guts Infusion Drink | 32152 | x3 | Implemented | done: skill 32152 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 306 | ガッツ注入ドリンク | Guts Infusion Drink | 32153 | x3 | Implemented | done: skill 32153 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 307 | モガ・トケール | Moga Tokale | 32154 | x2 | Implemented | done: skill 32154 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 308 | モガ・トケール | Moga Tokale | 32155 | x2 | Implemented | done: skill 32155 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 309 | マテリアルコレクター	 | Material Collector | 32156 | x1 | Implemented | done: skill 32156 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 310 | マテリアルコレクター	 | Material Collector | 32157 | x1 | Implemented | done: skill 32157 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 311 | せいなるおくりもの | Holy Gift | 32158 | x3 | Implemented | done: skill 32158 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 312 | せいなるおくりもの | Holy Gift | 32159 | x3 | Implemented | done: skill 32159 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 313 | はじけるおくりもの | Repelling Gift | 32160 | x2 | Implemented | done: skill 32160 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 314 | はじけるおくりもの | Repelling Gift | 32161 | x2 | Implemented | done: skill 32161 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 315 | 新春の黒箱 | New Year's Mystery Box | 32162 | x2 | Implemented | done: skill 32162 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 316 | 新春の黒箱 | New Year's Mystery Box | 32163 | x2 | Implemented | done: skill 32163 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1004 | デコ魔導書 | Deco Grimoire | 32168 | x2 | Implemented | done: skill 32168 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1005 | デコ魔導書 | Deco Grimoire | 32169 | x2 | Implemented | done: skill 32169 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1006 | サンダーフィート | Thunder Feet | 32170 | x3 | Implemented | done: skill 32170 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 1007 | サンダーフィート | Thunder Feet | 32171 | x3 | Implemented | done: skill 32171 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 1008 | ローゼ・ショコラフラム | Rose Chocolat Bomb | 32172 | x3 | Implemented | done: skill 32172 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 1009 | ローゼ・ショコラフラム | Rose Chocolat Bomb | 32173 | x3 | Implemented | done: skill 32173 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 1010 | まごころビスケ | Sincere Biscuit | 32174 | x2 | Implemented | done: skill 32174 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1011 | まごころビスケ | Sincere Biscuit | 32175 | x2 | Implemented | done: skill 32175 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1012 | あやしいアイス | Soothing Ice Cream | 32176 | x2 | Implemented | done: skill 32176 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1013 | あやしいアイス | Soothing Ice Cream | 32177 | x2 | Implemented | done: skill 32177 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1014 | フィッシュレーション | Fish Ration | 32178 | x2 | Implemented | done: skill 32178 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1015 | フィッシュレーション | Fish Ration | 32179 | x2 | Implemented | done: skill 32179 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1016 | ホットチリミスト | Hot Chili Mist | 32180 | x2 | Implemented | done: skill 32180 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1017 | ホットチリミスト | Hot Chili Mist | 32181 | x2 | Implemented | done: skill 32181 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1018 | 地球儀 | Globe | 32182 | x3 | Implemented | done: skill 32182 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 1019 | 地球儀 | Globe | 32183 | x3 | Implemented | done: skill 32183 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 1020 | プリズムコア | Prism Core | 32184 | x2 | Implemented | done: skill 32184 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1021 | プリズムコア | Prism Core | 32185 | x2 | Implemented | done: skill 32185 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1022 | 神秘のアンク | Mystical Ankh | 32186 | x2 | Implemented | done: skill 32186 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1023 | 神秘のアンク | Mystical Ankh | 32187 | x2 | Implemented | done: skill 32187 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1024 | そよ風のアロマ | Gentle Breeze Aroma | 32188 | x2 | Implemented | done: skill 32188 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1025 | そよ風のアロマ | Gentle Breeze Aroma | 32189 | x2 | Implemented | done: skill 32189 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1026 | レーベシュトラル | Lebenshtrahl | 32190 | x2 | Implemented | done: skill 32190 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1027 | レーベシュトラル | Lebenshtrahl | 32191 | x2 | Implemented | done: skill 32191 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1028 | シェルバニブレッド | Shelbani Bread | 32192 | x3 | Implemented | done: skill 32192 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 1029 | シェルバニブレッド | Shelbani Bread | 32193 | x3 | Implemented | done: skill 32193 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 1030 | 古の獣の護符 | Ancient Beast Talisman | 32194 | x2 | Implemented | done: skill 32194 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1031 | 古の獣の護符 | Ancient Beast Talisman | 32195 | x2 | Implemented | done: skill 32195 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x2 per battle estimated; mix pairings use mixer-only stats |
+| 1032 | 禁忌の秘術書 | Forbidden Grimoire | 32196 | x1 | Implemented | done: skill 32196 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 1033 | 禁忌の秘術書 | Forbidden Grimoire | 32197 | x1 | Implemented | done: skill 32197 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x1 per battle estimated; mix pairings use mixer-only stats |
+| 1034 | 偽りのブーケ | Fake Boo-kay | 32198 | x3 | Implemented | done: skill 32198 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
+| 1035 | 偽りのブーケ | Fake Boo-kay | 32199 | x3 | Implemented | done: skill 32199 pooled item damage/heal; 1/1 traits parsed; unsure: usage count x3 per battle estimated; mix pairings use mixer-only stats |
