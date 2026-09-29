@@ -423,22 +423,43 @@ def affinity_elements(attrs: list[int]) -> tuple[str, list[str]]:
     return "physical", [ATTR_ELEMENT.get(a, "slashing") for a in attrs]
 
 
-def combined_resistance(elements: list[str], resistance: dict) -> int:
+def combined_resistance(elements: list[str], resistance: dict, buffs: list | None = None,
+                          sim=None, target: dict | None = None) -> int:
     """Weakest-link resistance across the skill elements (integer percent).
 
     Multi-attribute hits use the lowest enemy resistance, matching the
-    mixed-attribute behavior documented for item mix.
+    mixed-attribute behavior documented for item mix. Granted elemental
+    resistance buffs (e.g. item-trait resistance) add per element, as do
+    conditional passive resistance mods evaluated live.
     """
-    values = [int(resistance.get(e, 0) or 0) for e in elements]
-    return min(values) if values else 0
+    bonus = 0
+    if buffs:
+        for buff in buffs or []:
+            if buff.get("kind") == "resist_elem" and buff.get("attr") in elements:
+                bonus += int(buff.get("value", 0) or 0) // 100
+    if sim is not None and target is not None:
+        ctx = mod_context(sim, target, None, None)
+        for mod in target.get("mods", []):
+            if mod.get("code") != "resist_up" or not mod.get("conds"):
+                continue
+            if not conds_pass(mod.get("conds"), ctx):
+                continue
+            for attr in mod.get("attrs", []):
+                if attr in elements:
+                    bonus += int(mod.get("value", 0) or 0) // 100
+                    break
+    values = [int(resistance.get(e, 0) or 0) + bonus for e in elements]
+    return min(values) if values else bonus
 
 
-def is_weak_hit(elements: list[str], resistance: dict) -> bool:
-    return combined_resistance(elements, resistance) <= WEAK_THRESHOLD
+def is_weak_hit(elements: list[str], resistance: dict, buffs: list | None = None,
+                sim=None, target: dict | None = None) -> bool:
+    return combined_resistance(elements, resistance, buffs, sim, target) <= WEAK_THRESHOLD
 
 
-def is_resist_hit(elements: list[str], resistance: dict) -> bool:
-    return combined_resistance(elements, resistance) >= RESIST_THRESHOLD
+def is_resist_hit(elements: list[str], resistance: dict, buffs: list | None = None,
+                  sim=None, target: dict | None = None) -> bool:
+    return combined_resistance(elements, resistance, buffs, sim, target) >= RESIST_THRESHOLD
 
 
 def resistance_mult(res_value: int, broken: bool) -> float:
@@ -560,6 +581,7 @@ def compute_hit(
     taken_mult: float,
     penetration: float = 0.0,
     crit_bonus: float = 0.0,
+    taken_crit: float = 0.0,
 ) -> tuple[int, bool]:
     attack = max(int(attack_stat), MIN_BATTLE_STAT)
     defense = max(int(defense_stat), MIN_BATTLE_STAT)
@@ -582,7 +604,7 @@ def compute_hit(
     )
     critical = force_crit or rng.random() < max(crit_rate, 0.0)
     if critical:
-        damage *= CRIT_MULT + max(crit_bonus, 0.0)
+        damage *= (CRIT_MULT + max(crit_bonus, 0.0)) * (1.0 + max(taken_crit, 0.0))
     return min(max(int(damage), 0), DAMAGE_CAP), critical
 
 
@@ -789,6 +811,9 @@ def conds_pass(conds: list | None, ctx: dict) -> bool:
         elif name == "skill_ids":
             if ctx.get("skill_id", 0) not in (cond.get("skills") or []):
                 return False
+        elif name == "skill_attr":
+            if cond.get("attr") not in (ctx.get("attrs") or []):
+                return False
         elif name == "panel":
             if ctx.get("panel_cat") != cond.get("panel"):
                 return False
@@ -882,6 +907,8 @@ def sum_slot_mods(mods: list[dict], codes: set[str], ctx: dict,
         code = mod.get("code")
         if code not in codes:
             continue
+        if mod.get("foe"):
+            continue
         if code in ("item_damage", "item_heal") and not (ctx.get("is_item") or require_item):
             continue
         if code in ("cannon_damage", "cannon_crit") and not (ctx.get("is_cannon") or require_cannon):
@@ -913,6 +940,9 @@ def collect_owner_mods(game_dir: Path, parsed_list: list[tuple[dict, int]]) -> l
             "dur_actions": parsed.get("dur_actions", 0),
             "dur_hits": parsed.get("dur_hits", 0),
             "perm": bool(parsed.get("perm")),
+            "foe": bool(parsed.get("foe")),
+            "slot": parsed.get("slot"),
+            "attr": parsed.get("attr"),
         })
     return mods
 
@@ -1098,13 +1128,16 @@ def grant_trigger_buff(sim: "BattleSim", giver: dict, owner: dict, entry: dict) 
     elif code == "resist_up":
         buff["kind"] = "resist_up"
         buff["ailment"] = entry.get("ailment")
+    elif code == "resist_down":
+        buff["kind"] = "resist_down"
+        buff["attr"] = entry.get("attr", "unknown")
     elif code == "ailment_resist":
         buff["kind"] = "resist_up"
         buff["ailment"] = entry.get("ailment")
     elif code == "panel_null":
         buff["kind"] = "panel_null"
     elif code in ("ailment", "ailment_dot", "regen", "barrier", "evade",
-                  "reflect", "cover", "null_damage", "counter"):
+                  "reflect", "cover", "null_damage", "counter", "break_power"):
         buff["kind"] = code
         for key in ("ailment", "reflect"):
             if entry.get(key) is not None:
@@ -1116,6 +1149,42 @@ def grant_trigger_buff(sim: "BattleSim", giver: dict, owner: dict, entry: dict) 
     if entry.get("perm"):
         buff["rest"] = None
     owner["buffs"].append(buff)
+
+
+def fire_action_triggers(sim: "BattleSim", actor: dict, skill_id: int, results: list,
+                         target_member: dict | None, panel: int | None,
+                         is_item: bool = False, is_cannon: bool = False,
+                         is_aoe: bool = False) -> None:
+    """Fire post-resolution trigger events for one ally action.
+
+    Shared by skill, tool, cannon, mix, and active actions so item traits
+    and ability triggers observe every action kind.
+    """
+    post_ctx = {
+        "skill_id": skill_id,
+        "target_member": target_member,
+        "panel_cat": panel_cat(sim.game_dir, panel),
+        "weak": any(isinstance(r, dict) and r.get("weak") for r in results),
+        "critical": any(isinstance(r, dict) and r.get("critical") for r in results),
+        "ko": any(isinstance(r, dict) and r.get("killed") for r in results),
+        "is_item": is_item,
+        "is_cannon": is_cannon,
+        "scope": "aoe" if is_aoe else "single",
+    }
+    fire_triggers(sim, "skill_use", actor, post_ctx)
+    fire_triggers(sim, "post_attack", actor, post_ctx)
+    if post_ctx["weak"]:
+        fire_triggers(sim, "weak_hit", actor, post_ctx)
+    if post_ctx["critical"]:
+        fire_triggers(sim, "crit", actor, post_ctx)
+    if post_ctx["ko"]:
+        fire_triggers(sim, "ko", actor, post_ctx)
+    if target_member is not None and target_member.get("broken"):
+        fire_triggers(sim, "break_hit", actor, post_ctx)
+    if target_member is not None and any(
+        b.get("kind") == "ailment" for b in target_member.get("buffs", [])
+    ):
+        fire_triggers(sim, "target_ailment_hit", actor, post_ctx)
 
 
 def execute_trigger_code(sim: "BattleSim", owner: dict, targets: list[dict], code: str, value: int) -> None:
@@ -1689,6 +1758,12 @@ class BattleSim:
         burst_stocks = max(
             [int(m.get("stocks", 1) or 1) for m in mods if m.get("code") == "burst_stocks"] + [1]
         )
+        start_res = dict(master.get("resistance", {}) or {})
+        for mod in mods:
+            if mod.get("code") != "resist_up" or mod.get("conds"):
+                continue
+            for attr in mod.get("attrs", []):
+                start_res[attr] = int(start_res.get(attr, 0) or 0) + int(mod.get("value", 0) or 0) // 100
         self.members[member_id] = {
             "id": member_id,
             "side": 0,
@@ -1705,7 +1780,7 @@ class BattleSim:
             "magic": start_stats["magic"],
             "defense": start_stats["defense"],
             "mental": start_stats["mental"],
-            "res": dict(master.get("resistance", {}) or {}),
+            "res": start_res,
             "skills": skills,
             "skill_lamps": skill_lamps,
             "skill_rank2": rank2,
@@ -2054,6 +2129,13 @@ def apply_skill_effects(
                 )
             elif info is not None:
                 dealt_state = grant_state_buff(sim, actor, target, effect_id, value, parsed)
+            elif parsed.get("code") in ("skill_damage", "dealt_damage", "skill_power",
+                                        "crit_rate", "crit_damage", "break_damage",
+                                        "taken_break", "taken_crit_damage", "penetration",
+                                        "taken_damage", "burst_damage", "heal_given",
+                                        "heal_received", "ailment", "resist_up",
+                                        "resist_down", "target_debuff"):
+                dealt_state = grant_parsed_slot_buff(sim, actor, target, value, parsed)
             else:
                 apply_parsed_skill_effect(sim, actor, targets, effect_id, value, parsed)
             # All other effect ids (item gauge, crit lamp, unmodeled
@@ -2070,6 +2152,71 @@ def apply_skill_effects(
                 }
             )
     return results
+
+
+SLOT_BUFF_KINDS = {
+    "skill_damage": "skill_damage", "dealt_damage": "skill_damage",
+    "skill_power": "skill_power", "crit_rate": "crit_rate",
+    "crit_damage": "crit_damage", "break_damage": "break_damage",
+    "taken_break": "taken_break", "taken_crit_damage": "taken_crit_damage",
+    "penetration": "penetration", "taken_damage": "taken",
+    "burst_damage": "burst_damage", "heal_given": "recovery_given",
+    "heal_received": "recovery_received", "resist_up": "resist_up",
+    "resist_down": "resist_down", "pre_resist_down_target": "resist_down",
+}
+
+
+def grant_parsed_slot_buff(sim: "BattleSim", actor: dict, target: dict,
+                           value: int, parsed: dict) -> dict | None:
+    """Grant a hidden slot buff from a mapped skill effect.
+
+    Foe-flagged effects land on enemy targets, everything else on the
+    acting member. Ailments roll application; amounts scale with potency.
+    """
+    code = parsed.get("code")
+    if code == "ailment":
+        ailment = parsed.get("ailment", "unknown")
+        chance = ailment_application_chance(
+            sim, actor, target, ailment, int(parsed.get("rate", 100) or 100))
+        if sim.rng.randint(1, 100) > chance:
+            return None
+        buff = {"id": 0, "value": int(value or 0), "rest": 2, "kind": "ailment",
+                "ailment": ailment, "display": False}
+    else:
+        if code == "target_debuff":
+            kind = parsed.get("slot", "skill_damage")
+            if kind not in ("skill_damage", "out", "defense", "speed", "taken"):
+                return None
+        else:
+            kind = SLOT_BUFF_KINDS.get(code)
+            if kind is None:
+                return None
+        rate = int(parsed.get("rate", 100) or 100)
+        if rate < 100 and sim.rng.randint(1, 100) > rate:
+            return None
+        magnitude = effect_magnitude(parsed, value)
+        magnitude = apply_potency(actor, target, kind if kind in ("taken",) else "out", magnitude)
+        buff = {"id": 0, "value": direction_sign(parsed) * magnitude, "rest": 2,
+                "kind": kind, "display": False}
+        if kind == "resist_up":
+            buff["ailment"] = parsed.get("ailment")
+        if kind == "resist_down":
+            buff["attr"] = parsed.get("attr", "unknown")
+    owner = target if parsed.get("foe") else actor
+    if not owner.get("alive"):
+        return None
+    dur_actions = int(parsed.get("dur_actions", 0) or 0)
+    dur_hits = int(parsed.get("dur_hits", 0) or 0)
+    if dur_actions:
+        buff["rest"] = dur_actions
+    if dur_hits:
+        buff["hits"] = dur_hits
+    owner["buffs"].append(buff)
+    return buff if buff.get("id") else None
+
+
+def direction_sign(parsed: dict) -> int:
+    return int(parsed.get("direction", 1) or 1)
 
 
 def grant_state_buff(sim: "BattleSim", actor: dict, target: dict, state_id: int,
@@ -2164,6 +2311,13 @@ def apply_parsed_skill_effect(sim: "BattleSim", actor: dict, targets: list[dict]
     elif code == "cleanse":
         for target in targets:
             remove_debuffs(target)
+    elif code == "dispel":
+        kind = parsed.get("dispel", "")
+        ailment = parsed.get("ailment")
+        for target in targets:
+            target["buffs"] = [b for b in target.get("buffs", [])
+                               if b.get("kind") != kind
+                               and not (ailment and b.get("ailment") == ailment)]
 
 
 def shift_order(sim: "BattleSim", member_id: int, steps: int) -> bool:
@@ -2311,7 +2465,7 @@ def apply_hit(
     defense_stat = max(int(defense_stat * (1 + buff_slot_bonus(target.get("buffs", []), "defense"))), MIN_BATTLE_STAT)
     attack_stat = actor["magic"] if use_magic else actor["attack"]
     broken = bool(target.get("broken"))
-    res_value = combined_resistance(elements, target.get("res", {}))
+    res_value = combined_resistance(elements, target.get("res", {}), target.get("buffs", []), sim, target)
     res_value -= resist_down_bonus(target.get("buffs", []), elements)
     weak = res_value <= WEAK_THRESHOLD
     resist = (not weak) and res_value >= RESIST_THRESHOLD
@@ -2340,6 +2494,7 @@ def apply_hit(
         slots["taken"],
         slots["penetration"],
         crit_bonus=slots["crit_damage"],
+        taken_crit=slots["taken_crit"],
     )
     ctx["critical"] = critical
     for buff in target.get("buffs", []):
@@ -2409,6 +2564,39 @@ def apply_hit(
         if buff.get("kind") == "reactive_heal":
             heal_member(sim, target, int(target.get("max_hp", 0) * pct_heal_fraction(buff.get("value", 0))))
             break
+    if damage > 0 and target.get("alive"):
+        for mod in actor.get("mods", []):
+            if mod.get("code") != "on_hit_resist":
+                continue
+            if not conds_pass(mod.get("conds"), ctx):
+                continue
+            grant = {"id": 0, "value": int(mod.get("value", 0) or 0), "rest": 2,
+                     "kind": "resist_elem", "attr": mod.get("attr", "unknown"), "display": False}
+            if int(mod.get("dur_hits", 0) or 0):
+                grant["hits"] = int(mod["dur_hits"])
+            target["buffs"].append(grant)
+        for mod in actor.get("mods", []):
+            if mod.get("code") != "resist_down":
+                continue
+            if not conds_pass(mod.get("conds"), ctx):
+                continue
+            target["buffs"].append({"id": 0, "value": int(mod.get("value", 0) or 0), "rest": 2,
+                                    "kind": "resist_down", "attr": mod.get("attr", "unknown"),
+                                    "display": False})
+        for mod in actor.get("mods", []):
+            if mod.get("code") not in ("target_debuff", "taken_break", "taken_crit_damage"):
+                continue
+            if not mod.get("foe"):
+                continue
+            if not conds_pass(mod.get("conds"), ctx):
+                continue
+            kind = {"target_debuff": mod.get("slot", "skill_damage")}.get(mod.get("code"), mod.get("code"))
+            if kind not in ("skill_damage", "out", "defense", "speed", "taken",
+                            "taken_break", "taken_crit_damage"):
+                continue
+            value = int(mod.get("direction", -1) or -1) * abs(int(mod.get("value", 0) or 0))
+            target["buffs"].append({"id": 0, "value": value, "rest": 2,
+                                    "kind": kind, "display": False})
     if has_ailment(target, "sleep"):
         remove_ailments(target, {"sleep"})
     if target["side"] == 0 and damage > 0:
@@ -2474,6 +2662,10 @@ def damage_slot_mults(sim: "BattleSim", actor: dict, target: dict, skill: dict,
     skill_damage = panel_skill_damage_mult(panel)
     skill_damage *= 1 + buff_slot_bonus(actor["buffs"], "skill_damage")
     skill_damage *= 1 + sum_slot_mods(actor_mods, {"skill_damage", "dealt_damage"}, ctx) / 10000
+    if ctx.get("is_item"):
+        skill_damage *= 1 + sum_slot_mods(actor_mods, {"item_damage"}, ctx, require_item=True) / 10000
+    if ctx.get("is_cannon"):
+        skill_damage *= 1 + sum_slot_mods(actor_mods, {"cannon_damage"}, ctx, require_cannon=True) / 10000
     skill_id = local.get("skill_id", 0)
     if skill_id:
         skill_damage *= 1 + lamp_damage_bonus(sim.game_dir, actor, skill_id) / 10000
@@ -2494,6 +2686,10 @@ def damage_slot_mults(sim: "BattleSim", actor: dict, target: dict, skill: dict,
     crit_damage = buff_crit_damage_bonus(actor["buffs"])
     crit_damage += buff_slot_bonus(actor["buffs"], "crit_damage")
     crit_damage += sum_slot_mods(actor_mods, {"crit_damage"}, ctx) / 10000
+    if ctx.get("is_item"):
+        crit_damage += sum_slot_mods(actor_mods, {"item_crit"}, ctx, require_item=True) / 10000
+    if ctx.get("is_cannon"):
+        crit_damage += sum_slot_mods(actor_mods, {"cannon_crit"}, ctx, require_cannon=True) / 10000
     break_up = buff_break_damage_bonus(actor["buffs"])
     break_up += buff_slot_bonus(actor["buffs"], "break_damage")
     break_up += buff_slot_bonus(actor["buffs"], "taken_break")
@@ -2507,6 +2703,8 @@ def damage_slot_mults(sim: "BattleSim", actor: dict, target: dict, skill: dict,
             crit_rate -= move
             crit_damage += move
     break_power = buff_break_power_mult(actor["buffs"])
+    taken_crit = buff_slot_bonus(target.get("buffs", []), "taken_crit_damage")
+    taken_crit += sum_slot_mods(target_mods, {"taken_crit_damage"}, ctx) / 10000
     drain = sum_slot_mods(actor_mods, {"drain"}, ctx) // 100
     for behavior in local.get("behaviors", []):
         code = behavior.get("code")
@@ -2527,6 +2725,7 @@ def damage_slot_mults(sim: "BattleSim", actor: dict, target: dict, skill: dict,
         "skill_damage": skill_damage, "skill_power": skill_power,
         "outgoing": outgoing, "taken": taken, "penetration": penetration,
         "crit_rate": crit_rate, "crit_damage": crit_damage,
+        "taken_crit": taken_crit,
         "break_up": break_up, "break_power": break_power, "drain": drain,
     }
 
@@ -2765,6 +2964,9 @@ def resolve_ally_action(
         attack_stat = actor["magic"] if use_magic else actor["attack"]
         if skill.get("effect") == 2 and target["side"] == 0:
             recovery = buff_recovery_given_bonus(actor["buffs"]) + buff_recovery_received_bonus(target["buffs"])
+            if skill_id_override and (actor.get("pooled") or actor.get("mixer")):
+                item_ctx = mod_context(sim, actor, target, skill, is_item=True)
+                recovery += sum_slot_mods(actor.get("mods", []), {"item_heal"}, item_ctx, require_item=True) / 10000
             heal = compute_heal(sim.rng, skill.get("power", 0), attack_stat, recovery)
             restored = heal_member(sim, target, heal)
             skill_results.append({"target": target["id"], "heal": restored})
@@ -3230,7 +3432,7 @@ def build_selection_target(
         return bytes(out)
     defense_stat = target["mental"] if (use_magic and target["side"] == 0) else target["defense"]
     broken = bool(target.get("broken"))
-    res_value = combined_resistance(elements, target.get("res", {}))
+    res_value = combined_resistance(elements, target.get("res", {}), target.get("buffs", []), sim, target)
     res_value -= resist_down_bonus(target.get("buffs", []), elements)
     weak = res_value <= WEAK_THRESHOLD
     resist = (not weak) and res_value >= RESIST_THRESHOLD
@@ -3454,7 +3656,7 @@ def pooled_item_actor(sim: BattleSim, actor: dict) -> dict:
     pooled["mods"] = [
         mod for mod in actor.get("mods", [])
         if mod.get("code") in ("item_damage", "item_heal", "cannon_damage",
-                               "cannon_crit", "ailment_rate")
+                               "cannon_crit", "ailment_rate", "on_hit_resist")
     ]
     return pooled
 
@@ -3753,9 +3955,17 @@ def do_action(
         tool = next((t for t in sim.tools if t["number"] == tool_number and t["uses"] > 0), None)
         if tool is None:
             raise ValueError(f"battle tool number={tool_number} is unavailable")
+        tool_row = prog_table(sim.game_dir, "battle_tool").get(str(tool.get("tool_id", 0)), {})
+        uses_done = max(int(tool_row.get("usage_count", 0) or 0) - int(tool.get("uses", 0) or 0), 0)
         tool["uses"] -= 1
         tool_skill_id = int(tool.get("skill_id", 0) or 0)
         tool_actor = pooled_item_actor(sim, actor)
+        if uses_done <= 0:
+            for mod in actor.get("mods", []):
+                if mod.get("code") == "first_use_damage":
+                    tool_actor["mods"].append({"code": "skill_damage",
+                                               "value": int(mod.get("value", 0) or 0),
+                                               "conds": [], "direction": 1})
         if tool_skill_id:
             results, effect_blobs, skill_id, _ = resolve_ally_action(
                 sim,
@@ -3770,6 +3980,10 @@ def do_action(
             results, effect_blobs, skill_id = [], [], 0
         if main_target is None and results:
             main_target = results[0].get("target")
+        tool_member = sim.members.get(main_target) if isinstance(main_target, int) else None
+        tool_skill = battle_table(sim.game_dir, "skill").get(str(skill_id), {})
+        fire_action_triggers(sim, actor, skill_id, results, tool_member, panel,
+                             is_item=True, is_aoe=tool_skill.get("target") in (4, 5))
         blob = build_action(
             sim,
             sim.action_no + 1,
@@ -3832,36 +4046,22 @@ def do_action(
                 lit[skill_id] = lit.get(skill_id, 0) + 1
         if skill_info.get("range_move"):
             set_member_range(sim, actor, skill_info["range_move"])
+        gain_down = sum_slot_mods(actor.get("mods", []),
+                                      {"burst_gain_down"}, mod_context(sim, actor, None, None)) / 10000
+        gain_factor = max(1.0 - gain_down, 0.0)
         if skill_type == 1:
-            actor["burst_gauge"] = min(int(actor.get("burst_gauge", 0) or 0) + BURST_GAIN_SKILL1, burst_max(actor))
+            actor["burst_gauge"] = min(int(actor.get("burst_gauge", 0) or 0) + int(BURST_GAIN_SKILL1 * gain_factor), burst_max(actor))
         elif skill_type == 2:
-            actor["burst_gauge"] = min(int(actor.get("burst_gauge", 0) or 0) + BURST_GAIN_SKILL2, burst_max(actor))
+            actor["burst_gauge"] = min(int(actor.get("burst_gauge", 0) or 0) + int(BURST_GAIN_SKILL2 * gain_factor), burst_max(actor))
         if kind in ("skill", "auto"):
-            post_ctx = {
-                "skill_id": skill_id,
-                "target_member": target_member,
-                "panel_cat": panel_cat(sim.game_dir, panel),
-                "weak": any(isinstance(r, dict) and r.get("weak") for r in results),
-                "critical": any(isinstance(r, dict) and r.get("critical") for r in results),
-                "ko": any(isinstance(r, dict) and r.get("killed") for r in results),
-            }
-            fire_triggers(sim, "skill_use", actor, post_ctx)
-            fire_triggers(sim, "post_attack", actor, post_ctx)
-            if post_ctx["weak"]:
-                fire_triggers(sim, "weak_hit", actor, post_ctx)
-            if post_ctx["critical"]:
-                fire_triggers(sim, "crit", actor, post_ctx)
-            if post_ctx["ko"]:
-                fire_triggers(sim, "ko", actor, post_ctx)
-            if target_member is not None and target_member.get("broken"):
-                fire_triggers(sim, "break_hit", actor, post_ctx)
-            if target_member is not None and any(
-                b.get("kind") == "ailment" for b in target_member.get("buffs", [])
-            ):
-                fire_triggers(sim, "target_ailment_hit", actor, post_ctx)
+            resolved = battle_table(sim.game_dir, "skill").get(str(skill_id), {})
+            fire_action_triggers(sim, actor, skill_id, results, target_member, panel,
+                                 is_aoe=resolved.get("target") in (4, 5))
             if burst_fired:
+                burst_ctx = {"skill_id": skill_id, "target_member": target_member,
+                             "panel_cat": panel_cat(sim.game_dir, panel)}
                 for member in sim.alive_allies():
-                    fire_triggers(sim, "party_burst", member, post_ctx)
+                    fire_triggers(sim, "party_burst", member, burst_ctx)
             if not actor.get("extra_turn"):
                 grant_extra_turn(sim, actor, skill_id, results)
     else:
@@ -3911,6 +4111,11 @@ def do_cannon_action(sim: BattleSim, actor: dict, cannon_number: int) -> bytes:
         skill_id_override=int(cannon.get("skill_id", 0) or 0),
     )
     main_target = results[0].get("target") if results else None
+    cannon_member = sim.members.get(main_target) if isinstance(main_target, int) else None
+    cannon_skill = battle_table(sim.game_dir, "skill").get(str(skill_id), {})
+    fire_action_triggers(sim, actor, skill_id, results, cannon_member,
+                         panel_for_turn(sim.game_dir, sim.battle_id, turn),
+                         is_cannon=True, is_aoe=cannon_skill.get("target") in (4, 5))
     blob = build_action(
         sim,
         sim.action_no + 1,
@@ -4007,6 +4212,11 @@ def do_mix_action(sim: BattleSim, actor: dict, tool_numbers: list[int]) -> bytes
         skill_id_override=skill_id,
     )
     main_target = results[0].get("target") if results else None
+    mix_member = sim.members.get(main_target) if isinstance(main_target, int) else None
+    mix_skill = battle_table(sim.game_dir, "skill").get(str(skill_id), {})
+    fire_action_triggers(sim, actor, skill_id, results, mix_member,
+                         panel_for_turn(sim.game_dir, sim.battle_id, turn),
+                         is_item=True, is_aoe=mix_skill.get("target") in (4, 5))
     blob = build_action(
         sim, sim.action_no + 1, actor, skill_id, None, main_target,
         results, effect_blobs, [], sim.total_dealt_hp_damage,
@@ -4046,6 +4256,11 @@ def do_active_action(sim: BattleSim, actor: dict, active_type: int, main_target:
     )
     if main_target is None and results:
         main_target = results[0].get("target")
+    active_member = sim.members.get(main_target) if isinstance(main_target, int) else None
+    active_skill = battle_table(sim.game_dir, "skill").get(str(skill_id), {})
+    fire_action_triggers(sim, actor, skill_id, results, active_member,
+                         panel_for_turn(sim.game_dir, sim.battle_id, turn),
+                         is_aoe=active_skill.get("target") in (4, 5))
     blob = build_action(
         sim,
         sim.action_no + 1,

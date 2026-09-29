@@ -11,6 +11,7 @@ from pathlib import Path
 from Crypto.Cipher import AES
 from google.protobuf import json_format, message_factory
 
+import contract_codec
 from decrypt_japanese_capture import AES_IV, AES_KEYS, format_fields, read_wire_fields, read_varint
 
 
@@ -153,6 +154,20 @@ def crypto_path(binary_path: Path) -> Path:
     return binary_path.with_suffix(binary_path.suffix + ".crypto.json")
 
 
+def contract_path(binary_path: Path) -> Path:
+    return binary_path.with_suffix(binary_path.suffix + ".contract.json")
+
+
+def load_contract_db(fields_path: Path | None):
+    """Load the fields.txt contract database, or None when unavailable."""
+    if fields_path is None:
+        return None
+    try:
+        return contract_codec.parse_fields_txt(fields_path)
+    except (OSError, ValueError):
+        return None
+
+
 def wire_json(data: bytes) -> dict[str, object]:
     result = []
     for number, wire, value in read_wire_fields(data):
@@ -197,12 +212,12 @@ def wire_bytes(value: dict[str, object]) -> bytes:
     )
 
 
-def decrypt_folder(source: Path, destination: Path, descriptor: Path) -> None:
+def decrypt_folder(source: Path, destination: Path, descriptor: Path, contract_db=None) -> None:
     pool = profile_editor.load_descriptor_pool(descriptor)
     destination.mkdir(parents=True, exist_ok=True)
     for path in sorted(source.iterdir()):
         if path.is_dir():
-            decrypt_folder(path, destination / path.name, descriptor)
+            decrypt_folder(path, destination / path.name, descriptor, contract_db)
             continue
         if path.suffix.lower() != ".bin":
             (destination / path.name).write_bytes(path.read_bytes())
@@ -251,14 +266,22 @@ def decrypt_folder(source: Path, destination: Path, descriptor: Path) -> None:
             wire_path.write_text(json.dumps(wire_json(plaintext), indent=2) + "\n", encoding="utf-8")
         except ValueError:
             pass
+        if contract_db is not None and type_pair is not None:
+            try:
+                contract_node = contract_codec.decode_message(contract_db, type_name, plaintext)
+                output.with_suffix(output.suffix + ".contract.json").write_text(
+                    json.dumps(contract_node, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+                )
+            except (ValueError, KeyError):
+                pass
 
 
-def encrypt_folder(source: Path, destination: Path, descriptor: Path) -> None:
+def encrypt_folder(source: Path, destination: Path, descriptor: Path, contract_db=None) -> None:
     pool = profile_editor.load_descriptor_pool(descriptor)
     destination.mkdir(parents=True, exist_ok=True)
     for path in sorted(source.iterdir()):
         if path.is_dir():
-            encrypt_folder(path, destination / path.name, descriptor)
+            encrypt_folder(path, destination / path.name, descriptor, contract_db)
             continue
         if path.suffix.lower() != ".bin":
             (destination / path.name).write_bytes(path.read_bytes())
@@ -277,12 +300,23 @@ def encrypt_folder(source: Path, destination: Path, descriptor: Path) -> None:
             json_format.Parse(editable.read_text(encoding="utf-8"), message)
             plaintext = message.SerializeToString()
         else:
-            wire_editable = path.with_suffix(path.suffix + ".wire.json")
-            if wire_editable.exists():
-                plaintext = wire_bytes(json.loads(wire_editable.read_text(encoding="utf-8")))
+            contract_editable = contract_path(path)
+            if contract_editable.exists() and contract_db is not None and type_pair is not None:
+                type_name = type_pair[0] if kind == "request" else type_pair[1]
+                plaintext = contract_codec.encode_message(
+                    contract_db, type_name,
+                    json.loads(contract_editable.read_text(encoding="utf-8")),
+                )
+            else:
+                wire_editable = path.with_suffix(path.suffix + ".wire.json")
+                if wire_editable.exists():
+                    plaintext = wire_bytes(json.loads(wire_editable.read_text(encoding="utf-8")))
         (destination / path.name).write_bytes(encrypt(plaintext, crypto))
         if editable.exists():
             (destination / editable.name).write_text(editable.read_text(encoding="utf-8"), encoding="utf-8")
+        contract_copy = contract_path(path)
+        if contract_copy.exists():
+            (destination / contract_copy.name).write_text(contract_copy.read_text(encoding="utf-8"), encoding="utf-8")
         if crypto_file.exists():
             (destination / crypto_file.name).write_text(crypto_file.read_text(encoding="utf-8"), encoding="utf-8")
         wire_editable = path.with_suffix(path.suffix + ".wire.json")
@@ -301,6 +335,14 @@ def main() -> int:
         default=EDITOR / "profile-descriptors.pb",
         help="protobuf descriptor set for editable JSON messages",
     )
+    parser.add_argument(
+        "--contract-fields",
+        type=Path,
+        default=Path(
+            "C:/Program Files (x86)/Steam/steamapps/common/AtelierResleriana/contract-dump/fields.txt"
+        ),
+        help="contract-dump fields.txt for schema-aware contract JSON",
+    )
     args = parser.parse_args()
     source = args.input.resolve()
     if not source.is_dir():
@@ -311,10 +353,11 @@ def main() -> int:
         prefix = "decrypted-" if args.command == "decrypt" else "encrypted-"
         name = source.name.removeprefix("decrypted-").removeprefix("encrypted-")
         destination = source.with_name(prefix + name)
+    contract_db = load_contract_db(args.contract_fields)
     if args.command == "decrypt":
-        decrypt_folder(source, destination, args.descriptor)
+        decrypt_folder(source, destination, args.descriptor, contract_db)
     else:
-        encrypt_folder(source, destination, args.descriptor)
+        encrypt_folder(source, destination, args.descriptor, contract_db)
     print(f"WROTE {destination}")
     return 0
 

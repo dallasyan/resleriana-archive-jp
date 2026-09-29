@@ -39,6 +39,10 @@ def normalize(text: str) -> str:
             out.append(chr(code - FULLWIDTH_OFFSET))
         elif char == "\uff05":
             out.append("%")
+        elif char == "\uff0b":
+            out.append("+")
+        elif char == "\uff0d":
+            out.append("-")
         elif char == "<":
             out.append(" ")
         else:
@@ -69,7 +73,7 @@ def parse_conditions(text: str) -> list:
     conds = []
     for role, code in (("アタッカー", "attacker"), ("ブレイカー", "breaker"),
                        ("ディフェンダー", "defender"), ("サポーター", "supporter")):
-        if "自身が%sの時" % role in text:
+        if ("自身が%sの時" % role) in text or ("かつ%sの時" % role) in text:
             conds.append({"cond": "role", "role": code})
     for name, code in ATTRS.items():
         if ("得意属性が%s" % name) in text or ("%s属性キャラ" % name) in text:
@@ -228,6 +232,18 @@ def parse_bracket(text: str) -> dict | None:
     return {"code": "unmapped", "scope": scope, "conds": conds, **parse_common(raw)}
 
 
+def mark_foe(parsed: dict, raw: str) -> dict:
+    """Flag debuff/grant effects explicitly aimed at foes.
+
+    自身-targeted effects stay owner-side; bare 敵-wide text without 対象
+    keeps the legacy owner-side behavior and is noted as a limitation.
+    """
+    if parsed.get("code") not in (None, "unmapped") and "自身" not in raw and \
+            ("対象" in raw or "敵全体" in raw or "敵対象" in raw):
+        parsed["foe"] = True
+    return parsed
+
+
 def parse_effect(text: str) -> dict:
     """Parse one effect/trait description into combat codes (ASCII only)."""
     bracket = parse_bracket(text)
@@ -238,10 +254,22 @@ def parse_effect(text: str) -> dict:
     if not raw or raw in ("state_change用",):
         return {"code": "unmapped", **base}
     for keyword, code in AILMENTS.items():
-        if keyword in raw and ("付与" in raw or "を" in raw):
+        if keyword in raw and "解除" not in raw and ("付与" in raw or "を" in raw):
             if keyword in ("毒", "猛毒", "火傷"):
                 return {"code": "ailment_dot", "ailment": code, **base}
             return {"code": "ailment", "ailment": code, **base}
+    if "マイナス効果" in raw and "解除" in raw or "状態異常" in raw and "解除" in raw:
+        return {"code": "cleanse", **base}
+    dispel_kinds = {"回避": "evade", "カウンター": "counter", "バリア": "barrier",
+                    "再生": "regen", "挑発": "taunt", "物攻": "out", "魔攻": "out",
+                    "物防": "defense", "魔防": "defense", "素早さ": "speed",
+                    "強化効果": "out", "マイナス効果": "taken"}
+    for word, kind in dispel_kinds.items():
+        if word in raw and re.search(r"解除", raw):
+            entry = {"code": "dispel", "dispel": kind, **base}
+            if kind == "taunt":
+                entry["ailment"] = "taunt"
+            return entry
     if "再生" in raw:
         return {"code": "regen", **base}
     if "バリア" in raw:
@@ -256,7 +284,8 @@ def parse_effect(text: str) -> dict:
     if "ダメージ無効" in raw or "無敵" in raw:
         return {"code": "null_damage", **base}
     if "蘇生" in raw or "復活" in raw:
-        return {"code": "revive", **base}
+        # No revive mechanic is modeled (KO has no recovery); leave unmapped.
+        return {"code": "unmapped", **base}
     if "かばう" in raw or "身代わり" in raw:
         return {"code": "cover", **base}
     if "ターン入れ替え" in raw:
@@ -283,10 +312,15 @@ def parse_effect(text: str) -> dict:
         if "クリティカル" in raw:
             return {"code": "cannon_crit", **base}
         return {"code": "cannon_damage", **base}
+    if "アイテム" in raw and "クリティカルダメージ" in raw:
+        return {"code": "item_crit", **base}
     if "アイテム" in raw and ("ダメージ" in raw or "強化" in raw):
         return {"code": "item_damage", **base}
     if "アイテム" in raw and "回復" in raw:
         return {"code": "item_heal", **base}
+    if "バーストゲージ" in raw and ("増加" in raw or "回復" in raw or "上昇" in raw) \
+            and "減少" not in raw:
+        return {"code": "burst_gauge", **base}
     if "貫通力" in raw:
         return {"code": "penetration", **base}
     if "ブレイクダメージ" in raw:
@@ -305,6 +339,20 @@ def parse_effect(text: str) -> dict:
     if "スキル威力" in raw:
         direction = -1 if ("ダウン" in raw or "減少" in raw) else 1
         return {"code": "skill_power", "direction": direction, **base}
+    if "ブレイク威力" in raw and ("アップ" in raw or "上昇" in raw):
+        return {"code": "break_power", "direction": 1, **base}
+    if "威力" in raw and ("アップ" in raw or "上昇" in raw):
+        for name in sorted(ATTRS, key=len, reverse=True):
+            if name in raw:
+                entry = {"code": "skill_power", "direction": 1, **base}
+                entry["conds"] = list(entry.get("conds") or []) + [{"cond": "skill_attr", "attr": ATTRS[name]}]
+                return entry
+    if "属性耐性" in raw and "アップ" in raw and "付与" in raw and "対象に" in raw:
+        for name in sorted(ATTRS, key=len, reverse=True):
+            if name in raw:
+                return {"code": "on_hit_resist", "attr": ATTRS[name], **base}
+    if "使用回数が1回" in raw:
+        return {"code": "first_use_damage", **base}
     if "スキルダメージ" in raw or "バーストスキルダメージ" in raw:
         direction = -1 if ("ダウン" in raw or "減少" in raw or "-" in raw) else 1
         return {"code": "skill_damage", "direction": direction, **base}
@@ -318,22 +366,39 @@ def parse_effect(text: str) -> dict:
         return {"code": "heal_given", **base}
     if "受けるHP回復量" in raw or "被回復量" in raw or "受ける回復量" in raw:
         return {"code": "heal_received", **base}
-    if "耐性" in raw and ("ダウン" in raw or "減少" in raw or "-" in raw):
-        for name, code in ATTRS.items():
+    if "耐性" in raw and ("ダウン" in raw or "減少" in raw or "-" in raw or "DOWN" in raw):
+        for name, code in sorted(ATTRS.items(), key=lambda kv: -len(kv[0])):
             if name in raw:
                 return {"code": "resist_down", "attr": code, **base}
         if "全属性" in raw:
             return {"code": "resist_down", "attr": "all", **base}
         return {"code": "resist_down", "attr": "unknown", **base}
-    for word, stat in STAT_WORDS:
+    if "バーストゲージ" in raw and "減少" in raw:
+        return {"code": "burst_gain_down", **base}
+    STAT_EXTENDED = STAT_WORDS + [("攻撃力", "attack"), ("防御力", "defense")]
+    # NOTE: bare 攻撃/防御 are deliberately excluded: they substring-match
+    # timing words such as 攻撃前/攻撃後. Bare-form cases are covered by the
+    # machine-EN fallback (e.g. "Reduces target's attack").
+    if "対象" in raw or "敵全体" in raw or "敵対象" in raw:
+        for word, stat in STAT_EXTENDED:
+            if word in raw and ("ダウン" in raw or "減少" in raw or "低下" in raw or "DOWN" in raw):
+                slot = {"patk": "out", "matk": "out", "pdef": "defense",
+                        "mdef": "defense", "spd": "speed",
+                        "attack": "out", "magic": "out", "defense": "defense",
+                        "mental": "defense", "speed": "speed"}.get(stat)
+                if slot:
+                    return {"code": "target_debuff", "slot": slot, **base}
+        if "ダメージ" in raw and ("ダウン" in raw or "減少" in raw or "DOWN" in raw) and "受ける" not in raw:
+            return {"code": "target_debuff", "slot": "skill_damage", **base}
+        if "受けるダメージ" in raw and ("アップ" in raw or "上昇" in raw or "UP" in raw):
+            return {"code": "target_debuff", "slot": "taken", **base}
+    for word, stat in STAT_EXTENDED:
         if word in raw and ("アップ" in raw or "上昇" in raw or "増加" in raw or "UP" in raw):
             return {"code": "stat_up", "stat": stat, **base}
         if word in raw and ("ダウン" in raw or "減少" in raw or "低下" in raw or "DOWN" in raw):
             return {"code": "stat_down", "stat": stat, **base}
     if "HPを回復" in raw or "HP回復" in raw:
         return {"code": "heal", **base}
-    if "ランプ" in raw:
-        return {"code": "lamp", **base}
     if "先駆け" in raw:
         return {"code": "pioneer", **base}
     if "与える強化効果量" in raw:
@@ -493,6 +558,9 @@ def parse_panel_branch(text: str, holder: str) -> list:
         if not chunk or chunk in ("強化系パネルとして扱う", "効果なし", "書き換え用",
                                   "バーストスキル発動可能"):
             continue
+        if "確定クリティカル" in chunk:
+            ops.append({"op": "crit_force", "holder": holder})
+            continue
         parsed = parse_effect(chunk)
         if parsed["code"] == "unmapped":
             ops.append({"op": "unmapped_panel", "holder": holder})
@@ -583,6 +651,121 @@ def detect_target_tag(chunk: str) -> str:
     if "ブレイクゲージが最も高い敵" in chunk or "残りブレイクゲージが最も高い敵" in chunk:
         return "extreme_enemy_break_max"
     return "context"
+
+
+EN_ATTRS = {"Slash": "slash", "Blunt": "impact", "Strike": "impact",
+            "Pierce": "piercing", "Fire": "fire", "Ice": "ice",
+            "Bolt": "lightning", "Lightning": "lightning", "Air": "wind", "Wind": "wind"}
+EN_ROLES = {"Attacker": "attacker", "Breaker": "breaker",
+            "Defender": "defender", "Supporter": "supporter"}
+EN_AILMENTS = {"Poison": "poison", "Venom": "venom", "Burn": "burn",
+               "Paralyz": "paralysis", "Paralysis": "paralysis", "Sleep": "sleep",
+               "Blind": "darkness", "Darkness": "darkness", "Taunt": "taunt",
+               "Frozen": "frozen", "Freeze": "frozen", "Freezing": "frozen",
+               "Stun": "stun", "Stunned": "stun"}
+EN_STATS = {"P.ATK": "attack", "M.ATK": "magic", "P.DEF": "defense",
+            "M.DEF": "defense", "SPD": "speed", "HP": "hp",
+            "attack": "attack", "defense": "defense", "magic": "magic",
+            "speed": "speed"}
+
+
+def parse_effect_en(text: str) -> dict:
+    """Parse machine-translated English effect text into combat codes.
+
+    Used only when the Japanese parse yields unmapped; disagreements
+    where both parse are logged for review at build time.
+    """
+    raw = text or ""
+    base: dict = {"rate": 100, "cap": 0, "stack_max": 0, "fixed": False,
+                  "text_value": 0, "conds": [], "dur_actions": 0, "dur_hits": 0,
+                  "perm": False}
+    match = re.search(r"for ([0-9]+) turns?", raw)
+    if match:
+        base["dur_actions"] = int(match.group(1))
+    for role, code in EN_ROLES.items():
+        if re.search(r"\b%s\b" % role, raw):
+            base["conds"].append({"cond": "role", "role": code})
+    for name, code in sorted(EN_ATTRS.items(), key=lambda kv: -len(kv[0])):
+        if re.search(r"\b%s\b" % name, raw):
+            base["conds"].append({"cond": "attr", "attr": code})
+            break
+    if "WEAK" in raw:
+        base["conds"].append({"cond": "weak_hit"})
+    attr = next((code for name, code in sorted(EN_ATTRS.items(), key=lambda kv: -len(kv[0]))
+                 if re.search(r"\b%s\b" % name, raw)), "unknown")
+    if "battle item" in raw.lower() and "critical damage" in raw.lower():
+        return {"code": "item_crit", **base}
+    if "battle item" in raw.lower() and "damage" in raw.lower():
+        return {"code": "item_damage", "direction": 1, **base}
+    if "Resistance Down" in raw and "target" in raw:
+        return {"code": "resist_down", "attr": attr, **base}
+    if "Resistance Up" in raw or "resistance +" in raw:
+        return {"code": "resist_up", "attrs": [a for a in {attr} if a != "unknown"], **base}
+    for stat_word, stat in EN_STATS.items():
+        if re.search(r"(?:Reduces|Lowers|Decreases) (?:target'?s? )?%s\b" % re.escape(stat_word), raw):
+            slot = {"attack": "out", "magic": "out", "defense": "defense",
+                    "mental": "defense", "speed": "speed"}.get(stat)
+            if slot:
+                return {"code": "target_debuff", "slot": slot, **base}
+    if re.search(r"[Rr]ecovery [Gg]iven", raw):
+        return {"code": "heal_given", **base}
+    if re.search(r"[Rr]ecovery [Rr]eceived", raw):
+        return {"code": "heal_received", **base}
+    if re.search(r"skill damage|damage buff", raw, re.I):
+        return {"code": "skill_damage", "direction": -1 if re.search(r"[Rr]educ|[Dd]ecreas|[Dd]own", raw) else 1, **base}
+    if re.search(r"Boosts damage to", raw):
+        return {"code": "dealt_damage", "direction": 1, **base}
+    if re.search(r"skill power", raw, re.I):
+        return {"code": "skill_power", "direction": 1, **base}
+    if re.search(r"critical damage (?:taken|received)|taken.+critical damage", raw, re.I):
+        return {"code": "taken_crit_damage", "direction": 1, **base}
+    if re.search(r"critical rate", raw, re.I):
+        return {"code": "crit_rate", "direction": -1 if re.search(r"[Rr]educ|[Dd]ecreas|[Dd]own", raw) else 1, **base}
+    if re.search(r"critical damage", raw, re.I):
+        return {"code": "crit_damage", "direction": -1 if re.search(r"[Rr]educ|[Dd]ecreas|[Dd]own", raw) else 1, **base}
+    for stat_word, stat in EN_STATS.items():
+        if stat_word == "HP" and "ecover" in raw:
+            continue
+        match = re.search(r"(?:Boosts|Grants|Increases|Reduces|Lowers|Decreases) (?:.+? )?%s\b" % re.escape(stat_word), raw)
+        if match:
+            down = match.group(0).split()[0] in ("Reduces", "Lowers", "Decreases")
+            if stat in ("attack", "magic", "defense", "mental", "speed"):
+                return {"code": "stat_down" if down else "stat_up", "stat": stat, **base}
+    if re.search(r"break damage", raw, re.I):
+        return {"code": "break_damage", "direction": 1, **base}
+    if re.search(r"penetrat", raw, re.I):
+        return {"code": "penetration", **base}
+    if re.search(r"\bheal\b|\bHeal\b|[Rr]estores (?:own |ally |allies )?HP", raw):
+        return {"code": "heal", **base}
+    for word, code in EN_AILMENTS.items():
+        if word in raw and not re.search(r"%s Damage" % word, raw) and \
+                re.search(r"[Ii]nflict|[Cc]aus|appl|[Gg]rant|[Ss]uffer", raw):
+            return {"code": "ailment", "ailment": code, **base}
+    if re.search(r"[Ee]vad|[Dd]odge", raw):
+        return {"code": "evade", **base}
+    if re.search(r"[Cc]ounter", raw):
+        return {"code": "counter", **base}
+    if re.search(r"[Rr]eflect", raw):
+        return {"code": "reflect", **base}
+    if re.search(r"[Bb]arrier", raw):
+        return {"code": "barrier", **base}
+    if re.search(r"[Rr]egen", raw):
+        return {"code": "regen", **base}
+    if re.search(r"[Rr]emov|[Cc]leanse|[Cc]ure|[Dd]ispel", raw):
+        return {"code": "cleanse", **base}
+    if re.search(r"[Ii]mmun|[Nn]ullif|[Ii]nvincible", raw):
+        return {"code": "ailment_immune", **base}
+    if re.search(r"[Ss]wap.{0,20}[Tt]urn|[Tt]urn.{0,20}[Ss]wap", raw):
+        return {"code": "turn_swap", **base}
+    if re.search(r"[Ee]xtra turn", raw):
+        return {"code": "extra_turn_grant", "cond": "unconditional", **base}
+    if re.search(r"[Ii]tem gauge", raw):
+        return {"code": "item_gauge", **base}
+    if re.search(r"[Bb]urst gauge", raw):
+        if re.search(r"[Dd]ecreas|[Rr]educ|[Dd]own|[Ll]ess", raw):
+            return {"code": "burst_gain_down", **base}
+        return {"code": "burst_gauge", **base}
+    return {"code": "unmapped", **base}
 
 
 def parse_ability_row(ability: dict, name_index: dict, hyperlinks: dict,
@@ -784,7 +967,9 @@ def _parse_ability_branch(branch: str, conds_base: list, mods: list, triggers: l
         seen_segments.add((seg, num))
         if "スキルランプ" in branch and "点灯数" in branch:
             continue
-        parsed = parse_effect(seg + ("アップ" if sign == "+" else "ダウン"))
+        hint = "アップ" if ("アップ" in seg or "上昇" in seg or sign == "+") else \
+               "ダウン" if ("ダウン" in seg or "減少" in seg or "低下" in seg or sign == "-") else ""
+        parsed = mark_foe(parse_effect(seg + hint), branch)
         if parsed.get("code") in (None, "unmapped"):
             continue
         direction = -1 if sign == "-" else parsed.get("direction", 1)
@@ -792,6 +977,8 @@ def _parse_ability_branch(branch: str, conds_base: list, mods: list, triggers: l
                  "conds": conds + (parsed.get("conds") or []),
                  "direction": direction,
                  "scope": scope,
+                 "foe": parsed.get("foe", False),
+                 "slot": parsed.get("slot"), "attr": parsed.get("attr"),
                  "rate": parsed.get("rate", 100), "cap": parsed.get("cap", 0),
                  "fixed": bool(parsed.get("fixed")),
                  "dur_actions": parsed.get("dur_actions", 0),
@@ -857,16 +1044,41 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("master", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--machine", type=Path, default=None,
+                        help="machine-translated master dir for EN fallback parsing")
     args = parser.parse_args()
 
     master: Path = args.master
     out: Path = args.output
     out.mkdir(parents=True, exist_ok=True)
 
+    machine_effects: dict[str, str] = {}
+    if getattr(args, "machine", None):
+        try:
+            for row in load(Path(args.machine), "effect"):
+                if row.get("description"):
+                    machine_effects[str(row.get("id"))] = row["description"]
+        except (OSError, ValueError):
+            pass
+    disagreements = []
     effects = {}
     for row in load(master, "effect"):
         text = row.get("description") or ""
-        parsed = parse_effect(text)
+        parsed = mark_foe(parse_effect(text), text)
+        if parsed.get("code") == "unmapped":
+            en_text = machine_effects.get(str(row.get("id")), "")
+            if en_text:
+                en_parsed = parse_effect_en(en_text)
+                if en_parsed.get("code") != "unmapped":
+                    en_parsed["source"] = "en"
+                    parsed = en_parsed
+        else:
+            en_text = machine_effects.get(str(row.get("id")), "")
+            if en_text:
+                en_parsed = parse_effect_en(en_text)
+                if en_parsed.get("code") not in ("unmapped", parsed.get("code")):
+                    disagreements.append((row.get("id"), parsed.get("code"),
+                                          en_parsed.get("code")))
         if parsed.get("code") == "unmapped":
             popup = row.get("popup_text") or ""
             if "入れ替え" in popup:
@@ -1098,6 +1310,11 @@ def main() -> int:
     mapped = sum(1 for parsed in effects.values() if parsed["code"] != "unmapped")
     print("effects: %d total, %d mapped (%.1f%%)" % (
         len(effects), mapped, 100.0 * mapped / max(len(effects), 1)))
+    en_mapped = sum(1 for parsed in effects.values() if parsed.get("source") == "en")
+    print("effects mapped via machine EN: %d" % en_mapped)
+    print("JP/EN disagreements: %d" % len(disagreements))
+    for item in disagreements[:20]:
+        print("  disagree:", item)
     state_kinds: dict[str, int] = {}
     for parsed in states.values():
         state_kinds[parsed["kind"]] = state_kinds.get(parsed["kind"], 0) + 1
