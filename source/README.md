@@ -54,7 +54,7 @@ The editor selects the Japanese AES key from the profile marker and preserves th
 
 `ShareProfile.bat` runs `ProfileEditor.exe normalize --in-place` for an existing profile without applying the complete-collection edits.
 
-`JapaneseOfflineEvents.Plugin` includes the offline `ExpeditionTimelineGroup` selector patch. Its three timeline keys are derived from the Japanese `ExpeditionTimelineGroup.json` TextAsset and are rotated in memory during special-reward presentation. An opt-in `-gacha-timeline-trace` flag logs Japanese gacha phase/branch lookups during selected-session replay without mutating the results.
+`JapaneseOfflineEvents.Plugin` includes the offline `ExpeditionTimelineGroup` selector patch. Its three timeline keys are derived from the Japanese `ExpeditionTimelineGroup.json` TextAsset and are rotated in memory during special-reward presentation. An opt-in `-gacha-timeline-trace` flag logs Japanese gacha phase/branch lookups during selected-session replay without mutating the results. The plugin also rotates pre-result gacha cutscene assets automatically across offline pulls; each of the three variant groups (START_02, REVERSAL_02, alternate-condition START_02) shares phase, condition, and branch data within the group.
 
 The C# projects are BepInEx plugins:
 

@@ -1,16 +1,21 @@
+import base64
 import hashlib
 import gzip
 import json
 import os
+import random
 import sys
 import time
 import uuid
 from dataclasses import dataclass
+from decimal import Decimal
 from functools import lru_cache
 from pathlib import Path
 from urllib.parse import urlsplit
 
 from mitmproxy import http
+
+import battle_japanese
 
 try:
     from cryptography.hazmat.primitives.ciphers import Cipher as _CryptographyCipher
@@ -30,6 +35,13 @@ except ImportError:
 BASE_DIR = Path(__file__).resolve().parent
 GAME_DIR = Path(os.environ.get("JAPANESE_GAME_DIR", str(BASE_DIR.parent.parent if BASE_DIR.name == "JapaneseOffline" else BASE_DIR)))
 PROGRESSION_MASTER_DIR = GAME_DIR / "progression-master"
+GACHA_SNAPSHOT_PATH = GAME_DIR / "gacha-snapshot.json"
+GACHA_STATE_FILENAME = "gacha-state.json"
+# Duplicate-character conversion observed across 123 captured executes from
+# 30 sessions: rarity -> (character-specific pieces, generic pieces).
+# The generic piece grant always targets item 126.
+GACHA_DUPE_PIECES: dict[int, tuple[int, int]] = {1: (1, 1), 2: (10, 10), 3: (50, 50)}
+GACHA_GENERIC_PIECE_ITEM_ID = 126
 EXPEDITION_REWARD_PATH = "/expedition/reward_receive"
 REPLAY_MODE = os.environ.get("JAPANESE_REPLAY_MODE", "generated").strip().lower() == "replay"
 HYBRID_MODE = os.environ.get("JAPANESE_REPLAY_MODE", "generated").strip().lower() == "hybrid"
@@ -383,6 +395,239 @@ def default_web_session_token_response() -> bytes:
         response_key,
         response_iv,
     )
+
+
+_GACHA_SNAPSHOTS: dict[str, dict] = {}
+
+
+def load_gacha_snapshot(path: Path | None = None) -> dict:
+    """Load the sanitized gacha snapshot (public banner/rate data only)."""
+    resolved = Path(path) if path is not None else GACHA_SNAPSHOT_PATH
+    key = str(resolved)
+    cached = _GACHA_SNAPSHOTS.get(key)
+    if cached is not None:
+        return cached
+    data = json.loads(resolved.read_text(encoding="utf-8"))
+    snapshot = {
+        "banners": {int(entry["gacha_id"]): entry for entry in data["banners"]},
+        "banner_order": [int(entry["gacha_id"]) for entry in data["banners"]],
+        "rate_sets": data["rate_sets"],
+        "rate_set_protos": {
+            name: base64.b64decode(proto)
+            for name, proto in data["rate_set_protos"].items()
+        },
+        "mixed_protos": [base64.b64decode(proto) for proto in data["mixed_protos"]],
+        "mixed_rows": data.get("mixed_rows", {}),
+        "mixed_dynamic": data.get("mixed_dynamic", {}),
+        "wishlist_banner_ids": [int(value) for value in data["wishlist_banner_ids"]],
+        "notifications": base64.b64decode(data["notifications_b64"]),
+    }
+    _GACHA_SNAPSHOTS[key] = snapshot
+    return snapshot
+
+
+def load_gacha_state() -> dict:
+    try:
+        data = json.loads((GAME_DIR / GACHA_STATE_FILENAME).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def save_gacha_state(state: dict) -> None:
+    if REPLAY_MODE:
+        return
+    try:
+        (GAME_DIR / GACHA_STATE_FILENAME).write_text(
+            json.dumps(state, separators=(",", ":")), encoding="utf-8"
+        )
+    except OSError as error:
+        raise ValueError(f"could not persist gacha state: {error}") from error
+
+
+def is_gacha_execute_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    seen: dict[int, int] = {}
+    for field_number, wire_type, value in fields:
+        if field_number in (1, 2) and wire_type == 0:
+            seen[field_number] = int(value)
+            continue
+        if field_number == 3 and wire_type == 2:
+            try:
+                read_wire_fields(bytes(value))
+            except ValueError:
+                return False
+            continue
+        return False
+    return seen.get(1, 0) > 0 and seen.get(2, 0) > 0
+
+
+def gacha_timestamp_message(timestamp: int | None = None) -> bytes:
+    return write_field(1, 0, int(time.time() if timestamp is None else timestamp))
+
+
+def gacha_button_state(
+    gacha_id: int, button_id: int, count: int, last_at: int
+) -> bytes:
+    message = bytearray(write_field(1, 0, gacha_id))
+    message.extend(write_field(2, 0, button_id))
+    if count:
+        message.extend(write_field(3, 0, count))
+        message.extend(write_field(4, 2, gacha_timestamp_message(last_at)))
+    return bytes(message)
+
+
+def gacha_item_record(item_id: int, quantity: int, lifetime: int) -> bytes:
+    message = bytearray(write_field(1, 0, item_id))
+    if quantity:
+        message.extend(write_field(2, 0, quantity))
+    if lifetime:
+        message.extend(write_field(3, 0, lifetime))
+    return bytes(message)
+
+
+def gacha_piece_record(character_id: int, quantity: int) -> bytes:
+    return write_field(1, 0, character_id) + write_field(2, 0, quantity)
+
+
+def gacha_character_record(character_id: int, rarity: int, received_at: int) -> bytes:
+    return b"".join(
+        (
+            write_field(1, 0, character_id),
+            write_field(8, 0, 1),
+            write_field(9, 0, 1),
+            write_field(11, 0, rarity),
+            write_field(13, 2, gacha_timestamp_message(received_at)),
+            write_field(15, 0, 1),
+            write_field(17, 0, 1),
+            write_field(29, 0, 10),
+            write_field(35, 0, 1),
+            write_field(37, 0, 1),
+        )
+    )
+
+
+def gacha_resource_record(
+    resource_type: int, resource_id: int, quantity: int, bonus: bool = False
+) -> bytes:
+    message = bytearray(write_field(1, 0, resource_type))
+    message.extend(write_field(2, 0, resource_id))
+    message.extend(write_field(3, 0, quantity))
+    if bonus:
+        message.extend(write_field(8, 0, 1))
+    return bytes(message)
+
+
+def gacha_memoria_record(entity_id: int, memoria_id: int, received_at: int) -> bytes:
+    return b"".join(
+        (
+            write_field(1, 0, entity_id),
+            write_field(2, 0, memoria_id),
+            write_field(5, 2, gacha_timestamp_message(received_at)),
+        )
+    )
+
+
+def write_packed_varints(field_number: int, values: list[int]) -> bytes:
+    return write_field(
+        field_number, 2, b"".join(write_varint(int(value)) for value in values)
+    )
+
+
+def pickup_rarity(banner: dict, dynamic: dict | None, card_id: int, gacha_id: int) -> int:
+    rarity = ((dynamic or {}).get("rarity", {}) or {}).get(str(card_id))
+    if rarity is None:
+        raise ValueError(f"unmapped pickup rarity for gacha_id={gacha_id}")
+    return int(rarity)
+
+
+def gacha_draw_weights(
+    snapshot: dict,
+    banner: dict,
+    gacha_id: int,
+    rows: list[dict],
+    selected_characters: list[int],
+    selected_memorias: list[int],
+) -> list[tuple[Decimal, tuple[int, int, int]]]:
+    """Build the additive draw-weight pool for a gacha pull.
+
+    Base rows, dynamic selection pools, and wishlist pickup overrides form
+    one weight pool (their captured masses sum to ~100). Selected pickup
+    cards weigh 1.0 each, unselected pickup cards 0.5 each; everything else
+    keeps its captured weight.
+    """
+    wish_rules = banner.get("wishlist") or {}
+    pickup_characters = {int(v) for v in wish_rules.get("characters", []) or []}
+    pickup_ids = pickup_characters | {
+        int(v) for v in wish_rules.get("memorias", []) or []
+    }
+    weights: list[tuple[Decimal, tuple[int, int, int]]] = []
+    for row in rows:
+        for card in row["cards"]:
+            if card[1] in pickup_ids:
+                continue
+            weights.append((Decimal(row["percent"]), (card[0], card[1], row["rarity"])))
+    dynamic = snapshot.get("mixed_dynamic", {}).get(str(gacha_id))
+    if dynamic and (selected_characters or selected_memorias):
+        rates = dynamic.get("rates", {}).get(
+            f"{len(selected_characters)},{len(selected_memorias)}"
+        )
+        if rates:
+            rarity_map = dynamic.get("rarity", {})
+            for card_id in dynamic.get("char_cards", []):
+                if card_id in pickup_ids:
+                    continue
+                rarity = rarity_map.get(str(card_id))
+                if rarity is None:
+                    raise ValueError(f"unmapped rarity for gacha_id={gacha_id}")
+                weights.append((Decimal(str(rates[0])), (4, card_id, int(rarity))))
+            for card_id in dynamic.get("mem_cards", []):
+                if card_id in pickup_ids:
+                    continue
+                weights.append((Decimal(str(rates[1])), (17, int(card_id), 0)))
+        for card_id in selected_characters:
+            weights.append(
+                (Decimal(1), (4, int(card_id), pickup_rarity(banner, dynamic, card_id, gacha_id)))
+            )
+        for card_id in selected_memorias:
+            weights.append((Decimal(1), (17, int(card_id), 0)))
+        for card_id in pickup_ids:
+            if card_id in selected_characters or card_id in selected_memorias:
+                continue
+            if card_id in pickup_characters:
+                weights.append(
+                    (
+                        Decimal("0.5"),
+                        (4, int(card_id), pickup_rarity(banner, dynamic, card_id, gacha_id)),
+                    )
+                )
+            else:
+                weights.append((Decimal("0.5"), (17, int(card_id), 0)))
+    if not weights:
+        raise ValueError(f"empty rate pool for gacha_id={gacha_id}")
+    return weights
+
+
+def is_gacha_wish_list_set_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    gacha_id = 0
+    for field_number, wire_type, value in fields:
+        if field_number == 1 and wire_type == 0:
+            gacha_id = int(value)
+        elif field_number in (2, 3) and wire_type == 2:
+            try:
+                read_varints(bytes(value))
+            except ValueError:
+                return False
+        else:
+            return False
+    return gacha_id > 0
 
 
 def default_auth_response(request_body: bytes = b"") -> bytes:
@@ -4595,6 +4840,437 @@ class Replay:
             return True
         return False
 
+    def gacha_list_response(self) -> bytes:
+        snapshot = load_gacha_snapshot()
+        state = load_gacha_state()
+        buttons_state = state.get("buttons", {})
+        if not isinstance(buttons_state, dict):
+            buttons_state = {}
+        wishlists = state.get("wishlist", {})
+        if not isinstance(wishlists, dict):
+            wishlists = {}
+        response_key, response_iv, response_marker = response_material()
+        out = bytearray()
+        for gacha_id in snapshot["banner_order"]:
+            banner = snapshot["banners"][gacha_id]
+            counts = buttons_state.get(str(gacha_id), {})
+            if not isinstance(counts, dict):
+                counts = {}
+            message = bytearray(write_field(1, 0, gacha_id))
+            for button in banner["buttons"]:
+                entry = counts.get(str(button["id"]), {})
+                if not isinstance(entry, dict):
+                    entry = {}
+                count = int(entry.get("count", 0) or 0)
+                last_at = int(entry.get("last_at", 0) or 0)
+                message.extend(
+                    write_field(
+                        3, 2, gacha_button_state(gacha_id, button["id"], count, last_at)
+                    )
+                )
+            out.extend(write_field(1, 2, bytes(message)))
+        for rate_set_id in snapshot["rate_sets"]:
+            out.extend(write_field(2, 2, snapshot["rate_set_protos"][rate_set_id]))
+        out.extend(write_field(3, 2, snapshot["notifications"]))
+        for gacha_id in snapshot["wishlist_banner_ids"]:
+            selection = wishlists.get(str(gacha_id), {})
+            if not isinstance(selection, dict):
+                selection = {}
+            state_message = bytearray(write_field(1, 0, gacha_id))
+            characters = [int(v) for v in selection.get("characters", []) or []]
+            memorias = [int(v) for v in selection.get("memorias", []) or []]
+            if characters:
+                state_message.extend(write_packed_varints(2, characters))
+            if memorias:
+                state_message.extend(write_packed_varints(4, memorias))
+            out.extend(write_field(4, 2, bytes(state_message)))
+        for proto in snapshot["mixed_protos"]:
+            out.extend(write_field(5, 2, proto))
+        body = encrypt_api_response(response_marker, bytes(out), response_key, response_iv)
+        self.log(
+            f"LOCAL-GACHA-LIST status=200 banners={len(snapshot['banner_order'])} "
+            f"rate_sets={len(snapshot['rate_sets'])} mixed={len(snapshot['mixed_protos'])}"
+        )
+        return body
+
+    def gacha_execute_response(self, flow: http.HTTPFlow) -> bytes:
+        request_body = flow.request.raw_content or b""
+        plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                request_body, is_gacha_execute_request, "/gacha/execute"
+            )
+        )
+        values = {
+            number: int(value)
+            for number, wire, value in read_wire_fields(plaintext)
+            if wire == 0
+        }
+        gacha_id, button_id = values[1], values[2]
+        snapshot = load_gacha_snapshot()
+        banner = snapshot["banners"].get(gacha_id)
+        if banner is None:
+            raise ValueError(f"unknown gacha_id={gacha_id}")
+        button = next(
+            (entry for entry in banner["buttons"] if entry["id"] == button_id), None
+        )
+        if button is None:
+            raise ValueError(f"unknown gacha_button_id={button_id}")
+        rows: list[dict] | None = None
+        rate_table = snapshot["rate_sets"].get(str(banner["rate_set_id"]))
+        if rate_table is not None:
+            rows = rate_table["rows"]
+        if rows is None:
+            rows = snapshot.get("mixed_rows", {}).get(str(gacha_id))
+        if not rows or any(not row["cards"] for row in rows):
+            raise ValueError(f"empty rate pool for gacha_id={gacha_id}")
+        if any(card[0] not in (4, 17) for row in rows for card in row["cards"]):
+            raise ValueError(f"unsupported pool for gacha_id={gacha_id}")
+        if any(
+            row["rarity"] not in GACHA_DUPE_PIECES
+            for row in rows
+            if any(card[0] == 4 for card in row["cards"])
+        ):
+            raise ValueError(f"unmapped rarity for gacha_id={gacha_id}")
+        if banner["bonuses"]:
+            raise ValueError(f"bonus rewards unsupported for gacha_id={gacha_id}")
+        draw_count = int(button["draws"])
+
+        profile_path = GAME_DIR / "profile.bin"
+        profile_resources = next(
+            bytes(value)
+            for number, wire, value in read_wire_fields(
+                decrypt_profile_plaintext(profile_path.read_bytes())
+            )
+            if number == 1 and wire == 2
+        )
+        owned: set[int] = set()
+        owned_memoria: set[int] = set()
+        max_memoria_entity = 0
+        pieces: dict[int, int] = {}
+        items: dict[int, list[int]] = {}
+        wallet_fields: list[tuple[int, int, object]] = []
+        for number, wire, value in read_wire_fields(profile_resources):
+            if number == 2 and wire == 2:
+                owned.add(varint_field(bytes(value), 1, -1))
+            elif number == 29 and wire == 2:
+                record = bytes(value)
+                owned_memoria.add(varint_field(record, 2, -1))
+                max_memoria_entity = max(
+                    max_memoria_entity, varint_field(record, 1, 0)
+                )
+            elif number == 8 and wire == 2:
+                record = bytes(value)
+                pieces[varint_field(record, 1, -1)] = varint_field(record, 2, 0)
+            elif number == 3 and wire == 2:
+                record = bytes(value)
+                items[varint_field(record, 1, -1)] = [
+                    varint_field(record, 2, 0),
+                    varint_field(record, 3, 0),
+                ]
+            elif number == 1 and wire == 2:
+                wallet_fields = list(read_wire_fields(bytes(value)))
+        wallet_balance = next(
+            (int(value) for number, wire, value in wallet_fields if number == 1 and wire == 0),
+            0,
+        )
+
+        ticket_id = banner["ticket_id"]
+        ticket_balance = items.get(ticket_id, [0, 0])[0] if ticket_id is not None else 0
+        cost_type = button["cost_type"]
+        cost_id = button["cost_id"]
+        cost_quantity = button["cost_qty"] or 0
+        now = int(time.time())
+        if button["cost_qty"] is None:
+            pay_path = "free"
+        elif ticket_id is not None and ticket_balance >= draw_count:
+            items[ticket_id][0] = ticket_balance - draw_count
+            pay_path = "ticket"
+        elif (
+            cost_type == 1
+            and cost_id == 1
+            and cost_quantity
+            and wallet_balance >= cost_quantity
+        ):
+            wallet_balance -= cost_quantity
+            pay_path = "gems"
+        elif (
+            cost_type == 5
+            and cost_id is not None
+            and items.get(cost_id, [0, 0])[0] >= cost_quantity
+            and cost_quantity
+        ):
+            items[cost_id][0] -= cost_quantity
+            pay_path = "ticket" if cost_id == ticket_id else "item"
+        else:
+            raise ValueError(f"insufficient funds for gacha_id={gacha_id}")
+
+        state = load_gacha_state()
+        buttons_state = state.setdefault("buttons", {})
+        if not isinstance(buttons_state, dict):
+            buttons_state = state["buttons"] = {}
+        per_banner = buttons_state.setdefault(str(gacha_id), {})
+        if not isinstance(per_banner, dict):
+            per_banner = buttons_state[str(gacha_id)] = {}
+        entry = per_banner.setdefault(str(button_id), {"count": 0, "last_at": 0})
+        if not isinstance(entry, dict):
+            entry = buttons_state[str(button_id)] = {"count": 0, "last_at": 0}
+        if button["limit"] is not None and int(entry.get("count", 0) or 0) >= int(
+            button["limit"]
+        ):
+            raise ValueError(f"draw limit reached for gacha_id={gacha_id}")
+        entry["count"] = int(entry.get("count", 0) or 0) + 1
+        entry["last_at"] = now
+
+        wishlists = load_gacha_state().get("wishlist", {})
+        selection = wishlists.get(str(gacha_id), {}) if isinstance(wishlists, dict) else {}
+        selected_characters: list[int] = []
+        selected_memorias: list[int] = []
+        if isinstance(selection, dict):
+            selected_characters = [int(v) for v in selection.get("characters", []) or []]
+            selected_memorias = [int(v) for v in selection.get("memorias", []) or []]
+        weights = gacha_draw_weights(
+            snapshot, banner, gacha_id, rows, selected_characters, selected_memorias
+        )
+        total_weight = sum(weight for weight, _ in weights)
+        if total_weight <= 0:
+            raise ValueError(f"invalid rate weights for gacha_id={gacha_id}")
+        rng = random.Random()
+        drawn: list[bytes] = []
+        new_records: list[bytes] = []
+        new_memoria_records: list[bytes] = []
+        new_ids: set[int] = set()
+        new_memoria_ids: set[int] = set()
+        drawn_dupe_ids: set[int] = set()
+        new_count = 0
+        next_entity_id = max_memoria_entity + 1
+        for _ in range(draw_count):
+            pick = rng.uniform(0, float(total_weight))
+            card_type, card_id, rarity = weights[-1][1]
+            for weight, candidate in weights:
+                pick -= float(weight)
+                if pick <= 0:
+                    card_type, card_id, rarity = candidate
+                    break
+            if card_type == 4 and (card_id in owned or card_id in new_ids):
+                rule = GACHA_DUPE_PIECES.get(rarity)
+                if rule is None:
+                    raise ValueError(
+                        f"unmapped dupe rarity for gacha_id={gacha_id}"
+                    )
+                drawn_dupe_ids.add(card_id)
+                piece_quantity, generic_quantity = rule
+                pieces[card_id] = pieces.get(card_id, 0) + piece_quantity
+                generic = items.setdefault(GACHA_GENERIC_PIECE_ITEM_ID, [0, 0])
+                generic[0] += generic_quantity
+                generic[1] += generic_quantity
+                drawn.append(
+                    write_field(1, 0, 4)
+                    + write_field(2, 0, card_id)
+                    + write_field(3, 0, 1)
+                    + write_field(5, 2, b"")
+                    + write_field(
+                        10,
+                        2,
+                        gacha_resource_record(8, card_id, piece_quantity),
+                    )
+                    + write_field(
+                        10,
+                        2,
+                        gacha_resource_record(
+                            5, GACHA_GENERIC_PIECE_ITEM_ID, generic_quantity
+                        ),
+                    )
+                )
+            elif card_type == 4:
+                new_ids.add(card_id)
+                new_records.append(gacha_character_record(card_id, rarity, now))
+                new_count += 1
+                drawn.append(
+                    write_field(1, 0, 4)
+                    + write_field(2, 0, card_id)
+                    + write_field(3, 0, 1)
+                    + write_field(5, 2, b"")
+                    + write_field(6, 0, 1)
+                )
+            else:
+                first_copy = (
+                    card_id not in owned_memoria and card_id not in new_memoria_ids
+                )
+                new_memoria_ids.add(card_id)
+                entity_id = next_entity_id
+                next_entity_id += 1
+                new_memoria_records.append(
+                    gacha_memoria_record(entity_id, card_id, now)
+                )
+                new_count += 1
+                reward = (
+                    write_field(1, 0, 17)
+                    + write_field(2, 0, card_id)
+                    + write_field(3, 0, 1)
+                    + write_field(4, 0, entity_id)
+                )
+                if first_copy:
+                    reward += write_field(6, 0, 1)
+                drawn.append(reward)
+
+        item_records = [
+            gacha_item_record(item_id, quantities[0], quantities[1])
+            for item_id, quantities in items.items()
+            if item_id
+            in {
+                ticket_id,
+                banner["medal_id"],
+                GACHA_GENERIC_PIECE_ITEM_ID,
+            }
+        ]
+        piece_records = [
+            gacha_piece_record(character_id, pieces[character_id])
+            for character_id in sorted(drawn_dupe_ids)
+        ]
+        wallet_message = None
+        if pay_path == "gems":
+            wallet_out = bytearray()
+            for number, wire, value in wallet_fields:
+                if number == 1 and wire == 0:
+                    wallet_out.extend(write_field(1, 0, wallet_balance))
+                else:
+                    wallet_out.extend(write_field(number, wire, value))
+            wallet_message = bytes(wallet_out)
+
+        medal_rewards = []
+        if pay_path == "gems" and banner["medal_id"] is not None:
+            medal_id = int(banner["medal_id"])
+            medal_quantity = int(button["medal_qty"])
+            medal_records = items.setdefault(medal_id, [0, 0])
+            medal_records[0] += medal_quantity
+            medal_records[1] += medal_quantity
+            medal_rewards.append(gacha_resource_record(5, medal_id, medal_quantity))
+            if int(button["add_medal"]):
+                medal_records[0] += int(button["add_medal"])
+                medal_records[1] += int(button["add_medal"])
+                medal_rewards.append(
+                    gacha_resource_record(5, medal_id, int(button["add_medal"]), bonus=True)
+                )
+            item_records = [
+                record
+                for record in item_records
+                if varint_field(record, 1, -1) != medal_id
+            ] + [
+                gacha_item_record(medal_id, medal_records[0], medal_records[1])
+            ]
+
+        resources_message = bytearray()
+        if wallet_message is not None:
+            resources_message.extend(write_field(1, 2, wallet_message))
+        resources_message.extend(b"".join(write_field(2, 2, record) for record in new_records))
+        resources_message.extend(b"".join(write_field(3, 2, record) for record in item_records))
+        resources_message.extend(b"".join(write_field(8, 2, record) for record in piece_records))
+        resources_message.extend(b"".join(write_field(29, 2, record) for record in new_memoria_records))
+
+        gacha_message = bytearray(write_field(1, 0, gacha_id))
+        for spec in banner["buttons"]:
+            spec_entry = per_banner.get(str(spec["id"]), {})
+            if not isinstance(spec_entry, dict):
+                spec_entry = {}
+            gacha_message.extend(
+                write_field(
+                    3,
+                    2,
+                    gacha_button_state(
+                        gacha_id,
+                        spec["id"],
+                        int(spec_entry.get("count", 0) or 0),
+                        int(spec_entry.get("last_at", 0) or 0),
+                    ),
+                )
+            )
+
+        response = bytearray(b"".join(write_field(1, 2, reward) for reward in drawn))
+        for medal in medal_rewards:
+            response.extend(write_field(5, 2, medal))
+        response.extend(write_field(3, 2, bytes(resources_message)))
+        response.extend(write_field(4, 2, bytes(gacha_message)))
+        body = encrypt_api_response(response_marker, bytes(response), response_key, response_iv)
+
+        self.persist_profile_update(
+            make_changed_resources_plaintext(
+                wallet=wallet_message,
+                characters=new_records or None,
+                items=item_records or None,
+                character_pieces=piece_records or None,
+                memorias=new_memoria_records or None,
+            ),
+            "/gacha/execute",
+        )
+        try:
+            save_gacha_state(state)
+        except ValueError as error:
+            self.log(f"GACHA-STATE-SAVE-FAILED reason={error}")
+        self.log(
+            f"LOCAL-GACHA-EXECUTE status=200 gacha_id={gacha_id} button_id={button_id} "
+            f"draws={draw_count} new={new_count} pay={pay_path}"
+        )
+        return body
+
+    def gacha_wish_list_set_response(self, flow: http.HTTPFlow) -> bytes:
+        request_body = flow.request.raw_content or b""
+        plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                request_body, is_gacha_wish_list_set_request, "/gacha/wish_list_set"
+            )
+        )
+        characters: list[int] = []
+        memorias: list[int] = []
+        gacha_id = 0
+        for number, wire, value in read_wire_fields(plaintext):
+            if number == 1:
+                gacha_id = int(value)
+            elif number == 2:
+                characters = read_varints(bytes(value))
+            elif number == 3:
+                memorias = read_varints(bytes(value))
+        snapshot = load_gacha_snapshot()
+        banner = snapshot["banners"].get(gacha_id)
+        if banner is None or gacha_id not in snapshot["wishlist_banner_ids"]:
+            raise ValueError(f"wishlist unsupported for gacha_id={gacha_id}")
+        rules = banner.get("wishlist")
+        if not rules:
+            raise ValueError(f"no wishlist rules for gacha_id={gacha_id}")
+        select = int(rules.get("select") or 0)
+        allowed_characters = {int(v) for v in rules.get("characters") or []}
+        allowed_memorias = {int(v) for v in rules.get("memorias") or []}
+        if len(characters) > select or any(v not in allowed_characters for v in characters):
+            raise ValueError(f"invalid wishlist characters for gacha_id={gacha_id}")
+        if len(memorias) > select or any(v not in allowed_memorias for v in memorias):
+            raise ValueError(f"invalid wishlist memorias for gacha_id={gacha_id}")
+
+        state = load_gacha_state()
+        wishlists = state.setdefault("wishlist", {})
+        if not isinstance(wishlists, dict):
+            wishlists = state["wishlist"] = {}
+        wishlists[str(gacha_id)] = {"characters": characters, "memorias": memorias}
+        try:
+            save_gacha_state(state)
+        except ValueError as error:
+            self.log(f"GACHA-STATE-SAVE-FAILED reason={error}")
+
+        state_message = bytearray(write_field(1, 0, gacha_id))
+        if characters:
+            state_message.extend(write_packed_varints(2, characters))
+        if memorias:
+            state_message.extend(write_packed_varints(4, memorias))
+        body = encrypt_api_response(
+            response_marker,
+            write_field(1, 2, bytes(state_message)),
+            response_key,
+            response_iv,
+        )
+        self.log(
+            f"LOCAL-GACHA-WISHLIST status=200 gacha_id={gacha_id} "
+            f"characters={len(characters)} memorias={len(memorias)}"
+        )
+        return body
+
     def recorded_response(self, flow: http.HTTPFlow, record: Record) -> None:
         response_body = record.response_body
         if record.path == "/auth/sign_in" and record.status == 200 and not HYBRID_MODE:
@@ -4670,6 +5346,212 @@ class Replay:
                     "Content-Type": "application/octet-stream",
                     "x-server-timestamp": str(int(time.time())),
                 },
+            )
+            return
+        if method == "POST" and path == "/gacha/list":
+            try:
+                response_body = self.gacha_list_response()
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
+                self.log(f"GACHA-LIST-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time())),
+                },
+            )
+            return
+        if method == "POST" and path == "/gacha/wish_list_set":
+            try:
+                response_body = self.gacha_wish_list_set_response(flow)
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
+                self.log(f"GACHA-WISHLIST-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time())),
+                },
+            )
+            return
+        if method == "POST" and path == "/gacha/execute":
+            try:
+                response_body = self.gacha_execute_response(flow)
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
+                self.log(f"GACHA-EXECUTE-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time()))},
+            )
+            return
+        if method == "POST" and path in (
+            "/quest/battle/start",
+            "/exploration/battle_start",
+            "/gacha/battle_start",
+        ):
+            try:
+                request_body = flow.request.raw_content or b""
+                if path == "/quest/battle/start":
+                    plaintext, response_key, response_iv, response_marker = (
+                        decrypt_request_with_response_material(
+                            request_body, battle_japanese.is_quest_battle_start_request, path
+                        )
+                    )
+                    quest_id, quest_party = battle_japanese.parse_battle_start_refs(plaintext)
+                    kind, ref_id, party_number = "quest", quest_id, quest_party
+                elif path == "/exploration/battle_start":
+                    plaintext, response_key, response_iv, response_marker = (
+                        decrypt_request_with_response_material(
+                            request_body, battle_japanese.is_exploration_battle_start_request, path
+                        )
+                    )
+                    values = {
+                        number: int(value)
+                        for number, wire, value in read_wire_fields(plaintext)
+                        if wire == 0
+                    }
+                    kind, ref_id, party_number = "exploration", values[1], 1
+                else:
+                    plaintext, response_key, response_iv, response_marker = (
+                        decrypt_request_with_response_material(
+                            request_body, battle_japanese.is_gacha_battle_start_request, path
+                        )
+                    )
+                    values = {
+                        number: int(value)
+                        for number, wire, value in read_wire_fields(plaintext)
+                        if wire == 0
+                    }
+                    kind, ref_id, party_number = "gacha", values[2], 1
+                profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+                response_plain, persist_plain, log_message = battle_japanese.start_battle_state(
+                    GAME_DIR, profile_plaintext, kind, ref_id, party_number
+                )
+                self.log(log_message)
+                if persist_plain is not None:
+                    self.persist_profile_update(persist_plain, path)
+                response_body = encrypt_api_response(response_marker, response_plain, response_key, response_iv)
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
+                self.log(f"BATTLE-START-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time())),
+                },
+            )
+            return
+        if method == "POST" and path in (
+            "/battle/attack",
+            "/battle/finish",
+            "/battle/retire",
+            "/battle/resume",
+            "/quest/battle/skip",
+        ):
+            try:
+                request_body = flow.request.raw_content or b""
+                if path == "/battle/attack":
+                    plaintext, response_key, response_iv, response_marker = (
+                        decrypt_request_with_response_material(
+                            request_body, battle_japanese.is_battle_attack_request, path
+                        )
+                    )
+                    profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+                    response_plain, persist_plain, log_message = battle_japanese.attack_battle(
+                        GAME_DIR, profile_plaintext, plaintext
+                    )
+                elif path == "/battle/finish":
+                    _, response_key, response_iv, response_marker = (
+                        decrypt_request_with_response_material(
+                            request_body, battle_japanese.is_empty_request, path
+                        )
+                    )
+                    profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+                    response_plain, persist_plain, log_message = battle_japanese.finish_battle(
+                        GAME_DIR, profile_plaintext
+                    )
+                elif path == "/battle/retire":
+                    _, response_key, response_iv, response_marker = (
+                        decrypt_request_with_response_material(
+                            request_body, battle_japanese.is_empty_request, path
+                        )
+                    )
+                    response_plain, persist_plain, log_message = battle_japanese.retire_battle()
+                elif path == "/battle/resume":
+                    _, response_key, response_iv, response_marker = (
+                        decrypt_request_with_response_material(
+                            request_body, battle_japanese.is_empty_request, path
+                        )
+                    )
+                    response_plain, persist_plain, log_message = battle_japanese.resume_battle()
+                else:
+                    plaintext, response_key, response_iv, response_marker = (
+                        decrypt_request_with_response_material(
+                            request_body, battle_japanese.is_battle_skip_request, path
+                        )
+                    )
+                    values = {
+                        number: int(value)
+                        for number, wire, value in read_wire_fields(plaintext)
+                        if wire == 0
+                    }
+                    profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+                    response_plain, persist_plain, log_message = battle_japanese.skip_battle(
+                        GAME_DIR, profile_plaintext, values[1], values.get(2, 1), values.get(5, 1)
+                    )
+                self.log(log_message)
+                if persist_plain is not None:
+                    self.persist_profile_update(persist_plain, path)
+                response_body = encrypt_api_response(response_marker, response_plain, response_key, response_iv)
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
+                self.log(f"BATTLE-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time()))},
             )
             return
         if method == "POST" and path == "/exploration/start":

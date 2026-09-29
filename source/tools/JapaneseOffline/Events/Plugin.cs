@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace JapaneseOfflineEvents;
 
-[BepInPlugin("df.resleriana.japaneseofflineevents", "Japanese Offline Events", "1.0.0")]
+[BepInPlugin("df.resleriana.japaneseofflineevents", "Japanese Offline Events", "1.0.1")]
 public sealed class Plugin : BasePlugin
 {
     private static readonly HashSet<int> NonRevivalEventIds = new()
@@ -29,6 +29,31 @@ public sealed class Plugin : BasePlugin
     private static int gachaTimelineTraceCalls;
     private static bool gachaTimelineBlendTypesLoaded;
     private static Type[]? gachaTimelineBlendTypes;
+    private static int lastGachaTimelineCallId;
+    private static long currentGachaCutsceneHash;
+    // Timeline variant groups from GachaPerformTimeline master data. Each
+    // group shares phase, condition, and branch data and differs only by
+    // timeline asset hash: START_02, REVERSAL_02, and START_02 under an
+    // alternate condition.
+    private static readonly int[][] GachaCutsceneVariantIds = new[]
+    {
+        new[] { 1931100145, 198598902, 1256382443, 1664450464 },
+        new[] { 1167557604, 625360697, 820361587, 349906468 },
+        new[] { 686738837, 1195297534, 1826283827, 1669742835 },
+    };
+    private static readonly long[][] GachaCutsceneVariantHashes = new[]
+    {
+        new[] { 2169503281729291622L, 5619400405122326864L, 5056243802209252086L, 1570880692701075140L },
+        new[] { 5999946350208369630L, 825542076709303374L, 6382563282298933372L, 2457491527278417483L },
+        new[] { 4369276731935470789L, 8017897526975844595L, 7246915525296751447L, 3996300486374844257L },
+    };
+    private static readonly int[] GachaCutsceneVariantIndexes = new int[3];
+    private static readonly long[] GachaCutsceneAllHashes = new[]
+    {
+        2169503281729291622L, 5619400405122326864L, 5056243802209252086L, 1570880692701075140L,
+        5999946350208369630L, 825542076709303374L, 6382563282298933372L, 2457491527278417483L,
+        4369276731935470789L, 8017897526975844595L, 7246915525296751447L, 3996300486374844257L,
+    };
     private static readonly (long First, long Second)[] ExpeditionTimelineKeys =
     {
         (8474723593597338938L, 2304692465143954913L),
@@ -48,6 +73,7 @@ public sealed class Plugin : BasePlugin
         var harmony = new Harmony("df.resleriana.japaneseofflineevents");
         PatchExpeditionTimelineSelection(harmony);
         PatchGachaTimelineTrace(harmony);
+        PatchGachaCutsceneRotation(harmony);
         PatchBoolean(harmony, typeof(EHPBANEAIPE), "MFKPEBOEEMH", "event availability");
 
         foreach (var methodName in new[]
@@ -169,10 +195,30 @@ public sealed class Plugin : BasePlugin
 
     private void PatchGachaTimelineTrace(Harmony harmony)
     {
-        if (!string.Equals(
+        // The launcher sets JAPANESE_GACHA_TIMELINE_TRACE=1 and also passes
+        // -japanese-gacha-timeline-trace on the game command line. The
+        // environment variable does not always reach the game process, so
+        // accept either signal.
+        bool traceEnabled = string.Equals(
             Environment.GetEnvironmentVariable("JAPANESE_GACHA_TIMELINE_TRACE"),
             "1",
-            StringComparison.Ordinal))
+            StringComparison.Ordinal);
+        if (!traceEnabled)
+        {
+            try
+            {
+                traceEnabled = Environment.GetCommandLineArgs().Any(argument => string.Equals(
+                    argument,
+                    "-japanese-gacha-timeline-trace",
+                    StringComparison.OrdinalIgnoreCase));
+            }
+            catch
+            {
+                traceEnabled = false;
+            }
+        }
+
+        if (!traceEnabled)
         {
             return;
         }
@@ -251,7 +297,6 @@ public sealed class Plugin : BasePlugin
 
         if (!gachaTimelineBlendTypesLoaded)
         {
-            gachaTimelineBlendTypesLoaded = true;
             var blendAssembly = AppDomain.CurrentDomain.GetAssemblies()
                 .FirstOrDefault(assembly => string.Equals(assembly.GetName().Name, "Blend", StringComparison.Ordinal));
             if (blendAssembly is not null)
@@ -259,15 +304,197 @@ public sealed class Plugin : BasePlugin
                 try
                 {
                     gachaTimelineBlendTypes = blendAssembly.GetTypes();
+                    gachaTimelineBlendTypesLoaded = true;
                 }
                 catch (ReflectionTypeLoadException error)
                 {
                     gachaTimelineBlendTypes = error.Types.Where(candidate => candidate is not null).Cast<Type>().ToArray();
+                    gachaTimelineBlendTypesLoaded = true;
+                }
+                catch (Exception error)
+                {
+                    log?.LogWarning($"Could not enumerate Blend assembly types for gacha trace: {error.GetType().Name}");
                 }
             }
         }
 
         return gachaTimelineBlendTypes?.FirstOrDefault(candidate => string.Equals(candidate.Name, typeName, StringComparison.Ordinal));
+    }
+
+    private void PatchGachaCutsceneRotation(Harmony harmony)
+    {
+        Type? type;
+        try
+        {
+            type = FindGachaTimelineManagerType("GachaPerformTimelineFixDataManager");
+        }
+        catch (Exception error)
+        {
+            Log.LogWarning($"Could not resolve offline gacha timeline manager for cutscene rotation: {error.GetType().Name}");
+            return;
+        }
+
+        if (type is null)
+        {
+            Log.LogWarning("Could not find offline gacha timeline manager for cutscene rotation.");
+            return;
+        }
+
+        MethodInfo[] methods;
+        try
+        {
+            methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly)
+                .Where(method => method.Name.Equals("GetData", StringComparison.Ordinal)
+                    && method.GetParameters().Length == 1
+                    && method.ReturnType.Name.Equals("JNMAFAKJNPG", StringComparison.Ordinal))
+                .ToArray();
+        }
+        catch (Exception error)
+        {
+            Log.LogWarning($"Could not enumerate offline gacha timeline lookups for cutscene rotation: {error.GetType().Name}");
+            return;
+        }
+
+        foreach (var method in methods)
+        {
+            try
+            {
+                harmony.Patch(method, postfix: new HarmonyMethod(typeof(Plugin), nameof(RotateGachaCutscene)));
+                Log.LogInfo($"Rotating offline gacha cutscene: {method}");
+            }
+            catch (Exception error)
+            {
+                Log.LogWarning($"Could not patch offline gacha cutscene lookup {method}: {error.GetType().Name}");
+            }
+        }
+
+        if (methods.Length == 0)
+        {
+            Log.LogWarning("No single-ID timeline lookup found for gacha cutscene rotation.");
+        }
+    }
+
+    private static void RotateGachaCutscene(object[] __args, object? __result)
+    {
+        try
+        {
+            if (__result is null || __args is null || __args.Length == 0)
+            {
+                return;
+            }
+
+            int id;
+            if (__args[0] is int directId)
+            {
+                id = directId;
+            }
+            else if (__args[0] is long longId)
+            {
+                id = unchecked((int)longId);
+            }
+            else if (!int.TryParse(__args[0]?.ToString(), out id))
+            {
+                return;
+            }
+
+            int group = -1;
+            for (int i = 0; i < GachaCutsceneVariantIds.Length; i++)
+            {
+                if (Array.IndexOf(GachaCutsceneVariantIds[i], id) >= 0)
+                {
+                    group = i;
+                    break;
+                }
+            }
+
+            if (group < 0)
+            {
+                lastGachaTimelineCallId = id;
+                return;
+            }
+
+            // Each timeline is looked up twice in a row (preload, then play).
+            // Reuse the chosen asset for the duplicate so both use one cutscene.
+            if (id != lastGachaTimelineCallId)
+            {
+                lastGachaTimelineCallId = id;
+                var hashes = GachaCutsceneVariantHashes[group];
+                currentGachaCutsceneHash = hashes[GachaCutsceneVariantIndexes[group]++ % hashes.Length];
+                log?.LogInfo($"Selected offline gacha cutscene timeline_id={id} asset={currentGachaCutsceneHash}");
+            }
+
+            if (currentGachaCutsceneHash != 0)
+            {
+                SetGachaTimelineAssetHash(__result, currentGachaCutsceneHash);
+            }
+        }
+        catch (Exception error)
+        {
+            log?.LogWarning($"Could not rotate offline gacha cutscene: {error.GetType().Name}");
+        }
+    }
+
+    private static void SetGachaTimelineAssetHash(object row, long assetHash)
+    {
+        const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+        var rowType = row.GetType();
+
+        var property = rowType.GetProperty("EAFLLNBBHKC", flags);
+        if (property is not null && property.CanWrite && property.PropertyType == typeof(long))
+        {
+            property.SetValue(row, assetHash);
+            return;
+        }
+
+        var field = rowType.GetField("EAFLLNBBHKC", flags);
+        if (field is not null && field.FieldType == typeof(long))
+        {
+            field.SetValue(row, assetHash);
+            return;
+        }
+
+        // Fallback: overwrite the long member currently holding a known variant hash.
+        foreach (var candidate in rowType.GetProperties(flags))
+        {
+            if (candidate.PropertyType != typeof(long) || !candidate.CanWrite || candidate.GetIndexParameters().Length != 0)
+            {
+                continue;
+            }
+
+            try
+            {
+                if (candidate.GetValue(row) is long current && Array.IndexOf(GachaCutsceneAllHashes, current) >= 0)
+                {
+                    candidate.SetValue(row, assetHash);
+                    return;
+                }
+            }
+            catch
+            {
+                // A generated IL2CPP member may not be writable from this hook.
+            }
+        }
+
+        foreach (var candidate in rowType.GetFields(flags))
+        {
+            if (candidate.FieldType != typeof(long))
+            {
+                continue;
+            }
+
+            try
+            {
+                if (candidate.GetValue(row) is long current && Array.IndexOf(GachaCutsceneAllHashes, current) >= 0)
+                {
+                    candidate.SetValue(row, assetHash);
+                    return;
+                }
+            }
+            catch
+            {
+                // A generated IL2CPP member may not be writable from this hook.
+            }
+        }
     }
 
     private static void TraceGachaTimelineData(MethodBase __originalMethod, object[] __args, object? __result)

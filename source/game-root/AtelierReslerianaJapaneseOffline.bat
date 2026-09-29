@@ -8,8 +8,10 @@ if /I "%~1"=="-replay" set "JAPANESE_REPLAY_MODE=replay"
 if /I "%~2"=="-generated" set "JAPANESE_REPLAY_MODE=generated"
 if /I "%~2"=="-replay" set "JAPANESE_REPLAY_MODE=replay"
 set "JAPANESE_GACHA_TIMELINE_TRACE="
+set "GACHA_TRACE_ARGUMENT="
 if /I "%~1"=="-gacha-timeline-trace" set "JAPANESE_GACHA_TIMELINE_TRACE=1"
 if /I "%~2"=="-gacha-timeline-trace" set "JAPANESE_GACHA_TIMELINE_TRACE=1"
+if defined JAPANESE_GACHA_TIMELINE_TRACE set "GACHA_TRACE_ARGUMENT=-japanese-gacha-timeline-trace"
 if /I "%JAPANESE_REPLAY_MODE%"=="replay" (
     set "JAPANESE_CAPTURE_SESSION="
 ) else (
@@ -49,7 +51,7 @@ echo Launching Japanese game...
 set "HOME_ICON_ARGUMENT="
 if "%JAPANESE_HOME_ICON_RENDER%"=="1" set "HOME_ICON_ARGUMENT=-japanese-home-icon-render"
 if defined JAPANESE_HOME_ICON_HOME_ID set "HOME_ICON_ARGUMENT=%HOME_ICON_ARGUMENT% -japanese-home-icon-home-id=%JAPANESE_HOME_ICON_HOME_ID%"
-start "Atelier Resleriana" "%ROOT%AtelierResleriana.exe" -japanese-offline %HOME_ICON_ARGUMENT%
+start "Atelier Resleriana" "%ROOT%AtelierResleriana.exe" -japanese-offline %HOME_ICON_ARGUMENT% %GACHA_TRACE_ARGUMENT%
 set "GAME_SEEN=0"
 set /a GAME_PRESENT_CHECKS=0
 set /a GAME_MISSING_CHECKS=0

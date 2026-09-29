@@ -21,7 +21,12 @@ Do not run `dotnet build` against a `.py` file. Python tools are built with Pyth
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\create_starter_profile.py"
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseProfileEditor\profile_editor.py"
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\tests\test_replay_progression.py"
-& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m unittest discover -s "tools\JapaneseOffline\tests" -p "test_replay_progression.py"
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\tests\test_replay_gacha.py"
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\tests\test_replay_battle.py"
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\build_gacha_snapshot.py"
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\battle_japanese.py"
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\build_battle_master.py"
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m unittest discover -s "tools\JapaneseOffline\tests" -p "test_replay_*.py"
 ```
 
 Remove generated `__pycache__` directories when preparing a package.
@@ -61,7 +66,25 @@ The package's `game-root\starter-profile.bin` is generated from an encrypted new
 
 The normal launcher copies this starter file to `profile.bin` only when no profile exists. It does not seed full `-replay` mode or overwrite an existing profile.
 
-`progression-master` also contains Japanese `battle_tool.json`, `equipment_tool.json`, `trait_rank_total.json`, `ship_part.json`, `ship_level.json`, and `ship_tool_level.json` tables used by generated tool-conversion and ship-upgrade handlers. Keep these files synchronized across `dist`, share runtime/source, and the installed game.
+## Gacha Snapshot
+
+The package's `game-root\gacha-snapshot.json` carries the public banner/rate data used by the generated `/gacha/list` and `/gacha/execute` handlers: banner/button/cost metadata, decoded standard rate sets with per-card rates and rarities, verbatim mixed-wishlist sets, and the banner notification payload. Wishlist selections and execution counts are excluded (empty states are synthesized; counts live in the runtime `gacha-state.json` sidecar). Regenerate it from a private capture session and the Japanese master tables; never bundle the input session:
+
+```powershell
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" "tools\JapaneseOffline\build_gacha_snapshot.py" "<private-session>" "resleriana-db-main\data\master\jp" "tools\JapaneseToolkit\share\game-root\gacha-snapshot.json"
+```
+
+`progression-master` also contains Japanese `battle_tool.json`, `battle_tool_trait.json`, `equipment_tool.json`, `equipment_tool_trait.json`, `memoria_level.json`, `memoria_buff_growth.json`, `memoria.json`, `memoria_rarity.json`, `memoria_sp_bonus.json`, `trait_rank_total.json`, `ship_part.json`, `ship_level.json`, `ship_tool.json`, and `ship_tool_level.json` tables used by generated battle, tool-conversion, Memoria, and ship handlers. Keep these files synchronized across `dist`, share runtime/source, and the installed game.
+
+## Battle Master
+
+The package's `game-root\battle-master\*.json` carries the slim battle tables used by the generated battle simulation (`battle_japanese.py`): quests, battles, waves, enemies, skills, timeline panels, state-change kinds, drop/reward sets, enemy AI, exploration areas, gacha battles, fixed parties, and character growth. Regenerate it from the Japanese master tables:
+
+```powershell
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" "tools\JapaneseOffline\build_battle_master.py" "resleriana-db-main\data\master\jp" "tools\JapaneseToolkit\share\game-root\battle-master"
+```
+
+Character/rarity/level/memoria tables are reused from `progression-master` at runtime.
 
 ## JapaneseCaptureObserver.exe
 
@@ -88,6 +111,12 @@ Copy-Item $captureEditor "tools\JapaneseToolkit\share\game-root\edit_japanese_ca
 Copy-Item $captureEditor "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\edit_japanese_capture.py" -Force
 $starterProfileTool = "tools\JapaneseOffline\create_starter_profile.py"
 Copy-Item $starterProfileTool "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\create_starter_profile.py" -Force
+$gachaSnapshotTool = "tools\JapaneseOffline\build_gacha_snapshot.py"
+Copy-Item $gachaSnapshotTool "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\build_gacha_snapshot.py" -Force
+$gachaSnapshot = "tools\JapaneseToolkit\share\game-root\gacha-snapshot.json"
+Copy-Item $gachaSnapshot "tools\JapaneseOffline\dist\gacha-snapshot.json" -Force
+Copy-Item $gachaSnapshot "tools\JapaneseToolkit\share\source\game-root\gacha-snapshot.json" -Force
+Copy-Item $gachaSnapshot "C:\Program Files (x86)\Steam\steamapps\common\AtelierResleriana\gacha-snapshot.json" -Force
 $offlineLauncher = "tools\JapaneseToolkit\share\game-root\AtelierReslerianaJapaneseOffline.bat"
 Copy-Item $offlineLauncher "tools\JapaneseToolkit\share\source\game-root\AtelierReslerianaJapaneseOffline.bat" -Force
 Copy-Item $offlineLauncher "C:\Program Files (x86)\Steam\steamapps\common\AtelierResleriana\AtelierReslerianaJapaneseOffline.bat" -Force
@@ -97,13 +126,27 @@ $progressionMaster = "tools\JapaneseToolkit\share\game-root\progression-master"
 Copy-Item $progressionMaster "tools\JapaneseOffline\dist" -Recurse -Force
 Copy-Item $progressionMaster "tools\JapaneseToolkit\share\source\game-root" -Recurse -Force
 Copy-Item $progressionMaster "C:\Program Files (x86)\Steam\steamapps\common\AtelierResleriana" -Recurse -Force
+$battle = "tools\JapaneseOffline\battle_japanese.py"
+Copy-Item $battle "tools\JapaneseOffline\dist\battle_japanese.py" -Force
+Copy-Item $battle "tools\JapaneseToolkit\share\game-root\battle_japanese.py" -Force
+Copy-Item $battle "tools\JapaneseToolkit\share\source\game-root\battle_japanese.py" -Force
+Copy-Item $battle "C:\Program Files (x86)\Steam\steamapps\common\AtelierResleriana\battle_japanese.py" -Force
+$battleBuilder = "tools\JapaneseOffline\build_battle_master.py"
+Copy-Item $battleBuilder "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\build_battle_master.py" -Force
+$battleMaster = "tools\JapaneseToolkit\share\game-root\battle-master"
+Copy-Item $battleMaster "tools\JapaneseOffline\dist" -Recurse -Force
+Copy-Item $battleMaster "tools\JapaneseToolkit\share\source\game-root" -Recurse -Force
+Copy-Item $battleMaster "C:\Program Files (x86)\Steam\steamapps\common\AtelierResleriana" -Recurse -Force
 ```
 
-After all files are synchronized, rebuild the share archive:
+After all files are synchronized, normalize Windows batch files to CRLF, then rebuild the share archive:
 
 ```powershell
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -c "from pathlib import Path; [Path(p).write_bytes(Path(p).read_bytes().replace(b'\r\n', b'\n').replace(b'\n', b'\r\n')) for p in list(Path('tools').rglob('*.bat'))]"
 Compress-Archive -Path "tools\JapaneseToolkit\share\*" -DestinationPath "tools\JapaneseToolkit\share.zip" -Force
 ```
+
+Batch files must keep CRLF line endings; LF-only checkouts break `call :label` with "cannot find the batch label".
 
 ## Verification
 

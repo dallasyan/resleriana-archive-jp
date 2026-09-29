@@ -157,6 +157,8 @@ A local Japanese session on 2026-09-25 recorded 24 pulls from one banner, three 
 | `/login_bonus/receive` | Hybrid capture; generated stub | Generated mode returns a fixed regular bonus response. |
 | `/external_purchase/receive` | Hybrid capture; generated empty response | The captured/generated empty form is a 17-byte encrypted envelope and omits `X-Content-Encoding: gzip`. |
 | `/web_session/token` | Generated | Returns a fresh synthetic UUID in `WebSessionTokenResponse`; the route supplies a web-session credential, not article content. |
+| `/gacha/list` | Generated (snapshot) | Serves the 27 snapshot banners, 5 decoded rate sets, 22 verbatim mixed-wishlist sets, and synthesized empty wishlist states from `gacha-snapshot.json`; button counts come from the runtime `gacha-state.json` sidecar. |
+| `/gacha/execute` | Generated (snapshot) | Weighted draws from snapshot pools/rates for all five standard banners (character, Memoria, mixed pools; single and ten draws) plus wishlist banners with and without selections (picks weigh 1.0 each, unselected pickup cards 0.5 each); rarity-keyed duplicate conversion, duplicate Memoria as extra entities with first-copy flag, ticket/item/gem costs, medal grants, Memoria entity allocation, profile persistence, and sidecar counts. Bonus and step-up pulls return 503. |
 | `/character/skin_set` | Generated | Mutates the active profile and persists it. |
 | `/party/bulk_update` | Generated | Updates parties and party members; persists changes. |
 | `/party/battle_tools_set` | Generated | Updates assigned battle tools; persists changes. |
@@ -198,21 +200,21 @@ Hybrid mode also declares `/mail/list` and `/mail/open` as initialization replay
 
 ## Battle Endpoints
 
-These are kept together because battle entry, previews, actions, and results form one dependency chain. Battle endpoint request/response contracts are defined in `blend/api.py`; Japanese captures provide concrete examples. None currently has a generated battle simulation handler.
+These are kept together because battle entry, previews, actions, and results form one dependency chain. The generated battle simulation (`battle_japanese.py`) resolves a simplified turn loop against `battle-master` tables: speed-ordered starts, wait-based repositioning, physical/magic affinity with weak/resist flags, panel effects, party-gauge bursts, break gauges, and generic buff stacking. Damage numbers are calibrated estimates, not exact replicas.
 
 | Status | Endpoint | Evidence / notes |
 |---|---|---|
-| - [ ] Missing | `/quest/battle/start` | Captured Japanese endpoint; returns battle-start history/context. |
-| - [ ] Missing | `/battle/attack` | Captured Japanese endpoint; request carries skill/tool commands; response contains action history and preview/action data. |
-| - [ ] Missing | `/battle/resume` | `BattleResumeResponse` schema; no generated response. |
-| - [ ] Missing | `/battle/retire` | Battle retirement/result route; no generated response. |
-| - [ ] Missing | `/battle/finish` | Captured Japanese endpoint; returns final battle/resource result. |
-| - [ ] Missing | `/quest/battle/skip` | Captured Japanese endpoint; no generated skip result. |
-| - [ ] Missing | `/quest/battle/total_battle_start` | Schema-defined start variant; no generated response. |
-| - [ ] Missing | `/quest/battle/solo_raid_battle_start` | Schema-defined start variant; no generated response. |
-| - [ ] Missing | `/quest/battle/rental_party_start` | Schema-defined start variant; no generated response. |
-| - [ ] Missing | `/exploration/battle_start` | Captured Japanese dungeon battle entry; no generated battle response. |
-| - [ ] Missing | `/gacha/battle_start` | Schema-defined gacha battle entry; no generated response. |
+| - [x] Implemented | `/quest/battle/start` | Generated history/context from quest, party, and wave tables; stamina deducted; full quest rewards (score-rank sets, drops, first-clear, EXP, missions, quest states) on finish. |
+| - [x] Implemented | `/battle/attack` | Generated action resolution for skill/auto, batched free battle-tool actions, and Japanese cannon mode 9; captured selectable-target, damage-result, skill-motion, timeline-move, enemy-turn, wave-transition, and win/loss shapes. Damage values and many passive/effect behaviors remain approximate. |
+| - [x] Implemented | `/battle/resume` | Returns the active generated battle history/context; 503 with no active battle. |
+| - [x] Implemented | `/battle/retire` | Clears the active battle; empty `ChangedResourcesResponse`. |
+| - [x] Implemented | `/battle/finish` | Generated quest/exploration/gacha results with rewards and profile persistence; 503 unless the active battle is won. |
+| - [x] Implemented | `/quest/battle/skip` | Generated per-clear piece/Cole rewards, drop rolls, EXP, clear counts, and stamina cost. |
+| - [ ] Missing | `/quest/battle/total_battle_start` | Schema-only start variant; no generated response. |
+| - [ ] Missing | `/quest/battle/solo_raid_battle_start` | Schema-only start variant; no generated response. |
+| - [ ] Missing | `/quest/battle/rental_party_start` | Schema-only start variant; no generated response. |
+| - [x] Implemented | `/exploration/battle_start` | Generated battles from exploration-area tables with weighted encounters. |
+| - [x] Implemented | `/gacha/battle_start` | Generated battles from gacha-battle tables with fixed parties and first-clear tracking. |
 
 Captured `BattleHistory.action_setups.skill_selections` includes preview values such as `hp_damage`, `hp_damage_for_critical`, `critical_rate`, `break_damage`, weakness/resistance flags, and timeline changes. Use these response fields as combat-test oracles when battle simulation work begins.
 
@@ -268,9 +270,9 @@ These routes are not currently implemented by the generated/hybrid Japanese repl
 - [ ] `/synthesis/combination_ranking` (also observed in Japanese captures)
 - [ ] `/synthesis/execute_rental` (also observed in Japanese captures)
 - [ ] `/synthesis/execute_easy`
-- [ ] `/gacha/list` (Japanese capture only; captured rates are calculated in the response, not explicit percentage fields in the master tables)
-- [ ] `/gacha/execute` (Japanese capture only; the latest session covers 10-draws on the guaranteed 3-star character banner)
-- [ ] `/gacha/wish_list_set` (Japanese capture only)
+- [x] `/gacha/list` (generated from the sanitized `gacha-snapshot.json`: 27 snapshot banners, 5 decoded rate sets, 22 verbatim mixed-wishlist sets; wishlist states and button counts from the runtime `gacha-state.json` sidecar)
+- [x] `/gacha/execute` (generated weighted draws from snapshot pools: all five standard banners including mixed character/Memoria pools and single draws, plus wishlist banners with and without selections; wishlist picks weigh 1.0 each, unselected pickup cards 0.5 each, base/dynamic pools keep captured weights; rarity-keyed duplicate conversion (1/10/50 pieces), duplicate Memoria granted as extra entities with a first-copy flag, ticket/item/gem cost handling, medal grants, Memoria entity allocation, profile persistence, and sidecar counts; bonus and step-up pulls return 503)
+- [x] `/gacha/wish_list_set` (generated; validates pickup membership and select counts against snapshot wishlist rules and persists selections in the `gacha-state.json` sidecar)
 - [ ] `/growth_pack/bulk_receive` (Japanese capture only)
 - [ ] `/emblem/acquisition_drama` (Japanese capture only)
 - [ ] `/recipe/favorite` (Japanese capture only)

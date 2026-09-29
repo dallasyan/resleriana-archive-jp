@@ -1,6 +1,7 @@
 - Be able to exit dungeon without returning to main menu
-- Enter battles so people can view their characters
+- Enter battles so people can view their characters (generated battles implemented; needs in-game verification across quest types)
 - Synthesis to view cutscenes
-- Gacha: use `-gacha-timeline-trace` to map runtime phase/branch selection, then rotate pre-result pull cutscenes; per-character reveal movies are separate
+- Gacha: pre-result pull cutscenes rotate automatically offline across the three variant groups (`-gacha-timeline-trace` maps phase/branch selection); per-character reveal movies are separate
 - Reset story progress to before specific battles to view pre-battle cutscenes
 - Costume synthesis???
+- +3 Cannon quest attempts each day
