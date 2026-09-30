@@ -197,6 +197,11 @@ A local Japanese session on 2026-09-25 recorded 24 pulls from one banner, three 
 | `/profile/update_chara_home_favorite_character_list` | Generated | Updates Home favorites; persists changes. |
 | `/profile/update_selected_home_id` | Generated | Updates selected Home; persists changes. |
 | `/illustrated_book/start` | Generated | Uses unique profile Memoria IDs and configured expedition/exploration treasure IDs. |
+| `/profile/update_name` | Generated | Updates the profile display name and persists the profile submessage. |
+| `/profile/update_memo` | Generated | Updates the profile memo and persists the profile submessage. |
+| `/profile/update_favorite_character` | Generated | Updates the profile's favorite character ID. |
+| `/profile/update_favorite_party` | Generated | Sets/clears the five wrapped favorite-party character IDs. |
+| `/profile/update_favorite_battle_tools` | Generated | Updates the repeated favorite Battle Tool entity IDs. |
 | `/recipe/learn` | Partial/stub | Returns a fixed successful no-op response; its captured 17-byte envelope omits `X-Content-Encoding: gzip`. |
 | `/recipe/favorite` | Generated | Updates the learned recipe's favorite flag in profile resources and persists it. |
 | `/dish/order` | Generated | Uses Japanese dish rewards, consumes one available order, updates dish refresh time, task counts, and profile resources. |
@@ -212,6 +217,10 @@ A local Japanese session on 2026-09-25 recorded 24 pulls from one banner, three 
 | `/exploration/skip` | Partial | Returns per-clear and aggregate gathering rewards, updates clear count, and persists item totals. Other skip reward/task details remain approximate. |
 | `/expedition/start` | Generated | Collects elapsed rewards for replaced slots, saves new expedition assignments, and persists item/Cole changes. |
 | `/expedition/reward_receive` | Partial | Refreshes active expedition timers and generates rank/material-pool rewards with a 120-hour cap; special rewards and character-piece details remain approximate. Full replay still patches its captured response. |
+| `/quest/street/start` | Generated | Initializes `StreetState` from Japanese street-phase data. |
+| `/quest/street/talk` | Generated | Validates the current talk phase, records played talk IDs, advances phases, and completes the final phase with task/profile updates. |
+| `/mail/list` | Generated (empty fallback) | Returns an empty `MailListResponse` when hybrid startup has no bundled record. No online mailbox data is included in the package. |
+| `/mail/open` | Generated (empty fallback) | Returns empty changed resources and mail list when hybrid startup has no bundled record; does not grant captured account-specific attachments. |
 | `/mana/use_item` | Generated | Consumes Mana items, applies Japanese hourly regeneration, updates Mana, and persists. |
 | `/ship/bulk_update` | Generated (Japanese capture) | Updates ship-party characters and Memoria selections; persists changes. |
 | `/ship/ship_tools_set` | Generated (Japanese capture) | Updates ship-party support/cannon selections; persists changes. |
@@ -219,7 +228,7 @@ A local Japanese session on 2026-09-25 recorded 24 pulls from one banner, three 
 | `/quest/talk_event/finish` | Client bypass | Offline Events plugin bypasses the client request. |
 | CDN `/master_data/*`, `/manifest.json` | Generated/local asset | Served by the mitmproxy addon, outside the game API `Replay.respond` route table. |
 
-Hybrid mode also declares `/mail/list` and `/mail/open` as initialization replay paths. Both appear in the local Japanese full-playthrough inventory, but their records are not included in the share package and there is no generated fallback; treat them as **Missing** in the shared runtime.
+Hybrid mode also declares `/mail/list` and `/mail/open` as initialization replay paths. Their captured mailbox contents remain private; if no startup record is bundled, the generated empty responses above are used.
 
 ## Battle Endpoints
 
@@ -254,18 +263,12 @@ These routes are not currently implemented by the generated/hybrid Japanese repl
 ### Profile, mail, mission, and progression
 
 - [ ] `/atelier/research` (Japanese capture only)
-- [ ] `/profile/update_name` (also observed in Japanese captures)
-- [ ] `/profile/update_memo`
-- [ ] `/profile/update_favorite_character`
-- [ ] `/profile/update_favorite_party`
-- [ ] `/profile/update_favorite_battle_tools`
 - [ ] `/mail/delete`
 - [ ] `/mission/receive` (also observed in Japanese captures)
 - [ ] `/mission/count_reward_receive` (also observed in Japanese captures)
 - [ ] `/mission/navigation_task_proceed` (Japanese capture only)
 - [ ] `/quest/daily_clear_add`
-- [ ] `/quest/street/start` (Japanese capture only)
-- [ ] `/quest/street/talk` (Japanese capture only)
+- `/quest/street/start` and `/quest/street/talk` are listed under **Currently Covered** above.
 - [ ] `/daily_pass/bulk_receive` (Japanese capture only; absent from reference route registry)
 
 ### Expedition and exploration
@@ -298,9 +301,228 @@ These routes are not currently implemented by the generated/hybrid Japanese repl
 
 ## Japanese Hybrid Paths Needing Bundled Responses or Generated Fallbacks
 
-- [ ] `/mail/list` — observed in local captures and listed in `HYBRID_INIT_PATHS`, but no record is bundled and no generated handler exists.
-- [ ] `/mail/open` — observed in local captures and listed in `HYBRID_INIT_PATHS`, but no record is bundled and no generated handler exists.
+- None. `/mail/list` and `/mail/open` use generated empty fallbacks when no startup record is bundled.
 
 ## Updating This Tracker
 
 For each endpoint, update its checkbox/status only after the generated or hybrid behavior is implemented and verified. Keep a short note describing whether it is stateful, a no-op/stub, client-bypassed, or capture-only. Update the separate Battle section when implementing battle-related paths; do not classify an endpoint as implemented solely because it appears in a capture or schema.
+
+<!-- BEGIN GENERATED PROTOBUF CONTRACT MAP -->
+## Protobuf Contract Mapping
+
+Names below come from the installed client `contract-dump/fields.txt`. Shared response types (especially `ChangedResourcesResponse`) legitimately serve multiple routes. `Empty`, JSON, and asset entries are non-route-specific wire shapes rather than missing protobuf definitions.
+
+| Endpoint | Request definition | Response definition |
+|---|---|---|
+| `/atelier/research` | `blend.api.AtelierResearchRequest` | `blend.api.ChangedResourcesResponse` |
+| `/auth/sign_in` | `blend.api.AuthSignInRequest` | `blend.api.AuthSignInResponse` |
+| `/auth/sign_up` | `blend.api.AuthSignUpRequest` | `blend.api.AuthSignUpResponse` |
+| `/battle/attack` | `blend.api.BattleAttackRequest` | `blend.api.BattleAttackResponse` |
+| `/battle/finish` | `google.protobuf.Empty` | `blend.api.BattleFinishResponse` |
+| `/battle/retire` | `google.protobuf.Empty` | `blend.api.ChangedResourcesResponse` |
+| `/character/enhance` | `blend.api.CharacterEnhanceRequest` | `blend.api.ChangedResourcesResponse` |
+| `/character/growboard_bulk_release` | `blend.api.CharacterGrowboardBulkReleaseRequest` | `blend.api.ChangedResourcesResponse` |
+| `/character/growboard_page_release` | `blend.api.CharacterGrowboardPageReleaseRequest` | `blend.api.ChangedResourcesResponse` |
+| `/character/rarity_enhance` | `blend.api.CharacterRarityEnhanceRequest` | `blend.api.ChangedResourcesResponse` |
+| `/dish/order` | `blend.api.DishOrderRequest` | `blend.api.DishOrderResponse` |
+| `/emblem/acquisition_drama` | `blend.api.EmblemAcquisitionDramaRequest` | `blend.api.ChangedResourcesResponse` |
+| `/equipment_preset/bulk_set` | `blend.api.EquipmentPresetBulkSetRequest` | `blend.api.ChangedResourcesResponse` |
+| `/event/top` | `No matching request definition in fields.txt` | `blend.api.EventTopResponse` |
+| `/expedition/reward_receive` | `google.protobuf.Empty` | `blend.api.ExpeditionRewardReceiveResponse` |
+| `/expedition/start` | `blend.api.ExpeditionStartRequest` | `blend.api.ExpeditionStartResponse` |
+| `/exploration/battle_start` | `blend.api.ExplorationBattleStartRequest` | `blend.api.BattleStartResponse` |
+| `/exploration/explore` | `blend.api.ExplorationExploreRequest` | `blend.api.ExplorationExploreResponse` |
+| `/exploration/finish` | `blend.api.ExplorationFinishRequest` | `blend.api.ExplorationFinishResponse` |
+| `/exploration/start` | `blend.api.ExplorationStartRequest` | `blend.api.ChangedResourcesResponse` |
+| `/external_purchase/receive` | `google.protobuf.Empty` | `Empty encrypted envelope` |
+| `/gacha/execute` | `blend.api.GachaExecuteRequest` | `blend.api.GachaExecuteResponse` |
+| `/gacha/list` | `google.protobuf.Empty` | `blend.api.GachaListResponse` |
+| `/gacha/wish_list_set` | `blend.api.GachaWishListSetRequest` | `blend.api.GachaWishListSetResponse` |
+| `/growth_pack/bulk_receive` | `blend.api.GrowthPackBulkReceiveRequest` | `blend.api.GrowthPackBulkReceiveResponse` |
+| `/illustrated_book/start` | `blend.api.IllustratedBookStartRequest` | `blend.api.IllustratedBookStartResponse` |
+| `/login_bonus/receive` | `google.protobuf.Empty` | `blend.api.LoginBonusReceiveResponse` |
+| `/mail/list` | `google.protobuf.Empty` | `blend.api.MailListResponse` |
+| `/mail/open` | `blend.api.MailOpenRequest` | `blend.api.MailOpenResponse` |
+| `/mana/use_item` | `blend.api.ManaUseItemRequest` | `blend.api.ChangedResourcesResponse` |
+| `/memoria/enhance` | `blend.api.MemoriaEnhanceRequest` | `blend.api.MemoriaEnhanceResponse` |
+| `/memoria/limit_break` | `blend.api.MemoriaLimitBreakRequest` | `blend.api.MemoriaLimitBreakResponse` |
+| `/memoria/lock` | `blend.api.MemoriaLockRequest` | `blend.api.ChangedResourcesResponse` |
+| `/mission/navigation_task_proceed` | `blend.api.MissionNavigationTaskProceedRequest` | `blend.api.ChangedResourcesResponse` |
+| `/mission/receive` | `blend.api.MissionReceiveRequest` | `blend.api.MissionReceiveResponse` |
+| `/party/battle_tools_set` | `blend.api.PartyBattleToolsSetRequest` | `blend.api.ChangedResourcesResponse` |
+| `/party/bulk_update` | `blend.api.PartyBulkUpdateRequest` | `blend.api.ChangedResourcesResponse` |
+| `/profile/update_name` | `blend.api.ProfileUpdateNameRequest` | `blend.api.ChangedResourcesResponse` |
+| `/quest/battle/skip` | `blend.api.QuestBattleSkipRequest` | `blend.api.QuestBattleSkipResponse` |
+| `/quest/battle/start` | `blend.api.QuestBattleStartRequest` | `blend.api.BattleStartResponse` |
+| `/quest/daily_clear_add` | `blend.api.QuestDailyClearAddRequest` | `blend.api.ChangedResourcesResponse` |
+| `/quest/street/start` | `blend.api.QuestStreetStartRequest` | `blend.api.ChangedResourcesResponse` |
+| `/quest/street/talk` | `blend.api.QuestStreetTalkRequest` | `blend.api.ChangedResourcesResponse` |
+| `/quest/talk_event/finish` | `blend.api.QuestTalkEventFinishRequest` | `blend.api.QuestTalkEventFinishResponse` |
+| `/recipe/count_reward_receive` | `blend.api.RecipeCountRewardReceiveRequest` | `blend.api.RecipeCountRewardReceiveResponse` |
+| `/recipe/favorite` | `blend.api.RecipeFavoriteRequest` | `blend.api.ChangedResourcesResponse` |
+| `/recipe/learn` | `google.protobuf.Empty` | `blend.api.RecipeLearnResponse` |
+| `/refund_info/get_country_code` | `google.protobuf.Empty` | `blend.api.RefundInfoGetCountryCodeResponse` |
+| `/ship/create` | `blend.api.ShipCreateRequest` | `blend.api.ChangedResourcesResponse` |
+| `/shop/piece_exchange` | `blend.api.ShopPieceExchangeRequest` | `blend.api.ChangedResourcesResponse` |
+| `/shop/purchase` | `blend.api.ShopPurchaseRequest` | `blend.api.ShopPurchaseResponse` |
+| `/shop/random_shop/list` | `blend.api.ShopRandomShopListRequest` | `blend.api.ShopRandomShopListResponse` |
+| `/shop/random_shop/refresh` | `blend.api.ShopRandomShopRefreshRequest` | `blend.api.ShopRandomShopRefreshResponse` |
+| `/stamina/purchase` | `blend.api.StaminaPurchaseRequest` | `blend.api.ChangedResourcesResponse` |
+| `/stamina/use_item` | `blend.api.StaminaUseItemRequest` | `blend.api.ChangedResourcesResponse` |
+| `/stamina/use_spare_stamina` | `blend.api.StaminaUseSpareStaminaRequest` | `blend.api.ChangedResourcesResponse` |
+| `/status` | `JSON` | `JSON` |
+| `/synthesis/bulk_execute` | `blend.api.SynthesisBulkExecuteRequest` | `blend.api.SynthesisExecuteResponse` |
+| `/synthesis/combination_ranking` | `blend.api.SynthesisCombinationRankingRequest` | `blend.api.SynthesisCombinationRankingResponse` |
+| `/synthesis/execute_rental` | `blend.api.SynthesisExecuteRentalRequest` | `blend.api.SynthesisExecuteResponse` |
+| `/tool/convert` | `blend.api.ToolConvertRequest` | `blend.api.ToolConvertResponse` |
+| `/tool/lock` | `blend.api.ToolLockRequest` | `blend.api.ChangedResourcesResponse` |
+| `/tutorial/progress` | `No matching request definition in fields.txt` | `No matching response definition in fields.txt` |
+| `/user/log_in` | `google.protobuf.Empty` | `blend.api.UserLogInResponse` |
+| `/user/unlink_steam` | `No matching request definition in fields.txt` | `No matching response definition in fields.txt` |
+| `/web_session/token` | `google.protobuf.Empty` | `blend.api.WebSessionTokenResponse` |
+| `/exploration/retire` | `blend.api.ExplorationRetireRequest` | `blend.api.ChangedResourcesResponse` |
+| `/exploration/skip` | `blend.api.ExplorationSkipRequest` | `blend.api.ExplorationSkipResponse` |
+| `/character/enhancement_reset` | `blend.api.CharacterEnhancementResetRequest` | `blend.api.CharacterEnhancementResetResponse` |
+| `/character/level_limit_release` | `blend.api.CharacterLevelLimitReleaseRequest` | `blend.api.ChangedResourcesResponse` |
+| `/character/bulk_set` | `blend.api.CharacterBulkSetRequest` | `blend.api.ChangedResourcesResponse` |
+| `/character/equip` | `blend.api.CharacterEquipRequest` | `blend.api.ChangedResourcesResponse` |
+| `/character/memoria_set` | `blend.api.CharacterMemoriaSetRequest` | `blend.api.ChangedResourcesResponse` |
+| `/equipment_preset/equip` | `blend.api.EquipmentPresetEquipRequest` | `blend.api.ChangedResourcesResponse` |
+| `/equipment_preset/memoria_set` | `blend.api.EquipmentPresetMemoriaSetRequest` | `blend.api.ChangedResourcesResponse` |
+| `/ship/bulk_update` | `blend.api.ShipBulkUpdateRequest` | `blend.api.ChangedResourcesResponse` |
+| `/ship/ship_tools_set` | `blend.api.ShipShipToolsSetRequest` | `blend.api.ChangedResourcesResponse` |
+| `/character/skin_set` | `blend.api.CharacterSkinSetRequest` | `blend.api.ChangedResourcesResponse` |
+| `/equipment_preset/update_name` | `blend.api.EquipmentPresetUpdateNameRequest` | `blend.api.ChangedResourcesResponse` |
+| `/memoria/sell` | `blend.api.MemoriaSellRequest` | `blend.api.MemoriaSellResponse` |
+| `/chara_home/register` | `blend.api.CharaHomeRegisterRequest` | `blend.api.ChangedResourcesResponse` |
+| `/profile/update_chara_home_favorite_character_list` | `blend.api.ProfileUpdateCharaHomeFavoriteCharacterListRequest` | `blend.api.ChangedResourcesResponse` |
+| `/profile/update_selected_home_id` | `blend.api.ProfileUpdateSelectedHomeIdRequest` | `blend.api.ChangedResourcesResponse` |
+| `/profile/update_memo` | `blend.api.ProfileUpdateMemoRequest` | `blend.api.ChangedResourcesResponse` |
+| `/profile/update_favorite_character` | `blend.api.ProfileUpdateFavoriteCharacterRequest` | `blend.api.ChangedResourcesResponse` |
+| `/profile/update_favorite_party` | `blend.api.ProfileUpdateFavoritePartyRequest` | `blend.api.ChangedResourcesResponse` |
+| `/profile/update_favorite_battle_tools` | `blend.api.ProfileUpdateFavoriteBattleToolsRequest` | `blend.api.ChangedResourcesResponse` |
+| `/synthesis/execute_easy` | `blend.api.SynthesisExecuteEasyRequest` | `blend.api.SynthesisExecuteEasyResponse` |
+| `/exploration/update_party` | `blend.api.ExplorationUpdatePartyRequest` | `blend.api.ChangedResourcesResponse` |
+| `/master_data/*` | `CDN/asset request` | `CDN asset payload (not protobuf)` |
+| `/manifest.json` | `JSON/asset request` | `JSON asset payload` |
+| `/battle/resume` | `google.protobuf.Empty` | `blend.api.BattleResumeResponse` |
+| `/quest/battle/total_battle_start` | `blend.api.QuestBattleTotalBattleStartRequest` | `blend.api.BattleStartResponse` |
+| `/quest/battle/solo_raid_battle_start` | `blend.api.QuestBattleSoloRaidBattleStartRequest` | `blend.api.BattleStartResponse` |
+| `/quest/battle/rental_party_start` | `blend.api.QuestBattleRentalPartyStartRequest` | `blend.api.BattleStartResponse` |
+| `/gacha/battle_start` | `blend.api.GachaBattleStartRequest` | `blend.api.BattleStartResponse` |
+| `/mail/delete` | `blend.api.MailDeleteRequest` | `blend.api.MailDeleteResponse` |
+| `/mission/count_reward_receive` | `blend.api.MissionCountRewardReceiveRequest` | `blend.api.MissionCountRewardReceiveResponse` |
+| `/daily_pass/bulk_receive` | `blend.api.DailyPassBulkReceiveRequest` | `blend.api.DailyPassBulkReceiveResponse` |
+| `/mana/purchase` | `blend.api.ManaPurchaseRequest` | `blend.api.ChangedResourcesResponse` |
+| `/shop/gem_list` | `No matching request definition in fields.txt` | `blend.api.ShopGemListResponse` |
+| `/shop/random_shop/purchase` | `blend.api.ShopRandomShopPurchaseRequest` | `blend.api.ShopRandomShopPurchaseResponse` |
+
+### Request/response definitions not assigned to a listed endpoint
+
+These API messages are present in `fields.txt` but are not selected by the route mappings above. Some may be nested helpers, legacy/variant routes, or routes not yet observed; review them before adding endpoints.
+
+- `blend.api.AdvertisingIdUpdateRequest`
+- `blend.api.AuthSignUpAppleRequest`
+- `blend.api.AuthSignUpAppleResponse`
+- `blend.api.AuthSignUpGoogleRequest`
+- `blend.api.AuthSignUpGoogleResponse`
+- `blend.api.AuthSignUpPasscodeRequest`
+- `blend.api.AuthSignUpPasscodeResponse`
+- `blend.api.CharacterSkillEvolveRequest`
+- `blend.api.CharacterSkillLockReleaseRequest`
+- `blend.api.CharacterStoryClearRequest`
+- `blend.api.CharacterStoryClearResponse`
+- `blend.api.CommunicationStoryClearRequest`
+- `blend.api.CommunicationStoryClearResponse`
+- `blend.api.CommunicationStoryReleaseRequest`
+- `blend.api.DailyPassReceiveRequest`
+- `blend.api.DailyPassReceiveResponse`
+- `blend.api.DebugCharacterEnhanceRequest`
+- `blend.api.DebugExplorationFinishRequest`
+- `blend.api.DebugKtidLinkRequest`
+- `blend.api.DebugLoginBonusListResponse`
+- `blend.api.DebugMailSendRequest`
+- `blend.api.DebugShopPurchaseRequest`
+- `blend.api.DebugShopStoreProductListResponse`
+- `blend.api.DebugTitleListResponse`
+- `blend.api.DebugTutorialStepUpdateRequest`
+- `blend.api.DebugUserBulkResourceRequest`
+- `blend.api.DebugUserLastMainStoryQuestRequest`
+- `blend.api.DebugUserResourceRequest`
+- `blend.api.EventDamageContestRequest`
+- `blend.api.EventDamageContestResponse`
+- `blend.api.EventLegendChallengeRequest`
+- `blend.api.EventLegendChallengeResponse`
+- `blend.api.EventReviveRequest`
+- `blend.api.ExternalPurchaseReceiveResponse`
+- `blend.api.GachaListRequest`
+- `blend.api.GachaStepUpExecuteRequest`
+- `blend.api.GachaStepUpExecuteResponse`
+- `blend.api.GrowthPackPointPurchaseRequest`
+- `blend.api.GrowthPackPurchaseRequest`
+- `blend.api.GrowthPackReceiveRequest`
+- `blend.api.GrowthPackReceiveResponse`
+- `blend.api.HouseBuildingCountRewardReceiveRequest`
+- `blend.api.HouseBuildingCountRewardReceiveResponse`
+- `blend.api.HouseBuildingEnhanceRequest`
+- `blend.api.HouseBuildingEnhanceResponse`
+- `blend.api.HouseBuildingRentRequest`
+- `blend.api.HouseBuildingRentalRewardReceiveRequest`
+- `blend.api.HouseBuildingRentalRewardReceiveResponse`
+- `blend.api.HouseBuildingResetRequest`
+- `blend.api.HouseBuildingRewardReceiveRequest`
+- `blend.api.HouseBuildingRewardReceiveResponse`
+- `blend.api.HouseBuildingStartRequest`
+- `blend.api.InvitationCreateRequest`
+- `blend.api.InvitationCreateResponse`
+- `blend.api.InvitationReceiveRequest`
+- `blend.api.ItemBundleOpenRequest`
+- `blend.api.ItemBundleOpenResponse`
+- `blend.api.ItemChallengeExecuteRequest`
+- `blend.api.ItemChallengeExecuteResponse`
+- `blend.api.ItemChallengeRewardReceiveRequest`
+- `blend.api.ItemChallengeRewardReceiveResponse`
+- `blend.api.KtidWebTokenResponse`
+- `blend.api.MissionEventTabRewardReceiveRequest`
+- `blend.api.MissionEventTabRewardReceiveResponse`
+- `blend.api.ModTimelineReleaseRequest`
+- `blend.api.MultiMissionReceiveRequest`
+- `blend.api.MultiMissionReceiveResponse`
+- `blend.api.MultiMissionStatusRequest`
+- `blend.api.MultiMissionStatusResponse`
+- `blend.api.PresentExecuteRequest`
+- `blend.api.PresentExecuteResponse`
+- `blend.api.PurchaseSessionPublishRequest`
+- `blend.api.PurchaseSessionStartRequest`
+- `blend.api.PurchaseSessionStartResponse`
+- `blend.api.PurchaseVerifyRequest`
+- `blend.api.QuestClearedPartyListRequest`
+- `blend.api.QuestClearedPartyListResponse`
+- `blend.api.QuestScoreRankFirstRewardReceiveRequest`
+- `blend.api.QuestScoreRankFirstRewardReceiveResponse`
+- `blend.api.QuestStreetMoveRequest`
+- `blend.api.RefundInfoGetRequest`
+- `blend.api.RefundInfoGetResponse`
+- `blend.api.RentalPartyBattleToolsSetRequest`
+- `blend.api.RentalPartyBulkUpdateRequest`
+- `blend.api.RentalPartyCharacterBulkEquipRequest`
+- `blend.api.RentalPartyCharacterEquipRequest`
+- `blend.api.ShipSynthesizeRequest`
+- `blend.api.ShipSynthesizeResponse`
+- `blend.api.ShopBoxGachaExecuteRequest`
+- `blend.api.ShopBoxGachaExecuteResponse`
+- `blend.api.ShopReceiveFirstPurchaseBonusResponse`
+- `blend.api.ShopWheelRequest`
+- `blend.api.ShopWheelResponse`
+- `blend.api.SoloRaidResetRequest`
+- `blend.api.SpecialOfferPurchaseRequest`
+- `blend.api.SynthesisExecuteRequest`
+- `blend.api.ToolTraitRankUpRequest`
+- `blend.api.TotalBattleAchieveLineDramaRequest`
+- `blend.api.TotalBattleResetPanelRequest`
+- `blend.api.UserLinkAppleRequest`
+- `blend.api.UserLinkGoogleRequest`
+- `blend.api.UserLinksListResponse`
+- `blend.api.UserUpdateBirthdateRequest`
+- `blend.api.UserUpdateLanguageRequest`
+<!-- END GENERATED PROTOBUF CONTRACT MAP -->

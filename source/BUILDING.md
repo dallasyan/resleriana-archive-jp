@@ -82,8 +82,8 @@ The package's `game-root\gacha-snapshot.json` carries the public banner/rate dat
 ## Non-Combat Gameplay Master
 
 The runtime's `gameplay-master.json` contains compact Japanese recipe, dish,
-expedition, expedition-recommendation, and exploration-area tables. Character,
-item, battle-tool, equipment-tool, and trait tables are reused from
+expedition, expedition-recommendation, exploration-area, street-phase, and
+street-talk tables. Character, item, battle-tool, equipment-tool, and trait tables are reused from
 `progression-master`; quest score and drop tables are reused from
 `battle-master`. Regenerate it from Japanese master tables (no capture data is
 used):
@@ -94,6 +94,18 @@ used):
 
 Copy `gameplay-master.json` to `tools\JapaneseOffline\dist`,
 `tools\JapaneseToolkit\share\source\game-root`, and the installed game.
+Hybrid mode uses empty generated `/mail/list` and `/mail/open` responses when
+the embedded startup handshake has no records for those routes; do not bundle
+online mailbox payloads or account-specific mail attachments.
+
+## Endpoint Contract Mapping
+
+Regenerate the request/response mapping and unmatched API-message list at the
+bottom of `ENDPOINTS.md` from the installed client's contract dump:
+
+```powershell
+& "<configured Python 3.10 executable>" "tools\JapaneseOffline\build_endpoint_contract_map.py" "C:\Program Files (x86)\Steam\steamapps\common\AtelierResleriana\contract-dump\fields.txt" "tools\JapaneseToolkit\share\ENDPOINTS.md"
+```
 
 ## Battle Master
 
@@ -162,6 +174,8 @@ Copy-Item $captureAnalyzer "tools\JapaneseToolkit\share\game-root\analyze_japane
 Copy-Item $captureAnalyzer "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\analyze_japanese_capture.py" -Force
 $gameplayBuilder = "tools\JapaneseOffline\build_gameplay_master.py"
 Copy-Item $gameplayBuilder "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\build_gameplay_master.py" -Force
+$contractMapBuilder = "tools\JapaneseOffline\build_endpoint_contract_map.py"
+Copy-Item $contractMapBuilder "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\build_endpoint_contract_map.py" -Force
 $gameplayMaster = "tools\JapaneseToolkit\share\game-root\gameplay-master.json"
 Copy-Item $gameplayMaster "tools\JapaneseOffline\dist\gameplay-master.json" -Force
 Copy-Item $gameplayMaster "tools\JapaneseToolkit\share\source\game-root\gameplay-master.json" -Force
