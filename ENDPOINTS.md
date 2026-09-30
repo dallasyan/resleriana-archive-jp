@@ -334,7 +334,7 @@ Names below come from the installed client `contract-dump/fields.txt`. Shared re
 | `/exploration/explore` | `blend.api.ExplorationExploreRequest` | `blend.api.ExplorationExploreResponse` |
 | `/exploration/finish` | `blend.api.ExplorationFinishRequest` | `blend.api.ExplorationFinishResponse` |
 | `/exploration/start` | `blend.api.ExplorationStartRequest` | `blend.api.ChangedResourcesResponse` |
-| `/external_purchase/receive` | `google.protobuf.Empty` | `Empty encrypted envelope` |
+| `/external_purchase/receive` | `google.protobuf.Empty` | `blend.api.ExternalPurchaseReceiveResponse` |
 | `/gacha/execute` | `blend.api.GachaExecuteRequest` | `blend.api.GachaExecuteResponse` |
 | `/gacha/list` | `google.protobuf.Empty` | `blend.api.GachaListResponse` |
 | `/gacha/wish_list_set` | `blend.api.GachaWishListSetRequest` | `blend.api.GachaWishListSetResponse` |
@@ -454,7 +454,6 @@ These API messages are present in `fields.txt` but are not selected by the route
 - `blend.api.EventLegendChallengeRequest`
 - `blend.api.EventLegendChallengeResponse`
 - `blend.api.EventReviveRequest`
-- `blend.api.ExternalPurchaseReceiveResponse`
 - `blend.api.GachaListRequest`
 - `blend.api.GachaStepUpExecuteRequest`
 - `blend.api.GachaStepUpExecuteResponse`
