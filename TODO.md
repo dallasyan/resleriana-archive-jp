@@ -1,3 +1,4 @@
+- Town event
 - Be able to exit dungeon without returning to main menu
 - Enter battles so people can view their characters (generated battles implemented; needs in-game verification across quest types)
 - Synthesis to view cutscenes

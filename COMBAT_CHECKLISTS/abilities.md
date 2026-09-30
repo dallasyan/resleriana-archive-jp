@@ -20,8 +20,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300111 | 全体攻撃から受けるダメージ-{0}% | Quartz Necklace | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: scope |
 | 300112 | 自身がアタッカーの時、受けるダメージ-{0}% | Battle Scarf | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role |
 | 300113 | 自身がアタッカーの時、受けるダメージ-{0}% | Battle Scarf | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role |
-| 300114 | 得意属性が斬属性の時、スキルダメージ+{0}% | Silver Twin Swords | Partial | done: skill_damage; missing: unmapped effect ids 6000645; unsure: skill_damage conditions: attr |
-| 300115 | 得意属性が斬属性の時、スキルダメージ+{0}% | Silver Twin Swords | Partial | done: skill_damage; missing: unmapped effect ids 6000645; unsure: skill_damage conditions: attr |
+| 300114 | 得意属性が斬属性の時、スキルダメージ+{0}% | Silver Twin Swords | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
+| 300115 | 得意属性が斬属性の時、スキルダメージ+{0}% | Silver Twin Swords | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
 | 300116 | 与えるHP回復量+{0}% | Beast Armor | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored |
 | 300117 | 与えるHP回復量+{0}% | Beast Armor | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored |
 | 300118 | 自身がブレイカーの時、受けるダメージ-{0}% | Hustle Belt | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role |
@@ -52,8 +52,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300143 | 自身のHPが70%以上の時、斬打突属性耐性+{0}% | Gnade Ring - Phys | Implemented | done: resist_up; 1/1 description effects mapped; unsure: resist_up resist_up buff amounts ignored downstream; resist_up conditions: hp_above |
 | 300144 | 得意属性が風属性の時、スキルダメージ+{0}% | Spirit Staff - Air | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
 | 300145 | 得意属性が風属性の時、スキルダメージ+{0}% | Spirit Staff - Air | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
-| 300146 | 自身がサポーターの時、バーストスキルダメージ+{0}% | Adventurer's Clothing | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
-| 300147 | 自身がサポーターの時、バーストスキルダメージ+{0}% | Adventurer's Clothing | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
+| 300146 | 自身がサポーターの時、バーストスキルダメージ+{0}% | Adventurer's Clothing | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role |
+| 300147 | 自身がサポーターの時、バーストスキルダメージ+{0}% | Adventurer's Clothing | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role |
 | 300148 | 自身のHPが70%以上の時、火氷雷風属性耐性+{0}% | Gnade Ring - Mag | Implemented | done: resist_up; 1/1 description effects mapped; unsure: resist_up resist_up buff amounts ignored downstream; resist_up conditions: hp_above |
 | 300149 | 自身のHPが70%以上の時、火氷雷風属性耐性+{0}% | Gnade Ring - Mag | Implemented | done: resist_up; 1/1 description effects mapped; unsure: resist_up resist_up buff amounts ignored downstream; resist_up conditions: hp_above |
 | 300150 | 得意属性が雷属性の時、スキルダメージ+{0}% | Spirit Staff - Bolt | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
@@ -116,8 +116,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300207 | 与えるマイナス効果量+{0}% | Training Path | Implemented | done: potency_given_minus; 1/1 description effects mapped |
 | 300208 | 自身がアタッカーの時、クリティカルダメージ+{0}% | Yarn Coat | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role |
 | 300209 | 自身がアタッカーの時、クリティカルダメージ+{0}% | Yarn Coat | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role |
-| 300210 | 自身がアタッカーの時、バーストスキルダメージ+{0}% | Gold Jacket | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
-| 300211 | 自身がアタッカーの時、バーストスキルダメージ+{0}% | Gold Jacket | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
+| 300210 | 自身がアタッカーの時、バーストスキルダメージ+{0}% | Gold Jacket | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role |
+| 300211 | 自身がアタッカーの時、バーストスキルダメージ+{0}% | Gold Jacket | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role |
 | 300212 | 単体攻撃の時、ブレイクダメージ+{0}% | Gold Embroidered Coat | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: scope |
 | 300213 | 単体攻撃の時、ブレイクダメージ+{0}% | Gold Embroidered Coat | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: scope |
 | 300214 | 全体攻撃の時、ブレイクダメージ+{0}% | Charade Lumont | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: scope |
@@ -198,24 +198,24 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300289 | 斬打突属性耐性+{0}%と状態異常耐性+{1}% | Vampire's Cloak | Partial | done: resist_up; 2/2 description effects mapped; missing: ailment_resist mod ignored (only buffs/immunity read); unsure: resist_up resist_up buff amounts ignored downstream |
 | 300290 | 自身がサポーターの時、与える強化効果量+{0}% | Witch's Mask | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: role |
 | 300291 | 自身がサポーターの時、与える強化効果量+{0}% | Witch's Mask | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: role |
-| 300292 | 得意属性が火属性の時、スキルダメージ+{0}%とバーストスキルダメージ+{1}% | Vampire's Brooch | Implemented | done: skill_damage; skill_damage; 2/2 description effects mapped; unsure: skill_damage conditions: attr |
-| 300293 | 得意属性が火属性の時、スキルダメージ+{0}%とバーストスキルダメージ+{1}% | Vampire's Brooch | Implemented | done: skill_damage; skill_damage; 2/2 description effects mapped; unsure: skill_damage conditions: attr |
+| 300292 | 得意属性が火属性の時、スキルダメージ+{0}%とバーストスキルダメージ+{1}% | Vampire's Brooch | Implemented | done: skill_damage; burst_damage; 2/2 description effects mapped; unsure: skill_damage conditions: attr; burst_damage conditions: attr |
+| 300293 | 得意属性が火属性の時、スキルダメージ+{0}%とバーストスキルダメージ+{1}% | Vampire's Brooch | Implemented | done: skill_damage; burst_damage; 2/2 description effects mapped; unsure: skill_damage conditions: attr; burst_damage conditions: attr |
 | 300294 | 得意属性が火属性かつアタッカーの時、全体攻撃のスキルダメージ+{0}% | Enchanted Broom | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr,scope |
 | 300295 | 得意属性が火属性かつアタッカーの時、全体攻撃のスキルダメージ+{0}% | Enchanted Broom | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr,scope |
 | 300296 | 得意属性が打属性かつディフェンダーの時、スキル発動後、味方全員に「受けるダメージ-{0}%」を1回攻撃を受けるまで付与 | Metal Turner | Implemented | done: buff@skill_use grants taken_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 300297 | 得意属性が打属性かつディフェンダーの時、スキル発動後、味方全員に「受けるダメージ-{0}%」を1回攻撃を受けるまで付与 | Metal Turner | Implemented | done: buff@skill_use grants taken_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 300298 | 得意属性が火属性かつアタッカーの時、スキル発動後、自身のHPを{0}%回復 | Plume | Implemented | done: buff@skill_use executes heal; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 300299 | 得意属性が火属性かつアタッカーの時、スキル発動後、自身のHPを{0}%回復 | Plume | Implemented | done: buff@skill_use executes heal; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
-| 300300 | 得意属性が斬属性かつサポーターの時、スキル発動後、味方全員に「受ける魔法攻撃ダメージ-{0}%」を1回攻撃を受けるまで付与 | Mystic Talisman | Partial | done: buff@skill_use grants stat_down; missing: unmapped effect ids 6000254; unsure: buff@skill_use conditions: role,attr |
-| 300301 | 得意属性が斬属性かつサポーターの時、スキル発動後、味方全員に「受ける魔法攻撃ダメージ-{0}%」を1回攻撃を受けるまで付与 | Mystic Talisman | Partial | done: buff@skill_use grants stat_down; missing: unmapped effect ids 6000255; unsure: buff@skill_use conditions: role,attr |
+| 300300 | 得意属性が斬属性かつサポーターの時、スキル発動後、味方全員に「受ける魔法攻撃ダメージ-{0}%」を1回攻撃を受けるまで付与 | Mystic Talisman | Partial | done: buff@skill_use grants taken_damage; missing: unmapped effect ids 6000254; unsure: buff@skill_use conditions: role,attr |
+| 300301 | 得意属性が斬属性かつサポーターの時、スキル発動後、味方全員に「受ける魔法攻撃ダメージ-{0}%」を1回攻撃を受けるまで付与 | Mystic Talisman | Partial | done: buff@skill_use grants taken_damage; missing: unmapped effect ids 6000255; unsure: buff@skill_use conditions: role,attr |
 | 300302 | 得意属性が火属性かつアタッカーの時、受ける強化効果量+{0}% | Wanderer's Clothes | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: role,attr |
 | 300303 | 得意属性が火属性かつアタッカーの時、受ける強化効果量+{0}% | Wanderer's Clothes | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: role,attr |
 | 300304 | 得意属性が打属性かつディフェンダーの時、単体攻撃から受けるダメージ-{0}% | Herbal Poncho | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,attr,scope |
 | 300305 | 得意属性が打属性かつディフェンダーの時、単体攻撃から受けるダメージ-{0}% | Herbal Poncho | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,attr,scope |
 | 300306 | 得意属性が氷属性かつサポーターの時、与えるマイナス効果量+{0}% | Ore Scale Armor | Implemented | done: potency_given_minus; 1/1 description effects mapped; unsure: potency_given_minus conditions: role,attr |
 | 300307 | 得意属性が氷属性かつサポーターの時、与えるマイナス効果量+{0}% | Ore Scale Armor | Implemented | done: potency_given_minus; 1/1 description effects mapped; unsure: potency_given_minus conditions: role,attr |
-| 300308 | 得意属性が氷属性かつアタッカーの時、スキル発動後、自身に「魔攻+{0}%」を2回行動終了するまで付与 | Daylight | Partial | done: buff@skill_use grants stat_up; missing: unmapped effect ids 6000262; unsure: buff@skill_use conditions: role,attr |
-| 300309 | 得意属性が氷属性かつアタッカーの時、スキル発動後、自身に「魔攻+{0}%」を2回行動終了するまで付与 | Daylight | Partial | done: buff@skill_use grants stat_up; missing: unmapped effect ids 6000263; unsure: buff@skill_use conditions: role,attr |
+| 300308 | 得意属性が氷属性かつアタッカーの時、スキル発動後、自身に「魔攻+{0}%」を2回行動終了するまで付与 | Daylight | Implemented | done: buff@skill_use grants stat_up; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
+| 300309 | 得意属性が氷属性かつアタッカーの時、スキル発動後、自身に「魔攻+{0}%」を2回行動終了するまで付与 | Daylight | Implemented | done: buff@skill_use grants stat_up; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 300310 | 得意属性が氷属性かつアタッカーの時、スキル発動後、自身に「魔攻+{0}%」を2回行動終了するまで付与し、<br>自身に「魔防+{1}%」を2回攻撃を受けるまで付与 | Cold Hammer | Implemented | done: stat_up; buff@skill_use grants stat_up; 2/2 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 300311 | 得意属性が氷属性かつアタッカーの時、スキル発動後、自身に「魔攻+{0}%」を2回行動終了するまで付与し、<br>自身に「魔防+{1}%」を2回攻撃を受けるまで付与 | Cold Hammer | Implemented | done: stat_up; buff@skill_use grants stat_up; 2/2 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 300312 | 得意属性が斬属性かつサポーターの時、スキル発動後、味方全員に「物理攻撃スキルダメージ+{0}%」を1回行動終了するまで付与 | Rugged Sword | Implemented | done: buff@skill_use grants skill_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
@@ -232,8 +232,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300323 | 得意属性が雷属性かつブレイカーの時、全体攻撃のブレイクダメージ+{0}% | Orphic Ring: Bolt | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: role,attr,scope |
 | 300324 | 自身がサポーターの時、スキル発動後、対象に「受けるHP回復量+{0}%」を1回行動終了するまで付与 | Beginner's Staff | Implemented | done: buff@skill_use grants heal_received; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
 | 300325 | 自身がサポーターの時、スキル発動後、対象に「受けるHP回復量+{0}%」を1回行動終了するまで付与 | Beginner's Staff | Implemented | done: buff@skill_use grants heal_received; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
-| 300326 | 得意属性が打属性の時、スキル発動後、自身に「物攻+{0}%」を1回行動終了するまで付与 | Bloody Claw | Partial | done: buff@skill_use grants stat_up; missing: unmapped effect ids 6000288; unsure: buff@skill_use conditions: attr |
-| 300327 | 得意属性が打属性の時、スキル発動後、自身に「物攻+{0}%」を1回行動終了するまで付与 | Bloody Claw | Partial | done: buff@skill_use grants stat_up; missing: unmapped effect ids 6000289; unsure: buff@skill_use conditions: attr |
+| 300326 | 得意属性が打属性の時、スキル発動後、自身に「物攻+{0}%」を1回行動終了するまで付与 | Bloody Claw | Implemented | done: buff@skill_use grants stat_up; 1/1 description effects mapped; unsure: buff@skill_use conditions: attr |
+| 300327 | 得意属性が打属性の時、スキル発動後、自身に「物攻+{0}%」を1回行動終了するまで付与 | Bloody Claw | Implemented | done: buff@skill_use grants stat_up; 1/1 description effects mapped; unsure: buff@skill_use conditions: attr |
 | 300328 | 自身がサポーターの時、与えるHP回復量+{0}% | Paraselene Clothes | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored; unsure: heal_given conditions: role |
 | 300329 | 自身がサポーターの時、与えるHP回復量+{0}% | Paraselene Clothes | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored; unsure: heal_given conditions: role |
 | 300330 | 得意属性が打属性の時、受けるダメージ-{0}% | Hard Robe | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: attr |
@@ -255,12 +255,12 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300346 | 得意属性が打属性の時、火氷雷風属性耐性+{0}% | Baron's Crown | Implemented | done: resist_up; 1/1 description effects mapped; unsure: resist_up resist_up buff amounts ignored downstream; resist_up conditions: attr |
 | 300347 | 得意属性が打属性の時、火氷雷風属性耐性+{0}% | Baron's Crown | Implemented | done: resist_up; 1/1 description effects mapped; unsure: resist_up resist_up buff amounts ignored downstream; resist_up conditions: attr |
 | 300348 | スキルダメージ+{0}% | Reliable Alchemist's Staff | Implemented | done: skill_damage; 1/1 description effects mapped |
-| 300349 | 自身がアタッカーの時、バーストスキルダメージ+{0}%<br>自身がアタッカーの時、受けるダメージ+{1}%(解除不可) | Exorcism Brooch | Implemented | done: skill_damage; taken_damage; 2/2 description effects mapped; unsure: skill_damage conditions: role; taken_damage conditions: role |
-| 300350 | 自身がアタッカーの時、バーストスキルダメージ+{0}%<br>自身がアタッカーの時、受けるダメージ+{1}%(解除不可) | Exorcism Brooch | Implemented | done: skill_damage; taken_damage; 2/2 description effects mapped; unsure: skill_damage conditions: role; taken_damage conditions: role |
+| 300349 | 自身がアタッカーの時、バーストスキルダメージ+{0}%<br>自身がアタッカーの時、受けるダメージ+{1}%(解除不可) | Exorcism Brooch | Implemented | done: burst_damage; taken_damage; 2/2 description effects mapped; unsure: burst_damage conditions: role; taken_damage conditions: role |
+| 300350 | 自身がアタッカーの時、バーストスキルダメージ+{0}%<br>自身がアタッカーの時、受けるダメージ+{1}%(解除不可) | Exorcism Brooch | Implemented | done: burst_damage; taken_damage; 2/2 description effects mapped; unsure: burst_damage conditions: role; taken_damage conditions: role |
 | 300351 | 得意属性が斬属性の時、スキル発動後、自身のHPを{0}%回復 | Kurken Sweats | Implemented | done: buff@skill_use executes heal; 1/1 description effects mapped; unsure: buff@skill_use conditions: attr |
 | 300352 | 得意属性が斬属性の時、スキル発動後、自身のHPを{0}%回復 | Kurken Sweats | Implemented | done: buff@skill_use executes heal; 1/1 description effects mapped; unsure: buff@skill_use conditions: attr |
-| 300353 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}% | Tonnelash | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300354 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}% | Tonnelash | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
+| 300353 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}% | Tonnelash | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300354 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}% | Tonnelash | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
 | 300355 | 得意属性が雷属性かつアタッカーの時、スキルダメージ+{0}% | Grand Plate | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
 | 300356 | 得意属性が雷属性かつアタッカーの時、スキルダメージ+{0}% | Grand Plate | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
 | 300357 | 得意属性が雷属性の時、スキル発動後、自身に「魔法攻撃スキルダメージ+{0}%」を付与(上限20%) | Vital Pendant | Implemented | done: buff@skill_use grants skill_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: attr |
@@ -277,8 +277,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300368 | 得意属性が打属性かつサポーターの時、スキル発動後、味方全員に「スキルダメージ+{0}%」を1回行動終了するまで付与 | Summary of Arts | Implemented | done: buff@skill_use grants skill_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 300369 | 得意属性が雷属性かつサポーターの時、スキル発動後、味方全員に「スキルダメージ+{0}%」を1回行動終了するまで付与 | Crimson Leather Armor | Implemented | done: buff@skill_use grants skill_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 300370 | 得意属性が雷属性かつサポーターの時、スキル発動後、味方全員に「スキルダメージ+{0}%」を1回行動終了するまで付与 | Crimson Leather Armor | Implemented | done: buff@skill_use grants skill_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
-| 300371 | 自身のHPが70%以上の時、自身の物理攻撃ダメージ+{0}% | Dart Shirt | Implemented | done: stat_up; 1/1 description effects mapped; unsure: stat_up conditions: hp_above |
-| 300372 | 自身のHPが70%以上の時、自身の物理攻撃ダメージ+{0}% | Dart Shirt | Implemented | done: stat_up; 1/1 description effects mapped; unsure: stat_up conditions: hp_above |
+| 300371 | 自身のHPが70%以上の時、自身の物理攻撃ダメージ+{0}% | Dart Shirt | Implemented | done: dealt_damage; 1/1 description effects mapped; unsure: dealt_damage conditions: hp_above |
+| 300372 | 自身のHPが70%以上の時、自身の物理攻撃ダメージ+{0}% | Dart Shirt | Implemented | done: dealt_damage; 1/1 description effects mapped; unsure: dealt_damage conditions: hp_above |
 | 300373 | 得意属性が雷属性かつサポーターの時、与える強化効果量+{0}% | Element Guard | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: role,attr |
 | 300374 | 得意属性が雷属性かつサポーターの時、与える強化効果量+{0}% | Element Guard | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: role,attr |
 | 300375 | 自身がアタッカーかつHPが70%以上の時、攻撃後、自身に「スキルダメージ+{0}%」を1回行動終了するまで付与 | Fancy Ring | Implemented | done: buff@post_attack grants skill_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: hp_above |
@@ -308,8 +308,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300399 | 得意属性が打属性かつアタッカーであり自身のHPが最大の時、スキルダメージ+{0}% | Zerstören | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr,hp_above |
 | 300400 | 得意属性が突属性かつアタッカーの時、クリティカルダメージ+{0}% | Durchdringen | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role,attr |
 | 300401 | 得意属性が突属性かつアタッカーの時、クリティカルダメージ+{0}% | Durchdringen | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role,attr |
-| 300402 | 自身がサポーターの時、スキル発動後、味方全員に「火属性ダメージ+{0}%」を1回行動終了するまで付与 | Blessed Staff | Missing | missing: unmapped effect ids 6000377; description text unparsed |
-| 300403 | 自身がサポーターの時、スキル発動後、味方全員に「火属性ダメージ+{0}%」を1回行動終了するまで付与 | Blessed Staff | Missing | missing: unmapped effect ids 6000377; description text unparsed |
+| 300402 | 自身がサポーターの時、スキル発動後、味方全員に「火属性ダメージ+{0}%」を1回行動終了するまで付与 | Blessed Staff | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
+| 300403 | 自身がサポーターの時、スキル発動後、味方全員に「火属性ダメージ+{0}%」を1回行動終了するまで付与 | Blessed Staff | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
 | 300404 | 得意属性が氷属性かつサポーターの時、スキル発動後、味方全員に「ターン開始時、HP回復+{0}%」を2回行動開始するまで付与 | Shadowguard Staff | Implemented | done: buff@turn_start grants stat_up; buff@turn_start grants stat_up; 1/1 description effects mapped; unsure: buff@turn_start conditions: role,attr |
 | 300405 | 得意属性が氷属性かつサポーターの時、スキル発動後、味方全員に「ターン開始時、HP回復+{0}%」を1回行動開始するまで付与 | Shadowguard Staff | Implemented | done: buff@turn_start grants stat_up; buff@turn_start grants stat_up; 1/1 description effects mapped; unsure: buff@turn_start conditions: role,attr |
 | 300406 | 得意属性が風属性の時、単体攻撃のブレイクダメージ+{0}% | Holy Favor Staff | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: attr,scope |
@@ -336,20 +336,20 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300427 | 得意属性が打属性かつサポーターの時、与える強化効果量+{0}% | Gluttony Ring | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: role,attr |
 | 300428 | 得意属性が氷属性かつブレイカーの時、単体攻撃のブレイクダメージ+{0}% | Lust Ring | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: role,attr,scope |
 | 300429 | 得意属性が氷属性かつブレイカーの時、単体攻撃のブレイクダメージ+{0}% | Lust Ring | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: role,attr,scope |
-| 300430 | 得意属性が火属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Fire | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300431 | 得意属性が火属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Fire | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300432 | 得意属性が氷属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Ice | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300433 | 得意属性が氷属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Ice | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300434 | 得意属性が風属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Air | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300435 | 得意属性が風属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Air | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300436 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Bolt | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300437 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Bolt | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300438 | 得意属性が斬属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Slash | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300439 | 得意属性が斬属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Slash | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300440 | 得意属性が打属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Strike | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300441 | 得意属性が打属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Strike | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300442 | 得意属性が突属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Stab | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300443 | 得意属性が突属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Stab | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
+| 300430 | 得意属性が火属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Fire | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300431 | 得意属性が火属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Fire | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300432 | 得意属性が氷属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Ice | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300433 | 得意属性が氷属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Ice | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300434 | 得意属性が風属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Air | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300435 | 得意属性が風属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Air | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300436 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Bolt | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300437 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Bolt | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300438 | 得意属性が斬属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Slash | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300439 | 得意属性が斬属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Slash | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300440 | 得意属性が打属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Strike | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300441 | 得意属性が打属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Strike | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300442 | 得意属性が突属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Stab | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300443 | 得意属性が突属性かつアタッカーの時、バーストスキルダメージ+{0}% | Origin Necklace: Stab | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
 | 300444 | 得意属性が火属性かつディフェンダーの時、HP最大時受けるダメージ-{0}% | Royalty Robe | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,attr |
 | 300445 | 得意属性が火属性かつディフェンダーの時、HP最大時受けるダメージ-{0}% | Royalty Robe | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,attr |
 | 300446 | 得意属性が氷属性かつサポーターの時、攻撃後、対象に「受けるダメージ+{0}%」を2回攻撃を受けるまで付与 | Purity Robe | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
@@ -386,8 +386,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300477 | WAVE開始時、自身のHPを{0}%回復 | Exotic Armor | Implemented | done: buff@wave_start executes heal; 1/1 description effects mapped |
 | 300478 | 得意属性が氷属性の時、クリティカルダメージ+{0}% | Passionate Envoy's Cane | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: attr |
 | 300479 | 得意属性が氷属性の時、クリティカルダメージ+{0}% | Passionate Envoy's Cane | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: attr |
-| 300480 | 得意属性が氷属性の時、スキルダメージ+{0}%とバーストスキルダメージ+{1}% | Passionate Envoy's Coat | Implemented | done: skill_damage; skill_damage; 2/2 description effects mapped; unsure: skill_damage conditions: attr |
-| 300481 | 得意属性が氷属性の時、スキルダメージ+{0}%とバーストスキルダメージ+{1}% | Passionate Envoy's Coat | Implemented | done: skill_damage; skill_damage; 2/2 description effects mapped; unsure: skill_damage conditions: attr |
+| 300480 | 得意属性が氷属性の時、スキルダメージ+{0}%とバーストスキルダメージ+{1}% | Passionate Envoy's Coat | Implemented | done: skill_damage; burst_damage; 2/2 description effects mapped; unsure: skill_damage conditions: attr; burst_damage conditions: attr |
+| 300481 | 得意属性が氷属性の時、スキルダメージ+{0}%とバーストスキルダメージ+{1}% | Passionate Envoy's Coat | Implemented | done: skill_damage; burst_damage; 2/2 description effects mapped; unsure: skill_damage conditions: attr; burst_damage conditions: attr |
 | 300482 | 得意属性が氷属性の時、クリティカル攻撃後、自身に「受けるダメージ-{0}%」を2回攻撃を受けるまで付与 | Passionate Envoy's Boots | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: attr |
 | 300483 | 得意属性が氷属性の時、クリティカル攻撃後、自身に「受けるダメージ-{0}%」を2回攻撃を受けるまで付与 | Passionate Envoy's Boots | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: attr |
 | 300484 | 自身がディフェンダーの時、単体攻撃から受けるダメージ-{0}% | Serene Envoy's Blade | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,scope |
@@ -404,8 +404,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300495 | クリティカル攻撃後、自身に「ブレイクダメージ+{0}%」を付与(上限20%) | Longevity Envelope | Implemented | done: buff@post_attack grants break_damage; 1/1 description effects mapped |
 | 300496 | 自身がアタッカーの時、単体攻撃のクリティカルダメージ+{0}% | Fortune Staff | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role,scope |
 | 300497 | 自身がアタッカーの時、単体攻撃のクリティカルダメージ+{0}% | Fortune Staff | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role,scope |
-| 300498 | 得意属性が氷属性の時、スキル2のダメージ+{0}% | Fortune Kimono | Missing | missing: unmapped effect ids 6000434; description text unparsed |
-| 300499 | 得意属性が氷属性の時、スキル2のダメージ+{0}% | Fortune Kimono | Missing | missing: unmapped effect ids 6000434; description text unparsed |
+| 300498 | 得意属性が氷属性の時、スキル2のダメージ+{0}% | Fortune Kimono | Implemented | done: dealt_damage; 1/1 description effects mapped; unsure: dealt_damage conditions: attr |
+| 300499 | 得意属性が氷属性の時、スキル2のダメージ+{0}% | Fortune Kimono | Implemented | done: dealt_damage; 1/1 description effects mapped; unsure: dealt_damage conditions: attr |
 | 300500 | 自身がアタッカーの時、スキル1使用後、自身のHPを{0}%回復 | Fortune Shimenawa | Partial | done: 1/1 description effects mapped; missing: heal mod ignored; unsure: heal conditions: role |
 | 300501 | 自身がアタッカーの時、スキル1使用後、自身のHPを{0}%回復 | Fortune Shimenawa | Partial | done: 1/1 description effects mapped; missing: heal mod ignored; unsure: heal conditions: role |
 | 300502 | 自身がアタッカーの時、バトル開始時、自身に「ターン開始時、HP回復+{0}%」を5回行動開始するまで付与 | Tourbillon | Implemented | done: buff@battle_start grants stat_up; buff@battle_start grants stat_up; 1/1 description effects mapped; unsure: buff@battle_start conditions: role |
@@ -462,12 +462,12 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300553 | 得意属性が雷属性かつ攻撃対象のブレイクゲージが50%以上の時、ブレイクダメージ+{0}% | Arbidel Torne | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: attr |
 | 300554 | 得意属性が雷属性かつ攻撃対象がブレイク時、対象に「受けるダメージ+{0}%」を2回攻撃を受けるまで付与 | Anendtos | Implemented | done: buff@break_hit grants taken_damage; 1/1 description effects mapped; unsure: buff@break_hit conditions: attr,target_broken |
 | 300555 | 得意属性が雷属性かつ攻撃対象がブレイク時、対象に「受けるダメージ+{0}%」を2回攻撃を受けるまで付与 | Anendtos | Implemented | done: buff@break_hit grants taken_damage; 1/1 description effects mapped; unsure: buff@break_hit conditions: attr,target_broken |
-| 300556 | 得意属性が雷属性かつ攻撃対象がブレイク時、味方全員に「魔攻+{0}%」を1回行動終了するまで付与 | Thundercall Crown | Partial | done: buff@break_hit grants stat_up; missing: unmapped effect ids 6000480; unsure: buff@break_hit conditions: attr,target_broken |
-| 300557 | 得意属性が雷属性かつ攻撃対象がブレイク時、味方全員に「魔攻+{0}%」を1回行動終了するまで付与 | Thundercall Crown | Partial | done: buff@break_hit grants stat_up; missing: unmapped effect ids 6000480; unsure: buff@break_hit conditions: attr,target_broken |
-| 300558 | 得意属性が火属性かつサポーターの時、味方全員の受ける物理攻撃ダメージ-{0}% | Signal Fire Bow | Implemented | done: stat_down; 1/1 description effects mapped; unsure: stat_down conditions: role,attr |
-| 300559 | 得意属性が火属性かつサポーターの時、味方全員の受ける物理攻撃ダメージ-{0}% | Signal Fire Bow | Implemented | done: stat_down; 1/1 description effects mapped; unsure: stat_down conditions: role,attr |
-| 300560 | 得意属性が火属性かつサポーターの時、味方全員の受ける魔法攻撃ダメージ-{0}% | Sapience Coat | Implemented | done: stat_down; 1/1 description effects mapped; unsure: stat_down conditions: role,attr |
-| 300561 | 得意属性が火属性かつサポーターの時、味方全員の受ける魔法攻撃ダメージ-{0}% | Sapience Coat | Implemented | done: stat_down; 1/1 description effects mapped; unsure: stat_down conditions: role,attr |
+| 300556 | 得意属性が雷属性かつ攻撃対象がブレイク時、味方全員に「魔攻+{0}%」を1回行動終了するまで付与 | Thundercall Crown | Implemented | done: buff@break_hit grants stat_up; 1/1 description effects mapped; unsure: buff@break_hit conditions: attr,target_broken |
+| 300557 | 得意属性が雷属性かつ攻撃対象がブレイク時、味方全員に「魔攻+{0}%」を1回行動終了するまで付与 | Thundercall Crown | Implemented | done: buff@break_hit grants stat_up; 1/1 description effects mapped; unsure: buff@break_hit conditions: attr,target_broken |
+| 300558 | 得意属性が火属性かつサポーターの時、味方全員の受ける物理攻撃ダメージ-{0}% | Signal Fire Bow | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,attr |
+| 300559 | 得意属性が火属性かつサポーターの時、味方全員の受ける物理攻撃ダメージ-{0}% | Signal Fire Bow | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,attr |
+| 300560 | 得意属性が火属性かつサポーターの時、味方全員の受ける魔法攻撃ダメージ-{0}% | Sapience Coat | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,attr |
+| 300561 | 得意属性が火属性かつサポーターの時、味方全員の受ける魔法攻撃ダメージ-{0}% | Sapience Coat | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,attr |
 | 300562 | 得意属性が火属性かつサポーターの時、与えるHP回復量+{0}%と受けるダメージ-{1}% | Lucky Coin | Partial | done: taken_damage; 2/2 description effects mapped; missing: heal_given mod ignored; unsure: heal_given conditions: role,attr; taken_damage conditions: role,attr |
 | 300563 | 得意属性が火属性かつサポーターの時、与えるHP回復量+{0}%と受けるダメージ-{1}% | Lucky Coin | Partial | done: taken_damage; 2/2 description effects mapped; missing: heal_given mod ignored; unsure: heal_given conditions: role,attr; taken_damage conditions: role,attr |
 | 300564 | 得意属性が打属性かつブレイカーの時、攻撃後、対象に「受けるダメージ+{0}%」を1回攻撃を受けるまで付与 | Force Macht Power | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
@@ -508,16 +508,16 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300599 | 得意属性が打属性かつアタッカーの時、攻撃後、自身に「スキルダメージ+{0}%」を2回行動終了するまで付与 | Halberd | Implemented | done: buff@post_attack grants skill_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
 | 300600 | 得意属性が打属性かつアタッカーの時、クリティカルダメージ+{0}% | Clear Leather Armor | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role,attr |
 | 300601 | 得意属性が打属性かつアタッカーの時、クリティカルダメージ+{0}% | Clear Leather Armor | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role,attr |
-| 300602 | 得意属性が打属性かつアタッカーの時、バーストスキルダメージ+{0}% | Silent Shoes | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300603 | 得意属性が打属性かつアタッカーの時、バーストスキルダメージ+{0}% | Silent Shoes | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
+| 300602 | 得意属性が打属性かつアタッカーの時、バーストスキルダメージ+{0}% | Silent Shoes | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300603 | 得意属性が打属性かつアタッカーの時、バーストスキルダメージ+{0}% | Silent Shoes | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
 | 300604 | 得意属性が打属性かつディフェンダーの時、受けるHP回復量+{0}% | Oracle Blade | Partial | done: 1/1 description effects mapped; missing: heal_received mod ignored; unsure: heal_received conditions: role,attr |
 | 300605 | 得意属性が打属性かつディフェンダーの時、受けるHP回復量+{0}% | Oracle Blade | Partial | done: 1/1 description effects mapped; missing: heal_received mod ignored; unsure: heal_received conditions: role,attr |
 | 300606 | 得意属性が打属性の時、攻撃を受けた時、自身のHPを{0}%回復 | Phantom Leather Mail | Implemented | done: buff@attacked executes heal; 1/1 description effects mapped; unsure: buff@attacked conditions: attr |
 | 300607 | 得意属性が打属性の時、攻撃を受けた時、自身のHPを{0}%回復 | Phantom Leather Mail | Implemented | done: buff@attacked executes heal; 1/1 description effects mapped; unsure: buff@attacked conditions: attr |
 | 300608 | 得意属性が打属性かつディフェンダーの時、受けるダメージ-{0}% | Battle Amulet | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,attr |
 | 300609 | 得意属性が打属性かつディフェンダーの時、受けるダメージ-{0}% | Battle Amulet | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,attr |
-| 300610 | 得意属性が突属性の時、攻撃対象がブレイク時、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Abmähen | Implemented | done: buff@break_hit grants stat_up; 1/1 description effects mapped; unsure: buff@break_hit conditions: attr,target_broken |
-| 300611 | 得意属性が突属性の時、攻撃対象がブレイク時、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Abmähen | Implemented | done: buff@break_hit grants stat_up; 1/1 description effects mapped; unsure: buff@break_hit conditions: attr,target_broken |
+| 300610 | 得意属性が突属性の時、攻撃対象がブレイク時、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Abmähen | Implemented | done: buff@break_hit grants taken_damage; 1/1 description effects mapped; unsure: buff@break_hit conditions: attr,target_broken |
+| 300611 | 得意属性が突属性の時、攻撃対象がブレイク時、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Abmähen | Implemented | done: buff@break_hit grants taken_damage; 1/1 description effects mapped; unsure: buff@break_hit conditions: attr,target_broken |
 | 300612 | 得意属性が風属性かつディフェンダーの時、HPが70%以上の時、受けるダメージ-{0}% | Gale Broom | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,attr,hp_above |
 | 300613 | 得意属性が風属性かつディフェンダーの時、HPが70%以上の時、受けるダメージ-{0}% | Gale Broom | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,attr,hp_above |
 | 300614 | 得意属性が斬属性かつサポーターの時、味方全員に物理攻撃スキルダメージ+{0}% | Wyrmsoul | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
@@ -600,20 +600,20 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300691 | 追加効果なし | Uniform of Dedication | Missing | missing: unmapped effect ids 6000586; description text unparsed |
 | 300692 | 追加効果なし | Eraser of Dedication | Missing | missing: unmapped effect ids 6000587; description text unparsed |
 | 300693 | 追加効果なし | Eraser of Dedication | Missing | missing: unmapped effect ids 6000587; description text unparsed |
-| 300694 | 自身がサポーターの時、スキル発動後、タイムラインに並んでいる次の味方に「バーストスキルダメージ+{0}%」を1回行動終了するまで付与 | Class President's Cane | Implemented | done: buff@skill_use grants skill_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
-| 300695 | 自身がサポーターの時、スキル発動後、タイムラインに並んでいる次の味方に「バーストスキルダメージ+{0}%」を1回行動終了するまで付与 | Class President's Cane | Implemented | done: buff@skill_use grants skill_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
+| 300694 | 自身がサポーターの時、スキル発動後、タイムラインに並んでいる次の味方に「バーストスキルダメージ+{0}%」を1回行動終了するまで付与 | Class President's Cane | Implemented | done: buff@skill_use grants burst_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
+| 300695 | 自身がサポーターの時、スキル発動後、タイムラインに並んでいる次の味方に「バーストスキルダメージ+{0}%」を1回行動終了するまで付与 | Class President's Cane | Implemented | done: buff@skill_use grants burst_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
 | 300696 | 得意属性が打属性かつサポーターの時、味方全員の強化系パネルから受ける効果量+{0}% | Class President's Uniform | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: role,attr,panel |
 | 300697 | 得意属性が打属性かつサポーターの時、味方全員の強化系パネルから受ける効果量+{0}% | Class President's Uniform | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: role,attr,panel |
-| 300698 | 得意属性が打属性かつサポーターの時、味方全員の物攻+{0}% | Class President's Ribbon | Partial | done: stat_up; missing: unmapped effect ids 6000590; unsure: stat_up conditions: role,attr |
-| 300699 | 得意属性が打属性かつサポーターの時、味方全員の物攻+{0}% | Class President's Ribbon | Partial | done: stat_up; missing: unmapped effect ids 6000590; unsure: stat_up conditions: role,attr |
+| 300698 | 得意属性が打属性かつサポーターの時、味方全員の物攻+{0}% | Class President's Ribbon | Implemented | done: stat_up; 1/1 description effects mapped; unsure: stat_up conditions: role,attr |
+| 300699 | 得意属性が打属性かつサポーターの時、味方全員の物攻+{0}% | Class President's Ribbon | Implemented | done: stat_up; 1/1 description effects mapped; unsure: stat_up conditions: role,attr |
 | 300700 | 得意属性が風属性かつWEAK攻撃時、スキルダメージ+{0}% | Lofty Longsword | Implemented | done: buff@weak_hit grants skill_damage; 1/1 description effects mapped; unsure: buff@weak_hit conditions: attr,weak_hit |
 | 300701 | 得意属性が風属性かつWEAK攻撃時、スキルダメージ+{0}% | Lofty Longsword | Implemented | done: buff@weak_hit grants skill_damage; 1/1 description effects mapped; unsure: buff@weak_hit conditions: attr,weak_hit |
 | 300702 | 得意属性が風属性の時、HP回復を受けた時、自身に「魔攻+{0}%」を1回行動終了するまで付与(重複不可) | Lofty Uniform | Implemented | done: buff@heal_received grants stat_up; 1/1 description effects mapped; unsure: buff@heal_received conditions: attr |
 | 300703 | 得意属性が風属性の時、HP回復を受けた時、自身に「魔攻+{0}%」を1回行動終了するまで付与(重複不可) | Lofty Uniform | Implemented | done: buff@heal_received grants stat_up; 1/1 description effects mapped; unsure: buff@heal_received conditions: attr |
 | 300704 | 得意属性が風属性かつアタッカーの時、パネル獲得時、スキルダメージ+{0}%(上限35%) | Lofty Pocket Mirror | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
 | 300705 | 得意属性が風属性かつアタッカーの時、パネル獲得時、スキルダメージ+{0}%(上限25%) | Lofty Pocket Mirror | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300706 | 清廉潔白のワイシャツと清廉潔白の雑巾を装備している時、バーストパネル獲得時、バーストスキルダメージ+{0}%(上限75%) | Immaculate Broom | Implemented | done: buff@panel_gain grants skill_damage; 1/1 description effects mapped; unsure: buff@panel_gain conditions: panel |
-| 300707 | 清廉潔白のワイシャツと清廉潔白の雑巾を装備している時、バーストパネル獲得時、バーストスキルダメージ+{0}%(上限50%) | Immaculate Broom | Implemented | done: buff@panel_gain grants skill_damage; 1/1 description effects mapped; unsure: buff@panel_gain conditions: panel |
+| 300706 | 清廉潔白のワイシャツと清廉潔白の雑巾を装備している時、バーストパネル獲得時、バーストスキルダメージ+{0}%(上限75%) | Immaculate Broom | Implemented | done: buff@panel_gain grants burst_damage; 1/1 description effects mapped; unsure: buff@panel_gain conditions: panel |
+| 300707 | 清廉潔白のワイシャツと清廉潔白の雑巾を装備している時、バーストパネル獲得時、バーストスキルダメージ+{0}%(上限50%) | Immaculate Broom | Implemented | done: buff@panel_gain grants burst_damage; 1/1 description effects mapped; unsure: buff@panel_gain conditions: panel |
 | 300708 | 追加効果なし | Immaculate Dress Shirt | Missing | missing: unmapped effect ids 6000595; description text unparsed |
 | 300709 | 追加効果なし | Immaculate Dress Shirt | Missing | missing: unmapped effect ids 6000595; description text unparsed |
 | 300710 | 追加効果なし | Immaculate Cloth | Missing | missing: unmapped effect ids 6000596; description text unparsed |
@@ -632,24 +632,24 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300723 | 得意属性が火氷雷風属性の時、受けるマイナス効果量-{0}% | Hand Towel of Relaxation | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: attr |
 | 300724 | 得意属性が火属性かつブレイカーの時、ブレイクダメージ+{0}% | Kaftí Skoúpa | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: role,attr |
 | 300725 | 得意属性が火属性かつブレイカーの時、ブレイクダメージ+{0}% | Kaftí Skoúpa | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: role,attr |
-| 300726 | 得意属性が火属性かつアタッカーの時、スキル2のダメージ+{0}% | Flóga Smókin | Missing | missing: unmapped effect ids 6000615; description text unparsed |
-| 300727 | 得意属性が火属性かつアタッカーの時、スキル2のダメージ+{0}% | Flóga Smókin | Missing | missing: unmapped effect ids 6000615; description text unparsed |
+| 300726 | 得意属性が火属性かつアタッカーの時、スキル2のダメージ+{0}% | Flóga Smókin | Implemented | done: dealt_damage; 1/1 description effects mapped; unsure: dealt_damage conditions: role,attr |
+| 300727 | 得意属性が火属性かつアタッカーの時、スキル2のダメージ+{0}% | Flóga Smókin | Implemented | done: dealt_damage; 1/1 description effects mapped; unsure: dealt_damage conditions: role,attr |
 | 300728 | 得意属性が火属性かつサポーターの時、与えるHP回復量+{0}% | Scinti Talon | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored; unsure: heal_given conditions: role,attr |
 | 300729 | 得意属性が火属性かつサポーターの時、与えるHP回復量+{0}% | Scinti Talon | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored; unsure: heal_given conditions: role,attr |
 | 300730 | 得意属性が氷属性かつブレイカーの時、単体攻撃のブレイクダメージ+{0}% | Krýa Skoúpa | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: role,attr,scope |
 | 300731 | 得意属性が氷属性かつブレイカーの時、単体攻撃のブレイクダメージ+{0}% | Krýa Skoúpa | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: role,attr,scope |
-| 300732 | 得意属性が氷属性かつアタッカーの時、スキル2のダメージ+{0}% | Pagoniá Smókin | Missing | missing: unmapped effect ids 6000618; description text unparsed |
-| 300733 | 得意属性が氷属性かつアタッカーの時、スキル2のダメージ+{0}% | Pagoniá Smókin | Missing | missing: unmapped effect ids 6000618; description text unparsed |
+| 300732 | 得意属性が氷属性かつアタッカーの時、スキル2のダメージ+{0}% | Pagoniá Smókin | Implemented | done: dealt_damage; 1/1 description effects mapped; unsure: dealt_damage conditions: role,attr |
+| 300733 | 得意属性が氷属性かつアタッカーの時、スキル2のダメージ+{0}% | Pagoniá Smókin | Implemented | done: dealt_damage; 1/1 description effects mapped; unsure: dealt_damage conditions: role,attr |
 | 300734 | 得意属性が氷属性かつサポーターの時、味方全員のクリティカルダメージ+{0}% | Glaço Talon | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role,attr |
 | 300735 | 得意属性が氷属性かつサポーターの時、味方全員のクリティカルダメージ+{0}% | Glaço Talon | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role,attr |
 | 300736 | 得意属性が風属性かつディフェンダーの時、スキル発動後、自身に「受けるダメージ-{0}%」を1回攻撃を受けるまで付与 | Thýella Skoúpa | Implemented | done: buff@skill_use grants taken_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 300737 | 得意属性が風属性かつディフェンダーの時、スキル発動後、自身に「受けるダメージ-{0}%」を1回攻撃を受けるまで付与 | Thýella Skoúpa | Implemented | done: buff@skill_use grants taken_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
-| 300738 | 得意属性が風属性かつアタッカーの時、バーストスキルダメージ+{0}% | Kykló Smókin | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300739 | 得意属性が風属性かつアタッカーの時、バーストスキルダメージ+{0}% | Kykló Smókin | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
+| 300738 | 得意属性が風属性かつアタッカーの時、バーストスキルダメージ+{0}% | Kykló Smókin | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300739 | 得意属性が風属性かつアタッカーの時、バーストスキルダメージ+{0}% | Kykló Smókin | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
 | 300740 | 得意属性が風属性の時、全体攻撃のブレイクダメージ+{0}% | Ciel Talon | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: attr,scope |
 | 300741 | 得意属性が風属性の時、全体攻撃のブレイクダメージ+{0}% | Ciel Talon | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: attr,scope |
-| 300742 | 自身がサポーターの時、スキル発動後、味方全員に「雷属性ダメージ+{0}%」を1回行動終了するまで付与 | Astra Skoúpa | Missing | missing: unmapped effect ids 6000623; description text unparsed |
-| 300743 | 自身がサポーターの時、スキル発動後、味方全員に「雷属性ダメージ+{0}%」を1回行動終了するまで付与 | Astra Skoúpa | Missing | missing: unmapped effect ids 6000623; description text unparsed |
+| 300742 | 自身がサポーターの時、スキル発動後、味方全員に「雷属性ダメージ+{0}%」を1回行動終了するまで付与 | Astra Skoúpa | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
+| 300743 | 自身がサポーターの時、スキル発動後、味方全員に「雷属性ダメージ+{0}%」を1回行動終了するまで付与 | Astra Skoúpa | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
 | 300744 | 得意属性が雷属性の時、攻撃時、敵の数に応じ、スキルダメージ+5〜20%(1〜4体で少ないほど増加) | Kerá Smókin | Partial | done: 2/2 description effects mapped; missing: description text unparsed |
 | 300745 | 得意属性が雷属性の時、攻撃時、敵の数に応じ、スキルダメージ+2〜10%(1〜4体で少ないほど増加) | Kerá Smókin | Partial | done: 2/2 description effects mapped; missing: description text unparsed |
 | 300746 | 得意属性が雷属性の時、単体攻撃のブレイクダメージ+{0}% | Foudre Talon | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: attr,scope |
@@ -660,8 +660,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300751 | 得意属性が斬属性の時、攻撃時、敵の数に応じ、スキルダメージ+2〜10%(1〜4体で少ないほど増加) | Himmel Mantel | Partial | done: 2/2 description effects mapped; missing: description text unparsed |
 | 300752 | 得意属性が斬属性かつサポーターの時、味方全員のクリティカルダメージ+{0}% | Tutél Talon | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role,attr |
 | 300753 | 得意属性が斬属性かつサポーターの時、味方全員のクリティカルダメージ+{0}% | Tutél Talon | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role,attr |
-| 300754 | 自身がサポーターの時、スキル発動後、味方全員に「打属性ダメージ+{0}%」を1回行動終了するまで付与 | Mace of Devastation | Missing | missing: unmapped effect ids 6000629; description text unparsed |
-| 300755 | 自身がサポーターの時、スキル発動後、味方全員に「打属性ダメージ+{0}%」を1回行動終了するまで付与 | Mace of Devastation | Missing | missing: unmapped effect ids 6000629; description text unparsed |
+| 300754 | 自身がサポーターの時、スキル発動後、味方全員に「打属性ダメージ+{0}%」を1回行動終了するまで付与 | Mace of Devastation | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
+| 300755 | 自身がサポーターの時、スキル発動後、味方全員に「打属性ダメージ+{0}%」を1回行動終了するまで付与 | Mace of Devastation | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
 | 300756 | 得意属性が打属性かつアタッカーの時、単体攻撃のスキルダメージ+{0}% | Erde Mantel | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr,scope |
 | 300757 | 得意属性が打属性かつアタッカーの時、単体攻撃のスキルダメージ+{0}% | Erde Mantel | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr,scope |
 | 300758 | 得意属性が打属性の時、単体攻撃のブレイクダメージ+{0}% | Dien Talon | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: attr,scope |
@@ -672,8 +672,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300763 | 得意属性が突属性かつディフェンダーの時、受けるダメージ-{0}% | Unterwel Mantel | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,attr |
 | 300764 | 得意属性が突属性かつサポーターの時、与えるHP回復量+{0}% | Amule Talon | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored; unsure: heal_given conditions: role,attr |
 | 300765 | 得意属性が突属性かつサポーターの時、与えるHP回復量+{0}% | Amule Talon | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored; unsure: heal_given conditions: role,attr |
-| 300766 | 得意属性が斬属性かつアタッカーの時、 バーストスキルダメージ+{0}% | Blade Knuckle | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300767 | 得意属性が斬属性かつアタッカーの時、 バーストスキルダメージ+{0}% | Blade Knuckle | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
+| 300766 | 得意属性が斬属性かつアタッカーの時、 バーストスキルダメージ+{0}% | Blade Knuckle | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300767 | 得意属性が斬属性かつアタッカーの時、 バーストスキルダメージ+{0}% | Blade Knuckle | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
 | 300768 | 得意属性が斬属性かつアタッカーの時、スキルダメージ+{0}% | Bronze Mail | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
 | 300769 | 得意属性が斬属性かつアタッカーの時、スキルダメージ+{0}% | Bronze Mail | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
 | 300770 | 得意属性が斬属性かつアタッカーの時、受けるダメージ-{0}% | One Angle Mascara | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,attr |
@@ -694,8 +694,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300785 | 得意属性が雷属性かつアタッカーであり攻撃対象がブレイク状態の時、スキルダメージ+{0}% | Wooden Staff | Implemented | done: buff@break_hit grants skill_damage; 1/1 description effects mapped; unsure: buff@break_hit conditions: attr,target_state,target_broken |
 | 300786 | 得意属性が雷属性かつアタッカーの時、クリティカルダメージ+{0}% | Adventurer's Garb | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role,attr |
 | 300787 | 得意属性が雷属性かつアタッカーの時、クリティカルダメージ+{0}% | Adventurer's Garb | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role,attr |
-| 300788 | 得意属性が雷属性かつアタッカーの時、攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Celestial Talisman | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
-| 300789 | 得意属性が雷属性かつアタッカーの時、攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Celestial Talisman | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
+| 300788 | 得意属性が雷属性かつアタッカーの時、攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Celestial Talisman | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
+| 300789 | 得意属性が雷属性かつアタッカーの時、攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Celestial Talisman | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
 | 300790 | ブレイクダメージ+{0}%と魔攻-{1}% | Steel Sword | Implemented | done: break_damage; stat_down; 2/2 description effects mapped |
 | 300791 | ブレイクダメージ+{0}%と魔攻-{1}% | Steel Sword | Implemented | done: break_damage; stat_down; 2/2 description effects mapped |
 | 300792 | 毒耐性+{0}% | Silver Armor | Partial | done: 1/1 description effects mapped; missing: ailment_resist_one mod ignored |
@@ -732,8 +732,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300823 | 得意属性が火属性かつサポーターの時、味方全員の強化系パネルから受ける効果量+{0}% | Dress of Happiness | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: role,attr,panel |
 | 300824 | 得意属性が火属性かつサポーターの時、味方全員の魔攻+{0}% | Ring of Happiness | Implemented | done: stat_up; 1/1 description effects mapped; unsure: stat_up conditions: role,attr |
 | 300825 | 得意属性が火属性かつサポーターの時、味方全員の魔攻+{0}% | Ring of Happiness | Implemented | done: stat_up; 1/1 description effects mapped; unsure: stat_up conditions: role,attr |
-| 300826 | 得意属性が火属性かつアタッカーの時、バーストスキルダメージ+{0}% | Ebony Staff | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300827 | 得意属性が火属性かつアタッカーの時、バーストスキルダメージ+{0}% | Ebony Staff | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
+| 300826 | 得意属性が火属性かつアタッカーの時、バーストスキルダメージ+{0}% | Ebony Staff | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300827 | 得意属性が火属性かつアタッカーの時、バーストスキルダメージ+{0}% | Ebony Staff | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
 | 300828 | 得意属性が火属性の時、カウンター攻撃を受けた時、自身に「クリティカルダメージ+{0}%」を1回行動終了するまで付与 | Ebony Plate | Implemented | done: buff@attacked grants crit_damage; 1/1 description effects mapped; unsure: buff@attacked conditions: attr |
 | 300829 | 得意属性が火属性の時、カウンター攻撃を受けた時、自身に「クリティカルダメージ+{0}%」を1回行動終了するまで付与 | Ebony Plate | Implemented | done: buff@attacked grants crit_damage; 1/1 description effects mapped; unsure: buff@attacked conditions: attr |
 | 300830 | 得意属性が火属性かつアタッカーの時、単体攻撃のスキルダメージ+{0}% | Soul Binder | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr,scope |
@@ -779,8 +779,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300870 | 得意属性が雷属性かつアタッカーの時、スキルダメージ+{0}%<br>「家族と友情」の味方全員の魔攻+{1}% | Water God's Scythe | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
 | 300871 | 得意属性が雷属性かつアタッカーの時、受ける強化効果量+{0}% | Midsummer Fish Sword | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: role,attr |
 | 300872 | 得意属性が雷属性かつアタッカーの時、受ける強化効果量+{0}% | Midsummer Fish Sword | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: role,attr |
-| 300873 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}% | Midsummer Swimsuit | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300874 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}% | Midsummer Swimsuit | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
+| 300873 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}% | Midsummer Swimsuit | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300874 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}% | Midsummer Swimsuit | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
 | 300875 | 得意属性が雷属性かつアタッカーの時、スキル発動後、対象に「受けるクリティカルダメージ+{0}%」を2回攻撃を受けるまで付与 | Midsummer Snorkel | Partial | done: 1/1 description effects mapped; missing: buff@skill_use buff taken_crit_damage ignored; unsure: buff@skill_use conditions: role,attr |
 | 300876 | 得意属性が雷属性かつアタッカーの時、スキル発動後、対象に「受けるクリティカルダメージ+{0}%」を2回攻撃を受けるまで付与 | Midsummer Snorkel | Partial | done: 1/1 description effects mapped; missing: buff@skill_use buff taken_crit_damage ignored; unsure: buff@skill_use conditions: role,attr |
 | 300877 | WEAK攻撃後、自身に「受けるダメージ-{0}%」を付与(上限10%) | Carefree Bat | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: weak_hit |
@@ -800,8 +800,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300891 | 得意属性が斬属性の時、与えるマイナス効果量+{0}%<br>斬属性かつアタッカーの時、さらに与えるマイナス効果量+{1}% | Moonlit Twin Stars | Implemented | done: potency_given_minus; potency_given_minus; 2/2 description effects mapped; unsure: potency_given_minus conditions: attr; potency_given_minus conditions: role |
 | 300892 | 得意属性が斬属性かつアタッカーでありカウンター攻撃を受ける時、回避する(確率{0}%) | Phantom Suit | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 300893 | 得意属性が斬属性かつアタッカーでありカウンター攻撃を受ける時、回避する(確率{0}%) | Phantom Suit | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 300894 | 得意属性が斬属性かつアタッカーの時、 バーストスキルダメージ+{0}% | Idaten's Boots | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 300895 | 得意属性が斬属性かつアタッカーの時、 バーストスキルダメージ+{0}% | Idaten's Boots | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
+| 300894 | 得意属性が斬属性かつアタッカーの時、 バーストスキルダメージ+{0}% | Idaten's Boots | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 300895 | 得意属性が斬属性かつアタッカーの時、 バーストスキルダメージ+{0}% | Idaten's Boots | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role,attr |
 | 300896 | 得意属性が氷属性かつサポーターの時、味方全員の受けるダメージ-{0}% | Icicle Fan | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,attr |
 | 300897 | 得意属性が氷属性かつサポーターの時、味方全員の受けるダメージ-{0}% | Icicle Fan | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,attr |
 | 300898 | 得意属性が氷属性かつサポーターの時、味方全員の強化系パネルから受ける効果量+{0}% | Mauve Armor | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: role,attr,panel |
@@ -814,16 +814,16 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300905 | 得意属性が火属性の時、味方全員のスキルダメージ+{0}%<br>火属性かつサポーターの時、さらに味方全員のスキルダメージ+{1}% | Hellfire Broom | Implemented | done: skill_damage; skill_damage; 2/2 description effects mapped; unsure: skill_damage conditions: attr; skill_damage conditions: role |
 | 300906 | 得意属性が火属性の時、与える強化効果量+{0}% | Valkyrie Mail | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: attr |
 | 300907 | 得意属性が火属性の時、与える強化効果量+{0}% | Valkyrie Mail | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: attr |
-| 300908 | 自身がサポーターの時、スキル発動後、味方全員に「火属性ダメージ+{0}%」を1回行動終了するまで付与 | Purifying Flame Bracelet | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 300909 | 自身がサポーターの時、スキル発動後、味方全員に「火属性ダメージ+{0}%」を1回行動終了するまで付与 | Purifying Flame Bracelet | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 300908 | 自身がサポーターの時、スキル発動後、味方全員に「火属性ダメージ+{0}%」を1回行動終了するまで付与 | Purifying Flame Bracelet | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
+| 300909 | 自身がサポーターの時、スキル発動後、味方全員に「火属性ダメージ+{0}%」を1回行動終了するまで付与 | Purifying Flame Bracelet | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
 | 300910 | 得意属性が氷属性かつディフェンダーの時、スキル発動後、自身に「魔防+{0}%」を2回攻撃を受けるまで付与 | Guardian Rod | Implemented | done: buff@skill_use grants stat_up; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 300911 | 得意属性が氷属性かつディフェンダーの時、スキル発動後、自身に「魔防+{0}%」を2回攻撃を受けるまで付与 | Guardian Rod | Implemented | done: buff@skill_use grants stat_up; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 300912 | 得意属性が氷属性の時、受けるダメージ-{0}%<br>氷属性かつディフェンダーの時、さらに受けるダメージ-{1}% | Crystal Ice Armor | Implemented | done: taken_damage; taken_damage; 2/2 description effects mapped; unsure: taken_damage conditions: attr; taken_damage conditions: role |
 | 300913 | 得意属性が氷属性の時、受けるダメージ-{0}%<br>氷属性かつディフェンダーの時、さらに受けるダメージ-{1}% | Crystal Ice Armor | Implemented | done: taken_damage; taken_damage; 2/2 description effects mapped; unsure: taken_damage conditions: attr; taken_damage conditions: role |
 | 300914 | 得意属性が氷属性の時、攻撃を受けた時、自身のHPを{0}%回復 | Resonance Bell | Implemented | done: buff@attacked executes heal; 1/1 description effects mapped; unsure: buff@attacked conditions: attr |
 | 300915 | 得意属性が氷属性の時、攻撃を受けた時、自身のHPを{0}%回復 | Resonance Bell | Implemented | done: buff@attacked executes heal; 1/1 description effects mapped; unsure: buff@attacked conditions: attr |
-| 300916 | 得意属性が火属性の時、スキルダメージ+{0}%とバーストスキルダメージ+{1}% | Forbidden Tome of Flames | Implemented | done: skill_damage; skill_damage; 2/2 description effects mapped; unsure: skill_damage conditions: attr |
-| 300917 | 得意属性が火属性の時、スキルダメージ+{0}%とバーストスキルダメージ+{1}% | Forbidden Tome of Flames | Implemented | done: skill_damage; skill_damage; 2/2 description effects mapped; unsure: skill_damage conditions: attr |
+| 300916 | 得意属性が火属性の時、スキルダメージ+{0}%とバーストスキルダメージ+{1}% | Forbidden Tome of Flames | Implemented | done: skill_damage; burst_damage; 2/2 description effects mapped; unsure: skill_damage conditions: attr; burst_damage conditions: attr |
+| 300917 | 得意属性が火属性の時、スキルダメージ+{0}%とバーストスキルダメージ+{1}% | Forbidden Tome of Flames | Implemented | done: skill_damage; burst_damage; 2/2 description effects mapped; unsure: skill_damage conditions: attr; burst_damage conditions: attr |
 | 300918 | 得意属性が火属性の時、スキル発動後、自身のHPを{0}%回復 | Blaze Dress | Implemented | done: buff@skill_use executes heal; 1/1 description effects mapped; unsure: buff@skill_use conditions: attr |
 | 300919 | 得意属性が火属性の時、スキル発動後、自身のHPを{0}%回復 | Blaze Dress | Implemented | done: buff@skill_use executes heal; 1/1 description effects mapped; unsure: buff@skill_use conditions: attr |
 | 300920 | 得意属性が火属性かつアタッカーの時、受ける強化効果量+{0}% | Flame Hairpin | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: role,attr |
@@ -832,8 +832,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300923 | 自身がアタッカーの時、攻撃後、対象に「受けるダメージ+{0}%」を2回攻撃を受けるまで付与 | Thorny Sigh | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role |
 | 300924 | 得意属性が斬属性の時、攻撃を受けた時、自身に「物攻+{0}%」を1回行動終了するまで付与(重複不可) | Elegant Heart | Implemented | done: buff@attacked grants stat_up; 1/1 description effects mapped; unsure: buff@attacked conditions: attr |
 | 300925 | 得意属性が斬属性の時、攻撃を受けた時、自身に「物攻+{0}%」を1回行動終了するまで付与(重複不可) | Elegant Heart | Implemented | done: buff@attacked grants stat_up; 1/1 description effects mapped; unsure: buff@attacked conditions: attr |
-| 300926 | 得意属性が斬属性の時、攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Radiant Coronet | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped; unsure: buff@post_attack conditions: attr |
-| 300927 | 得意属性が斬属性の時、攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Radiant Coronet | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped; unsure: buff@post_attack conditions: attr |
+| 300926 | 得意属性が斬属性の時、攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Radiant Coronet | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: attr |
+| 300927 | 得意属性が斬属性の時、攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Radiant Coronet | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: attr |
 | 300928 | 得意属性が火属性かつブレイカーの時、WEAK攻撃時、ブレイクダメージ+{0}% | Eterno Flóga | Implemented | done: buff@weak_hit grants break_damage; 1/1 description effects mapped; unsure: buff@weak_hit conditions: role,attr,weak_hit |
 | 300929 | 得意属性が火属性かつブレイカーの時、WEAK攻撃時、ブレイクダメージ+{0}% | Eterno Flóga | Implemented | done: buff@weak_hit grants break_damage; 1/1 description effects mapped; unsure: buff@weak_hit conditions: role,attr,weak_hit |
 | 300930 | 得意属性が火属性の時、WEAK攻撃後、自身に「ブレイクダメージ+{0}%」を付与(上限25%) | Lichtschutz Mail | Implemented | done: buff@post_attack grants break_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: attr,weak_hit |
@@ -844,10 +844,10 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300935 | 得意属性が斬属性かつディフェンダーの時、スキルダメージ+{0}% | Ténèbres Energy | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
 | 300936 | 自身がディフェンダーの時、HPが50%以下の時、受けるダメージ-{0}% | Mugitus Plate | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,hp_below |
 | 300937 | 自身がディフェンダーの時、HPが50%以下の時、受けるダメージ-{0}% | Mugitus Plate | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: role,hp_below |
-| 300938 | 味方全員の物理攻撃ダメージ+{0}% | Shadow Walkers | Implemented | done: stat_up; 1/1 description effects mapped |
-| 300939 | 味方全員の物理攻撃ダメージ+{0}% | Shadow Walkers | Implemented | done: stat_up; 1/1 description effects mapped |
+| 300938 | 味方全員の物理攻撃ダメージ+{0}% | Shadow Walkers | Implemented | done: dealt_damage; 1/1 description effects mapped |
+| 300939 | 味方全員の物理攻撃ダメージ+{0}% | Shadow Walkers | Implemented | done: dealt_damage; 1/1 description effects mapped |
 | 300940 | 得意属性が火属性の時、味方全員の状態異常耐性+{0}%<br>「正義と探求」の味方全員の物防+{1}% | Chorebeat Heart | Partial | done: stat_up; 2/2 description effects mapped; missing: ailment_resist mod ignored (only buffs/immunity read); unsure: ailment_resist conditions: attr |
-| 300941 | 得意属性が氷属性の時、バーストスキルダメージ+{0}%<br>「ずぼら」の味方全員の魔攻+{1}% | Ether Staff | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: attr |
+| 300941 | 得意属性が氷属性の時、バーストスキルダメージ+{0}%<br>「ずぼら」の味方全員の魔攻+{1}% | Ether Staff | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: attr |
 | 300942 | 得意属性が火属性かつディフェンダーの時、味方全員の魔法攻撃スキルダメージ+{0}% | Pastete Dream | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
 | 300943 | 得意属性が火属性かつディフェンダーの時、味方全員の魔法攻撃スキルダメージ+{0}% | Pastete Dream | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr |
 | 300944 | 得意属性が火属性の時、受けるHP回復量+{0}% | Miel Robe | Partial | done: 1/1 description effects mapped; missing: heal_received mod ignored; unsure: heal_received conditions: attr |
@@ -874,8 +874,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300965 | 得意属性が打属性の時、受けるHP回復量+{0}% | Couronne Victoire | Partial | done: 1/1 description effects mapped; missing: heal_received mod ignored; unsure: heal_received conditions: attr |
 | 300966 | 自身が打属性の時、与えるマイナス効果量+{0}%<br>「冒険」の味方全員の物攻+{1}% | Triple Element | Implemented | done: potency_given_minus; stat_up; 2/2 description effects mapped |
 | 300967 | 自身がアタッカーの時、与える強化効果量+{0}%<br>「おてんば」の味方全員の魔攻+{1}% | Magische Flügel | Implemented | done: potency_given_plus; stat_up; 2/2 description effects mapped; unsure: potency_given_plus conditions: role |
-| 300968 | 得意属性が打属性かつブレイカーの時、攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Hammer of Judgment | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
-| 300969 | 得意属性が打属性かつブレイカーの時、攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Hammer of Judgment | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
+| 300968 | 得意属性が打属性かつブレイカーの時、攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Hammer of Judgment | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
+| 300969 | 得意属性が打属性かつブレイカーの時、攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Hammer of Judgment | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
 | 300970 | 自身が打属性の時、WEAK攻撃後、自身に「物攻+{0}%」を1回行動終了まで付与 | Kruger Cloak | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped; unsure: buff@post_attack conditions: weak_hit |
 | 300971 | 自身が打属性の時、WEAK攻撃後、自身に「物攻+{0}%」を1回行動終了まで付与 | Kruger Cloak | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped; unsure: buff@post_attack conditions: weak_hit |
 | 300972 | 自身がブレイカーの時、味方全員のブレイクダメージ+{0}% | Alchemist's Belt | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: role |
@@ -884,8 +884,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300975 | 得意属性が火属性かつアタッカーの時、スキル発動後、対象に「受けるクリティカルダメージ+{0}%」を2回攻撃を受けるまで付与 | Fluens Flamma | Partial | done: 1/1 description effects mapped; missing: buff@skill_use buff taken_crit_damage ignored; unsure: buff@skill_use conditions: role,attr |
 | 300976 | 自身がアタッカーの時、クリティカル攻撃後、自身に「スキルダメージ+{0}%」を1回行動終了まで付与 | Flamma Etutela | Implemented | done: buff@post_attack grants skill_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role |
 | 300977 | 自身がアタッカーの時、クリティカル攻撃後、自身に「スキルダメージ+{0}%」を1回行動終了まで付与 | Flamma Etutela | Implemented | done: buff@post_attack grants skill_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role |
-| 300978 | 得意属性が火属性の時、バーストスキルダメージ+{0}% | Vinculatis | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
-| 300979 | 得意属性が火属性の時、バーストスキルダメージ+{0}% | Vinculatis | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
+| 300978 | 得意属性が火属性の時、バーストスキルダメージ+{0}% | Vinculatis | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: attr |
+| 300979 | 得意属性が火属性の時、バーストスキルダメージ+{0}% | Vinculatis | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: attr |
 | 300980 | 得意属性が風属性かつアタッカーの時、スキル発動後、自身に「魔攻+{0}%」を2回行動終了するまで付与 | Tornado Finisher | Implemented | done: buff@skill_use grants stat_up; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 300981 | 得意属性が風属性かつアタッカーの時、スキル発動後、自身に「魔攻+{0}%」を2回行動終了するまで付与 | Tornado Finisher | Implemented | done: buff@skill_use grants stat_up; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 300982 | 自身がアタッカーの時、単体攻撃のスキルダメージ+{0}% | Wind Shade | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,scope |
@@ -904,8 +904,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 300995 | 自身がアタッカーの時、対象が状態異常時、スキルダメージ+{0}% | Natüranisch | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
 | 300996 | 得意属性が突属性の時、受ける強化効果量+{0}% | Talisman of Ancient Beasts | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: attr |
 | 300997 | 得意属性が突属性の時、受ける強化効果量+{0}% | Talisman of Ancient Beasts | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: attr |
-| 300998 | 得意属性が斬属性かつサポーターの時、スキル発動後、物攻が最も高い味方1人に「バーストスキルダメージ+{0}%」を1回行動終了するまで付与(重複不可) | Screaming Scissors | Implemented | done: buff@skill_use grants skill_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
-| 300999 | 得意属性が斬属性かつサポーターの時、スキル発動後、物攻が最も高い味方1人に「バーストスキルダメージ+{0}%」を1回行動終了するまで付与(重複不可) | Screaming Scissors | Implemented | done: buff@skill_use grants skill_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
+| 300998 | 得意属性が斬属性かつサポーターの時、スキル発動後、物攻が最も高い味方1人に「バーストスキルダメージ+{0}%」を1回行動終了するまで付与(重複不可) | Screaming Scissors | Implemented | done: buff@skill_use grants burst_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
+| 300999 | 得意属性が斬属性かつサポーターの時、スキル発動後、物攻が最も高い味方1人に「バーストスキルダメージ+{0}%」を1回行動終了するまで付与(重複不可) | Screaming Scissors | Implemented | done: buff@skill_use grants burst_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 301000 | 自身がサポーターの時、味方全員の物理攻撃スキルダメージ+{0}% | Silence Style | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
 | 301001 | 自身がサポーターの時、味方全員の物理攻撃スキルダメージ+{0}% | Silence Style | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
 | 301002 | 自身が斬属性の時、与えるHP回復量+{0}% | Lilac Jewel Necklace | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored |
@@ -916,18 +916,18 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 301007 | 得意属性が突属性の時、攻撃対象がブレイク時、対象に「ダメージ-{0}%」を付与(上限9%) | Scale Plate | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 301008 | 得意属性が突属性かつブレイカーの時、WEAK攻撃時、ブレイクダメージ+{0}% | Mercurius Eye | Implemented | done: buff@weak_hit grants break_damage; 1/1 description effects mapped; unsure: buff@weak_hit conditions: role,attr,weak_hit |
 | 301009 | 得意属性が突属性かつブレイカーの時、WEAK攻撃時、ブレイクダメージ+{0}% | Mercurius Eye | Implemented | done: buff@weak_hit grants break_damage; 1/1 description effects mapped; unsure: buff@weak_hit conditions: role,attr,weak_hit |
-| 301010 | 得意属性が突属性の時、攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Noblesse Lance | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped; unsure: buff@post_attack conditions: attr |
-| 301011 | 得意属性が突属性の時、攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Noblesse Lance | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped; unsure: buff@post_attack conditions: attr |
+| 301010 | 得意属性が突属性の時、攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Noblesse Lance | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: attr |
+| 301011 | 得意属性が突属性の時、攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Noblesse Lance | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: attr |
 | 301012 | 得意属性が突属性かつサポーターの時、与えるマイナス効果量+{0}% | Eminence Coat | Implemented | done: potency_given_minus; 1/1 description effects mapped; unsure: potency_given_minus conditions: role,attr |
 | 301013 | 得意属性が突属性かつサポーターの時、与えるマイナス効果量+{0}% | Eminence Coat | Implemented | done: potency_given_minus; 1/1 description effects mapped; unsure: potency_given_minus conditions: role,attr |
 | 301014 | 自身がサポーターの時、スキル発動後、味方全員に「物理攻撃スキルダメージ+{0}%」を1回行動終了するまで付与 | Fière Gauntlets | Implemented | done: buff@skill_use grants skill_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
 | 301015 | 自身がサポーターの時、スキル発動後、味方全員に「物理攻撃スキルダメージ+{0}%」を1回行動終了するまで付与 | Fière Gauntlets | Implemented | done: buff@skill_use grants skill_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
-| 301016 | 得意属性が雷属性かつサポーターの時、スキル発動後、魔攻が最も高い味方1人に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与(重複不可) | Darkveil Rod | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 301017 | 得意属性が雷属性かつサポーターの時、スキル発動後、魔攻が最も高い味方1人に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与(重複不可) | Darkveil Rod | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 301016 | 得意属性が雷属性かつサポーターの時、スキル発動後、魔攻が最も高い味方1人に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与(重複不可) | Darkveil Rod | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr,weak_hit |
+| 301017 | 得意属性が雷属性かつサポーターの時、スキル発動後、魔攻が最も高い味方1人に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与(重複不可) | Darkveil Rod | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr,weak_hit |
 | 301018 | 得意属性が雷属性の時、与えるマイナス効果量+{0}% | Tranquil Tunic | Implemented | done: potency_given_minus; 1/1 description effects mapped; unsure: potency_given_minus conditions: attr |
 | 301019 | 得意属性が雷属性の時、与えるマイナス効果量+{0}% | Tranquil Tunic | Implemented | done: potency_given_minus; 1/1 description effects mapped; unsure: potency_given_minus conditions: attr |
-| 301020 | 自身がサポーターの時、スキル発動後、対象に「受けるダメージ+{0}%」と「受ける魔法攻撃ダメージ+{1}%」を2回行動終了するまで付与 | Fortune Talisman | Implemented | done: buff@skill_use grants taken_damage; buff@skill_use grants stat_up; 2/2 description effects mapped; unsure: buff@skill_use conditions: role |
-| 301021 | 自身がサポーターの時、スキル発動後、対象に「受けるダメージ+{0}%」と「受ける魔法攻撃ダメージ+{1}%」を2回行動終了するまで付与 | Fortune Talisman | Implemented | done: buff@skill_use grants taken_damage; buff@skill_use grants stat_up; 2/2 description effects mapped; unsure: buff@skill_use conditions: role |
+| 301020 | 自身がサポーターの時、スキル発動後、対象に「受けるダメージ+{0}%」と「受ける魔法攻撃ダメージ+{1}%」を2回行動終了するまで付与 | Fortune Talisman | Implemented | done: buff@skill_use grants taken_damage; buff@skill_use grants taken_damage; 2/2 description effects mapped; unsure: buff@skill_use conditions: role |
+| 301021 | 自身がサポーターの時、スキル発動後、対象に「受けるダメージ+{0}%」と「受ける魔法攻撃ダメージ+{1}%」を2回行動終了するまで付与 | Fortune Talisman | Implemented | done: buff@skill_use grants taken_damage; buff@skill_use grants taken_damage; 2/2 description effects mapped; unsure: buff@skill_use conditions: role |
 | 301022 | 得意属性が雷属性かつWEAK攻撃時、スキルダメージ+{0}% | Inquisitor's Blade | Implemented | done: buff@weak_hit grants skill_damage; 1/1 description effects mapped; unsure: buff@weak_hit conditions: attr,weak_hit |
 | 301023 | 得意属性が雷属性かつWEAK攻撃時、スキルダメージ+{0}% | Inquisitor's Blade | Implemented | done: buff@weak_hit grants skill_damage; 1/1 description effects mapped; unsure: buff@weak_hit conditions: attr,weak_hit |
 | 301024 | 得意属性が雷属性の時、受けるHP回復量+{0}% | Aegis Jacket | Partial | done: 1/1 description effects mapped; missing: heal_received mod ignored; unsure: heal_received conditions: attr |
@@ -965,8 +965,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 301056 | 得意属性が氷属性かつブレイカーの時、スキル2のブレイクダメージ+{0}% | Healer's Garb | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: role,attr |
 | 301057 | 得意属性が氷属性の時、WEAK攻撃後、自身に「ブレイクダメージ+{0}%」を付与(上限30%) | Royal Hat | Implemented | done: buff@post_attack grants break_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: attr,weak_hit |
 | 301058 | 得意属性が氷属性の時、WEAK攻撃後、自身に「ブレイクダメージ+{0}%」を付与(上限25%) | Royal Hat | Implemented | done: buff@post_attack grants break_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: attr,weak_hit |
-| 301059 | 得意属性が氷属性かつサポーターの時、攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Zeitstaub | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
-| 301060 | 得意属性が氷属性かつサポーターの時、攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Zeitstaub | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
+| 301059 | 得意属性が氷属性かつサポーターの時、攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Zeitstaub | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
+| 301060 | 得意属性が氷属性かつサポーターの時、攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Zeitstaub | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
 | 301061 | 得意属性が氷属性かつサポーターの時、与える強化効果量+{0}% | Luxstwahl | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: role,attr |
 | 301062 | 得意属性が氷属性かつサポーターの時、与える強化効果量+{0}% | Luxstwahl | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: role,attr |
 | 301063 | 得意属性が氷属性かつサポーターの時、味方全員の魔攻+{0}% | Brave Seal | Implemented | done: stat_up; 1/1 description effects mapped; unsure: stat_up conditions: role,attr |
@@ -1014,8 +1014,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 301106 | 得意属性が斬属性かつアタッカーの時、バーストスキル使用後、「クリティカル確率+{0}%」を1回行動終了するまで付与 | Floral Blue Blade | Implemented | done: buff@skill_use grants crit_rate; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 301107 | 得意属性が斬属性かつアタッカーの時、受ける強化効果量+{0}% | Ancient Coat | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: role,attr |
 | 301108 | 得意属性が斬属性かつアタッカーの時、受ける強化効果量+{0}% | Ancient Coat | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: role,attr |
-| 301109 | 得意属性が斬属性かつアタッカーの時、スキル発動後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Gute Schreier | Implemented | done: buff@skill_use grants stat_up; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
-| 301110 | 得意属性が斬属性かつアタッカーの時、スキル発動後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Gute Schreier | Implemented | done: buff@skill_use grants stat_up; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
+| 301109 | 得意属性が斬属性かつアタッカーの時、スキル発動後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Gute Schreier | Implemented | done: buff@skill_use grants taken_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
+| 301110 | 得意属性が斬属性かつアタッカーの時、スキル発動後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Gute Schreier | Implemented | done: buff@skill_use grants taken_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 301111 | 自身がベップ【Mourning Blades】の時、クリティカルダメージ+{0}% | Moon Flower Butterfly | Implemented | done: crit_damage; 1/1 description effects mapped |
 | 301112 | 得意属性が火属性の時、攻撃後、対象に「受けるダメージ+{0}%」を1回攻撃を受けるまで付与<br>自身がブレイカーの時、ブレイクダメージ+{1}% | Bomber's Jewelry | Implemented | done: break_damage; buff@post_attack grants taken_damage; 2/2 description effects mapped; unsure: break_damage conditions: role; buff@post_attack conditions: attr |
 | 301113 | 得意属性が雷属性の時、味方全員のスキルダメージ+{0}%<br>自身がサポーターの時、与えるHP回復量+{1}% | Innocent Bloom Star | Partial | done: skill_damage; 2/2 description effects mapped; missing: heal_given mod ignored; unsure: skill_damage conditions: attr; heal_given conditions: role |
@@ -1041,11 +1041,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 301133 | 得意属性が斬属性かつアタッカーの時、攻撃前、対象に「斬属性耐性-{0}%」を1回攻撃を受けるまで付与 | Metol Boots | Implemented | done: buff@pre_attack executes resist_down; 1/1 description effects mapped; unsure: buff@pre_attack conditions: role,attr |
 | 301134 | 得意属性が斬属性かつアタッカーの時、攻撃前、対象に「斬属性耐性-{0}%」を1回攻撃を受けるまで付与 | Metol Boots | Implemented | done: buff@pre_attack executes resist_down; 1/1 description effects mapped; unsure: buff@pre_attack conditions: role,attr |
 | 301135 | 自身がヴァレリア【Get Over Limit】の時、WEAK攻撃時、スキル威力+{0}%とスキルダメージ+{1}% | Sickle the Wake | Implemented | done: buff@weak_hit grants skill_power; buff@weak_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@weak_hit conditions: weak_hit |
-| 301136 | 自身がユミア【Seeker of Memories】の時、クリティカル攻撃後、敵全体に「受ける魔法攻撃ダメージ+{0}%」を付与(上限30%) | Ephemeral Record | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped |
+| 301136 | 自身がユミア【Seeker of Memories】の時、クリティカル攻撃後、敵全体に「受ける魔法攻撃ダメージ+{0}%」を付与(上限30%) | Ephemeral Record | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped |
 | 301137 | 得意属性が火属性の時、全体攻撃から受けるダメージ-{0}% | Wanderer's Garb | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: attr,scope |
 | 301138 | 得意属性が火属性の時、全体攻撃から受けるダメージ-{0}% | Wanderer's Garb | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: attr,scope |
-| 301139 | 得意属性が火属性かつアタッカーの時、パーティの誰かが戦闘アイテム使用後、自身に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与<br>※アイテムを複数同時に使用しても発動は1回 | Saphensia Nyulas | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 301140 | 得意属性が火属性かつアタッカーの時、パーティの誰かが戦闘アイテム使用後、自身に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与<br>※アイテムを複数同時に使用しても発動は1回 | Saphensia Nyulas | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 301139 | 得意属性が火属性かつアタッカーの時、パーティの誰かが戦闘アイテム使用後、自身に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与<br>※アイテムを複数同時に使用しても発動は1回 | Saphensia Nyulas | Implemented | done: buff@item_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@item_use conditions: role,attr,weak_hit |
+| 301140 | 得意属性が火属性かつアタッカーの時、パーティの誰かが戦闘アイテム使用後、自身に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与<br>※アイテムを複数同時に使用しても発動は1回 | Saphensia Nyulas | Implemented | done: buff@item_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@item_use conditions: role,attr,weak_hit |
 | 301141 | 自身がレイニャ【Sincere Devotion】の時、HPが最大の時、物理攻撃スキルダメージ+{0}% | Golden Spring Beetle | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: hp_above |
 | 301142 | 得意属性が打属性かつアタッカーであり攻撃対象がブレイク状態の時、スキルダメージ+{0}% | Hunter Wear | Implemented | done: buff@break_hit grants skill_damage; 1/1 description effects mapped; unsure: buff@break_hit conditions: attr,target_state,target_broken |
 | 301143 | 得意属性が打属性かつアタッカーであり攻撃対象がブレイク状態の時、スキルダメージ+{0}% | Hunter Wear | Implemented | done: buff@break_hit grants skill_damage; 1/1 description effects mapped; unsure: buff@break_hit conditions: attr,target_state,target_broken |
@@ -1056,7 +1056,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 301148 | 得意属性が打属性かつブレイカーの時、スキル2のブレイクダメージ+{0}% | Corundum Armor | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: role,attr |
 | 301149 | 得意属性が打属性かつブレイカーの時、与えるマイナス効果量+{0}% | Curse Spoiler | Implemented | done: potency_given_minus; 1/1 description effects mapped; unsure: potency_given_minus conditions: role,attr |
 | 301150 | 得意属性が打属性かつブレイカーの時、与えるマイナス効果量+{0}% | Curse Spoiler | Implemented | done: potency_given_minus; 1/1 description effects mapped; unsure: potency_given_minus conditions: role,attr |
-| 301151 | 自身がアイラ【Friendly Fashionista】の時、攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Secret Lance Triaina | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped |
+| 301151 | 自身がアイラ【Friendly Fashionista】の時、攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Secret Lance Triaina | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped |
 | 301152 | 得意属性が火属性かつブレイカーの時、パネル獲得時、自身に「ブレイクダメージ+{0}%」を1回行動終了するまで付与 | Pixie Robe | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: role,attr |
 | 301153 | 得意属性が火属性かつブレイカーの時、パネル獲得時、自身に「ブレイクダメージ+{0}%」を1回行動終了するまで付与 | Pixie Robe | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: role,attr |
 | 301154 | 得意属性が火属性かつブレイカーの時、攻撃前、対象に「受けるブレイクダメージ+{0}%」を2回攻撃を受けるまで付与 | Scarlet Scarf | Implemented | done: buff@pre_attack grants taken_break; 1/1 description effects mapped; unsure: buff@pre_attack conditions: role,attr |
@@ -1072,17 +1072,17 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 301164 | 得意属性が火属性かつサポーターの時、与える強化効果量+{0}% | Eternal Flower | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: role,attr |
 | 301165 | 得意属性が火属性かつサポーターの時、与える強化効果量+{0}% | Eternal Flower | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: role,attr |
 | 301166 | 自身がクラウディア【Blooming Creation】の時、WEAK攻撃時、スキル威力+{0}% | Artemis Compound | Implemented | done: buff@weak_hit grants skill_power; 1/1 description effects mapped; unsure: buff@weak_hit conditions: weak_hit |
-| 301167 | 得意属性が風属性かつアタッカーの時、スキル2のダメージ+{0}% | Boxed Girl's Sailor Uniform | Missing | missing: unmapped effect ids 6001045; description text unparsed |
-| 301168 | 得意属性が風属性かつアタッカーの時、スキル2のダメージ+{0}% | Boxed Girl's Sailor Uniform | Missing | missing: unmapped effect ids 6001045; description text unparsed |
-| 301169 | 得意属性が風属性かつアタッカーの時、強化系パネル獲得時、自身に「魔法攻撃ダメージ+{0}%」を1回行動終了するまで付与                                                         | Boxed Girl's Loafers | Implemented | done: buff@panel_gain grants stat_up; 1/1 description effects mapped; unsure: buff@panel_gain conditions: role,attr,panel |
-| 301170 | 得意属性が風属性かつアタッカーの時、強化系パネル獲得時、自身に「魔法攻撃ダメージ+{0}%」を1回行動終了するまで付与                                                | Boxed Girl's Loafers | Implemented | done: buff@panel_gain grants stat_up; 1/1 description effects mapped; unsure: buff@panel_gain conditions: role,attr,panel |
-| 301171 | 得意属性が風属性の時、WEAK攻撃後、魔攻が最も高い味方1人に「風属性ダメージ+{0}%」を1回行動終了するまで付与<br>攻撃対象がブレイク時、味方全員に「プラスパネルから受ける効果量+{1}%」を1回行動終了するまで付与(重複不可) | Blooming Clover | Partial | done: 2/2 description effects mapped; missing: buff@break_hit buff potency_received ignored; unsure: buff@break_hit conditions: target_broken,panel |
+| 301167 | 得意属性が風属性かつアタッカーの時、スキル2のダメージ+{0}% | Boxed Girl's Sailor Uniform | Implemented | done: dealt_damage; 1/1 description effects mapped; unsure: dealt_damage conditions: role,attr |
+| 301168 | 得意属性が風属性かつアタッカーの時、スキル2のダメージ+{0}% | Boxed Girl's Sailor Uniform | Implemented | done: dealt_damage; 1/1 description effects mapped; unsure: dealt_damage conditions: role,attr |
+| 301169 | 得意属性が風属性かつアタッカーの時、強化系パネル獲得時、自身に「魔法攻撃ダメージ+{0}%」を1回行動終了するまで付与                                                         | Boxed Girl's Loafers | Implemented | done: buff@panel_gain grants dealt_damage; 1/1 description effects mapped; unsure: buff@panel_gain conditions: role,attr,panel |
+| 301170 | 得意属性が風属性かつアタッカーの時、強化系パネル獲得時、自身に「魔法攻撃ダメージ+{0}%」を1回行動終了するまで付与                                                | Boxed Girl's Loafers | Implemented | done: buff@panel_gain grants dealt_damage; 1/1 description effects mapped; unsure: buff@panel_gain conditions: role,attr,panel |
+| 301171 | 得意属性が風属性の時、WEAK攻撃後、魔攻が最も高い味方1人に「風属性ダメージ+{0}%」を1回行動終了するまで付与<br>攻撃対象がブレイク時、味方全員に「プラスパネルから受ける効果量+{1}%」を1回行動終了するまで付与(重複不可) | Blooming Clover | Partial | done: buff@post_attack grants dealt_damage; 2/2 description effects mapped; missing: buff@break_hit buff potency_received ignored; unsure: buff@post_attack conditions: attr,weak_hit; buff@break_hit conditions: target_broken,panel |
 | 301172 | 自身がプラフタ【Mighty Manager】の時、攻撃対象が状態異常の時、クリティカル確率+{0}% | Wing Trooper Type-1 | Implemented | done: crit_rate; 1/1 description effects mapped |
 | 301173 | 得意属性が突属性かつアタッカーの時、全体攻撃のスキルダメージ+{0}% | Foreign Girl's Sailor Uniform | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr,scope |
 | 301174 | 得意属性が突属性かつアタッカーの時、全体攻撃のスキルダメージ+{0}% | Foreign Girl's Sailor Uniform | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role,attr,scope |
 | 301175 | 得意属性が突属性かつアタッカーの時、受ける強化効果量+{0}% | Foreign Girl's Watch | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: role,attr |
 | 301176 | 得意属性が突属性かつアタッカーの時、受ける強化効果量+{0}% | Foreign Girl's Watch | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: role,attr |
-| 301177 | 自身がハイディ【ドリームフューチャー】かつ攻撃対象がブレイク時、敵全体に「受ける魔法攻撃ダメージ+{0}％」を2回攻撃を受けるまで付与(上限4個) | Genius Solution | Implemented | done: buff@break_hit grants stat_up; 1/1 description effects mapped; unsure: buff@break_hit conditions: target_broken |
+| 301177 | 自身がハイディ【ドリームフューチャー】かつ攻撃対象がブレイク時、敵全体に「受ける魔法攻撃ダメージ+{0}％」を2回攻撃を受けるまで付与(上限4個) | Genius Solution | Implemented | done: buff@break_hit grants taken_damage; 1/1 description effects mapped; unsure: buff@break_hit conditions: target_broken |
 | 301178 | 得意属性が風属性かつブレイカーの時、WAVE開始時、味方全員に「与える状態異常付与率+{0}%」を2回行動終了するまで付与 | Mechanic's White Coat | Partial | done: 1/1 description effects mapped; missing: buff@wave_start buff ailment_rate ignored; unsure: buff@wave_start conditions: role,attr |
 | 301179 | 得意属性が風属性かつブレイカーの時、WAVE開始時、味方全員に「与える状態異常付与率+{0}%」を2回行動終了するまで付与 | Mechanic's White Coat | Partial | done: 1/1 description effects mapped; missing: buff@wave_start buff ailment_rate ignored; unsure: buff@wave_start conditions: role,attr |
 | 301180 | 得意属性が風属性かつブレイカーの時、WEAK攻撃時、ブレイクダメージ+{0}% | Mechanic's Goggles | Implemented | done: buff@weak_hit grants break_damage; 1/1 description effects mapped; unsure: buff@weak_hit conditions: role,attr,weak_hit |
@@ -1090,25 +1090,25 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 301182 | 自身がフロッケ【ハートフルミライ】の時、与える強化効果量+{0}% | Cybernetics Case | Implemented | done: potency_given_plus; 1/1 description effects mapped |
 | 301183 | 得意属性が風属性かつサポーターの時、攻撃後、対象に「受けるダメージ+{0}%」を2回攻撃を受けるまで付与 | Scientist's White Coat | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
 | 301184 | 得意属性が風属性かつサポーターの時、攻撃後、対象に「受けるダメージ+{0}%」を2回攻撃を受けるまで付与 | Scientist's White Coat | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
-| 301185 | 得意属性が風属性かつサポーターの時、スキル発動後、魔攻が最も高い味方1人に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与(重複不可) | Scientist's Shoes | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 301186 | 得意属性が風属性かつサポーターの時、スキル発動後、魔攻が最も高い味方1人に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与(重複不可) | Scientist's Shoes | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 301187 | 自身がユナ【With Ideals】の時、スキル発動後、味方全員に「物理攻撃ダメージ+{0}%」を1回行動終了するまで付与 | Symbol of Justice and Pride | Implemented | done: buff@skill_use grants stat_up; 1/1 description effects mapped |
+| 301185 | 得意属性が風属性かつサポーターの時、スキル発動後、魔攻が最も高い味方1人に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与(重複不可) | Scientist's Shoes | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr,weak_hit |
+| 301186 | 得意属性が風属性かつサポーターの時、スキル発動後、魔攻が最も高い味方1人に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与(重複不可) | Scientist's Shoes | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr,weak_hit |
+| 301187 | 自身がユナ【With Ideals】の時、スキル発動後、味方全員に「物理攻撃ダメージ+{0}%」を1回行動終了するまで付与 | Symbol of Justice and Pride | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped |
 | 301188 | 自身が突属性かつサポーターの時、バトル開始時、味方全員に「ターン開始時、HP回復+{0}%」を5回行動開始するまで付与(重複不可) | Role Model's Uniform | Implemented | done: buff@battle_start grants stat_up; buff@battle_start grants stat_up; 1/1 description effects mapped; unsure: buff@battle_start conditions: role |
 | 301189 | 自身が突属性かつサポーターの時、バトル開始時、味方全員に「ターン開始時、HP回復+{0}%」を5回行動開始するまで付与(重複不可) | Role Model's Uniform | Implemented | done: buff@battle_start grants stat_up; buff@battle_start grants stat_up; 1/1 description effects mapped; unsure: buff@battle_start conditions: role |
-| 301190 | 自身が突属性かつサポーターの時、スキル発動後、味方全員に「突属性ダメージ+{0}%」を1回行動終了するまで付与 | Role Model's Necktie | Missing | missing: unmapped effect ids 6001064; description text unparsed |
-| 301191 | 自身が突属性かつサポーターの時、スキル発動後、味方全員に「突属性ダメージ+{0}%」を1回行動終了するまで付与 | Role Model's Necktie | Missing | missing: unmapped effect ids 6001064; description text unparsed |
+| 301190 | 自身が突属性かつサポーターの時、スキル発動後、味方全員に「突属性ダメージ+{0}%」を1回行動終了するまで付与 | Role Model's Necktie | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
+| 301191 | 自身が突属性かつサポーターの時、スキル発動後、味方全員に「突属性ダメージ+{0}%」を1回行動終了するまで付与 | Role Model's Necktie | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
 | 301192 | 得意属性が突属性の時、強化系パネル獲得時、物攻が最も高い味方1人に「スキルダメージ+{0}%」を1回行動終了するまで付与(重複不可)<br>自身がサポーターの時、味方全員の受けるHP回復量+{1}% | Mighty Chain | Partial | done: buff@panel_gain grants skill_damage; 2/2 description effects mapped; missing: heal_received mod ignored; unsure: heal_received conditions: role; buff@panel_gain conditions: attr,panel |
 | 301193 | 自身がイザナ【Knight's Beginning】の時、スキルダメージ+{0}%とクリティカルダメージ+{1}% | Cat's Sieval | Implemented | done: skill_damage; crit_damage; 2/2 description effects mapped |
 | 301194 | 得意属性が風属性の時、攻撃を受けた時、自身に「魔攻+{0}%」を1回行動終了するまで付与(重複不可) | Fairy Dress | Implemented | done: buff@attacked grants stat_up; 1/1 description effects mapped; unsure: buff@attacked conditions: attr |
 | 301195 | 得意属性が風属性の時、攻撃を受けた時、自身に「魔攻+{0}%」を1回行動終了するまで付与(重複不可) | Fairy Dress | Implemented | done: buff@attacked grants stat_up; 1/1 description effects mapped; unsure: buff@attacked conditions: attr |
-| 301196 | 得意属性が風属性かつアタッカーの時、スキル発動後、自身に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与 | Fighter's Bangle | Missing | missing: unmapped effect ids 6001072; description text unparsed |
-| 301197 | 得意属性が風属性かつアタッカーの時、スキル発動後、自身に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与 | Fighter's Bangle | Missing | missing: unmapped effect ids 6001072; description text unparsed |
+| 301196 | 得意属性が風属性かつアタッカーの時、スキル発動後、自身に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与 | Fighter's Bangle | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr,weak_hit |
+| 301197 | 得意属性が風属性かつアタッカーの時、スキル発動後、自身に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与 | Fighter's Bangle | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr,weak_hit |
 | 301198 | 自身がヨハナ【Phenom's Reborn】の時、スキル発動前、対象に「受けるダメージ+{0}%」を1回行動終了するまで付与(上限3個) | Fugi=Muni | Implemented | done: taken_damage; 2/2 description effects mapped |
 | 301199 | 得意属性が氷属性かつアタッカーの時、攻撃後、自身に「魔攻+{0}％」を2回行動終了するまで付与 | Shadow to Shadow | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
 | 301200 | 得意属性が氷属性かつアタッカーの時、攻撃後、自身に「魔攻+{0}％」を2回行動終了するまで付与 | Shadow to Shadow | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
 | 301201 | 得意属性が氷属性かつアタッカーの時、クリティカル攻撃後、自身に「スキルダメージ+{0}%」を付与(上限60%) | Midnight Scarf | Implemented | done: buff@post_attack grants skill_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
 | 301202 | 得意属性が氷属性かつアタッカーの時、クリティカル攻撃後、自身に「スキルダメージ+{0}%」を付与(上限40%) | Midnight Scarf | Implemented | done: buff@post_attack grants skill_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
-| 301203 | 自身がリラ【雅なる豪傑】の時、攻撃を受けた時、味方全員に「魔法攻撃ダメージ+{0}%」を1回行動終了するまで付与(上限2個) | Evil Spirit Prayer Claws | Implemented | done: buff@attacked grants stat_up; 1/1 description effects mapped |
+| 301203 | 自身がリラ【雅なる豪傑】の時、攻撃を受けた時、味方全員に「魔法攻撃ダメージ+{0}%」を1回行動終了するまで付与(上限2個) | Evil Spirit Prayer Claws | Implemented | done: buff@attacked grants dealt_damage; 1/1 description effects mapped |
 | 301204 | 得意属性が風属性かつディフェンダーの時、攻撃を受けた時、味方全員に「受けるダメージ-{0}%」を1回攻撃を受けるまで付与(上限2個) | Floral Yukata | Implemented | done: buff@attacked grants taken_damage; 1/1 description effects mapped; unsure: buff@attacked conditions: role,attr |
 | 301205 | 得意属性が風属性かつディフェンダーの時、攻撃を受けた時、味方全員に「受けるダメージ-{0}%」を1回攻撃を受けるまで付与(上限2個) | Floral Yukata | Implemented | done: buff@attacked grants taken_damage; 1/1 description effects mapped; unsure: buff@attacked conditions: role,attr |
 | 301206 | 得意属性が風属性かつディフェンダーの時、スキル発動後、味方全員に「受けるHP回復量+{0}%」を1回行動終了するまで付与 | Eternal Shawl | Implemented | done: buff@skill_use grants heal_received; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
@@ -1119,11 +1119,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 301211 | 得意属性が氷属性の時、全体攻撃から受けるダメージ-{0}% | Evil-Warding Charm | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: attr,scope |
 | 301212 | 得意属性が氷属性の時、全体攻撃から受けるダメージ-{0}% | Evil-Warding Charm | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: attr,scope |
 | 301213 | 得意属性が氷属性の時、単体攻撃のスキルダメージ+{0}%<br>自身がアタッカーの時、攻撃前、対象に「氷属性耐性-{1}%」を1回攻撃を受けるまで付与 | Damsel Crown | Implemented | done: skill_damage; buff@pre_attack executes resist_down; 2/2 description effects mapped; unsure: skill_damage conditions: attr,scope; buff@pre_attack conditions: role |
-| 301214 | 自身がトトリ【エンドレスボイジャー】の時、スキル発動後、敵全体に「受ける魔法攻撃ダメージ+{0}%」を1回攻撃を受けるまで付与(上限3個) | Fishing Village Alchemist's Staff | Implemented | done: buff@skill_use grants stat_up; 1/1 description effects mapped |
+| 301214 | 自身がトトリ【エンドレスボイジャー】の時、スキル発動後、敵全体に「受ける魔法攻撃ダメージ+{0}%」を1回攻撃を受けるまで付与(上限3個) | Fishing Village Alchemist's Staff | Implemented | done: buff@skill_use grants taken_damage; 1/1 description effects mapped |
 | 301215 | 得意属性が氷属性かつサポーターの時、与えるHP回復量+{0}% | Crazy Chalk | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored; unsure: heal_given conditions: role,attr |
 | 301216 | 得意属性が氷属性かつサポーターの時、与えるHP回復量+{0}% | Crazy Chalk | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored; unsure: heal_given conditions: role,attr |
-| 301217 | 自身がサポーターの時、スキル発動後、味方全員に「氷属性ダメージ+{0}%」を1回行動終了するまで付与 | Schlunk Mate Hen | Missing | missing: unmapped effect ids 6001089; description text unparsed |
-| 301218 | 自身がサポーターの時、スキル発動後、味方全員に「氷属性ダメージ+{0}%」を1回行動終了するまで付与 | Schlunk Mate Hen | Missing | missing: unmapped effect ids 6001089; description text unparsed |
+| 301217 | 自身がサポーターの時、スキル発動後、味方全員に「氷属性ダメージ+{0}%」を1回行動終了するまで付与 | Schlunk Mate Hen | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
+| 301218 | 自身がサポーターの時、スキル発動後、味方全員に「氷属性ダメージ+{0}%」を1回行動終了するまで付与 | Schlunk Mate Hen | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
 | 301219 | 自身がロロナ【ワンダフルプリンセス】の時、バリア消失時、自身に「最大HP+{0}%」を付与(上限20%) | Invincible Rod | Implemented | done: stat_up; 1/1 description effects mapped |
 | 301220 | 得意属性が氷属性かつディフェンダーの時、スキル発動後、自身のHPを{0}%回復 | Lanch Blanage | Implemented | done: buff@skill_use executes heal; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 301221 | 得意属性が氷属性かつディフェンダーの時、スキル発動後、自身のHPを{0}%回復 | Lanch Blanage | Implemented | done: buff@skill_use executes heal; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr |
@@ -1155,13 +1155,13 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 301247 | 自身のHPが70%以上の時、受けるダメージ-{0}%(固定) | Albadicities | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: hp_above |
 | 301248 | 与えるHP回復量+{0}% | Crepusco Stella | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored |
 | 301249 | 与えるHP回復量+{0}% | Crepusco Stella | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored |
-| 301250 | 自身がヨハナ【ブリリアントダイバー】かつ攻撃対象がブレイク時、敵全体に「受ける物理攻撃ダメージ+{0}％」を2回攻撃を受けるまで付与(上限4個) | Genius Shot | Implemented | done: buff@break_hit grants stat_up; 1/1 description effects mapped; unsure: buff@break_hit conditions: target_broken |
+| 301250 | 自身がヨハナ【ブリリアントダイバー】かつ攻撃対象がブレイク時、敵全体に「受ける物理攻撃ダメージ+{0}％」を2回攻撃を受けるまで付与(上限4個) | Genius Shot | Implemented | done: buff@break_hit grants taken_damage; 1/1 description effects mapped; unsure: buff@break_hit conditions: target_broken |
 | 301251 | 自身が鬼門【篤き忠義の忍び】の時、パーティの誰かが戦闘アイテム使用後、自身に「スキルダメージ+{0}%」を1回行動終了するまで付与<br>※アイテムを複数同時に使用しても発動は1回 | Shadow Blade | Implemented | done: buff@item_use grants skill_damage; 1/1 description effects mapped |
 | 301252 | 自身が永遠【口説き上手の式使い】の時、パーティの誰かが戦闘アイテム使用後、味方全員に「受けるダメージ-{0}%(固定)」を1回攻撃を受けるまで付与<br>※アイテムを複数同時に使用しても発動は1回 | Origami Protective Charm | Implemented | done: buff@item_use grants taken_damage; 1/1 description effects mapped |
-| 301253 | 自身が鏑矢【地に輝ける一番星】の時、パーティの誰かが戦闘アイテム使用後、敵全体に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限2個)<br>※アイテムを複数同時に使用しても発動は1回 | Stellar Radiance Blade | Partial | done: buff@item_use grants stat_up; missing: unmapped effect ids 6001127 |
+| 301253 | 自身が鏑矢【地に輝ける一番星】の時、パーティの誰かが戦闘アイテム使用後、敵全体に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限2個)<br>※アイテムを複数同時に使用しても発動は1回 | Stellar Radiance Blade | Implemented | done: buff@item_use grants taken_damage; 1/1 description effects mapped |
 | 301254 | 得意属性が雷属性の時、スキルダメージ+{0}%<br>自身がアタッカーの時、攻撃前、対象に「雷属性耐性-{1}%」を1回攻撃を受けるまで付与 | Naivety Night | Implemented | done: skill_damage; buff@pre_attack executes resist_down; 2/2 description effects mapped; unsure: skill_damage conditions: attr; buff@pre_attack conditions: role |
 | 301255 | 得意属性が火属性の時、味方全員の全体攻撃から受けるダメージ-{0}%(固定)<br>自身がディフェンダーかつ攻撃を受けた時、自身に「最大HP+{1}%」を付与(上限10%) | Trouble Tempest | Implemented | done: taken_damage; buff@attacked grants stat_up; 2/2 description effects mapped; unsure: taken_damage conditions: attr,scope |
-| 301256 | 得意属性が風属性の時、パーティの誰かが戦闘アイテム使用後、自身に「与える強化効果量+{0}%」を1回行動終了するまで付与<br>※アイテムを複数同時に使用しても発動は1回<br>自身がサポーターの時、味方全員の魔攻+{1}% | Sweet & Fresh | Partial | done: stat_up; 1/2 description effects mapped; missing: buff@item_use buff potency_given_plus ignored; unmapped effect ids 6001133; unsure: stat_up conditions: role; buff@item_use conditions: attr |
+| 301256 | 得意属性が風属性の時、パーティの誰かが戦闘アイテム使用後、自身に「与える強化効果量+{0}%」を1回行動終了するまで付与<br>※アイテムを複数同時に使用しても発動は1回<br>自身がサポーターの時、味方全員の魔攻+{1}% | Sweet & Fresh | Partial | done: stat_up; 2/2 description effects mapped; missing: buff@item_use buff potency_given_plus ignored; unsure: stat_up conditions: role; buff@item_use conditions: attr |
 | 301257 | 自身のクリティカルダメージ+{0}% | Raging Demon God's Armor | Implemented | done: crit_damage; 1/1 description effects mapped |
 | 301258 | 自身のクリティカルダメージ+{0}% | Raging Demon God's Armor | Implemented | done: crit_damage; 1/1 description effects mapped |
 | 301259 | 攻撃後、対象に「受けるダメージ+{0}%」を1回攻撃を受けるまで付与(上限2個) | Spirit's Buckler | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped |
@@ -1189,16 +1189,16 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 301281 | 得意属性が打属性かつブレイカーの時、バーストスキル使用前、対象に「受けるブレイクダメージ+{0}％」を1回攻撃を受けるまで付与 | Makeup Costa | Implemented | done: taken_break; 1/1 description effects mapped; unsure: taken_break conditions: role,attr |
 | 301282 | 得意属性が打属性かつブレイカーの時、攻撃対象がブレイク時、物攻が最も高い味方1人に「スキルダメージ+{0}%」を1回行動終了するまで付与 | White Heart Earrings | Implemented | done: buff@break_hit grants skill_damage; 1/1 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
 | 301283 | 得意属性が打属性かつサポーターの時、バーストスキルで攻撃後、対象に「受けるダメージ+{0}％」を1回攻撃を受けるまで付与 | Angel Bouquet | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: role,attr |
-| 301284 | 得意属性が打属性かつサポーターの時、スキル発動後、物攻が最も高い味方1人に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与(重複不可) | Fluffy Chouchou | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 301284 | 得意属性が打属性かつサポーターの時、スキル発動後、物攻が最も高い味方1人に「WEAK攻撃ダメージ+{0}%」を1回行動終了するまで付与(重複不可) | Fluffy Chouchou | Implemented | done: buff@skill_use grants dealt_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role,attr,weak_hit |
 | 301285 | 味方全員のクリティカルダメージ+{0}％ | Veteran's Robe | Implemented | done: crit_damage; 1/1 description effects mapped |
 | 301286 | 味方全員のクリティカルダメージ+{0}％ | Veteran's Robe | Implemented | done: crit_damage; 1/1 description effects mapped |
 | 301287 | スキルダメージ+{0}％ | Atlas Bangle | Implemented | done: skill_damage; 1/1 description effects mapped |
 | 301288 | スキルダメージ+{0}％ | Atlas Bangle | Implemented | done: skill_damage; 1/1 description effects mapped |
 | 301289 | 自身が鴉【月影の執行者】の時、パーティの誰かがクリティカル攻撃後、味方全員に「クリティカルダメージ+{0}％(上限50％)」を付与 | Moonlight | Implemented | done: buff@post_attack grants crit_damage; 2/2 description effects mapped |
-| 301290 | 自身がリーベ【Innate Strategist】の時、スキル発動後、得意属性が突属性の味方全員に「バーストスキルダメージ+{0}％」「ブレイクダメージ+{1}％」を1回行動終了するまで付与し、「受けるダメージ-{2}％」を1回攻撃を受けるまで付与 | Steel-Hearted Bow that Pierces All | Implemented | done: buff@skill_use grants skill_damage; buff@skill_use grants break_damage; buff@skill_use grants taken_damage; 3/3 description effects mapped; unsure: buff@skill_use conditions: attr |
+| 301290 | 自身がリーベ【Innate Strategist】の時、スキル発動後、得意属性が突属性の味方全員に「バーストスキルダメージ+{0}％」「ブレイクダメージ+{1}％」を1回行動終了するまで付与し、「受けるダメージ-{2}％」を1回攻撃を受けるまで付与 | Steel-Hearted Bow that Pierces All | Implemented | done: buff@skill_use grants burst_damage; buff@skill_use grants break_damage; buff@skill_use grants taken_damage; 3/3 description effects mapped; unsure: buff@skill_use conditions: attr |
 | 301291 | 自身がシトリン【Charming Jewel】の時、HPが80％以上の時、クリティカルダメージ+{0}％ | Enchanting Eyes of Beauty | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: hp_above |
 | 301292 | 得意属性が斬属性の時、スキル発動後、敵全体に「斬属性耐性-{0}%」を1回攻撃を受けるまで付与(上限3個)<br>自身がサポーターの時、味方全員のクリティカル確率+{1}％ | Sweet Bite | Implemented | done: crit_rate; buff@skill_use executes resist_down; 2/2 description effects mapped; unsure: crit_rate conditions: role; buff@skill_use conditions: attr |
-| 301293 | 自身がゴゥ【九偉人 No.5】 の時、攻撃対象がブレイク時、対象に「受ける物理攻撃ダメージ+{0}％」と「受けるクリティカルダメージ+{1}％」を1回攻撃を受けるまで付与 | Blade of Righteous Fury That Severs the Heavens | Partial | done: buff@break_hit grants stat_up; 2/2 description effects mapped; missing: buff@break_hit buff taken_crit_damage ignored; unsure: buff@break_hit conditions: target_broken |
+| 301293 | 自身がゴゥ【九偉人 No.5】 の時、攻撃対象がブレイク時、対象に「受ける物理攻撃ダメージ+{0}％」と「受けるクリティカルダメージ+{1}％」を1回攻撃を受けるまで付与 | Blade of Righteous Fury That Severs the Heavens | Partial | done: buff@break_hit grants taken_damage; 2/2 description effects mapped; missing: buff@break_hit buff taken_crit_damage ignored; unsure: buff@break_hit conditions: target_broken |
 | 301294 | 自身のHPが70%以上の時、受けるダメージ-{0}%(固定) | Knight Plate | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: hp_above |
 | 301295 | 自身のHPが70%以上の時、受けるダメージ-{0}%(固定) | Knight Plate | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: hp_above |
 | 301296 | 与えるHP回復量+{0}% | Ring of Compassion | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored |
@@ -1206,11 +1206,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 301298 | 自身がクリセルダ【トリッキーバニー】の時、攻撃前、対象に「火属性耐性-{0}％」を2回攻撃を受けるまで付与 | Noël Lapin | Implemented | done: buff@pre_attack executes resist_down; 1/1 description effects mapped |
 | 301299 | 得意属性が氷属性かつアタッカーの時、味方全員のクリティカルダメージ+{0}％<br>「読書」の時、攻撃前、対象に「状態異常耐性-{1}%」(上限50％)を1回行動終了するまで付与 | Starry Chain | Implemented | done: crit_damage; buff@pre_attack executes resist_down; 2/2 description effects mapped; unsure: crit_damage conditions: role,attr |
 | 301300 | 自身がアンチュ【ミルキィバニー】の時、強化系パネル獲得時、魔攻が最も高い味方1人に「スキル威力+{0}％」を1回行動終了するまで付与(重複不可) | Sirona Stick | Implemented | done: buff@panel_gain grants skill_power; 1/1 description effects mapped; unsure: buff@panel_gain conditions: panel |
-| 301301 | 自身がイザナ【Starry Heavens Tone】の時、攻撃対象がブレイク時、味方全員に「WEAK攻撃ダメージ+{0}％」を1回行動終了するまで付与 | Lux Trumpet | Missing | missing: unmapped effect ids 6001190; description text unparsed |
+| 301301 | 自身がイザナ【Starry Heavens Tone】の時、攻撃対象がブレイク時、味方全員に「WEAK攻撃ダメージ+{0}％」を1回行動終了するまで付与 | Lux Trumpet | Implemented | done: buff@break_hit grants dealt_damage; 1/1 description effects mapped; unsure: buff@break_hit conditions: weak_hit,target_broken |
 | 301302 | 自身がレスナ【幸爛漫・福ノ華】の時、WEAK攻撃後、自身に「受ける強化効果量+{0}％」を1回行動終了するまで付与 | New Year's Fortune Battledore | Partial | done: 1/1 description effects mapped; missing: buff@post_attack buff potency_received ignored; unsure: buff@post_attack conditions: weak_hit |
 | 301303 | 自身がリアス【Mistletoe of Hope】の時、パーティの誰かが戦闘アイテム使用後、自身に「スキル威力+{0}％」を1回行動終了するまで付与<br>※アイテムを複数同時に使用しても発動は1回 | Graciaschtoof | Implemented | done: buff@item_use grants skill_power; 1/1 description effects mapped |
 | 301304 | 自身がスレイ【白の意思を継ぐ者】の時、ブレイクダメージ+{0}％<br>さらに、攻撃対象がブレイク時、味方全員に「受ける強化効果量+{1}％」を1回行動終了するまで付与 | Perschelzwei | Partial | done: break_damage; 2/2 description effects mapped; missing: buff@break_hit buff potency_received ignored; unsure: buff@break_hit conditions: target_broken |
-| 301305 | 得意属性が火属性の時、攻撃前、対象に「全体攻撃から受ける魔法攻撃ダメージ+{0}％」を1回攻撃を受けるまで付与<br>自身がアタッカーの時、攻撃後、自身に「WEAK攻撃ダメージ+{1}％」を1回行動終了するまで付与 | Witchcraft | Partial | done: buff@pre_attack grants stat_up; 1/2 description effects mapped; missing: unmapped effect ids 6001212; unsure: buff@pre_attack conditions: attr,scope |
+| 301305 | 得意属性が火属性の時、攻撃前、対象に「全体攻撃から受ける魔法攻撃ダメージ+{0}％」を1回攻撃を受けるまで付与<br>自身がアタッカーの時、攻撃後、自身に「WEAK攻撃ダメージ+{1}％」を1回行動終了するまで付与 | Witchcraft | Implemented | done: buff@pre_attack grants taken_damage; buff@post_attack grants dealt_damage; 2/2 description effects mapped; unsure: buff@pre_attack conditions: attr,scope; buff@post_attack conditions: role,weak_hit |
 | 301306 | 得意属性が斬属性の時、攻撃対象がブレイク時、得意属性が物理属性または「ハルフェン復興隊」の味方全員に「クリティカルダメージ+{0}％」を1回行動終了するまで付与<br>自身がブレイカーの時、WEAK攻撃後、自身に「ブレイクダメージ+{1}％」を1回行動終了するまで付与 | Steward's Vestments | Implemented | done: crit_damage; buff@post_attack grants break_damage; 3/3 description effects mapped; unsure: buff@post_attack conditions: role,weak_hit |
 | 301307 | ブレイクダメージ+{0}％ | Unbridled Garb | Implemented | done: break_damage; 1/1 description effects mapped |
 | 301308 | ブレイクダメージ+{0}％ | Unbridled Garb | Implemented | done: break_damage; 1/1 description effects mapped |
@@ -1240,7 +1240,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 301332 | 与えるHP回復量+{0}% | Spiraling Amulet | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored |
 | 301333 | 与えるHP回復量+{0}% | Spiraling Amulet | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored |
 | 301334 | 自身が鬼門【Cutie☆Fox】の時、バーストゲージが200%以上かつバーストスキル使用後、自身に「スキル威力+{0}％」を1回行動終了するまで付与 | Otoko Fox | Implemented | done: buff@skill_use grants skill_power; 1/1 description effects mapped; unsure: buff@skill_use conditions: gauge_above |
-| 301335 | 得意属性が打属性の時、与える強化効果量+{0}％<br>自身がサポーターの時、味方全員のバーストスキルダメージ+{1}％ | Class Representative's Pouch | Implemented | done: potency_given_plus; skill_damage; 2/2 description effects mapped; unsure: potency_given_plus conditions: attr; skill_damage conditions: role |
+| 301335 | 得意属性が打属性の時、与える強化効果量+{0}％<br>自身がサポーターの時、味方全員のバーストスキルダメージ+{1}％ | Class Representative's Pouch | Implemented | done: potency_given_plus; burst_damage; 2/2 description effects mapped; unsure: potency_given_plus conditions: attr; burst_damage conditions: role |
 | 301336 | 自身がヨハナ【Cutie☆Hamster】の時、バーストスキル使用前、自身に「与える強化効果量+{0}％」を付与(上限40％) | Genius Chord | Implemented | done: potency_given_plus; 1/1 description effects mapped |
 | 301337 | 自身がイザナ【Cutie☆Cat】の時、バーストスキルでブレイク時、自身に「与えるマイナス効果量+{0}％」を付与(重複不可) | Dream Lead | Partial | done: 1/1 description effects mapped; missing: buff@break_hit buff potency_given_minus ignored; unsure: buff@break_hit conditions: target_broken |
 | 301338 | 得意属性が風属性の時、クリティカルダメージ+{0}％<br>自身がアタッカーの時、強化系パネルから受ける効果量+{1}％ | Indomitable Freshman's Synthesis Belt | Implemented | done: crit_damage; potency_received; 2/2 description effects mapped; unsure: crit_damage conditions: attr; potency_received conditions: role,panel |
@@ -1249,7 +1249,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 301341 | ブレイクダメージ+{0}％ | Flower Coat | Implemented | done: break_damage; 1/1 description effects mapped |
 | 301342 | スキルダメージ+{0}％ | Flower Earrings | Implemented | done: skill_damage; 1/1 description effects mapped |
 | 301343 | スキルダメージ+{0}％ | Flower Earrings | Implemented | done: skill_damage; 1/1 description effects mapped |
-| 301344 | 自身がハイディ【Buddy's Returning】の時、ブレイク時、対象に「受けるダメージ+{0}％」を1回行動終了するまで付与<br>バーストゲージが200%以上かつバーストスキル発動後、バーストゲージをさらに100%消費し、対象に「受けるバーストスキルダメージ+{1}％」を | Yungers | Implemented | done: buff@break_hit grants taken_damage; buff@skill_use grants skill_damage; 3/3 description effects mapped; unsure: buff@break_hit conditions: target_broken; buff@skill_use conditions: gauge_above |
+| 301344 | 自身がハイディ【Buddy's Returning】の時、ブレイク時、対象に「受けるダメージ+{0}％」を1回行動終了するまで付与<br>バーストゲージが200%以上かつバーストスキル発動後、バーストゲージをさらに100%消費し、対象に「受けるバーストスキルダメージ+{1}％」を | Yungers | Implemented | done: buff@break_hit grants taken_damage; buff@skill_use grants burst_damage; 3/3 description effects mapped; unsure: buff@break_hit conditions: target_broken; buff@skill_use conditions: gauge_above |
 | 301345 | 自身がシトリン【九偉人 No.4】の時、味方全員はスキル発動前に状態異常が付与されている敵へ与えるスキル威力+{0}% | Enchanting Eyes of a Ruined Nation - Fierce Splendor | Implemented | done: skill_power; 1/1 description effects mapped |
 | 301346 | 自身がソフィー【Memory of Dreams】でありHPが85%以上の状態で攻撃を受けた時、得意属性が風属性の味方全員のバーストゲージを{0}％増加 | Starlight Staff | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 301347 | 味方全員のクリティカルダメージ+{0}％ | Veil Cuirass | Implemented | done: crit_damage; 1/1 description effects mapped |
@@ -2064,7 +2064,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1980007 | バトル開始時「おてんば」に「回避(確率100%)」を1回攻撃されるまで付与 | Storm Prodigy | Missing | missing: unmapped effect ids 72500123; description text unparsed |
 | 1980008 | 戦闘アイテムダメージ+{0}% | Alchemy Enthusiast | Partial | done: item_damage; missing: unmapped effect ids 72500125 |
 | 1980009 | 「約束と協力」1人につき「クリティカルダメージ+{0}%」 | Strong Will to Fulfill Dreams | Implemented | done: crit_damage; 1/1 description effects mapped |
-| 1980012 | バーストスキルダメージ+{0}% | Hand in Hand | Implemented | done: skill_damage; 1/1 description effects mapped |
+| 1980012 | バーストスキルダメージ+{0}% | Hand in Hand | Implemented | done: burst_damage; 1/1 description effects mapped |
 | 1980013 | スキルダメージ・ブレイクダメージ+{0}% | Living in the Underworld | Implemented | done: break_damage; 2/2 description effects mapped |
 | 1980014 | 魔攻・魔防+{0}% | Charming Royalty | Implemented | done: stat_up; 2/2 description effects mapped |
 | 1980020 | 物攻・魔攻+{0}% | I Love Carrots! | Implemented | done: stat_up; 2/2 description effects mapped |
@@ -2135,7 +2135,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1980127 | WEAK攻撃時、スキルダメージ+{0}% | Protect and Rescue Shadow | Implemented | done: buff@weak_hit grants skill_damage; 1/1 description effects mapped; unsure: buff@weak_hit conditions: weak_hit |
 | 1980128 | スキルダメージ・ブレイクダメージ+{0}% | Let's Enjoy the Hot Springs! | Implemented | done: break_damage; 2/2 description effects mapped |
 | 1980129 | バトル開始時「受けるダメージ-{0}%」を2回攻撃を受けるまで付与 | No More Farewells | Implemented | done: buff@battle_start grants taken_damage; 1/1 description effects mapped |
-| 1980130 | バーストスキルダメージ+{0}% | Strength of a Voyager | Implemented | done: skill_damage; 1/1 description effects mapped |
+| 1980130 | バーストスキルダメージ+{0}% | Strength of a Voyager | Implemented | done: burst_damage; 1/1 description effects mapped |
 | 1980131 | 物攻・魔攻+{0}% | Victory Will Be Mine! | Implemented | done: stat_up; 2/2 description effects mapped |
 | 1980132 | WEAK攻撃時、スキルダメージ+{0}% | Azure Knight | Implemented | done: buff@weak_hit grants skill_damage; 1/1 description effects mapped; unsure: buff@weak_hit conditions: weak_hit |
 | 1980133 | 「火傷耐性+{0}%」と「攻撃対象が火傷状態の時、スキルダメージ+{1}%」 | Crimson Swordswoman | Partial | done: skill_damage; skill_damage; 2/2 description effects mapped; missing: ailment_resist_one mod ignored; unsure: ailment_resist_one conditions: target_state; skill_damage conditions: target_state |
@@ -2147,7 +2147,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1980139 | 「攻撃を受けた時、自身のHPを{0}%回復」と「クリティカルダメージ+{1}%」 | Danger? No Problem | Implemented | done: buff@attacked grants crit_damage; buff@attacked executes heal; 2/2 description effects mapped |
 | 1980140 | バーストスキルのスキルダメージ・ブレイクダメージ+{0}% | A Little Bold in Summer | Implemented | done: break_damage; 2/2 description effects mapped |
 | 1980141 | 攻撃対象がブレイク状態の時、スキルダメージ+{0}% | Great Adventurer at the Beach | Implemented | done: buff@break_hit grants skill_damage; 1/1 description effects mapped; unsure: buff@break_hit conditions: target_state,target_broken |
-| 1980142 | バーストスキルダメージ＋{0}% | Unmatched in Mobility! | Implemented | done: skill_damage; 1/1 description effects mapped |
+| 1980142 | バーストスキルダメージ＋{0}% | Unmatched in Mobility! | Implemented | done: burst_damage; 1/1 description effects mapped |
 | 1980143 | 魔攻+{0}% | Beachside Allure | Implemented | done: stat_up; 1/1 description effects mapped |
 | 1980144 | 「ランターナ」1人につき「クリティカルダメージ+{0}%」 | The Comet Is with Us | Implemented | done: crit_damage; 1/1 description effects mapped |
 | 1980145 | 「毒を高確率で付与」と「毒状態の相手にスキルダメージ+{0}%」 | Never Let Your Prey Escape! | Partial | done: skill_damage; 1/2 description effects mapped; missing: unmapped effect ids 72500050 |
@@ -2160,17 +2160,17 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1980152 | 「ターン開始時、自身のHPを{0}%回復」と「スキルダメージ・ブレイクダメージ+{1}%」 | Pie Meister's Specialty | Partial | done: buff@turn_start grants break_damage; buff@turn_start executes heal; 2/3 description effects mapped; missing: unmapped effect ids 72500025 |
 | 1980153 | スキルダメージ・ブレイクダメージ+{0}% | Bomberwoman's Trump Card | Implemented | done: break_damage; 2/2 description effects mapped |
 | 1980154 | 「先駆け」と「物攻+{0}%」 | Power to Those Who Trust in Their Friends! | Partial | done: stat_up; 1/2 description effects mapped; missing: unmapped effect ids 72500099 |
-| 1980155 | バーストスキルダメージ+{0}% | For a Future We Cherish | Implemented | done: skill_damage; 1/1 description effects mapped |
+| 1980155 | バーストスキルダメージ+{0}% | For a Future We Cherish | Implemented | done: burst_damage; 1/1 description effects mapped |
 | 1980156 | 「おてんば」は「物攻・魔攻+{0}%」と「スキルダメージ・ブレイクダメージ+{1}%」 | I'll Break Through! | Implemented | done: stat_up; break_damage; 4/4 description effects mapped |
 | 1980157 | 得意属性が火属性のキャラは「クリティカルダメージ+{0}%」 | Burnt to a Crisp! | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: attr |
 | 1980158 | 「ひょうきん者」は「スキルダメージ・ブレイクダメージ+{0}%」 | I'll Do Whatever I Can! | Implemented | done: break_damage; 2/2 description effects mapped |
 | 1980159 | 得意属性が突属性のキャラは「物攻・魔攻・物防・魔防+{0}%」 | Angel's Blessing | Implemented | done: stat_up; 4/4 description effects mapped; unsure: stat_up conditions: attr |
 | 1980160 | 「先駆け」と「スキルダメージ+{0}%」 | Flash of Inspiration! | Partial | done: skill_damage; 1/2 description effects mapped; missing: unmapped effect ids 72500099 |
 | 1980161 | 「麻痺耐性+{0}%」と「攻撃対象が麻痺状態の時、スキルダメージ+{1}%」 | Captivated by the Queen | Partial | done: skill_damage; skill_damage; 2/2 description effects mapped; missing: ailment_resist_one mod ignored; unsure: ailment_resist_one conditions: target_state; skill_damage conditions: target_state |
-| 1980162 | 「ランターナ」は攻撃後、対象に「受ける突属性ダメージ+{0}%」を1回攻撃を受けるまで付与 | Keen Eye for Weakness | Missing | missing: unmapped effect ids 72500147; description text unparsed |
+| 1980162 | 「ランターナ」は攻撃後、対象に「受ける突属性ダメージ+{0}%」を1回攻撃を受けるまで付与 | Keen Eye for Weakness | Partial | done: buff@post_attack grants taken_damage; missing: unmapped effect ids 72500147 |
 | 1980163 | 「冒険」は「物攻・魔攻+{0}%」と「スキルダメージ・ブレイクダメージ+{1}%」 | Smash, Smash, and Smash Some More! | Implemented | done: stat_up; break_damage; 4/4 description effects mapped |
 | 1980164 | 得意属性が雷属性のキャラは「物攻・魔攻・物防・魔防+{0}%」 | Puppeteer's Devotion | Implemented | done: stat_up; 4/4 description effects mapped; unsure: stat_up conditions: attr |
-| 1980165 | バーストスキルダメージ+{0}% | Seeker of Knowledge's Favorite Specs | Implemented | done: skill_damage; 1/1 description effects mapped |
+| 1980165 | バーストスキルダメージ+{0}% | Seeker of Knowledge's Favorite Specs | Implemented | done: burst_damage; 1/1 description effects mapped |
 | 1980166 | 「ランターナ」は「物攻・魔攻・物防・魔防+{0}%」 | I'll Master This Power | Implemented | done: stat_up; 4/4 description effects mapped |
 | 1980167 | 「騎士」は「物防・魔防+{0}%」 | Noble Knight Under Starry Night | Implemented | done: stat_up; 2/2 description effects mapped |
 | 1980168 | 得意属性が雷属性のキャラは「攻撃対象がブレイク状態の時、スキルダメージ+{0}%」 | For Our Burning Desires | Implemented | done: buff@break_hit grants skill_damage; buff@break_hit grants skill_damage; 1/1 description effects mapped; unsure: buff@break_hit conditions: attr,target_state,target_broken |
@@ -2190,7 +2190,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1980182 | 「マイペース」は「先駆け」と「物攻+{0}%」 | Let's Make Quick Work of This! | Partial | done: stat_up; 1/2 description effects mapped; missing: unmapped effect ids 72500099 |
 | 1980183 | 「アラディス調査団」1人につき「魔攻・魔防+{0}%」 | Tracing Memories | Implemented | done: stat_up; 2/2 description effects mapped |
 | 1980184 | 「アラディス調査団」1人につき「スキルダメージ・ブレイクダメージ+{0}%」 | Justice Prevails | Implemented | done: break_damage; 2/2 description effects mapped |
-| 1980185 | 「戦闘アイテムダメージ+{0}%」と「スキルダメージ・バーストスキルダメージ+{1}%」 | Journey of Atonement | Partial | done: item_damage; skill_damage; 2/3 description effects mapped; missing: unmapped effect ids 72500125 |
+| 1980185 | 「戦闘アイテムダメージ+{0}%」と「スキルダメージ・バーストスキルダメージ+{1}%」 | Journey of Atonement | Partial | done: item_damage; burst_damage; 2/3 description effects mapped; missing: unmapped effect ids 72500125 |
 | 1980186 | 得意属性が火属性のキャラは「攻撃対象がブレイク状態の時、スキルダメージ+{0}%」 | Fashionable Mind | Implemented | done: buff@break_hit grants skill_damage; buff@break_hit grants skill_damage; 1/1 description effects mapped; unsure: buff@break_hit conditions: attr,target_state,target_broken |
 | 1980187 | 「アラディス調査団」は「物攻・魔攻・物防・魔防+{0}%」 | Mysterious Mercenary | Implemented | done: stat_up; 4/4 description effects mapped |
 | 1980188 | 得意属性が打属性のキャラは「物攻・魔攻・物防・魔防+{0}%」 | Personal Aesthetics | Implemented | done: stat_up; 4/4 description effects mapped; unsure: stat_up conditions: attr |
@@ -2201,7 +2201,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1980193 | 「真面目」は「物防・魔防+{0}%」 | Extraordinary Leadership | Implemented | done: stat_up; 2/2 description effects mapped |
 | 1980194 | 得意属性が風属性のキャラは「スキルダメージ・クリティカルダメージ+{0}%」 | Feel the Hammer's Wind! | Implemented | done: crit_damage; 2/2 description effects mapped; unsure: crit_damage conditions: attr |
 | 1980195 | 得意属性が風属性のキャラは「物防・魔防+{0}%」 | Clad in Spirit Wind | Implemented | done: stat_up; 2/2 description effects mapped; unsure: stat_up conditions: attr |
-| 1980196 | 得意属性が氷属性のキャラは「バーストスキルダメージ+{0}%」 | Tremble in Anticipation! | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
+| 1980196 | 得意属性が氷属性のキャラは「バーストスキルダメージ+{0}%」 | Tremble in Anticipation! | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: attr |
 | 1980197 | 「アーランド」1人につき「スキルダメージ・ブレイクダメージ+{0}%」 | A Certain Arland Noble's Daughter | Implemented | done: break_damage; 2/2 description effects mapped |
 | 1980198 | 「アーランド」は「魔攻・魔防+{0}%」 | Arland's Famous Adventurer | Implemented | done: stat_up; 2/2 description effects mapped |
 | 1980199 | 得意属性が氷属性のキャラは「物防・魔防+{0}%」 | Princess Rorona's Prayer | Implemented | done: stat_up; 2/2 description effects mapped; unsure: stat_up conditions: attr |
@@ -2209,17 +2209,17 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1980201 | 得意属性が斬属性のキャラは「受けるダメージ-{0}％」 | The Queen Will Support You | Implemented | done: taken_damage; 1/1 description effects mapped; unsure: taken_damage conditions: attr |
 | 1980202 | 「ランターナ」1人につき「物攻・魔攻+{0}%」 | Let's Forget Our Positions and Have Fun | Implemented | done: stat_up; 2/2 description effects mapped |
 | 1980203 | 得意属性が斬属性のキャラは「スキルダメージ・ブレイクダメージ+{0}%」 | I'll Cut Through This Heat! | Implemented | done: break_damage; 2/2 description effects mapped; unsure: break_damage conditions: attr |
-| 1980204 | 「ケイウン」は「魔攻+{0}%」と「バーストスキルダメージ+{1}%」 | Patience for a New Era | Implemented | done: stat_up; skill_damage; 2/2 description effects mapped |
+| 1980204 | 「ケイウン」は「魔攻+{0}%」と「バーストスキルダメージ+{1}%」 | Patience for a New Era | Implemented | done: stat_up; burst_damage; 2/2 description effects mapped |
 | 1980205 | 「ケイウン」1人につき「戦闘アイテムダメージ+{0}%」と「物防・魔防+{1}%」 | The Beautiful Far Eastern Onmyoji | Implemented | done: item_damage; stat_up; 3/3 description effects mapped |
 | 1980206 | 「ケイウン」は「魔攻・魔防+{0}%」 | Reverent Shrine Maiden | Implemented | done: stat_up; 2/2 description effects mapped |
 | 1980207 | 味方全員は「ケイウン」1人につき「物攻・魔攻+{0}%」と「スキルダメージ・ブレイクダメージ+{2}%」 | Master of Arms | Implemented | done: stat_up; break_damage; 4/4 description effects mapped |
 | 1980208 | 得意属性が打属性のキャラは「物攻+{0}%」 | Rustic Country Workshop | Implemented | done: stat_up; 1/1 description effects mapped; unsure: stat_up conditions: attr |
-| 1980209 | 「世話焼き」は「スキルダメージ・バーストスキルダメージ+{0}%」 | Kindness Received Must Be Repaid | Implemented | done: skill_damage; 2/2 description effects mapped |
+| 1980209 | 「世話焼き」は「スキルダメージ・バーストスキルダメージ+{0}%」 | Kindness Received Must Be Repaid | Implemented | done: burst_damage; 2/2 description effects mapped |
 | 1980210 | 得意属性が打属性のキャラは「物防・魔防+{0}%」 | Hot-Blooded Man Full of Chivalry | Implemented | done: stat_up; 2/2 description effects mapped; unsure: stat_up conditions: attr |
 | 1980211 | 「季節の装い」は「先駆け」と「スキルダメージ+{0}%」 | "Little" Devil Servant | Partial | done: skill_damage; 1/2 description effects mapped; missing: unmapped effect ids 72500099 |
 | 1980212 | 味方全員は「季節の装い」1人につき「スキルダメージ・ブレイクダメージ+{0}%」 | New Horizons Found on an Everlasting Summer Island | Implemented | done: break_damage; 2/2 description effects mapped |
 | 1980213 | 得意属性が打属性のキャラは「攻撃対象がブレイク状態の時、スキルダメージ+{0}%」 | Top Secret Schoolgirl | Implemented | done: buff@break_hit grants skill_damage; buff@break_hit grants skill_damage; 1/1 description effects mapped; unsure: buff@break_hit conditions: attr,target_state,target_broken |
-| 1980214 | 「季節の装い」は「バーストスキルダメージ+{0}%」 | Talent Blooming on the Eternal Summer Island | Implemented | done: skill_damage; 1/1 description effects mapped |
+| 1980214 | 「季節の装い」は「バーストスキルダメージ+{0}%」 | Talent Blooming on the Eternal Summer Island | Implemented | done: burst_damage; 1/1 description effects mapped |
 | 1980215 | 得意属性が突属性のキャラは「物攻+{0}%」 | Talented Staff Officer | Implemented | done: stat_up; 1/1 description effects mapped; unsure: stat_up conditions: attr |
 | 1980216 | 味方全員は「冥き追憶」1人につき「スキルダメージ・クリティカルダメージ+20%」 | Guardian of the Shadow Order | Partial | done: 2/2 description effects mapped; missing: description text unparsed |
 | 1980217 | 「九偉人」は「先駆け」と「クリティカルダメージ+{0}%」 | Enchanting Eyes That Bewilder Hearts | Partial | done: crit_damage; 1/2 description effects mapped; missing: unmapped effect ids 72500099 |
@@ -2292,7 +2292,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990047 | 暗闇耐性+{0}% | Blindness Resist Up | Partial | done: 1/1 description effects mapped; missing: ailment_resist_one mod ignored |
 | 1990048 | スキルダメージ+{0}% | Combat Strength | Implemented | done: skill_damage; 1/1 description effects mapped |
 | 1990049 | 挑発耐性+{0}% | Taunt Resist Up | Partial | done: 1/1 description effects mapped; missing: ailment_resist_one mod ignored |
-| 1990050 | スキルで撃破時、自身に「スキルダメージ+{0}%」を付与(上限30%) | Overshooting Summer | Partial | done: buff@ko grants skill_damage; missing: unmapped effect ids 72000911; unsure: buff@ko conditions: ko |
+| 1990050 | スキルで撃破時、自身に「スキルダメージ+{0}%」を付与(上限30%) | Overshooting Summer | Implemented | done: buff@ko grants skill_damage; 1/1 description effects mapped; unsure: buff@ko conditions: ko |
 | 1990051 | 毒耐性+{0}% | Poison Resist Up | Partial | done: 1/1 description effects mapped; missing: ailment_resist_one mod ignored |
 | 1990052 | 敵にとても狙われやすくなる<br>HPが50%以上の時、受けるダメージ-{0}% | Why Me?! | Partial | done: aggro; taken_damage; 1/2 description effects mapped; missing: unmapped effect ids 72000914; unsure: taken_damage conditions: hp_above |
 | 1990053 | 毒耐性+{0}% | Poison Resist Up | Partial | done: 1/1 description effects mapped; missing: ailment_resist_one mod ignored |
@@ -2432,7 +2432,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990211 | 味方全員のクリティカルダメージ+{0}% | Critical Cascade II | Implemented | done: crit_damage; 1/1 description effects mapped |
 | 1990212 | 強化系パネル獲得時、アイテムゲージを{0}%回復 | In Sickness and in Health | Partial | done: buff@panel_gain executes item_gauge; missing: unmapped effect ids 72001087; unsure: buff@panel_gain conditions: panel |
 | 1990213 | 味方全員の魔攻+{0}% | Advance All - M. ATK III | Implemented | done: stat_up; 1/1 description effects mapped |
-| 1990214 | 攻撃対象がブレイク時、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Phantom Magic | Partial | done: buff@break_hit grants stat_up; missing: unmapped effect ids 72001089; unsure: buff@break_hit conditions: target_broken |
+| 1990214 | 攻撃対象がブレイク時、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Phantom Magic | Partial | done: buff@break_hit grants taken_damage; missing: unmapped effect ids 72001089; unsure: buff@break_hit conditions: target_broken |
 | 1990215 | プラスパネル獲得時、自身に「ブレイクダメージ+{0}%」を1回行動終了するまで付与 | Royal Technique | Implemented | done: buff@panel_gain grants break_damage; 1/1 description effects mapped; unsure: buff@panel_gain conditions: panel |
 | 1990216 | パネル獲得時、味方全員に「クリティカルダメージ+{0}%」を付与(上限30%) | It's Showtime | Implemented | done: crit_damage; 1/1 description effects mapped |
 | 1990217 | 得意属性が雷属性の味方全員のスキルダメージ+{0}% | Destructive Overload Bolt II | Partial | done: skill_damage; missing: unmapped effect ids 72000936; unsure: skill_damage conditions: attr |
@@ -2460,7 +2460,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990239 | いずれかのスキル使用後「メッサーベント」のスキルランプを1個点灯する | Awakening Fighting Spirit | Partial | done: lamp_light@skill_use; missing: unmapped effect ids 72001094 |
 | 1990240 | 敵にとても狙われやすくなる<br>自身の物防・魔防+{0}% | Hate & P. DEF & M. DEF Up | Partial | done: aggro; stat_up; 2/3 description effects mapped; missing: unmapped effect ids 72000914 |
 | 1990241 | 味方全員の全状態異常耐性＋{0}% | Status Effect Resist Up (All) | Partial | done: 1/1 description effects mapped; missing: ailment_resist mod ignored (only buffs/immunity read) |
-| 1990242 | HP回復を受けた時、<br>やや高確率で自身に「火属性ダメージ+{0}%」を1回行動終了するまで付与 | Awakening Resolve | Missing | missing: unmapped effect ids 72001116; description text unparsed |
+| 1990242 | HP回復を受けた時、<br>やや高確率で自身に「火属性ダメージ+{0}%」を1回行動終了するまで付与 | Awakening Resolve | Partial | done: dealt_damage; missing: unmapped effect ids 72001116 |
 | 1990243 | プラスパネルから受ける効果量+{0}% | Panel Up Plus V | Partial | done: potency_received; missing: unmapped effect ids 72001045; unsure: potency_received conditions: panel |
 | 1990244 | スキル発動後、自身に「魔攻+{0}%」を付与(上限50%)<br>WEAK攻撃時、スキルダメージ+{1}% | Are You Ready? | Partial | done: buff@skill_use grants stat_up; buff@weak_hit grants skill_damage; 1/2 description effects mapped; missing: unmapped effect ids 72001120; unsure: buff@weak_hit conditions: weak_hit |
 | 1990245 | スキル発動後、自身に「魔攻+{0}%」を付与(上限50%) | Are You Ready? | Implemented | done: buff@skill_use grants stat_up; 1/1 description effects mapped |
@@ -2468,7 +2468,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990247 | 自身のHPが最大でない状態で攻撃を受けた時、自身のバーストパネルを除いたパネル全てをHP回復パネルに変換(空パネルの時は生成) | So Hungry! | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 1990248 | スキルで撃破時、自身に「魔攻+{0}%」を付与(上限30%) | Marie, Assault Leader | Partial | done: buff@ko grants stat_up; missing: unmapped effect ids 72001121; unsure: buff@ko conditions: ko |
 | 1990249 | 攻撃対象がブレイク状態の時、自身に「スキルダメージ+{0}%」を付与(上限60%) | I'll Get It Done and Dusted! | Partial | done: buff@break_hit grants skill_damage; missing: unmapped effect ids 72001122; unsure: buff@break_hit conditions: target_state,target_broken |
-| 1990250 | スキルで撃破時、自身に「クリティカルダメージ+{0}%」を付与(上限100%)し、<br>自身に「バーストスキルダメージ+{0}%」を付与(上限100%) | A Brand New Me! | Partial | done: skill_damage; buff@ko grants crit_damage; missing: unmapped effect ids 72001123, 72001126; unsure: buff@ko conditions: ko |
+| 1990250 | スキルで撃破時、自身に「クリティカルダメージ+{0}%」を付与(上限100%)し、<br>自身に「バーストスキルダメージ+{0}%」を付与(上限100%) | A Brand New Me! | Partial | done: burst_damage; buff@ko grants crit_damage; missing: unmapped effect ids 72001123, 72001126; unsure: buff@ko conditions: ko |
 | 1990251 | 自身のクリティカル確率が100%を超えている場合、攻撃時、100%を超えたクリティカル確率の上昇量をクリティカルダメージアップに変換(変換上限300%) | One with the Hammer! | Missing | missing: unmapped effect ids 72001098; description text unparsed |
 | 1990252 | 敵が全体攻撃を除くカウンター使用時、カウンター対象の味方をかばい、<br>受けるダメージ-{0}% | Bearing the Pride of Royalty | Partial | done: taken_damage; 1/2 description effects mapped; missing: unmapped effect ids 72000930 |
 | 1990253 | 攻撃を受けた時、自身のHPを{0}%回復 | Roman's First Aid Technique | Implemented | done: buff@attacked executes heal; 1/1 description effects mapped |
@@ -2482,8 +2482,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990261 | スキル発動後、自身のHPを{0}%回復<br>自身のHPが95%以上の状態で攻撃を受けた時、タイムラインに並んでいる、次の味方のパネル1つをバーストパネルに変換(空パネルの時は生成) | Flocke's Here to Help! | Partial | done: buff@skill_use executes heal; 1/2 description effects mapped; missing: unmapped effect ids 72001138 |
 | 1990262 | 自身に付与されている強化効果の数に応じ、スキルダメージ+10〜100%(1〜20個で多いほど増加)<br>※バトル開始時に発動した回数制限のない強化効果は含まない | Friends' Support Becomes Strength! | Missing | missing: unmapped effect ids 72001173, 72001174; description text unparsed |
 | 1990263 | スキル使用前、攻撃対象に「絡まりリボン」が付与されている時、その攻撃のスキルダメージ+{0}% | Time to Be Mischievous! | Partial | done: skill_damage; missing: unmapped effect ids 72001176 |
-| 1990264 | 自身がパネル獲得時またはHP回復を受けた時、自身に「物攻+{0}%」を付与(上限100%)し、<br>自身に「突属性ダメージ+{1}%」を<br>1回行動終了するまで付与(上限5個) | Rising Excitement! | Partial | done: stat_up; buff@heal_received grants stat_up; missing: unmapped effect ids 72001128, 72001136, 72001128, 72001136 |
-| 1990265 | プラスパネルから受ける効果量+{0}%<br>攻撃対象が麻痺・ねむり・スタン状態あるいは「王の威光」が付与された状態の時、ダメージ+{1}% | Big Opportunity! | Partial | done: potency_received; missing: unmapped effect ids 72001045, 72001364; unsure: potency_received conditions: panel |
+| 1990264 | 自身がパネル獲得時またはHP回復を受けた時、自身に「物攻+{0}%」を付与(上限100%)し、<br>自身に「突属性ダメージ+{1}%」を<br>1回行動終了するまで付与(上限5個) | Rising Excitement! | Partial | done: stat_up; dealt_damage; buff@heal_received grants stat_up; missing: unmapped effect ids 72001128, 72001136, 72001128, 72001136 |
+| 1990265 | プラスパネルから受ける効果量+{0}%<br>攻撃対象が麻痺・ねむり・スタン状態あるいは「王の威光」が付与された状態の時、ダメージ+{1}% | Big Opportunity! | Partial | done: potency_received; dealt_damage; missing: unmapped effect ids 72001045, 72001364; unsure: potency_received conditions: panel; dealt_damage unmodeled conditions: target_any_state |
 | 1990266 | 味方全員のスキルダメージ+{0}% | Destructive Overload II | Partial | done: skill_damage; missing: unmapped effect ids 72000922 |
 | 1990267 | スキル発動後、アイテムゲージを{0}%回復し、<br>味方全員のHPを{1}%回復 | Diva's Soothing Melody | Partial | done: buff@skill_use executes item_gauge; missing: heal mod ignored; unmapped effect ids 72001085, 72001131 |
 | 1990268 | 味方全員の与えるマイナス効果量+{0}% | Seneschal's Plan | Partial | done: potency_given_minus; missing: unmapped effect ids 72001057 |
@@ -2502,7 +2502,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990281 | パーティの誰かがアイテム使用後、自身に「強制ブレイク」を1回行動終了するまで付与(発動上限3回)<br>※アイテムを複数同時に使用しても発動は1回 | Let's Begin the "Release" | Missing | missing: unmapped effect ids 72001156; description text unparsed |
 | 1990282 | スキルで撃破時、自身に「魔攻+{0}%」を付与(上限100%)し、自身に「スキルダメージ+{1}%」を付与(上限200%) | Fortune-Bringing Strike | Partial | done: buff@ko grants stat_up; buff@ko grants skill_damage; missing: unmapped effect ids 72001158, 72001159; unsure: buff@ko conditions: ko |
 | 1990283 | 自身のクリティカル確率+{0}%<br>自身のHPが50%以上の時、クリティカルダメージ+{1}%<br>自身のHPが70%以上の時、スキルダメージ+{2}% | The First Move is Key to Victory | Partial | done: crit_rate; crit_damage; skill_damage; missing: unmapped effect ids 72001160, 72001171, 72001172; unsure: crit_damage conditions: hp_above; skill_damage conditions: hp_above |
-| 1990284 | 攻撃対象がブレイク時、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与<br>WEAK攻撃時、スキルダメージ+{1}% | No More Wasted Steps | Partial | done: buff@break_hit grants stat_up; buff@weak_hit grants skill_damage; missing: unmapped effect ids 72001089, 72001120; unsure: buff@break_hit conditions: target_broken; buff@weak_hit conditions: weak_hit |
+| 1990284 | 攻撃対象がブレイク時、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与<br>WEAK攻撃時、スキルダメージ+{1}% | No More Wasted Steps | Partial | done: buff@break_hit grants taken_damage; buff@weak_hit grants skill_damage; missing: unmapped effect ids 72001089, 72001120; unsure: buff@break_hit conditions: target_broken; buff@weak_hit conditions: weak_hit |
 | 1990285 | バーストパネル獲得時、自身に「ブレイクダメージ+{0}%」を1回行動終了するまで付与 | Look Out! | Partial | done: buff@panel_gain grants break_damage; missing: unmapped effect ids 72001165; unsure: buff@panel_gain conditions: panel |
 | 1990286 | 得意属性が氷属性の味方全員のスキルダメージ・ブレイクダメージ+{0}% | Let's Freeze Them Solid | Partial | done: break_damage; missing: unmapped effect ids 72001166, 72001167; unsure: break_damage conditions: attr |
 | 1990287 | 強化系パネル獲得時、アイテムゲージを{0}%回復 | Paving the Way with Alchemy | Partial | done: buff@panel_gain executes item_gauge; missing: unmapped effect ids 72001087; unsure: buff@panel_gain conditions: panel |
@@ -2514,7 +2514,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990293 | パーティの誰かが戦闘アイテム使用後、味方全員に「受けるダメージ-{0}%(固定)」を1回攻撃を受けるまで付与(発動上限2回)<br>※アイテムを複数同時に使用しても発動は1回 | Theorist's Wisdom | Partial | done: buff@item_use grants taken_damage; missing: unmapped effect ids 72001185; unsure: buff@item_use use cap 2 |
 | 1990294 | 味方全員の物攻+{0}%<br>味方全員のスキルダメージ+{1}% | Archer's Principles | Partial | done: stat_up; skill_damage; 1/2 description effects mapped; missing: unmapped effect ids 72000922 |
 | 1990295 | スキル発動後、アイテムゲージを{0}%回復 | Supporting Arrow | Partial | done: buff@skill_use executes item_gauge; missing: unmapped effect ids 72001085 |
-| 1990296 | 自身がクリティカルパネル獲得時またはスキルで撃破時、自身に「バーストスキルダメージ+{0}%」を付与(上限100%)し、<br>「クリティカルダメージ+{1}%」を付与(上限100%) | Extraordinary Breakthrough Power | Partial | done: crit_damage; buff@ko grants skill_damage; missing: unmapped effect ids 72001181, 72001188, 72001187, 72001189; unsure: buff@ko conditions: ko |
+| 1990296 | 自身がクリティカルパネル獲得時またはスキルで撃破時、自身に「バーストスキルダメージ+{0}%」を付与(上限100%)し、<br>「クリティカルダメージ+{1}%」を付与(上限100%) | Extraordinary Breakthrough Power | Partial | done: crit_damage; buff@ko grants burst_damage; missing: unmapped effect ids 72001181, 72001188, 72001187, 72001189; unsure: buff@ko conditions: ko |
 | 1990297 | スキル発動後、自身に「クリティカルダメージ+{0}%」を1回行動終了するまで付与<br>クリティカル攻撃時、自身のHPを{1}%回復 | Final Overrun | Partial | done: buff@skill_use grants crit_damage; missing: heal mod ignored; unmapped effect ids 72001191, 72001190 |
 | 1990298 | WEAK攻撃後、自身に「スキル威力+{0}%」を付与(上限5個) | Adventure Makes Me Grow! | Partial | done: buff@post_attack grants skill_power; missing: unmapped effect ids 72001210; unsure: buff@post_attack conditions: weak_hit |
 | 1990305 | スキル発動後、「レスレリ学園」タグを持つキャラ数に応じ、得意属性が突属性または「レスレリ学園」の味方全員に「バーストスキルダメージ+15～35%」を付与(上限140%)  | Follow My Special Training! | Missing | missing: unmapped effect ids 72001306, 72001307, 72001308, 72001309; description text unparsed |
@@ -2528,16 +2528,16 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990325 | スキル発動後、味方全員に「クリティカルダメージ+{0}%」を付与(上限250%) | I'll Help Make Your Dreams Come True! | Partial | done: buff@skill_use grants crit_damage; missing: unmapped effect ids 72001209 |
 | 1990326 | 敵にとても狙われやすくなる<br>自身の物防・魔防+{0}% | Presence of the Strong | Partial | done: aggro; stat_up; 2/3 description effects mapped; missing: unmapped effect ids 72000914 |
 | 1990327 | 得意属性が斬属性の味方全員の最大HP+{0}%、物防・魔防+{1}%<br>バトル開始時、味方全員のHPを{2}%回復し、<br>得意属性が斬属性の味方全員に「受けるダメージ-{3}%」を1回攻撃を受けるまで付与 | A Mother's Love | Partial | done: stat_up; stat_up; taken_damage; buff@battle_start executes heal; missing: unmapped effect ids 72001214, 72001215, 72001131, 72001213, 72001216; unsure: stat_up conditions: attr; taken_damage conditions: attr |
-| 1990328 | 攻撃対象がブレイク時、得意属性が斬属性の味方全員に「バーストスキルダメージ+{0}%」を付与(上限200%)し、「物攻+{1}%」を1回行動終了するまで付与 | Carve a Path to Dreams! | Partial | done: buff@break_hit grants skill_damage; buff@break_hit grants stat_up; missing: unmapped effect ids 72001217, 72001233; unsure: buff@break_hit conditions: attr,target_broken |
+| 1990328 | 攻撃対象がブレイク時、得意属性が斬属性の味方全員に「バーストスキルダメージ+{0}%」を付与(上限200%)し、「物攻+{1}%」を1回行動終了するまで付与 | Carve a Path to Dreams! | Partial | done: buff@break_hit grants burst_damage; buff@break_hit grants stat_up; missing: unmapped effect ids 72001217, 72001233; unsure: buff@break_hit conditions: attr,target_broken |
 | 1990329 | 「ステラストーム」または「ステラプリズム」で攻撃対象がブレイク時、対象にパネル無効を3回行動終了するまで付与 | I Won't Let Evil Prevail! | Partial | done: buff@break_hit grants panel_null; missing: unmapped effect ids 72001218, 72001219; unsure: buff@break_hit conditions: target_broken |
 | 1990330 | バトル開始時、「ヘツエンドレーエン」のスキルランプを{0}個点灯する<br>スキルランプの点灯数1個につき、スキルダメージ+{1}% | Carving a Path with Friends! | Partial | done: lamp_light@battle_start; lamp_bonus@None (passive lamp data); missing: unmapped effect ids 72001094, 72001225, 72001226, 72001227 |
 | 1990331 | パーティの誰かが戦闘アイテム使用後または「レーヴェバイセン」、「ヘツエンドレーエン」、「ツェアライセン」でWEAK攻撃後、「ヘツエンドレーエン」のスキルランプを1個点灯する<br>※アイテムを複数同時に使用しても点灯は1個 | My Body Remembers How to Fight | Missing | missing: unmapped effect ids 72001094, 72001223, 72001224; description text unparsed |
 | 1990334 | 強化系パネル獲得時または誰かが戦闘アイテム使用時、自身に「クリティカル確率+{0}%」を1回行動終了するまで付与<br>※アイテムを複数同時に使用しても発動は1回<br><br>自身がプラスパネル獲得時またはバーストパネル獲得時、現在HPが最大の敵へパネルスキル：{{hyperl | Something Only I Can Do | Partial | done: buff@item_use grants crit_rate; panel_skill@panel_gain; panel_skill@panel_gain; missing: unmapped effect ids 72001236, 72001237, 72001234, 72001235, 72001242 |
-| 1990335 | スキル発動後、自身に「素早さ+{0}%」を付与(上限15%)し、<br>「スキルダメージ+{1}%」を付与(上限175%)<br>対象が被ダメージUP状態の時、ダメージ+{2}% | This is My Potential! | Partial | done: skill_damage; buff@skill_use grants stat_up; missing: unmapped effect ids 72001238, 72001239, 72001241 |
+| 1990335 | スキル発動後、自身に「素早さ+{0}%」を付与(上限15%)し、<br>「スキルダメージ+{1}%」を付与(上限175%)<br>対象が被ダメージUP状態の時、ダメージ+{2}% | This is My Potential! | Partial | done: skill_damage; dealt_damage; buff@skill_use grants stat_up; missing: unmapped effect ids 72001238, 72001239, 72001241 |
 | 1990336 | 自身がバーストパネル獲得時、現在HPが最大の敵へパネルスキル：{hyperlink_id 58}を発動する | Never Miss an Opportunity | Partial | done: panel_skill@panel_gain; missing: unmapped effect ids 72001235, 72001242 |
 | 1990337 | 自身に「パイル」が付与されている時、以下のボーナス効果が全て発動する<br>・スキルダメージ+{0}%<br>・WEAK攻撃時、ブレイクダメージ+{1}% | Protecting Someone Once Again | Partial | done: skill_damage; buff@weak_hit grants break_damage; missing: unmapped effect ids 72001243, 72001244; unsure: buff@weak_hit conditions: weak_hit |
 | 1990338 | 自身がプラスパネル獲得時とバーストパネル獲得時、自身のHPを{0}%回復し、 現在HPが最小の敵へパネルスキル：{{hyperlink_id 79}}を発動する<br>HPが最大の時、「クリティカル確率+{1}%」と「クリティカルダメージ+{2}%」 | I'll Try Harder! | Partial | done: crit_rate; crit_damage; buff@panel_gain executes heal; panel_skill@post_attack; missing: unmapped effect ids 72001247, 72001248, 72001249, 72001250, 72001234, 72001235, 72001242; unsure: crit_rate conditions: hp_above; crit_damage conditions: hp_above; buff@panel_gain conditions: panel |
-| 1990339 | パネル獲得時、自身に「飛剣」が付与されていない時、「飛剣(Lv2)」を付与<br>既に付与されている時、「飛剣」のLv+2(上限Lv10)<br>「飛剣」のLvに応じて以下のボーナスをそれぞれ獲得する<br>Lv3以上：貫通力+{0}<br>Lv5以上：貫通力+{1}<br>Lv | Where Are My Enemies? | Missing | missing: unmapped effect ids 72001253, 72001254, 72001255, 72001256, 72001261; description text unparsed |
+| 1990339 | パネル獲得時、自身に「飛剣」が付与されていない時、「飛剣(Lv2)」を付与<br>既に付与されている時、「飛剣」のLv+2(上限Lv10)<br>「飛剣」のLvに応じて以下のボーナスをそれぞれ獲得する<br>Lv3以上：貫通力+{0}<br>Lv5以上：貫通力+{1}<br>Lv | Where Are My Enemies? | Partial | done: dealt_damage; missing: unmapped effect ids 72001253, 72001254, 72001255, 72001256, 72001261; unsure: dealt_damage conditions: target_state |
 | 1990340 | 自身がバーストパネル獲得時に現在HPが最大の敵へパネルスキル：{{hyperlink_id 101}}を発動する<br>WEAK攻撃時、スキルダメージ+{0}% | I'm Strong Now! | Partial | done: panel_skill@panel_gain; buff@weak_hit grants skill_damage; missing: unmapped effect ids 72001120, 72001235, 72001242; unsure: buff@weak_hit conditions: weak_hit |
 | 1990341 | 攻撃対象がブレイク時、得意属性が火属性の味方全員に「スキルダメージ+{0}%」を1回行動終了するまで付与し、<br>対象に「受けるダメージ+{1}%」を1回攻撃を受けるまで付与 | Be Cute at the End | Partial | done: taken_damage; buff@break_hit grants skill_damage; missing: unmapped effect ids 72001262, 72001274; unsure: buff@break_hit conditions: attr,target_broken |
 | 1990342 | 自身がバーストパネル獲得時、アイテムゲージを{0}%回復し、現在HPが最大の敵へパネルスキル：{{hyperlink_id 122}}を発動する<br>得意属性が火属性の味方全員のプラスパネルから受ける効果量+{1}% | Let's All Rush Forward! | Partial | done: potency_received; panel_skill@panel_gain; buff@panel_gain executes item_gauge; missing: unmapped effect ids 72001272, 72001266, 72001235, 72001264; unsure: potency_received conditions: attr,panel; buff@panel_gain conditions: hp_above,panel |
@@ -2548,7 +2548,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990347 | WEAK攻撃時、ブレイクダメージ+{0}%<br>状態異常が付与された攻撃対象がブレイク時、「レスレリ学園」の味方全員に「クリティカル確率+{1}%」を1回行動終了するまで付与 | Technology That Shapes the Future | Partial | done: buff@weak_hit grants break_damage; buff@break_hit grants crit_rate; 1/2 description effects mapped; missing: unmapped effect ids 72001288; unsure: buff@weak_hit conditions: weak_hit; buff@break_hit conditions: target_broken |
 | 1990348 | 「エミットリソン」または「クラルテレゾナンス」で状態異常が付与された対象を攻撃時、味方全員のバーストパネルを除いたパネル全てを、マルテラートパネルに変換(空パネルの時は生成)<br>自身がマルテラートパネル獲得時、自身に「アッチェレランド」を1回行動終了するまで付与し、バーストス | Let's Go Rhythmically! | Missing | missing: unmapped effect ids 72001289, 72001290, 72001291; description text unparsed |
 | 1990349 | パーティの誰かが戦闘アイテム使用後、敵全体に「麻痺」を1回行動開始するまで超高確率で付与<br>※アイテムを複数同時に使用しても発動は1回<br>攻撃対象が状態異常時、スキルダメージ+30% | Club President's Daughter's Sense | Missing | missing: unmapped effect ids 72001293, 72001292; description text unparsed |
-| 1990350 | スキル発動後またはHP回復を受けた時、自身に「バーストスキルダメージ+{0}%」を付与(上限50%)し、「スキルダメージ+{1}%」を付与(上限120%) | I'll Prove My Theory | Partial | done: buff@heal_received grants skill_damage; buff@heal_received grants skill_damage; missing: unmapped effect ids 72001296, 72001297, 72001296, 72001297 |
+| 1990350 | スキル発動後またはHP回復を受けた時、自身に「バーストスキルダメージ+{0}%」を付与(上限50%)し、「スキルダメージ+{1}%」を付与(上限120%) | I'll Prove My Theory | Partial | done: buff@heal_received grants burst_damage; buff@heal_received grants skill_damage; missing: unmapped effect ids 72001296, 72001297, 72001296, 72001297 |
 | 1990351 | 攻撃対象が状態異常時、スキルダメージ+{0}% | Young Genius's Observant Eye | Partial | done: skill_damage; missing: unmapped effect ids 72001292 |
 | 1990352 | 状態異常が付与された対象を攻撃時、味方全員のHPを{0}%回復し、アイテムゲージを{1}%回復し、得意属性が風属性の味方全員に「魔攻+{2}%」を1回行動終了するまで付与(重複不可) | Scientific Support Power | Partial | done: stat_up; missing: heal mod ignored; item_gauge mod ignored; unmapped effect ids 72001298, 72001299, 72001300, 72001304; unsure: stat_up conditions: attr; heal conditions: attr; item_gauge conditions: attr |
 | 1990353 | パーティの誰かが戦闘アイテム使用後、味方全員のHPを{0}%回復し、味方全員のマイナス効果を解除<br>※アイテムを複数同時に使用しても発動は1回 | Well Prepared! | Partial | done: buff@item_use executes heal; missing: unmapped effect ids 72001131, 72001301 |
@@ -2559,11 +2559,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990358 | 敵にとても狙われやすくなる<br>自身の物防・魔防+{0}%<br>自身のHPが50％以下の時、自身のHPを{1}%回復(発動上限1回) | Enchanting Attire | Partial | done: aggro; stat_up; 2/5 description effects mapped; missing: heal mod ignored; unmapped effect ids 72001312, 72000914, 72001316; unsure: heal conditions: hp_below |
 | 1990359 | 得意属性が風属性の味方全員の最大HP+{0}%<br>バトル開始時、味方全員のHPを{1}%回復<br>HP回復を受けた時、得意属性が風属性の味方全員に「物防・魔防+{2}％」を付与(上限70％) | Protection Bell | Partial | done: stat_up; buff@battle_start executes heal; buff@heal_received grants stat_up; missing: unmapped effect ids 72001313, 72001131, 72001314, 72001315; unsure: stat_up conditions: attr; buff@heal_received conditions: attr |
 | 1990360 | スキル発動後、自身に「魔攻+{0}%」を付与(上限100%)し、「スキルダメージ+{1}%」を付与(上限100%) | The Prodigy's New Power | Partial | done: buff@skill_use grants stat_up; buff@skill_use grants skill_damage; missing: unmapped effect ids 72001320, 72001321 |
-| 1990361 | 「真月影」と「絶迅の斬」と「裏月影」で被ダメージUP状態の対象を攻撃後、「クリティカル確率+{0}%」を付与(上限100%)<br>WEAK攻撃後、自身に「バーストスキルダメージ+{1}%」を付与(上限60%) | Let Me Show You How It's Done! | Partial | done: buff@post_attack grants crit_rate; buff@post_attack grants skill_damage; missing: unmapped effect ids 72001322, 72001324, 72001323; unsure: buff@post_attack conditions: weak_hit |
+| 1990361 | 「真月影」と「絶迅の斬」と「裏月影」で被ダメージUP状態の対象を攻撃後、「クリティカル確率+{0}%」を付与(上限100%)<br>WEAK攻撃後、自身に「バーストスキルダメージ+{1}%」を付与(上限60%) | Let Me Show You How It's Done! | Partial | done: buff@post_attack grants crit_rate; buff@post_attack grants burst_damage; missing: unmapped effect ids 72001322, 72001324, 72001323; unsure: buff@post_attack conditions: weak_hit |
 | 1990362 | バトル開始時またはパーティの誰かが戦闘アイテム使用後、自身に「ブレイクダメージ+{0}%」を1回行動終了するまで付与(発動上限4回)<br>※アイテムを複数同時に使用しても発動は1回 | Pierce with this Spear! | Partial | done: buff@item_use grants break_damage; missing: unmapped effect ids 72001326, 72001325; unsure: buff@item_use use cap 4 |
 | 1990363 | 攻撃対象がブレイク時、得意属性が氷属性の味方全員に「魔攻+{0}％」を1回行動終了するまで付与 | Veteran Adventurer's Command | Partial | done: buff@break_hit grants stat_up; missing: unmapped effect ids 72001327; unsure: buff@break_hit conditions: attr,target_broken |
 | 1990364 | 得意属性が氷属性の味方全員に以下の追加効果を付与<br>追加効果：「攻撃後、対象に受けるダメージ+40%を1回攻撃を受けるまで付与(上限4個)」 | Veteran Adventurer's Tactics | Missing | missing: unmapped effect ids 72001328; description text unparsed |
-| 1990365 | 被ダメージUP状態の対象を攻撃時、アイテムゲージを{0}%回復し、得意属性が氷属性の味方全員に「バーストスキルダメージ+{1}%」を付与(重複不可) | Everyone's Power Will Help! | Partial | done: skill_damage; missing: item_gauge mod ignored; unmapped effect ids 72001329, 72001330; unsure: skill_damage conditions: attr; item_gauge conditions: attr |
+| 1990365 | 被ダメージUP状態の対象を攻撃時、アイテムゲージを{0}%回復し、得意属性が氷属性の味方全員に「バーストスキルダメージ+{1}%」を付与(重複不可) | Everyone's Power Will Help! | Partial | done: burst_damage; missing: item_gauge mod ignored; unmapped effect ids 72001329, 72001330; unsure: burst_damage conditions: attr; item_gauge conditions: attr |
 | 1990366 | 被ダメージUP状態の対象を攻撃後、自身に「魔攻+{0}%」と「スキルダメージ+{1}%」を付与(上限180%) | The Party's Just Getting Started! | Partial | done: buff@post_attack grants stat_up; buff@post_attack grants skill_damage; missing: unmapped effect ids 72001331, 72001332 |
 | 1990367 | 敵にとても狙われやすくなる<br>得意属性が氷属性または「アーランド」の味方全員の最大HP+{0}％<br>バトル開始時、味方全員のHPを100%回復 | Everyone, Attention! | Partial | done: aggro; stat_up; missing: unmapped effect ids 72001333, 72001334, 72001131, 72000914 |
 | 1990368 | 自身がパネル獲得時またはHP回復を受けた時、得意属性が氷属性または「アーランド」の味方全員に「物防・魔防+{0}%」を付与(上限30%)し、<br>アイテムゲージを{1}%回復<br>「バリア」の耐久値が消費されたとき、「受けるダメージ-10%」を付与(重複不可) | Sharing Happiness | Partial | done: stat_up; missing: item_gauge mod ignored; unmapped effect ids 72001335, 72001085, 72001337, 72001336, 72001335, 72001336, 72001085, 72001340 +3 more |
@@ -2574,8 +2574,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990373 | WAVE開始時、敵全体に「マイナスパネルから受けるマイナス効果量+{0}%」を付与 | Butterfly Tactics | Missing | missing: buff@wave_start buff potency_received ignored; unmapped effect ids 72001360; unsure: buff@wave_start conditions: panel |
 | 1990374 | パーティの誰かが攻撃対象をブレイク時、味方全員に「バーストスキル以外の貫通力+{0}」を付与(上限150） | I Can Feel Everyone's Excitement | Partial | done: buff@break_hit grants penetration; missing: unmapped effect ids 72001362, 72001362; unsure: buff@break_hit conditions: target_broken |
 | 1990375 | 味方全員の戦闘アイテムから受ける強化効果量+{0}%<br>「プライムシャイン」または「ミックスチア」を使用時、自身に「与えるHP回復量+{1}%」を付与(上限70%) | I'll Give My All to Support You! | Partial | done: item_damage; missing: heal_given mod ignored; unmapped effect ids 72001168, 72001365, 72001366 |
-| 1990376 | 攻撃対象がブレイク時、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与し、<br>得意属性が打属性の味方全員に「クリティカル確率+{1}％」を1回行動終了するまで付与 | I'll Punish You! | Partial | done: crit_rate; buff@break_hit grants stat_up; missing: unmapped effect ids 72001367, 72001368; unsure: crit_rate conditions: attr; buff@break_hit conditions: target_broken |
-| 1990377 | 攻撃対象がブレイク時、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Midsummer Wounds | Partial | done: buff@break_hit grants stat_up; missing: unmapped effect ids 72001367, 72001371; unsure: buff@break_hit conditions: target_broken |
+| 1990376 | 攻撃対象がブレイク時、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与し、<br>得意属性が打属性の味方全員に「クリティカル確率+{1}％」を1回行動終了するまで付与 | I'll Punish You! | Partial | done: crit_rate; buff@break_hit grants taken_damage; missing: unmapped effect ids 72001367, 72001368; unsure: crit_rate conditions: attr; buff@break_hit conditions: target_broken |
+| 1990377 | 攻撃対象がブレイク時、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与 | Midsummer Wounds | Partial | done: buff@break_hit grants taken_damage; missing: unmapped effect ids 72001367, 72001371; unsure: buff@break_hit conditions: target_broken |
 | 1990378 | 対象の現在のブレイクゲージが50%以上の時、ブレイクダメージ+{0}%<br>WEAK攻撃時、スキルダメージ+{1}% | Genius Pursuit! | Partial | done: break_damage; buff@weak_hit grants skill_damage; 1/2 description effects mapped; missing: unmapped effect ids 72001120; unsure: buff@weak_hit conditions: weak_hit |
 | 1990379 | スキル発動後、または自身がパネル獲得時、自身に「忍術ひらめき覚え書き」が付与されていない時、「忍術ひらめき覚え書き(Lv2)」を付与<br>既に付与されている時、「忍術ひらめき覚え書き」のLv+2(上限Lv10)<br>「忍術ひらめき覚え書き」のLvに応じて以下のボーナスをそれぞ | Mastery of Ninjutsu | Missing | missing: unmapped effect ids 72001375, 72001377, 72001379, 72001381, 72001374, 72001374; description text unparsed |
 | 1990380 | パーティの誰かが戦闘アイテム使用時、自身の次のパネルをバーストパネルに変換(空パネルの時は生成)(発動上限3回)<br>※アイテムを複数同時に使用しても発動は1回 | Borrowing the Power of Alchemy! | Missing | missing: unmapped effect ids 72001373; description text unparsed |
@@ -2594,12 +2594,12 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990393 | 味方全員のクリティカルダメージ+{0}％ | Critical Damage Up (All) III | Implemented | done: crit_damage; 1/1 description effects mapped |
 | 1990394 | 味方全員の物攻+{0}％ | P.ATK Up (All) III | Implemented | done: stat_up; 1/1 description effects mapped |
 | 1990395 | 味方全員の魔攻+{0}％ | M.ATK Up (All) III | Implemented | done: stat_up; 1/1 description effects mapped |
-| 1990396 | 回復力+{0}% | Heal Up III | Missing | missing: unmapped effect ids 713001413; description text unparsed |
+| 1990396 | 回復力+{0}% | Heal Up III | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored |
 | 1990397 | 味方全員の強化系パネルから受ける強化効果量+{0}% | Boost Panel Up (All) III | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: panel |
 | 1990398 | 受けるダメージ-{0}% | Guard Up III | Implemented | done: taken_damage; 1/1 description effects mapped |
 | 1990399 | 攻撃後、対象に「与えるダメージ-{0}%」(固定)を1回行動終了するまで付与 | Attack Damage Down III | Implemented | done: buff@post_attack grants dealt_damage; 1/1 description effects mapped |
 | 1990400 | 行動後、自身のHPを{0}%回復 | Action Heal III | Partial | done: buff@post_attack executes heal; missing: unmapped effect ids 713001417 |
-| 1990401 | 行動後、自身に「最大HP+{0}%」(固定)を2回行動終了するまで付与 | Action HP Up III | Partial | done: buff@post_attack grants stat_up; missing: unmapped effect ids 713001418 |
+| 1990401 | 行動後、自身に「最大HP+{0}%」(固定)を2回行動終了するまで付与 | Action HP Up III | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped |
 | 1990402 | ブレイクダメージ+{0}% | Break Up III | Implemented | done: break_damage; 1/1 description effects mapped |
 | 1990403 | 与える「火属性耐性ダウン」の効果量+{0}% | Resist Fire Minus Up III | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 1990404 | 与える「氷属性耐性ダウン」の効果量+{0}% | Resist Ice Minus Up III | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
@@ -2619,12 +2619,12 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990418 | 味方全員のクリティカルダメージ+{0}％ | Critical Damage Up All II | Implemented | done: crit_damage; 1/1 description effects mapped |
 | 1990419 | 味方全員の物攻+{0}％ | P.ATK Up All II | Implemented | done: stat_up; 1/1 description effects mapped |
 | 1990420 | 味方全員の魔攻+{0}％ | M.ATK Up All II | Implemented | done: stat_up; 1/1 description effects mapped |
-| 1990421 | 回復力+{0}% | Heal Up II | Missing | missing: unmapped effect ids 713001413; description text unparsed |
+| 1990421 | 回復力+{0}% | Heal Up II | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored |
 | 1990422 | 味方全員の強化系パネルから受ける強化効果量+{0}% | Boost Panel Up All II | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: panel |
 | 1990423 | 受けるダメージ-{0}% | Guard Up II | Implemented | done: taken_damage; 1/1 description effects mapped |
 | 1990424 | 攻撃後、対象に「与えるダメージ-{0}%」(固定)を1回行動終了するまで付与 | Attack Damage Down II | Implemented | done: buff@post_attack grants dealt_damage; 1/1 description effects mapped |
 | 1990425 | 行動後、自身のHPを{0}%回復 | Action Heal II | Partial | done: buff@post_attack executes heal; missing: unmapped effect ids 713001417 |
-| 1990426 | 行動後、自身に「最大HP+{0}%」(固定)を2回行動終了するまで付与 | Action HP Up II | Partial | done: buff@post_attack grants stat_up; missing: unmapped effect ids 713001418 |
+| 1990426 | 行動後、自身に「最大HP+{0}%」(固定)を2回行動終了するまで付与 | Action HP Up II | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped |
 | 1990427 | ブレイクダメージ+{0}% | Break Up II | Implemented | done: break_damage; 1/1 description effects mapped |
 | 1990428 | 与える「火属性耐性ダウン」の効果量+{0}% | Resist Fire Minus Up II | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 1990429 | 与える「氷属性耐性ダウン」の効果量+{0}% | Resist Ice Minus Up II | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
@@ -2644,12 +2644,12 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990443 | 味方全員のクリティカルダメージ+{0}％ | Critical Damage Up All I | Implemented | done: crit_damage; 1/1 description effects mapped |
 | 1990444 | 味方全員の物攻+{0}％ | P.ATK Up All I | Implemented | done: stat_up; 1/1 description effects mapped |
 | 1990445 | 味方全員の魔攻+{0}％ | M.ATK Up All I | Implemented | done: stat_up; 1/1 description effects mapped |
-| 1990446 | 回復力+{0}% | Heal Up I | Missing | missing: unmapped effect ids 713001413; description text unparsed |
+| 1990446 | 回復力+{0}% | Heal Up I | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored |
 | 1990447 | 味方全員の強化系パネルから受ける強化効果量+{0}% | Boost Panel Up All I | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: panel |
 | 1990448 | 受けるダメージ-{0}% | Guard Up I | Implemented | done: taken_damage; 1/1 description effects mapped |
 | 1990449 | 攻撃後、対象に「与えるダメージ-{0}%」(固定)を1回行動終了するまで付与 | Attack Damage Down I | Implemented | done: buff@post_attack grants dealt_damage; 1/1 description effects mapped |
 | 1990450 | 行動後、自身のHPを{0}%回復 | Action Heal I | Partial | done: buff@post_attack executes heal; missing: unmapped effect ids 713001417 |
-| 1990451 | 行動後、自身に「最大HP+{0}%」(固定)を2回行動終了するまで付与 | Action HP Up I | Partial | done: buff@post_attack grants stat_up; missing: unmapped effect ids 713001418 |
+| 1990451 | 行動後、自身に「最大HP+{0}%」(固定)を2回行動終了するまで付与 | Action HP Up I | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped |
 | 1990452 | ブレイクダメージ+{0}% | Break Up I | Implemented | done: break_damage; 1/1 description effects mapped |
 | 1990453 | 与える「火属性耐性ダウン」の効果量+{0}% | Resist Fire Minus Up I | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 1990454 | 与える「氷属性耐性ダウン」の効果量+{0}% | Resist Ice Minus Up I | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
@@ -2676,7 +2676,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990475 | 自身のバーストスキルをゲージ化<br>※バーストゲージは2周分ストック可能<br><br>自身を除くパーティの誰かがバーストスキル発動後、自身のバーストゲージを{0}%増加<br>攻撃対象がブレイク時、自身のバーストゲージを{1}%増加<br>ブレイク状態の敵を攻撃時、自身のバー | It's a Secret Between Us♪ | Missing | missing: unmapped effect ids 72001460, 72001462, 72001463, 72001452; description text unparsed |
 | 1990476 | バーストスキル発動後、得意属性が打属性の味方全員に「物攻+{0}%」と「クリティカルダメージ+{1}%」を2回行動終了するまで付与 | I'll Help Out! | Partial | done: buff@skill_use grants stat_up; buff@skill_use grants crit_damage; missing: unmapped effect ids 72001464, 72001465; unsure: buff@skill_use conditions: attr |
 | 1990477 | 自身のバーストスキルをゲージ化<br>※バーストゲージは3周分ストック可能<br><br>「ビューティーシャイン」で「がち恋アルビ担モード(Lv5)」が付与された対象を攻撃後、対象の「がち恋アルビ担モード(Lv5)」を解除し、自身のバーストゲージを{0}%増加<br>「メロメロ☆ | Nailed by Alvie! | Missing | missing: unmapped effect ids 72001468, 72001475, 72001476, 72001452, 72001469; description text unparsed |
-| 1990478 | バーストスキル発動後、敵全体に「受ける物理攻撃ダメージ+{0}%」(上限200%)と「受ける攻撃の貫通力+{1}」(上限150)を付与 | Vacation Trick | Partial | done: buff@skill_use grants stat_up; buff@skill_use grants penetration; missing: unmapped effect ids 72001466, 72001467 |
+| 1990478 | バーストスキル発動後、敵全体に「受ける物理攻撃ダメージ+{0}%」(上限200%)と「受ける攻撃の貫通力+{1}」(上限150)を付与 | Vacation Trick | Partial | done: buff@skill_use grants taken_damage; buff@skill_use grants penetration; missing: unmapped effect ids 72001466, 72001467 |
 | 1990479 | バトル開始時、「クレアティオフロース」のスキルランプを3個点灯する<br>パーティの誰かが戦闘アイテム使用後、「クレアティオフロース」のスキルランプを1個点灯する<br>※アイテムを複数同時に使用しても点灯は1個 | All According to Plan | Partial | done: lamp_light@battle_start; lamp_light@item_use; missing: unmapped effect ids 72001094, 72001094 |
 | 1990480 | 得意属性が突属性の味方全員は、スキル使用前に付与されている強化効果の数に応じて以下のボーナスをそれぞれ獲得する<br>3個以上：スキルダメージ+{0}%<br>5個以上：スキルダメージ+{1}%<br>10個以上：スキル発動後、自身の次のパネル1つをバーストパネルに変換(空パネル | Breakthrough Formula | Missing | missing: unmapped effect ids 72001478, 72001479, 72001482, 72001484; description text unparsed |
 | 1990481 | スキル発動後、アイテムゲージを{0}%回復<br>「冥き追憶」タグを持つキャラ数に応じ、「冥き追憶」の味方全員の「物攻・魔攻・クリティカルダメージ+6～30％」(1～5人で多いほど増加) | Encroaching Darkness | Partial | done: buff@skill_use executes item_gauge; missing: unmapped effect ids 72001085, 72001517, 72001518, 72001519, 72001511 |
@@ -2700,7 +2700,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990499 | スキル発動後、アイテムゲージを{0}%回復<br>クリティカル攻撃後、さらにアイテムゲージを{1}%回復<br>パーティの誰かが戦闘アイテム使用後、自身に「クリティカル確率+{2}%」を1回行動終了するまで付与<br>※アイテムを複数同時に使用しても発動は1回<br><br>自身 | Alchemichance | Partial | done: buff@skill_use executes item_gauge; buff@post_attack executes item_gauge; buff@item_use grants crit_rate; missing: unmapped effect ids 72001085, 72001569, 72001568, 72001577, 72001578, 72001579 |
 | 1990500 | 「ハルフェン復興隊」タグを持つキャラ数に応じ、基礎魔攻+100～500(1～5人で多いほど増加) | If We're All Together! | Missing | missing: unmapped effect ids 72001570; description text unparsed |
 | 1990501 | パーティの誰かが戦闘アイテム使用時、自身に「ブレイクダメージ+{0}%」を付与(上限80%)し、味方全員に「クリティカルダメージ+{1}%」を付与(上限80%)<br>※アイテムを複数同時に使用しても発動は1回 | Fight Like a Thunderclap | Partial | done: buff@item_use grants break_damage; buff@item_use grants crit_damage; missing: unmapped effect ids 72001572, 72001573 |
-| 1990502 | 攻撃対象がブレイク時、アイテムゲージを{0}%回復し、対象に「受ける魔法攻撃ダメージ+{1}%」を付与(上限80%) | Let's Go All Out! | Partial | done: buff@break_hit grants stat_up; buff@break_hit executes item_gauge; 1/2 description effects mapped; missing: unmapped effect ids 72001574; unsure: buff@break_hit conditions: target_broken |
+| 1990502 | 攻撃対象がブレイク時、アイテムゲージを{0}%回復し、対象に「受ける魔法攻撃ダメージ+{1}%」を付与(上限80%) | Let's Go All Out! | Partial | done: buff@break_hit grants taken_damage; buff@break_hit executes item_gauge; 1/2 description effects mapped; missing: unmapped effect ids 72001574; unsure: buff@break_hit conditions: target_broken |
 | 1990503 | 敵にとても狙われやすくなる<br>得意属性が雷属性または「ハルフェン復興隊」の味方全員の最大HP+{0}%<br>バトル開始時、「ウェルテックスソード」のスキルランプを3個点灯し、<br>味方全員のHPを100%回復<br>自身が攻撃を受けた時またはパーティの誰かが戦闘アイテム使 | I'll Be Your Opponent Until the End | Partial | done: aggro; stat_up; lamp_light@battle_start; lamp_light@item_use; missing: unmapped effect ids 72001580, 72001094, 72001094, 72001094, 72001581, 72001131, 72000914 |
 | 1990504 | 自身のバーストスキルをゲージ化<br>※バーストゲージは3周分ストック可能<br><br>攻撃を受けた時、自身のバーストゲージを{0}%増加<br>スキル発動後、自身のHPを{1}%回復<br><br>パーティの誰かが戦闘アイテム使用後、「ハルフェン復興隊」タグを持つキャラ数に応 | Alchemy Effect Verification Experiment | Partial | done: buff@skill_use executes heal; 1/7 description effects mapped; missing: unmapped effect ids 72001474, 72001452, 72001582, 72001583, 72001597, 72001598 |
 | 1990505 | 味方全員は「ハルフェン復興隊」タグを持つキャラ数に応じ「クリティカルダメージ+10～50％」と「戦闘アイテムクリティカルダメージ+10～50%」(1～5人で多いほど増加)<br><br>スキル発動後、アイテムゲージを{0}%回復し、味方全員のHPを{1}%回復 | Let's Combine Our Strength! | Partial | done: buff@skill_use executes heal; buff@skill_use executes item_gauge; missing: unmapped effect ids 72001085, 72001131, 72001584, 72001606 |
@@ -2716,7 +2716,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990515 | 味方全員は「新星」タグを持つキャラ数に応じ「物防・魔防+3～15%」(1～5人で多いほど増加) | <Rising Star Unity> Overflowing P.DEF & M.DEF Power | Partial | done: 2/2 description effects mapped; missing: description text unparsed |
 | 1990516 | 自身のバーストスキルをゲージ化<br>※バーストゲージは3周分ストック可能<br><br>「餓狼の影」が付与された敵を攻撃後、自身のバーストゲージを{0}%増加<br>スキル発動後、味方全員のHPを{1}%回復 | Following in My Brother's Footsteps | Partial | done: buff@skill_use executes heal; missing: unmapped effect ids 72001599, 72001131, 72001452 |
 | 1990517 | バトル開始時、得意属性が物理属性の味方全員に以下の追加効果を付与<br>追加効果：「HP回復を受けた時、自身にクリティカルダメージ+35%を付与(上限210%)(効果量固定)」<br><br>※バトル開始時に発動した回復効果は含まない | Devotion to My Brother | Missing | missing: unmapped effect ids 72001600; description text unparsed |
-| 1990518 | 自身のバーストスキルをゲージ化<br>※バーストゲージは2周分ストック可能<br><br>「餓狼の影」が付与された敵を攻撃後、自身のバーストゲージを{0}%増加<br>「餓狼の影(Lv10)」が付与された対象を攻撃時、「バーストスキルダメージ+{1}%」を1回行動終了するまで付与 | As a Reliable Brother | Partial | done: skill_damage; missing: unmapped effect ids 72001599, 72001603, 72001604, 72001602, 72001452 |
+| 1990518 | 自身のバーストスキルをゲージ化<br>※バーストゲージは2周分ストック可能<br><br>「餓狼の影」が付与された敵を攻撃後、自身のバーストゲージを{0}%増加<br>「餓狼の影(Lv10)」が付与された対象を攻撃時、「バーストスキルダメージ+{1}%」を1回行動終了するまで付与 | As a Reliable Brother | Partial | done: burst_damage; missing: unmapped effect ids 72001599, 72001603, 72001604, 72001602, 72001452 |
 | 1990519 | パーティに自身以外の「騎士」がいる時、基礎物攻+{0} | Dreams Shared with My Brother | Partial | done: stat_up; missing: unmapped effect ids 72001605 |
 | 1990520 | 自身のバーストスキルをゲージ化<br>※バーストゲージは2周分ストック可能<br><br>クリティカル攻撃後、自身のバーストゲージを{0}%増加<br>スキル発動前に状態異常が付与されている敵を攻撃後、自身のバーストゲージを{1}%増加<br><br>スキル発動前に自身に付与され | Ancestral Alchemy | Partial | done: crit_rate; missing: unmapped effect ids 72001620, 72001611, 72001622, 72001098, 72001452 |
 | 1990521 | 「冥き追憶」タグを持つキャラ数に応じ、スキル威力+30～150%(1～5人で多いほど増加)<br><br>バトル開始時、「シュテルケミッシェン」のスキルランプを2個点灯する<br>スキル発動前に状態異常が付与されている敵を攻撃後、「シュテルケミッシェン」のスキルランプを1個点灯す | Aspiring Darkness | Partial | done: lamp_light@battle_start; lamp_light@post_attack; lamp_light@target_ailment_hit; missing: unmapped effect ids 72001094, 72001621, 72001642, 72001511 |
@@ -2759,14 +2759,14 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990558 | パーティに自身以外の「寡黙」がいる時、基礎魔攻+{0}<br><br>味方から単体スキルを受けた後、自身に「スキルダメージ+{1}％」を付与(上限2個) | I'll Try to Meet Your Expectations | Partial | done: stat_up; skill_damage; missing: unmapped effect ids 72001749, 72001750, 72001751 |
 | 1990559 | 自身のバーストスキルをゲージ化<br>※バーストゲージは3周分ストック可能<br><br>パネル獲得時、自身のバーストゲージを{0}％増加し、自身に「クリティカルダメージ+{1}％」を1回行動終了するまで付与 | Power of the Miraculous Nine -II- | Partial | done: crit_damage; missing: unmapped effect ids 72001474, 72001754, 72001452, 72001511 |
 | 1990560 | 攻撃対象がブレイク状態の時、クリティカル確率+{0}%<br>スキル発動前に状態異常が付与されている対象を攻撃時、スキルダメージ+{1}%<br><br>パーティに自身以外の「九偉人」がいる時、基礎魔攻+{2}<br><br>「冥き追憶」タグを持つキャラ数に応じ、スキル威力+20 | Annihilating Darkness | Partial | done: skill_damage; stat_up; buff@break_hit grants crit_rate; missing: unmapped effect ids 72001755, 72001757, 72001758, 72001642; unsure: buff@break_hit conditions: target_state,target_broken |
-| 1990561 | 自身のバーストスキルをゲージ化<br>※バーストゲージは3周分ストック可能<br><br>攻撃対象が小ブレイクまたはブレイク時、自身のバーストゲージを{0}％増加し、対象に「受ける物理攻撃ダメージ+{1}％」と「受ける魔法攻撃ダメージ+{2}％」を2回攻撃を受けるまで付与<br> | Power of the Miraculous Nine -I- | Partial | done: stat_up; stat_up; buff@break_hit grants stat_up; buff@break_hit grants stat_up; missing: unmapped effect ids 72001759, 72001760, 72001761, 72001452, 72001511; unsure: buff@break_hit conditions: target_broken |
+| 1990561 | 自身のバーストスキルをゲージ化<br>※バーストゲージは3周分ストック可能<br><br>攻撃対象が小ブレイクまたはブレイク時、自身のバーストゲージを{0}％増加し、対象に「受ける物理攻撃ダメージ+{1}％」と「受ける魔法攻撃ダメージ+{2}％」を2回攻撃を受けるまで付与<br> | Power of the Miraculous Nine -I- | Partial | done: taken_damage; taken_damage; buff@break_hit grants taken_damage; buff@break_hit grants taken_damage; missing: unmapped effect ids 72001759, 72001760, 72001761, 72001452, 72001511; unsure: buff@break_hit conditions: target_broken |
 | 1990562 | 「冥き追憶」タグを持つキャラ数に応じ、自身が与えるマイナス効果量+10～{0}％と味方全員の物攻・魔攻+20～{1}％(1～5人で多いほど増加)<br><br>「冥き追憶」の味方全員は1回目のターン開始時、自身のパネルをバーストパネルに変換(空パネルの時は生成) | Reigning Darkness | Missing | missing: unmapped effect ids 72001762, 72001763, 72001764, 72001765, 72001766; description text unparsed |
 | 1990563 | 自身のバーストスキルをゲージ化<br>※バーストゲージは5周分ストック可能<br><br>自身のバーストゲージ100％につき、クリティカルダメージ+{0}％ | Culmination of the Palme's Wisdom | Partial | done: crit_damage; missing: unmapped effect ids 72001777, 72001778, 72001779, 72001780, 72001781, 72001782, 72001452 |
 | 1990564 | 自身を除くパーティの誰かがスキル選択後、ブレイク状態の敵がいる場合または攻撃対象をブレイクした場合、現在HPが最も低い敵へ追加攻撃：{{hyperlink_id 163}}を発動する<br>自身に「MODE：グラヴィス」が付与されている時、追加攻撃：{{hyperlink_id  | Let's Finish This Quick! | Partial | done: stat_up; extra_attack@post_attack; extra_attack@break_hit; extra_attack@post_attack; extra_attack@post_attack; missing: unmapped effect ids 72001783, 72001784, 72001785, 72001786, 72001787, 72001788, 72001789, 72001790 +5 more |
 | 1990565 | 自身のバーストスキルをゲージ化<br>※バーストゲージは3周分ストック可能<br><br>パーティの誰かがスキル発動後、自身のバーストゲージを{0}%増加 | Performance Dedicated to My Sister | Missing | missing: unmapped effect ids 72001474, 72001474, 72001452; description text unparsed |
 | 1990566 | スキル発動後、得意属性が斬属性の味方全員に「素早さ+{0}％」を付与(上限24％)<br>パーティの誰かがスキル発動後、得意属性が斬属性の味方全員に「クリティカル確率+{1}％」(上限100％)と「クリティカルダメージ+{2}％」(上限1600％)を付与<br><br>味方全員は | Seaside Limit | Partial | done: potency_given_plus; buff@skill_use grants stat_up; buff@skill_use grants crit_rate; buff@skill_use grants crit_damage; missing: unmapped effect ids 72001796, 72001797, 72001798, 72001800, 72001801, 72001797, 72001798; unsure: buff@skill_use conditions: attr |
 | 1990567 | 自身のバーストスキルをゲージ化<br>※バーストゲージは3周分ストック可能<br><br>パーティの誰かがスキル発動後、自身のバーストゲージを{0}％増加<br>攻撃対象が小ブレイクまたはブレイク時、自身のバーストゲージを{1}％増加し、対象のターンを{2}ターン遅らせる<br> | Unwavering Conviction | Partial | done: 1/5 description effects mapped; missing: unmapped effect ids 72001474, 72001802, 72001474, 72001452; description text unparsed |
-| 1990568 | 攻撃対象が小ブレイクまたはブレイク時、もしくはブレイク状態の敵を攻撃後、対象に「受ける物理攻撃ダメージ+{0}％」を付与(上限320％)<br>※複数のゲージを同時に0にしても発動は1回<br><br>戦闘不能になっていない味方が3人以上かつブレイク状態の敵を「グラヴィスグローブ | Skills Forged with Siblings | Partial | done: potency_given_minus; buff@post_attack grants stat_up; 2/6 description effects mapped; missing: break_power mod ignored; unmapped effect ids 72001822, 72001806, 72001823, 72001821; unsure: buff@post_attack conditions: target_broken |
+| 1990568 | 攻撃対象が小ブレイクまたはブレイク時、もしくはブレイク状態の敵を攻撃後、対象に「受ける物理攻撃ダメージ+{0}％」を付与(上限320％)<br>※複数のゲージを同時に0にしても発動は1回<br><br>戦闘不能になっていない味方が3人以上かつブレイク状態の敵を「グラヴィスグローブ | Skills Forged with Siblings | Partial | done: potency_given_minus; buff@post_attack grants taken_damage; 2/6 description effects mapped; missing: break_power mod ignored; unmapped effect ids 72001822, 72001806, 72001823, 72001821; unsure: buff@post_attack conditions: target_broken |
 | 1990569 | 自身のバーストスキルをゲージ化<br>※バーストゲージは3周分ストック可能<br><br>パーティの誰かがスキル発動後、自身のバーストゲージを{0}％増加<br>スキル発動後、自身の「エレガントフレグランス」10Lvにつき、自身のバーストゲージを{1}％増加 | All Set for Fun? | Missing | missing: unmapped effect ids 72001474, 72001807, 72001808, 72001809, 72001810, 72001811, 72001474, 72001452; description text unparsed |
 | 1990570 | パーティの誰かがスキル発動後、「エレガントフレグランス」が付与されていない味方全員に「エレガントフレグランス(Lv1)」を付与<br>既に付与されている味方全員の「エレガントフレグランス」のLv+1(上限Lv50)<br>味方全員は、付与されている「エレガントフレグランス」のLv | Seaside Affection | Partial | done: potency_given_plus; missing: unmapped effect ids 72001815, 72001816, 72001817, 72001801, 72001818, 72001818 |
 | 4990001 | WEAK攻撃時、スキルダメージ+{0}% | Weak Point Damage Up I | Implemented | done: buff@weak_hit grants skill_damage; 1/1 description effects mapped; unsure: buff@weak_hit conditions: weak_hit |
@@ -2794,11 +2794,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4990023 | ボスを攻撃時、スキルダメージ+{0}% | Boss Damage Up I | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: boss |
 | 4990024 | ボスを攻撃時、スキルダメージ+{0}% | Boss Damage Up I | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: boss |
 | 4990025 | ボスを攻撃時、スキルダメージ+{0}% | Boss Damage Up I | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: boss |
-| 4990026 | バーストスキルダメージ+{0}% | Burst Up I | Implemented | done: skill_damage; 1/1 description effects mapped |
-| 4990027 | バーストスキルダメージ+{0}% | Burst Up I | Implemented | done: skill_damage; 1/1 description effects mapped |
-| 4990028 | バーストスキルダメージ+{0}% | Burst Up I | Implemented | done: skill_damage; 1/1 description effects mapped |
-| 4990029 | バーストスキルダメージ+{0}% | Burst Up I | Implemented | done: skill_damage; 1/1 description effects mapped |
-| 4990030 | バーストスキルダメージ+{0}% | Burst Up I | Implemented | done: skill_damage; 1/1 description effects mapped |
+| 4990026 | バーストスキルダメージ+{0}% | Burst Up I | Implemented | done: burst_damage; 1/1 description effects mapped |
+| 4990027 | バーストスキルダメージ+{0}% | Burst Up I | Implemented | done: burst_damage; 1/1 description effects mapped |
+| 4990028 | バーストスキルダメージ+{0}% | Burst Up I | Implemented | done: burst_damage; 1/1 description effects mapped |
+| 4990029 | バーストスキルダメージ+{0}% | Burst Up I | Implemented | done: burst_damage; 1/1 description effects mapped |
+| 4990030 | バーストスキルダメージ+{0}% | Burst Up I | Implemented | done: burst_damage; 1/1 description effects mapped |
 | 4990032 | 敵の数が1体の時、ブレイクダメージ+{0}% | Final Foe Stun Up I | Implemented | done: break_damage; 1/1 description effects mapped |
 | 4990033 | 敵の数が1体の時、ブレイクダメージ+{0}% | Final Foe Stun Up I | Implemented | done: break_damage; 1/1 description effects mapped |
 | 4990034 | 敵の数が1体の時、ブレイクダメージ+{0}% | Final Foe Stun Up I | Implemented | done: break_damage; 1/1 description effects mapped |
@@ -3094,11 +3094,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4990350 | 自身がアタッカーの時、魔法攻撃スキルダメージ+{0}% | Attacker Magic Damage Up III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
 | 4990351 | 自身がアタッカーの時、魔法攻撃スキルダメージ+{0}% | Attacker Magic Damage Up III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
 | 4990352 | 自身がアタッカーの時、魔法攻撃スキルダメージ+{0}% | Attacker Magic Damage Up III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
-| 4990353 | 得意属性が氷属性の時、スキルダメージ+{0}% | Ice Affinity Damage Up III | Partial | done: skill_damage; missing: unmapped effect ids 95000078; unsure: skill_damage conditions: attr |
-| 4990354 | 得意属性が氷属性の時、スキルダメージ+{0}% | Ice Affinity Damage Up III | Partial | done: skill_damage; missing: unmapped effect ids 95000078; unsure: skill_damage conditions: attr |
-| 4990355 | 得意属性が氷属性の時、スキルダメージ+{0}% | Ice Affinity Damage Up III | Partial | done: skill_damage; missing: unmapped effect ids 95000078; unsure: skill_damage conditions: attr |
-| 4990356 | 得意属性が氷属性の時、スキルダメージ+{0}% | Ice Affinity Damage Up III | Partial | done: skill_damage; missing: unmapped effect ids 95000078; unsure: skill_damage conditions: attr |
-| 4990357 | 得意属性が氷属性の時、スキルダメージ+{0}% | Ice Affinity Damage Up III | Partial | done: skill_damage; missing: unmapped effect ids 95000078; unsure: skill_damage conditions: attr |
+| 4990353 | 得意属性が氷属性の時、スキルダメージ+{0}% | Ice Affinity Damage Up III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
+| 4990354 | 得意属性が氷属性の時、スキルダメージ+{0}% | Ice Affinity Damage Up III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
+| 4990355 | 得意属性が氷属性の時、スキルダメージ+{0}% | Ice Affinity Damage Up III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
+| 4990356 | 得意属性が氷属性の時、スキルダメージ+{0}% | Ice Affinity Damage Up III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
+| 4990357 | 得意属性が氷属性の時、スキルダメージ+{0}% | Ice Affinity Damage Up III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
 | 4990358 | 自身がアタッカーの時、味方全員のスキルダメージ+{0}% | Attacker Damage Up (All) III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
 | 4990359 | 自身がアタッカーの時、味方全員のスキルダメージ+{0}% | Attacker Damage Up (All) III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
 | 4990360 | 自身がアタッカーの時、味方全員のスキルダメージ+{0}% | Attacker Damage Up (All) III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
@@ -3189,11 +3189,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4990445 | 得意属性が風属性の時、クリティカルダメージ+{0}% | Air Affinity Critical Damage Up III | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: attr |
 | 4990446 | 得意属性が風属性の時、クリティカルダメージ+{0}% | Air Affinity Critical Damage Up III | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: attr |
 | 4990447 | 得意属性が風属性の時、クリティカルダメージ+{0}% | Air Affinity Critical Damage Up III | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: attr |
-| 4990448 | 味方全員のバーストスキルダメージ+{0}% | Burst Up (All) III | Implemented | done: skill_damage; 1/1 description effects mapped |
-| 4990449 | 味方全員のバーストスキルダメージ+{0}% | Burst Up (All) III | Implemented | done: skill_damage; 1/1 description effects mapped |
-| 4990450 | 味方全員のバーストスキルダメージ+{0}% | Burst Up (All) III | Implemented | done: skill_damage; 1/1 description effects mapped |
-| 4990451 | 味方全員のバーストスキルダメージ+{0}% | Burst Up (All) III | Implemented | done: skill_damage; 1/1 description effects mapped |
-| 4990452 | 味方全員のバーストスキルダメージ+{0}% | Burst Up (All) III | Implemented | done: skill_damage; 1/1 description effects mapped |
+| 4990448 | 味方全員のバーストスキルダメージ+{0}% | Burst Up (All) III | Implemented | done: burst_damage; 1/1 description effects mapped |
+| 4990449 | 味方全員のバーストスキルダメージ+{0}% | Burst Up (All) III | Implemented | done: burst_damage; 1/1 description effects mapped |
+| 4990450 | 味方全員のバーストスキルダメージ+{0}% | Burst Up (All) III | Implemented | done: burst_damage; 1/1 description effects mapped |
+| 4990451 | 味方全員のバーストスキルダメージ+{0}% | Burst Up (All) III | Implemented | done: burst_damage; 1/1 description effects mapped |
+| 4990452 | 味方全員のバーストスキルダメージ+{0}% | Burst Up (All) III | Implemented | done: burst_damage; 1/1 description effects mapped |
 | 4990453 | 攻撃対象がぷに種族の時、スキルダメージ+{0}% | Puni Damage Up III | Implemented | done: skill_damage; 1/1 description effects mapped |
 | 4990454 | 攻撃対象がぷに種族の時、スキルダメージ+{0}% | Puni Damage Up III | Implemented | done: skill_damage; 1/1 description effects mapped |
 | 4990455 | 攻撃対象がぷに種族の時、スキルダメージ+{0}% | Puni Damage Up III | Implemented | done: skill_damage; 1/1 description effects mapped |
@@ -3204,11 +3204,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4990460 | 得意属性が風属性の時、ブレイクダメージ+{0}% | Air Affinity Stun Up III | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: attr |
 | 4990461 | 得意属性が風属性の時、ブレイクダメージ+{0}% | Air Affinity Stun Up III | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: attr |
 | 4990462 | 得意属性が風属性の時、ブレイクダメージ+{0}% | Air Affinity Stun Up III | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: attr |
-| 4990463 | 自身がサポーターの時、味方全員のバーストスキルダメージ+{0}% | Supporter Burst Up (All) III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
-| 4990464 | 自身がサポーターの時、味方全員のバーストスキルダメージ+{0}% | Supporter Burst Up (All) III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
-| 4990465 | 自身がサポーターの時、味方全員のバーストスキルダメージ+{0}% | Supporter Burst Up (All) III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
-| 4990466 | 自身がサポーターの時、味方全員のバーストスキルダメージ+{0}% | Supporter Burst Up (All) III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
-| 4990467 | 自身がサポーターの時、味方全員のバーストスキルダメージ+{0}% | Supporter Burst Up (All) III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
+| 4990463 | 自身がサポーターの時、味方全員のバーストスキルダメージ+{0}% | Supporter Burst Up (All) III | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role |
+| 4990464 | 自身がサポーターの時、味方全員のバーストスキルダメージ+{0}% | Supporter Burst Up (All) III | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role |
+| 4990465 | 自身がサポーターの時、味方全員のバーストスキルダメージ+{0}% | Supporter Burst Up (All) III | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role |
+| 4990466 | 自身がサポーターの時、味方全員のバーストスキルダメージ+{0}% | Supporter Burst Up (All) III | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role |
+| 4990467 | 自身がサポーターの時、味方全員のバーストスキルダメージ+{0}% | Supporter Burst Up (All) III | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role |
 | 4990468 | 自身がサポーターの時、味方全員の強化系パネルから受ける効果量+{0}% | Supporter Boost Pan. Up (All) III | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: role,panel |
 | 4990469 | 自身がサポーターの時、味方全員の強化系パネルから受ける効果量+{0}% | Supporter Boost Pan. Up (All) III | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: role,panel |
 | 4990470 | 自身がサポーターの時、味方全員の強化系パネルから受ける効果量+{0}% | Supporter Boost Pan. Up (All) III | Implemented | done: potency_received; 1/1 description effects mapped; unsure: potency_received conditions: role,panel |
@@ -3299,11 +3299,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4990555 | 自身がアタッカーの時、クリティカルダメージ+{0}% | Attacker Critical Damage Up IV | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role |
 | 4990556 | 自身がアタッカーの時、クリティカルダメージ+{0}% | Attacker Critical Damage Up IV | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role |
 | 4990557 | 自身がアタッカーの時、クリティカルダメージ+{0}% | Attacker Critical Damage Up IV | Implemented | done: crit_damage; 1/1 description effects mapped; unsure: crit_damage conditions: role |
-| 4990558 | 得意属性が斬属性の時、バーストスキルダメージ+{0}% | Slash Affinity Burst Up III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
-| 4990559 | 得意属性が斬属性の時、バーストスキルダメージ+{0}% | Slash Affinity Burst Up III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
-| 4990560 | 得意属性が斬属性の時、バーストスキルダメージ+{0}% | Slash Affinity Burst Up III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
-| 4990561 | 得意属性が斬属性の時、バーストスキルダメージ+{0}% | Slash Affinity Burst Up III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
-| 4990562 | 得意属性が斬属性の時、バーストスキルダメージ+{0}% | Slash Affinity Burst Up III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: attr |
+| 4990558 | 得意属性が斬属性の時、バーストスキルダメージ+{0}% | Slash Affinity Burst Up III | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: attr |
+| 4990559 | 得意属性が斬属性の時、バーストスキルダメージ+{0}% | Slash Affinity Burst Up III | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: attr |
+| 4990560 | 得意属性が斬属性の時、バーストスキルダメージ+{0}% | Slash Affinity Burst Up III | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: attr |
+| 4990561 | 得意属性が斬属性の時、バーストスキルダメージ+{0}% | Slash Affinity Burst Up III | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: attr |
+| 4990562 | 得意属性が斬属性の時、バーストスキルダメージ+{0}% | Slash Affinity Burst Up III | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: attr |
 | 4990563 | 得意属性が火属性の時、与える強化効果量+{0}% | Fire Affinity Enhancer Up III | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: attr |
 | 4990564 | 得意属性が火属性の時、与える強化効果量+{0}% | Fire Affinity Enhancer Up III | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: attr |
 | 4990565 | 得意属性が火属性の時、与える強化効果量+{0}% | Fire Affinity Enhancer Up III | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: attr |
@@ -3439,11 +3439,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4990695 | 得意属性が氷属性の時、WEAK攻撃後、自身に「クリティカルダメージ+{0}%」を2回行動終了するまで付与 | Ice Weakness Critical Damage Up III | Implemented | done: buff@post_attack grants crit_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: attr,weak_hit |
 | 4990696 | 得意属性が氷属性の時、WEAK攻撃後、自身に「クリティカルダメージ+{0}%」を2回行動終了するまで付与 | Ice Weakness Critical Damage Up III | Implemented | done: buff@post_attack grants crit_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: attr,weak_hit |
 | 4990697 | 得意属性が氷属性の時、WEAK攻撃後、自身に「クリティカルダメージ+{0}%」を2回行動終了するまで付与 | Ice Weakness Critical Damage Up III | Implemented | done: buff@post_attack grants crit_damage; 1/1 description effects mapped; unsure: buff@post_attack conditions: attr,weak_hit |
-| 4990698 | 攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Magical Damage Received Up III | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped |
-| 4990699 | 攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Magical Damage Received Up III | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped |
-| 4990700 | 攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Magical Damage Received Up III | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped |
-| 4990701 | 攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Magical Damage Received Up III | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped |
-| 4990702 | 攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Magical Damage Received Up III | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped |
+| 4990698 | 攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Magical Damage Received Up III | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped |
+| 4990699 | 攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Magical Damage Received Up III | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped |
+| 4990700 | 攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Magical Damage Received Up III | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped |
+| 4990701 | 攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Magical Damage Received Up III | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped |
+| 4990702 | 攻撃後、対象に「受ける魔法攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Magical Damage Received Up III | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped |
 | 4990703 | 得意属性が雷属性の時、与えるHP回復量+{0}% | Bolt Heal Up III | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored; unsure: heal_given conditions: attr |
 | 4990704 | 得意属性が雷属性の時、与えるHP回復量+{0}% | Bolt Heal Up III | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored; unsure: heal_given conditions: attr |
 | 4990705 | 得意属性が雷属性の時、与えるHP回復量+{0}% | Bolt Heal Up III | Partial | done: 1/1 description effects mapped; missing: heal_given mod ignored; unsure: heal_given conditions: attr |
@@ -3594,11 +3594,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4990850 | 「アラディス調査団」の時、スキルダメージ+{0}% | Aladiss Research Team Damage Up II | Implemented | done: skill_damage; 1/1 description effects mapped |
 | 4990851 | 「アラディス調査団」の時、スキルダメージ+{0}% | Aladiss Research Team Damage Up II | Implemented | done: skill_damage; 1/1 description effects mapped |
 | 4990852 | 「アラディス調査団」の時、スキルダメージ+{0}% | Aladiss Research Team Damage Up II | Implemented | done: skill_damage; 1/1 description effects mapped |
-| 4990853 | 攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Physical Damage Received Up III | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped |
-| 4990854 | 攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Physical Damage Received Up III | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped |
-| 4990855 | 攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Physical Damage Received Up III | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped |
-| 4990856 | 攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Physical Damage Received Up III | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped |
-| 4990857 | 攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Physical Damage Received Up III | Implemented | done: buff@post_attack grants stat_up; 1/1 description effects mapped |
+| 4990853 | 攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Physical Damage Received Up III | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped |
+| 4990854 | 攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Physical Damage Received Up III | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped |
+| 4990855 | 攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Physical Damage Received Up III | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped |
+| 4990856 | 攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Physical Damage Received Up III | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped |
+| 4990857 | 攻撃後、対象に「受ける物理攻撃ダメージ+{0}%」を2回攻撃を受けるまで付与(上限4個) | Attack Physical Damage Received Up III | Implemented | done: buff@post_attack grants taken_damage; 1/1 description effects mapped |
 | 4990858 | 自身がサポーターの時、味方全員の魔法攻撃スキルダメージ+{0}% | Supporter Magic Damage Up (All) III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
 | 4990859 | 自身がサポーターの時、味方全員の魔法攻撃スキルダメージ+{0}% | Supporter Magic Damage Up (All) III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
 | 4990860 | 自身がサポーターの時、味方全員の魔法攻撃スキルダメージ+{0}% | Supporter Magic Damage Up (All) III | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
@@ -3669,11 +3669,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4990925 | バトル開始時、自身に「受けるダメージ-{0}%」を1回攻撃を受けるまで付与 | Initial Guard Up III | Implemented | done: buff@battle_start grants taken_damage; 1/1 description effects mapped |
 | 4990926 | バトル開始時、自身に「受けるダメージ-{0}%」を1回攻撃を受けるまで付与 | Initial Guard Up III | Implemented | done: buff@battle_start grants taken_damage; 1/1 description effects mapped |
 | 4990927 | バトル開始時、自身に「受けるダメージ-{0}%」を1回攻撃を受けるまで付与 | Initial Guard Up III | Implemented | done: buff@battle_start grants taken_damage; 1/1 description effects mapped |
-| 4990928 | バトル開始時、自身に「受ける物理攻撃ダメージ-{0}%」を1回攻撃を受けるまで付与 | Initial Physical Guard Up III | Implemented | done: buff@battle_start grants stat_down; 1/1 description effects mapped |
-| 4990929 | バトル開始時、自身に「受ける物理攻撃ダメージ-{0}%」を1回攻撃を受けるまで付与 | Initial Physical Guard Up III | Implemented | done: buff@battle_start grants stat_down; 1/1 description effects mapped |
-| 4990930 | バトル開始時、自身に「受ける物理攻撃ダメージ-{0}%」を1回攻撃を受けるまで付与 | Initial Physical Guard Up III | Implemented | done: buff@battle_start grants stat_down; 1/1 description effects mapped |
-| 4990931 | バトル開始時、自身に「受ける物理攻撃ダメージ-{0}%」を1回攻撃を受けるまで付与 | Initial Physical Guard Up III | Implemented | done: buff@battle_start grants stat_down; 1/1 description effects mapped |
-| 4990932 | バトル開始時、自身に「受ける物理攻撃ダメージ-{0}%」を1回攻撃を受けるまで付与 | Initial Physical Guard Up III | Implemented | done: buff@battle_start grants stat_down; 1/1 description effects mapped |
+| 4990928 | バトル開始時、自身に「受ける物理攻撃ダメージ-{0}%」を1回攻撃を受けるまで付与 | Initial Physical Guard Up III | Implemented | done: buff@battle_start grants taken_damage; 1/1 description effects mapped |
+| 4990929 | バトル開始時、自身に「受ける物理攻撃ダメージ-{0}%」を1回攻撃を受けるまで付与 | Initial Physical Guard Up III | Implemented | done: buff@battle_start grants taken_damage; 1/1 description effects mapped |
+| 4990930 | バトル開始時、自身に「受ける物理攻撃ダメージ-{0}%」を1回攻撃を受けるまで付与 | Initial Physical Guard Up III | Implemented | done: buff@battle_start grants taken_damage; 1/1 description effects mapped |
+| 4990931 | バトル開始時、自身に「受ける物理攻撃ダメージ-{0}%」を1回攻撃を受けるまで付与 | Initial Physical Guard Up III | Implemented | done: buff@battle_start grants taken_damage; 1/1 description effects mapped |
+| 4990932 | バトル開始時、自身に「受ける物理攻撃ダメージ-{0}%」を1回攻撃を受けるまで付与 | Initial Physical Guard Up III | Implemented | done: buff@battle_start grants taken_damage; 1/1 description effects mapped |
 | 4990933 | バトル開始時、自身に「スキルダメージ+{0}%」を1回行動終了するまで付与 | Initial Damage Up III | Implemented | done: buff@battle_start grants skill_damage; 1/1 description effects mapped |
 | 4990934 | バトル開始時、自身に「スキルダメージ+{0}%」を1回行動終了するまで付与 | Initial Damage Up III | Implemented | done: buff@battle_start grants skill_damage; 1/1 description effects mapped |
 | 4990935 | バトル開始時、自身に「スキルダメージ+{0}%」を1回行動終了するまで付与 | Initial Damage Up III | Implemented | done: buff@battle_start grants skill_damage; 1/1 description effects mapped |
@@ -3714,11 +3714,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4990970 | 「アーランド」の時、与える強化効果量+{0}%と与えるHP回復量+{1}% | Imagination "Rorona's Pie" | Partial | done: potency_given_plus; 2/2 description effects mapped; missing: heal_given mod ignored |
 | 4990971 | 「アーランド」の時、与える強化効果量+{0}%と与えるHP回復量+{1}% | Imagination "Rorona's Pie" | Partial | done: potency_given_plus; 2/2 description effects mapped; missing: heal_given mod ignored |
 | 4990972 | 「アーランド」の時、与える強化効果量+{0}%と与えるHP回復量+{1}% | Imagination "Rorona's Pie" | Partial | done: potency_given_plus; 2/2 description effects mapped; missing: heal_given mod ignored |
-| 4990973 | 得意属性が氷属性かつサポーターの時、スキル発動後、敵全体に「受ける魔法攻撃ダメージ+{0}%」を1回攻撃を受けるまで付与(上限4個)<br>「家族と友情」の時、アタッカーの味方全員のスキルダメージ+{1}% | Imagination "It's a Gathering Day!" | Implemented | done: skill_damage; buff@skill_use grants stat_up; 2/2 description effects mapped; unsure: buff@skill_use conditions: role,attr |
-| 4990974 | 得意属性が氷属性かつサポーターの時、スキル発動後、敵全体に「受ける魔法攻撃ダメージ+{0}%」を1回攻撃を受けるまで付与(上限4個)<br>「家族と友情」の時、アタッカーの味方全員のスキルダメージ+{1}% | Imagination "It's a Gathering Day!" | Implemented | done: skill_damage; buff@skill_use grants stat_up; 2/2 description effects mapped; unsure: buff@skill_use conditions: role,attr |
-| 4990975 | 得意属性が氷属性かつサポーターの時、スキル発動後、敵全体に「受ける魔法攻撃ダメージ+{0}%」を1回攻撃を受けるまで付与(上限4個)<br>「家族と友情」の時、アタッカーの味方全員のスキルダメージ+{1}% | Imagination "It's a Gathering Day!" | Implemented | done: skill_damage; buff@skill_use grants stat_up; 2/2 description effects mapped; unsure: buff@skill_use conditions: role,attr |
-| 4990976 | 得意属性が氷属性かつサポーターの時、スキル発動後、敵全体に「受ける魔法攻撃ダメージ+{0}%」を1回攻撃を受けるまで付与(上限4個)<br>「家族と友情」の時、アタッカーの味方全員のスキルダメージ+{1}% | Imagination "It's a Gathering Day!" | Implemented | done: skill_damage; buff@skill_use grants stat_up; 2/2 description effects mapped; unsure: buff@skill_use conditions: role,attr |
-| 4990977 | 得意属性が氷属性かつサポーターの時、スキル発動後、敵全体に「受ける魔法攻撃ダメージ+{0}%」を1回攻撃を受けるまで付与(上限4個)<br>「家族と友情」の時、アタッカーの味方全員のスキルダメージ+{1}% | Imagination "It's a Gathering Day!" | Implemented | done: skill_damage; buff@skill_use grants stat_up; 2/2 description effects mapped; unsure: buff@skill_use conditions: role,attr |
+| 4990973 | 得意属性が氷属性かつサポーターの時、スキル発動後、敵全体に「受ける魔法攻撃ダメージ+{0}%」を1回攻撃を受けるまで付与(上限4個)<br>「家族と友情」の時、アタッカーの味方全員のスキルダメージ+{1}% | Imagination "It's a Gathering Day!" | Implemented | done: skill_damage; buff@skill_use grants taken_damage; 2/2 description effects mapped; unsure: buff@skill_use conditions: role,attr |
+| 4990974 | 得意属性が氷属性かつサポーターの時、スキル発動後、敵全体に「受ける魔法攻撃ダメージ+{0}%」を1回攻撃を受けるまで付与(上限4個)<br>「家族と友情」の時、アタッカーの味方全員のスキルダメージ+{1}% | Imagination "It's a Gathering Day!" | Implemented | done: skill_damage; buff@skill_use grants taken_damage; 2/2 description effects mapped; unsure: buff@skill_use conditions: role,attr |
+| 4990975 | 得意属性が氷属性かつサポーターの時、スキル発動後、敵全体に「受ける魔法攻撃ダメージ+{0}%」を1回攻撃を受けるまで付与(上限4個)<br>「家族と友情」の時、アタッカーの味方全員のスキルダメージ+{1}% | Imagination "It's a Gathering Day!" | Implemented | done: skill_damage; buff@skill_use grants taken_damage; 2/2 description effects mapped; unsure: buff@skill_use conditions: role,attr |
+| 4990976 | 得意属性が氷属性かつサポーターの時、スキル発動後、敵全体に「受ける魔法攻撃ダメージ+{0}%」を1回攻撃を受けるまで付与(上限4個)<br>「家族と友情」の時、アタッカーの味方全員のスキルダメージ+{1}% | Imagination "It's a Gathering Day!" | Implemented | done: skill_damage; buff@skill_use grants taken_damage; 2/2 description effects mapped; unsure: buff@skill_use conditions: role,attr |
+| 4990977 | 得意属性が氷属性かつサポーターの時、スキル発動後、敵全体に「受ける魔法攻撃ダメージ+{0}%」を1回攻撃を受けるまで付与(上限4個)<br>「家族と友情」の時、アタッカーの味方全員のスキルダメージ+{1}% | Imagination "It's a Gathering Day!" | Implemented | done: skill_damage; buff@skill_use grants taken_damage; 2/2 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 4990978 | 得意属性が氷属性かつディフェンダーの時、スキル発動後、魔攻が最も高い味方1人に「スキルダメージ+{0}%」を1回行動終了するまで付与(上限3個)<br>「天然」の時、スキル発動後、自身に「最大HP+{1}%」(固定)を2回行動終了するまで付与 | Imagination "Princess and Knight" | Implemented | done: buff@skill_use grants skill_damage; buff@skill_use grants stat_up; 2/2 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 4990979 | 得意属性が氷属性かつディフェンダーの時、スキル発動後、魔攻が最も高い味方1人に「スキルダメージ+{0}%」を1回行動終了するまで付与(上限3個)<br>「天然」の時、スキル発動後、自身に「最大HP+{1}%」(固定)を2回行動終了するまで付与 | Imagination "Princess and Knight" | Implemented | done: buff@skill_use grants skill_damage; buff@skill_use grants stat_up; 2/2 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 4990980 | 得意属性が氷属性かつディフェンダーの時、スキル発動後、魔攻が最も高い味方1人に「スキルダメージ+{0}%」を1回行動終了するまで付与(上限3個)<br>「天然」の時、スキル発動後、自身に「最大HP+{1}%」(固定)を2回行動終了するまで付与 | Imagination "Princess and Knight" | Implemented | done: buff@skill_use grants skill_damage; buff@skill_use grants stat_up; 2/2 description effects mapped; unsure: buff@skill_use conditions: role,attr |
@@ -3784,11 +3784,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4991040 | 自身がディフェンダーの時、受けるHP回復量+{0}% | Defender Receive Heal Up II | Partial | done: 1/1 description effects mapped; missing: heal_received mod ignored; unsure: heal_received conditions: role |
 | 4991041 | 自身がディフェンダーの時、受けるHP回復量+{0}% | Defender Receive Heal Up II | Partial | done: 1/1 description effects mapped; missing: heal_received mod ignored; unsure: heal_received conditions: role |
 | 4991042 | 自身がディフェンダーの時、受けるHP回復量+{0}% | Defender Receive Heal Up II | Partial | done: 1/1 description effects mapped; missing: heal_received mod ignored; unsure: heal_received conditions: role |
-| 4991043 | 自身がアタッカーの時、バーストスキルダメージ+{0}% | Attacker Burst Up II | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
-| 4991044 | 自身がアタッカーの時、バーストスキルダメージ+{0}% | Attacker Burst Up II | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
-| 4991045 | 自身がアタッカーの時、バーストスキルダメージ+{0}% | Attacker Burst Up II | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
-| 4991046 | 自身がアタッカーの時、バーストスキルダメージ+{0}% | Attacker Burst Up II | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
-| 4991047 | 自身がアタッカーの時、バーストスキルダメージ+{0}% | Attacker Burst Up II | Implemented | done: skill_damage; 1/1 description effects mapped; unsure: skill_damage conditions: role |
+| 4991043 | 自身がアタッカーの時、バーストスキルダメージ+{0}% | Attacker Burst Up II | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role |
+| 4991044 | 自身がアタッカーの時、バーストスキルダメージ+{0}% | Attacker Burst Up II | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role |
+| 4991045 | 自身がアタッカーの時、バーストスキルダメージ+{0}% | Attacker Burst Up II | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role |
+| 4991046 | 自身がアタッカーの時、バーストスキルダメージ+{0}% | Attacker Burst Up II | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role |
+| 4991047 | 自身がアタッカーの時、バーストスキルダメージ+{0}% | Attacker Burst Up II | Implemented | done: burst_damage; 1/1 description effects mapped; unsure: burst_damage conditions: role |
 | 4991048 | 自身がブレイカーの時、単体攻撃のブレイクダメージ+{0}% | Breaker Single Target Stun Up II | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: role,scope |
 | 4991049 | 自身がブレイカーの時、単体攻撃のブレイクダメージ+{0}% | Breaker Single Target Stun Up II | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: role,scope |
 | 4991050 | 自身がブレイカーの時、単体攻撃のブレイクダメージ+{0}% | Breaker Single Target Stun Up II | Implemented | done: break_damage; 1/1 description effects mapped; unsure: break_damage conditions: role,scope |
@@ -3829,11 +3829,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4991085 | 自身がサポーターの時、味方全員のスキル威力+{0}%<br>得意属性が魔法属性の時、味方全員のクリティカルダメージ+{1}% | Idea "What the Witch's Eyes Perceive Is" | Implemented | done: skill_power; crit_damage; 2/2 description effects mapped; unsure: skill_power conditions: role |
 | 4991086 | 自身がサポーターの時、味方全員のスキル威力+{0}%<br>得意属性が魔法属性の時、味方全員のクリティカルダメージ+{1}% | Idea "What the Witch's Eyes Perceive Is" | Implemented | done: skill_power; crit_damage; 2/2 description effects mapped; unsure: skill_power conditions: role |
 | 4991087 | 自身がサポーターの時、味方全員のスキル威力+{0}%<br>得意属性が魔法属性の時、味方全員のクリティカルダメージ+{1}% | Idea "What the Witch's Eyes Perceive Is" | Implemented | done: skill_power; crit_damage; 2/2 description effects mapped; unsure: skill_power conditions: role |
-| 4991088 | 得意属性が雷属性かつブレイカーの時、味方全員のブレイク状態の敵への魔法攻撃スキルダメージ+{0}%<br>「マイペース」の時、ブレイクダメージ+{1}% | Imagination "Radiance of the Earth" | Implemented | done: break_damage; buff@break_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
-| 4991089 | 得意属性が雷属性かつブレイカーの時、味方全員のブレイク状態の敵への魔法攻撃スキルダメージ+{0}%<br>「マイペース」の時、ブレイクダメージ+{1}% | Imagination "Radiance of the Earth" | Implemented | done: break_damage; buff@break_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
-| 4991090 | 得意属性が雷属性かつブレイカーの時、味方全員のブレイク状態の敵への魔法攻撃スキルダメージ+{0}%<br>「マイペース」の時、ブレイクダメージ+{1}% | Imagination "Radiance of the Earth" | Implemented | done: break_damage; buff@break_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
-| 4991091 | 得意属性が雷属性かつブレイカーの時、味方全員のブレイク状態の敵への魔法攻撃スキルダメージ+{0}%<br>「マイペース」の時、ブレイクダメージ+{1}% | Imagination "Radiance of the Earth" | Implemented | done: break_damage; buff@break_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
-| 4991092 | 得意属性が雷属性かつブレイカーの時、味方全員のブレイク状態の敵への魔法攻撃スキルダメージ+{0}%<br>「マイペース」の時、ブレイクダメージ+{1}% | Imagination "Radiance of the Earth" | Implemented | done: break_damage; buff@break_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
+| 4991088 | 得意属性が雷属性かつブレイカーの時、味方全員のブレイク状態の敵への魔法攻撃スキルダメージ+{0}%<br>「マイペース」の時、ブレイクダメージ+{1}% | Imagination "Radiance of the Earth" | Implemented | done: break_damage; buff@break_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_state,target_broken |
+| 4991089 | 得意属性が雷属性かつブレイカーの時、味方全員のブレイク状態の敵への魔法攻撃スキルダメージ+{0}%<br>「マイペース」の時、ブレイクダメージ+{1}% | Imagination "Radiance of the Earth" | Implemented | done: break_damage; buff@break_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_state,target_broken |
+| 4991090 | 得意属性が雷属性かつブレイカーの時、味方全員のブレイク状態の敵への魔法攻撃スキルダメージ+{0}%<br>「マイペース」の時、ブレイクダメージ+{1}% | Imagination "Radiance of the Earth" | Implemented | done: break_damage; buff@break_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_state,target_broken |
+| 4991091 | 得意属性が雷属性かつブレイカーの時、味方全員のブレイク状態の敵への魔法攻撃スキルダメージ+{0}%<br>「マイペース」の時、ブレイクダメージ+{1}% | Imagination "Radiance of the Earth" | Implemented | done: break_damage; buff@break_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_state,target_broken |
+| 4991092 | 得意属性が雷属性かつブレイカーの時、味方全員のブレイク状態の敵への魔法攻撃スキルダメージ+{0}%<br>「マイペース」の時、ブレイクダメージ+{1}% | Imagination "Radiance of the Earth" | Implemented | done: break_damage; buff@break_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_state,target_broken |
 | 4991093 | 得意属性が突属性の時、与える強化効果量+{0}% | Stab Enhance Up II | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: attr |
 | 4991094 | 得意属性が突属性の時、与える強化効果量+{0}% | Stab Enhance Up II | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: attr |
 | 4991095 | 得意属性が突属性の時、与える強化効果量+{0}% | Stab Enhance Up II | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: attr |
@@ -3884,11 +3884,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4991140 | 得意属性が打属性かつアタッカーの時、スキルダメージ+{0}% 「お菓子」の時、スキル発動前、対象に「受けるクリティカルダメージ+{1}%」を1回攻撃を受けるまで付与 | Idea "Marie Rose's Secret" | Implemented | done: skill_damage; taken_crit_damage; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
 | 4991141 | 得意属性が打属性かつアタッカーの時、スキルダメージ+{0}% 「お菓子」の時、スキル発動前、対象に「受けるクリティカルダメージ+{1}%」を1回攻撃を受けるまで付与 | Idea "Marie Rose's Secret" | Implemented | done: skill_damage; taken_crit_damage; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
 | 4991142 | 得意属性が打属性かつアタッカーの時、スキルダメージ+{0}% 「お菓子」の時、スキル発動前、対象に「受けるクリティカルダメージ+{1}%」を1回攻撃を受けるまで付与 | Idea "Marie Rose's Secret" | Implemented | done: skill_damage; taken_crit_damage; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 4991143 | 得意属性が打属性かつサポーターの時、味方全員のWEAK攻撃ダメージ+{0}% 「真面目」の時、与える強化効果量+{1}% | Imagination "The Being Beyond the Lens" | Partial | done: potency_given_plus; 1/2 description effects mapped; missing: unmapped effect ids 95000285 |
-| 4991144 | 得意属性が打属性かつサポーターの時、味方全員のWEAK攻撃ダメージ+{0}% 「真面目」の時、与える強化効果量+{1}% | Imagination "The Being Beyond the Lens" | Partial | done: potency_given_plus; 1/2 description effects mapped; missing: unmapped effect ids 95000285 |
-| 4991145 | 得意属性が打属性かつサポーターの時、味方全員のWEAK攻撃ダメージ+{0}% 「真面目」の時、与える強化効果量+{1}% | Imagination "The Being Beyond the Lens" | Partial | done: potency_given_plus; 1/2 description effects mapped; missing: unmapped effect ids 95000285 |
-| 4991146 | 得意属性が打属性かつサポーターの時、味方全員のWEAK攻撃ダメージ+{0}% 「真面目」の時、与える強化効果量+{1}% | Imagination "The Being Beyond the Lens" | Partial | done: potency_given_plus; 1/2 description effects mapped; missing: unmapped effect ids 95000285 |
-| 4991147 | 得意属性が打属性かつサポーターの時、味方全員のWEAK攻撃ダメージ+{0}% 「真面目」の時、与える強化効果量+{1}% | Imagination "The Being Beyond the Lens" | Partial | done: potency_given_plus; 1/2 description effects mapped; missing: unmapped effect ids 95000285 |
+| 4991143 | 得意属性が打属性かつサポーターの時、味方全員のWEAK攻撃ダメージ+{0}% 「真面目」の時、与える強化効果量+{1}% | Imagination "The Being Beyond the Lens" | Implemented | done: dealt_damage; potency_given_plus; 2/2 description effects mapped; unsure: dealt_damage conditions: role,attr,weak_hit |
+| 4991144 | 得意属性が打属性かつサポーターの時、味方全員のWEAK攻撃ダメージ+{0}% 「真面目」の時、与える強化効果量+{1}% | Imagination "The Being Beyond the Lens" | Implemented | done: dealt_damage; potency_given_plus; 2/2 description effects mapped; unsure: dealt_damage conditions: role,attr,weak_hit |
+| 4991145 | 得意属性が打属性かつサポーターの時、味方全員のWEAK攻撃ダメージ+{0}% 「真面目」の時、与える強化効果量+{1}% | Imagination "The Being Beyond the Lens" | Implemented | done: dealt_damage; potency_given_plus; 2/2 description effects mapped; unsure: dealt_damage conditions: role,attr,weak_hit |
+| 4991146 | 得意属性が打属性かつサポーターの時、味方全員のWEAK攻撃ダメージ+{0}% 「真面目」の時、与える強化効果量+{1}% | Imagination "The Being Beyond the Lens" | Implemented | done: dealt_damage; potency_given_plus; 2/2 description effects mapped; unsure: dealt_damage conditions: role,attr,weak_hit |
+| 4991147 | 得意属性が打属性かつサポーターの時、味方全員のWEAK攻撃ダメージ+{0}% 「真面目」の時、与える強化効果量+{1}% | Imagination "The Being Beyond the Lens" | Implemented | done: dealt_damage; potency_given_plus; 2/2 description effects mapped; unsure: dealt_damage conditions: role,attr,weak_hit |
 | 4991148 | 得意属性が打属性かつブレイカーであり、対象をブレイク時、味方全員に「スキルダメージ+{0}％」を1回行動終了するまで付与 「学生」の時、ブレイクダメージ+{1}% | Imagination "Honoka's Secret" | Implemented | done: break_damage; buff@break_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: attr,target_broken |
 | 4991149 | 得意属性が打属性かつブレイカーであり、対象をブレイク時、味方全員に「スキルダメージ+{0}％」を1回行動終了するまで付与 「学生」の時、ブレイクダメージ+{1}% | Imagination "Honoka's Secret" | Implemented | done: break_damage; buff@break_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: attr,target_broken |
 | 4991150 | 得意属性が打属性かつブレイカーであり、対象をブレイク時、味方全員に「スキルダメージ+{0}％」を1回行動終了するまで付与 「学生」の時、ブレイクダメージ+{1}% | Imagination "Honoka's Secret" | Implemented | done: break_damage; buff@break_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: attr,target_broken |
@@ -3904,11 +3904,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4991160 | 自身が「ライザリン・シュタウト」の時、スキルダメージ+{0}％、ブレイクダメージ+{1}％、受ける強化効果量+{2}％、与えるマイナス効果量+{3}％ | Imagination "The Light She Spun" | Implemented | done: skill_damage; break_damage; potency_received; potency_given_minus; 4/4 description effects mapped |
 | 4991161 | 自身が「ライザリン・シュタウト」の時、スキルダメージ+{0}％、ブレイクダメージ+{1}％、受ける強化効果量+{2}％、与えるマイナス効果量+{3}％ | Imagination "The Light She Spun" | Implemented | done: skill_damage; break_damage; potency_received; potency_given_minus; 4/4 description effects mapped |
 | 4991162 | 自身が「ライザリン・シュタウト」の時、スキルダメージ+{0}％、ブレイクダメージ+{1}％、受ける強化効果量+{2}％、与えるマイナス効果量+{3}％ | Imagination "The Light She Spun" | Implemented | done: skill_damage; break_damage; potency_received; potency_given_minus; 4/4 description effects mapped |
-| 4991163 | 得意属性が突属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「メガネ」の時、与えるHP回復量+{1}% | Imagination "Connected Arrow, to the Limit" | Partial | done: skill_damage; 2/2 description effects mapped; missing: heal_given mod ignored; unsure: skill_damage conditions: role,attr |
-| 4991164 | 得意属性が突属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「メガネ」の時、与えるHP回復量+{1}% | Imagination "Connected Arrow, to the Limit" | Partial | done: skill_damage; 2/2 description effects mapped; missing: heal_given mod ignored; unsure: skill_damage conditions: role,attr |
-| 4991165 | 得意属性が突属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「メガネ」の時、与えるHP回復量+{1}% | Imagination "Connected Arrow, to the Limit" | Partial | done: skill_damage; 2/2 description effects mapped; missing: heal_given mod ignored; unsure: skill_damage conditions: role,attr |
-| 4991166 | 得意属性が突属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「メガネ」の時、与えるHP回復量+{1}% | Imagination "Connected Arrow, to the Limit" | Partial | done: skill_damage; 2/2 description effects mapped; missing: heal_given mod ignored; unsure: skill_damage conditions: role,attr |
-| 4991167 | 得意属性が突属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「メガネ」の時、与えるHP回復量+{1}% | Imagination "Connected Arrow, to the Limit" | Partial | done: skill_damage; 2/2 description effects mapped; missing: heal_given mod ignored; unsure: skill_damage conditions: role,attr |
+| 4991163 | 得意属性が突属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「メガネ」の時、与えるHP回復量+{1}% | Imagination "Connected Arrow, to the Limit" | Partial | done: burst_damage; 2/2 description effects mapped; missing: heal_given mod ignored; unsure: burst_damage conditions: role,attr |
+| 4991164 | 得意属性が突属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「メガネ」の時、与えるHP回復量+{1}% | Imagination "Connected Arrow, to the Limit" | Partial | done: burst_damage; 2/2 description effects mapped; missing: heal_given mod ignored; unsure: burst_damage conditions: role,attr |
+| 4991165 | 得意属性が突属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「メガネ」の時、与えるHP回復量+{1}% | Imagination "Connected Arrow, to the Limit" | Partial | done: burst_damage; 2/2 description effects mapped; missing: heal_given mod ignored; unsure: burst_damage conditions: role,attr |
+| 4991166 | 得意属性が突属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「メガネ」の時、与えるHP回復量+{1}% | Imagination "Connected Arrow, to the Limit" | Partial | done: burst_damage; 2/2 description effects mapped; missing: heal_given mod ignored; unsure: burst_damage conditions: role,attr |
+| 4991167 | 得意属性が突属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「メガネ」の時、与えるHP回復量+{1}% | Imagination "Connected Arrow, to the Limit" | Partial | done: burst_damage; 2/2 description effects mapped; missing: heal_given mod ignored; unsure: burst_damage conditions: role,attr |
 | 4991168 | 得意属性が突属性かつアタッカーの時、クリティカルダメージ+{0}％<br>「マイペース」の時、物攻+{1}% | Imagination: "I'll Play With You" | Implemented | done: crit_damage; stat_up; 2/2 description effects mapped; unsure: crit_damage conditions: role,attr |
 | 4991169 | 得意属性が突属性かつアタッカーの時、クリティカルダメージ+{0}％<br>「マイペース」の時、物攻+{1}% | Imagination: "I'll Play With You" | Implemented | done: crit_damage; stat_up; 2/2 description effects mapped; unsure: crit_damage conditions: role,attr |
 | 4991170 | 得意属性が突属性かつアタッカーの時、クリティカルダメージ+{0}％<br>「マイペース」の時、物攻+{1}% | Imagination: "I'll Play With You" | Implemented | done: crit_damage; stat_up; 2/2 description effects mapped; unsure: crit_damage conditions: role,attr |
@@ -3944,11 +3944,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4991200 | 得意属性が風属性かつブレイカーの時、WEAK攻撃時、ブレイクダメージ+{0}%<br>「騎士」の時、対象をブレイク時、味方全体に「強化系パネルから受ける効果量+{1}％」を1回行動終了するまで付与(重複不可) | Imagination "Together on Starsong Night" | Partial | done: buff@weak_hit grants break_damage; 2/2 description effects mapped; missing: buff@break_hit buff potency_received ignored; unsure: buff@weak_hit conditions: role,attr,weak_hit; buff@break_hit conditions: target_broken,panel |
 | 4991201 | 得意属性が風属性かつブレイカーの時、WEAK攻撃時、ブレイクダメージ+{0}%<br>「騎士」の時、対象をブレイク時、味方全体に「強化系パネルから受ける効果量+{1}％」を1回行動終了するまで付与(重複不可) | Imagination "Together on Starsong Night" | Partial | done: buff@weak_hit grants break_damage; 2/2 description effects mapped; missing: buff@break_hit buff potency_received ignored; unsure: buff@weak_hit conditions: role,attr,weak_hit; buff@break_hit conditions: target_broken,panel |
 | 4991202 | 得意属性が風属性かつブレイカーの時、WEAK攻撃時、ブレイクダメージ+{0}%<br>「騎士」の時、対象をブレイク時、味方全体に「強化系パネルから受ける効果量+{1}％」を1回行動終了するまで付与(重複不可) | Imagination "Together on Starsong Night" | Partial | done: buff@weak_hit grants break_damage; 2/2 description effects mapped; missing: buff@break_hit buff potency_received ignored; unsure: buff@weak_hit conditions: role,attr,weak_hit; buff@break_hit conditions: target_broken,panel |
-| 4991203 | 得意属性が風属性かつアタッカーの時、WEAK攻撃時、自身の攻撃の貫通力+{0}<br>「真面目」の時、魔攻+{1}％ | Imagination "So Nothing Unfortunate Happens" | Partial | done: stat_up; buff@weak_hit grants penetration; 1/2 description effects mapped; missing: unmapped effect ids 95000322; unsure: buff@weak_hit conditions: role,attr,weak_hit |
-| 4991204 | 得意属性が風属性かつアタッカーの時、WEAK攻撃時、自身の攻撃の貫通力+{0}<br>「真面目」の時、魔攻+{1}％ | Imagination "So Nothing Unfortunate Happens" | Partial | done: stat_up; buff@weak_hit grants penetration; 1/2 description effects mapped; missing: unmapped effect ids 95000322; unsure: buff@weak_hit conditions: role,attr,weak_hit |
-| 4991205 | 得意属性が風属性かつアタッカーの時、WEAK攻撃時、自身の攻撃の貫通力+{0}<br>「真面目」の時、魔攻+{1}％ | Imagination "So Nothing Unfortunate Happens" | Partial | done: stat_up; buff@weak_hit grants penetration; 1/2 description effects mapped; missing: unmapped effect ids 95000322; unsure: buff@weak_hit conditions: role,attr,weak_hit |
-| 4991206 | 得意属性が風属性かつアタッカーの時、WEAK攻撃時、自身の攻撃の貫通力+{0}<br>「真面目」の時、魔攻+{1}％ | Imagination "So Nothing Unfortunate Happens" | Partial | done: stat_up; buff@weak_hit grants penetration; 1/2 description effects mapped; missing: unmapped effect ids 95000322; unsure: buff@weak_hit conditions: role,attr,weak_hit |
-| 4991207 | 得意属性が風属性かつアタッカーの時、WEAK攻撃時、自身の攻撃の貫通力+{0}<br>「真面目」の時、魔攻+{1}％ | Imagination "So Nothing Unfortunate Happens" | Partial | done: stat_up; buff@weak_hit grants penetration; 1/2 description effects mapped; missing: unmapped effect ids 95000322; unsure: buff@weak_hit conditions: role,attr,weak_hit |
+| 4991203 | 得意属性が風属性かつアタッカーの時、WEAK攻撃時、自身の攻撃の貫通力+{0}<br>「真面目」の時、魔攻+{1}％ | Imagination "So Nothing Unfortunate Happens" | Implemented | done: stat_up; buff@weak_hit grants penetration; 2/2 description effects mapped; unsure: buff@weak_hit conditions: role,attr,weak_hit |
+| 4991204 | 得意属性が風属性かつアタッカーの時、WEAK攻撃時、自身の攻撃の貫通力+{0}<br>「真面目」の時、魔攻+{1}％ | Imagination "So Nothing Unfortunate Happens" | Implemented | done: stat_up; buff@weak_hit grants penetration; 2/2 description effects mapped; unsure: buff@weak_hit conditions: role,attr,weak_hit |
+| 4991205 | 得意属性が風属性かつアタッカーの時、WEAK攻撃時、自身の攻撃の貫通力+{0}<br>「真面目」の時、魔攻+{1}％ | Imagination "So Nothing Unfortunate Happens" | Implemented | done: stat_up; buff@weak_hit grants penetration; 2/2 description effects mapped; unsure: buff@weak_hit conditions: role,attr,weak_hit |
+| 4991206 | 得意属性が風属性かつアタッカーの時、WEAK攻撃時、自身の攻撃の貫通力+{0}<br>「真面目」の時、魔攻+{1}％ | Imagination "So Nothing Unfortunate Happens" | Implemented | done: stat_up; buff@weak_hit grants penetration; 2/2 description effects mapped; unsure: buff@weak_hit conditions: role,attr,weak_hit |
+| 4991207 | 得意属性が風属性かつアタッカーの時、WEAK攻撃時、自身の攻撃の貫通力+{0}<br>「真面目」の時、魔攻+{1}％ | Imagination "So Nothing Unfortunate Happens" | Implemented | done: stat_up; buff@weak_hit grants penetration; 2/2 description effects mapped; unsure: buff@weak_hit conditions: role,attr,weak_hit |
 | 4991208 | 「アラディス調査団」の時、スキルダメージ+{0}％、ブレイクダメージ+{1}％、与える強化効果量+{2}％、与えるマイナス効果量+{3}％<br>バトル開始時、はじめのレンジを入れ替える | Imagination "Thrilling and Terrifying" | Partial | done: skill_damage; break_damage; potency_given_plus; potency_given_minus; range_swap@battle_start; 6/13 description effects mapped; missing: unmapped effect ids 95000325, 95000326, 95000327, 95000328, 95000329, 95000330, 95000331 |
 | 4991209 | 「アラディス調査団」の時、スキルダメージ+{0}％、ブレイクダメージ+{1}％、与える強化効果量+{2}％、与えるマイナス効果量+{3}％<br>バトル開始時、はじめのレンジを入れ替える | Imagination "Thrilling and Terrifying" | Partial | done: skill_damage; break_damage; potency_given_plus; potency_given_minus; range_swap@battle_start; 6/13 description effects mapped; missing: unmapped effect ids 95000325, 95000326, 95000327, 95000328, 95000329, 95000330, 95000331 |
 | 4991210 | 「アラディス調査団」の時、スキルダメージ+{0}％、ブレイクダメージ+{1}％、与える強化効果量+{2}％、与えるマイナス効果量+{3}％<br>バトル開始時、はじめのレンジを入れ替える | Imagination "Thrilling and Terrifying" | Partial | done: skill_damage; break_damage; potency_given_plus; potency_given_minus; range_swap@battle_start; 6/13 description effects mapped; missing: unmapped effect ids 95000325, 95000326, 95000327, 95000328, 95000329, 95000330, 95000331 |
@@ -3984,11 +3984,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4991240 | 得意属性が突属性かつサポーターであり、HP回復を受けた時、味方全員に「スキルダメージ+{0}％」を1回行動終了するまで付与(上限3個)<br>「お菓子」の時、与えるHP回復量+{1}％ | Imagination "Eternal Teacher's Love Guide!?" | Partial | done: buff@heal_received grants skill_damage; 2/2 description effects mapped; missing: heal_given mod ignored; unsure: buff@heal_received conditions: attr |
 | 4991241 | 得意属性が突属性かつサポーターであり、HP回復を受けた時、味方全員に「スキルダメージ+{0}％」を1回行動終了するまで付与(上限3個)<br>「お菓子」の時、与えるHP回復量+{1}％ | Imagination "Eternal Teacher's Love Guide!?" | Partial | done: buff@heal_received grants skill_damage; 2/2 description effects mapped; missing: heal_given mod ignored; unsure: buff@heal_received conditions: attr |
 | 4991242 | 得意属性が突属性かつサポーターであり、HP回復を受けた時、味方全員に「スキルダメージ+{0}％」を1回行動終了するまで付与(上限3個)<br>「お菓子」の時、与えるHP回復量+{1}％ | Imagination "Eternal Teacher's Love Guide!?" | Partial | done: buff@heal_received grants skill_damage; 2/2 description effects mapped; missing: heal_given mod ignored; unsure: buff@heal_received conditions: attr |
-| 4991243 | 得意属性が斬属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「騎士」の時、全体攻撃のスキルダメージ+{1}％ | Imagination "Filled with Sweet Happiness" | Implemented | done: skill_damage; skill_damage; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr; skill_damage conditions: scope |
-| 4991244 | 得意属性が斬属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「騎士」の時、全体攻撃のスキルダメージ+{1}％ | Imagination "Filled with Sweet Happiness" | Implemented | done: skill_damage; skill_damage; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr; skill_damage conditions: scope |
-| 4991245 | 得意属性が斬属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「騎士」の時、全体攻撃のスキルダメージ+{1}％ | Imagination "Filled with Sweet Happiness" | Implemented | done: skill_damage; skill_damage; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr; skill_damage conditions: scope |
-| 4991246 | 得意属性が斬属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「騎士」の時、全体攻撃のスキルダメージ+{1}％ | Imagination "Filled with Sweet Happiness" | Implemented | done: skill_damage; skill_damage; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr; skill_damage conditions: scope |
-| 4991247 | 得意属性が斬属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「騎士」の時、全体攻撃のスキルダメージ+{1}％ | Imagination "Filled with Sweet Happiness" | Implemented | done: skill_damage; skill_damage; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr; skill_damage conditions: scope |
+| 4991243 | 得意属性が斬属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「騎士」の時、全体攻撃のスキルダメージ+{1}％ | Imagination "Filled with Sweet Happiness" | Implemented | done: burst_damage; skill_damage; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr; skill_damage conditions: scope |
+| 4991244 | 得意属性が斬属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「騎士」の時、全体攻撃のスキルダメージ+{1}％ | Imagination "Filled with Sweet Happiness" | Implemented | done: burst_damage; skill_damage; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr; skill_damage conditions: scope |
+| 4991245 | 得意属性が斬属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「騎士」の時、全体攻撃のスキルダメージ+{1}％ | Imagination "Filled with Sweet Happiness" | Implemented | done: burst_damage; skill_damage; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr; skill_damage conditions: scope |
+| 4991246 | 得意属性が斬属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「騎士」の時、全体攻撃のスキルダメージ+{1}％ | Imagination "Filled with Sweet Happiness" | Implemented | done: burst_damage; skill_damage; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr; skill_damage conditions: scope |
+| 4991247 | 得意属性が斬属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「騎士」の時、全体攻撃のスキルダメージ+{1}％ | Imagination "Filled with Sweet Happiness" | Implemented | done: burst_damage; skill_damage; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr; skill_damage conditions: scope |
 | 4991248 | 得意属性が魔法属性の時、自身の魔攻+{0}％<br>自身がアタッカーの時、スキルダメージ+{1}％<br>バトル開始時、自身のバーストゲージを{2}％増加 | Imagination "To Reclaim Alchemy" | Implemented | done: stat_up; skill_damage; 3/3 description effects mapped; unsure: skill_damage conditions: role |
 | 4991249 | 得意属性が魔法属性の時、自身の魔攻+{0}％<br>自身がアタッカーの時、スキルダメージ+{1}％<br>バトル開始時、自身のバーストゲージを{2}％増加 | Imagination "To Reclaim Alchemy" | Implemented | done: stat_up; skill_damage; 3/3 description effects mapped; unsure: skill_damage conditions: role |
 | 4991250 | 得意属性が魔法属性の時、自身の魔攻+{0}％<br>自身がアタッカーの時、スキルダメージ+{1}％<br>バトル開始時、自身のバーストゲージを{2}％増加 | Imagination "To Reclaim Alchemy" | Implemented | done: stat_up; skill_damage; 3/3 description effects mapped; unsure: skill_damage conditions: role |
@@ -4019,46 +4019,46 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4991275 | 得意属性が突属性かつブレイカーの時、対象をブレイク時、アタッカーの味方全員に「スキルダメージ+{0}％」を1回行動終了するまで付与<br>「ひょうきん者」の時、与えるマイナス効果量+{1}％ | Imagination "Curious Mask" | Implemented | done: potency_given_minus; buff@break_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
 | 4991276 | 得意属性が突属性かつブレイカーの時、対象をブレイク時、アタッカーの味方全員に「スキルダメージ+{0}％」を1回行動終了するまで付与<br>「ひょうきん者」の時、与えるマイナス効果量+{1}％ | Imagination "Curious Mask" | Implemented | done: potency_given_minus; buff@break_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
 | 4991277 | 得意属性が突属性かつブレイカーの時、対象をブレイク時、アタッカーの味方全員に「スキルダメージ+{0}％」を1回行動終了するまで付与<br>「ひょうきん者」の時、与えるマイナス効果量+{1}％ | Imagination "Curious Mask" | Implemented | done: potency_given_minus; buff@break_hit grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
-| 4991278 | 得意属性が氷属性かつブレイカーの時、ブレイク時、スキル対象に「受ける攻撃の貫通力+{0}」を1回攻撃を受けるまで付与<br>「クリエイター」の時、クリティカル攻撃後、対象に「受けるバーストスキルダメージ+{1}％」を1回行動終了するまで付与(上限2個) | Imagination "Embracing Emotion" | Implemented | done: buff@break_hit grants penetration; buff@post_attack grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
-| 4991279 | 得意属性が氷属性かつブレイカーの時、ブレイク時、スキル対象に「受ける攻撃の貫通力+{0}」を1回攻撃を受けるまで付与<br>「クリエイター」の時、クリティカル攻撃後、対象に「受けるバーストスキルダメージ+{1}％」を1回行動終了するまで付与(上限2個) | Imagination "Embracing Emotion" | Implemented | done: buff@break_hit grants penetration; buff@post_attack grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
-| 4991280 | 得意属性が氷属性かつブレイカーの時、ブレイク時、スキル対象に「受ける攻撃の貫通力+{0}」を1回攻撃を受けるまで付与<br>「クリエイター」の時、クリティカル攻撃後、対象に「受けるバーストスキルダメージ+{1}％」を1回行動終了するまで付与(上限2個) | Imagination "Embracing Emotion" | Implemented | done: buff@break_hit grants penetration; buff@post_attack grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
-| 4991281 | 得意属性が氷属性かつブレイカーの時、ブレイク時、スキル対象に「受ける攻撃の貫通力+{0}」を1回攻撃を受けるまで付与<br>「クリエイター」の時、クリティカル攻撃後、対象に「受けるバーストスキルダメージ+{1}％」を1回行動終了するまで付与(上限2個) | Imagination "Embracing Emotion" | Implemented | done: buff@break_hit grants penetration; buff@post_attack grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
-| 4991282 | 得意属性が氷属性かつブレイカーの時、ブレイク時、スキル対象に「受ける攻撃の貫通力+{0}」を1回攻撃を受けるまで付与<br>「クリエイター」の時、クリティカル攻撃後、対象に「受けるバーストスキルダメージ+{1}％」を1回行動終了するまで付与(上限2個) | Imagination "Embracing Emotion" | Implemented | done: buff@break_hit grants penetration; buff@post_attack grants skill_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
+| 4991278 | 得意属性が氷属性かつブレイカーの時、ブレイク時、スキル対象に「受ける攻撃の貫通力+{0}」を1回攻撃を受けるまで付与<br>「クリエイター」の時、クリティカル攻撃後、対象に「受けるバーストスキルダメージ+{1}％」を1回行動終了するまで付与(上限2個) | Imagination "Embracing Emotion" | Implemented | done: buff@break_hit grants penetration; buff@post_attack grants burst_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
+| 4991279 | 得意属性が氷属性かつブレイカーの時、ブレイク時、スキル対象に「受ける攻撃の貫通力+{0}」を1回攻撃を受けるまで付与<br>「クリエイター」の時、クリティカル攻撃後、対象に「受けるバーストスキルダメージ+{1}％」を1回行動終了するまで付与(上限2個) | Imagination "Embracing Emotion" | Implemented | done: buff@break_hit grants penetration; buff@post_attack grants burst_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
+| 4991280 | 得意属性が氷属性かつブレイカーの時、ブレイク時、スキル対象に「受ける攻撃の貫通力+{0}」を1回攻撃を受けるまで付与<br>「クリエイター」の時、クリティカル攻撃後、対象に「受けるバーストスキルダメージ+{1}％」を1回行動終了するまで付与(上限2個) | Imagination "Embracing Emotion" | Implemented | done: buff@break_hit grants penetration; buff@post_attack grants burst_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
+| 4991281 | 得意属性が氷属性かつブレイカーの時、ブレイク時、スキル対象に「受ける攻撃の貫通力+{0}」を1回攻撃を受けるまで付与<br>「クリエイター」の時、クリティカル攻撃後、対象に「受けるバーストスキルダメージ+{1}％」を1回行動終了するまで付与(上限2個) | Imagination "Embracing Emotion" | Implemented | done: buff@break_hit grants penetration; buff@post_attack grants burst_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
+| 4991282 | 得意属性が氷属性かつブレイカーの時、ブレイク時、スキル対象に「受ける攻撃の貫通力+{0}」を1回攻撃を受けるまで付与<br>「クリエイター」の時、クリティカル攻撃後、対象に「受けるバーストスキルダメージ+{1}％」を1回行動終了するまで付与(上限2個) | Imagination "Embracing Emotion" | Implemented | done: buff@break_hit grants penetration; buff@post_attack grants burst_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
 | 4991283 | 得意属性が突属性かつディフェンダーの時、スキル発動後、味方全員に「最大HP+{0}％」(上限20％)を付与<br>「真面目」の時、物防・魔防+{1}％ | Imagination "How Does It Taste?" | Implemented | done: stat_up; buff@skill_use grants stat_up; 3/3 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 4991284 | 得意属性が突属性かつディフェンダーの時、スキル発動後、味方全員に「最大HP+{0}％」(上限20％)を付与<br>「真面目」の時、物防・魔防+{1}％ | Imagination "How Does It Taste?" | Implemented | done: stat_up; buff@skill_use grants stat_up; 3/3 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 4991285 | 得意属性が突属性かつディフェンダーの時、スキル発動後、味方全員に「最大HP+{0}％」(上限20％)を付与<br>「真面目」の時、物防・魔防+{1}％ | Imagination "How Does It Taste?" | Implemented | done: stat_up; buff@skill_use grants stat_up; 3/3 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 4991286 | 得意属性が突属性かつディフェンダーの時、スキル発動後、味方全員に「最大HP+{0}％」(上限20％)を付与<br>「真面目」の時、物防・魔防+{1}％ | Imagination "How Does It Taste?" | Implemented | done: stat_up; buff@skill_use grants stat_up; 3/3 description effects mapped; unsure: buff@skill_use conditions: role,attr |
 | 4991287 | 得意属性が突属性かつディフェンダーの時、スキル発動後、味方全員に「最大HP+{0}％」(上限20％)を付与<br>「真面目」の時、物防・魔防+{1}％ | Imagination "How Does It Taste?" | Implemented | done: stat_up; buff@skill_use grants stat_up; 3/3 description effects mapped; unsure: buff@skill_use conditions: role,attr |
-| 4991288 | 得意属性が突属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「師匠」の時、物攻+{1}％ | Imagination "Upholding Order" | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 4991289 | 得意属性が突属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「師匠」の時、物攻+{1}％ | Imagination "Upholding Order" | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 4991290 | 得意属性が突属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「師匠」の時、物攻+{1}％ | Imagination "Upholding Order" | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 4991291 | 得意属性が突属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「師匠」の時、物攻+{1}％ | Imagination "Upholding Order" | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 4991292 | 得意属性が突属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「師匠」の時、物攻+{1}％ | Imagination "Upholding Order" | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
+| 4991288 | 得意属性が突属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「師匠」の時、物攻+{1}％ | Imagination "Upholding Order" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991289 | 得意属性が突属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「師匠」の時、物攻+{1}％ | Imagination "Upholding Order" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991290 | 得意属性が突属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「師匠」の時、物攻+{1}％ | Imagination "Upholding Order" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991291 | 得意属性が突属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「師匠」の時、物攻+{1}％ | Imagination "Upholding Order" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991292 | 得意属性が突属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「師匠」の時、物攻+{1}％ | Imagination "Upholding Order" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
 | 4991293 | 自身がアタッカーの時、スキル発動後、自身に「スキルダメージ+{0}％」を付与(上限900％) | Imagination "Guardians of Order" | Implemented | done: buff@skill_use grants skill_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
 | 4991294 | 自身がアタッカーの時、スキル発動後、自身に「スキルダメージ+{0}％」を付与(上限900％) | Imagination "Guardians of Order" | Implemented | done: buff@skill_use grants skill_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
 | 4991295 | 自身がアタッカーの時、スキル発動後、自身に「スキルダメージ+{0}％」を付与(上限900％) | Imagination "Guardians of Order" | Implemented | done: buff@skill_use grants skill_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
 | 4991296 | 自身がアタッカーの時、スキル発動後、自身に「スキルダメージ+{0}％」を付与(上限900％) | Imagination "Order Keepers" | Implemented | done: buff@skill_use grants skill_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
 | 4991297 | 自身がアタッカーの時、スキル発動後、自身に「スキルダメージ+{0}％」を付与(上限900％) | Imagination "Order Keepers" | Implemented | done: buff@skill_use grants skill_damage; 1/1 description effects mapped; unsure: buff@skill_use conditions: role |
-| 4991298 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「真面目」の時、魔攻+{1}％ | Idea "Kimon's Stage Ninjutsu☆" | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 4991299 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「真面目」の時、魔攻+{1}％ | Idea "Kimon's Stage Ninjutsu☆" | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 4991300 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「真面目」の時、魔攻+{1}％ | Imagination "Kimon's Stage Ninjutsu☆" | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 4991301 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「真面目」の時、魔攻+{1}％ | Imagination "Kimon's Stage Ninjutsu☆" | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 4991302 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「真面目」の時、魔攻+{1}％ | Imagination "Kimon's Stage Ninjutsu☆" | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 4991303 | 得意属性が雷属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「おてんば」の時、味方全員の魔攻+{1}％ | Imagination: "Johanna's Cute Side♪" | Partial | done: skill_damage; stat_up; 1/2 description effects mapped; missing: unmapped effect ids 95000373; unsure: skill_damage conditions: role,attr |
-| 4991304 | 得意属性が雷属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「おてんば」の時、味方全員の魔攻+{1}％ | Imagination: "Johanna's Cute Side♪" | Partial | done: skill_damage; stat_up; 1/2 description effects mapped; missing: unmapped effect ids 95000373; unsure: skill_damage conditions: role,attr |
-| 4991305 | 得意属性が雷属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「おてんば」の時、味方全員の魔攻+{1}％ | Imagination: "Johanna's Cute Side♪" | Partial | done: skill_damage; stat_up; 1/2 description effects mapped; missing: unmapped effect ids 95000373; unsure: skill_damage conditions: role,attr |
-| 4991306 | 得意属性が雷属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「おてんば」の時、味方全員の魔攻+{1}％ | Imagination: "Johanna's Cute Side♪" | Partial | done: skill_damage; stat_up; 1/2 description effects mapped; missing: unmapped effect ids 95000373; unsure: skill_damage conditions: role,attr |
-| 4991307 | 得意属性が雷属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「おてんば」の時、味方全員の魔攻+{1}％ | Imagination: "Johanna's Cute Side♪" | Partial | done: skill_damage; stat_up; 1/2 description effects mapped; missing: unmapped effect ids 95000373; unsure: skill_damage conditions: role,attr |
+| 4991298 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「真面目」の時、魔攻+{1}％ | Idea "Kimon's Stage Ninjutsu☆" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991299 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「真面目」の時、魔攻+{1}％ | Idea "Kimon's Stage Ninjutsu☆" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991300 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「真面目」の時、魔攻+{1}％ | Imagination "Kimon's Stage Ninjutsu☆" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991301 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「真面目」の時、魔攻+{1}％ | Imagination "Kimon's Stage Ninjutsu☆" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991302 | 得意属性が雷属性かつアタッカーの時、バーストスキルダメージ+{0}％<br>「真面目」の時、魔攻+{1}％ | Imagination "Kimon's Stage Ninjutsu☆" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991303 | 得意属性が雷属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「おてんば」の時、味方全員の魔攻+{1}％ | Imagination: "Johanna's Cute Side♪" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991304 | 得意属性が雷属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「おてんば」の時、味方全員の魔攻+{1}％ | Imagination: "Johanna's Cute Side♪" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991305 | 得意属性が雷属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「おてんば」の時、味方全員の魔攻+{1}％ | Imagination: "Johanna's Cute Side♪" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991306 | 得意属性が雷属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「おてんば」の時、味方全員の魔攻+{1}％ | Imagination: "Johanna's Cute Side♪" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991307 | 得意属性が雷属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「おてんば」の時、味方全員の魔攻+{1}％ | Imagination: "Johanna's Cute Side♪" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
 | 4991308 | 得意属性が雷属性かつブレイカーの時、対象をブレイク時、味方全員に「バーストクリティカルダメージ+{0}％」を1回行動終了するまで付与<br>「天然」の時、与えるマイナス効果量+{1}％ | Imagination "Izana's Guitar Technique!" | Implemented | done: potency_given_minus; buff@break_hit grants crit_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
 | 4991309 | 得意属性が雷属性かつブレイカーの時、対象をブレイク時、味方全員に「バーストクリティカルダメージ+{0}％」を1回行動終了するまで付与<br>「天然」の時、与えるマイナス効果量+{1}％ | Imagination "Izana's Guitar Technique!" | Implemented | done: potency_given_minus; buff@break_hit grants crit_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
 | 4991310 | 得意属性が雷属性かつブレイカーの時、対象をブレイク時、味方全員に「バーストクリティカルダメージ+{0}％」を1回行動終了するまで付与<br>「天然」の時、与えるマイナス効果量+{1}％ | Imagination "Izana's Guitar Technique!" | Implemented | done: potency_given_minus; buff@break_hit grants crit_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
 | 4991311 | 得意属性が雷属性かつブレイカーの時、対象をブレイク時、味方全員に「バーストクリティカルダメージ+{0}％」を1回行動終了するまで付与<br>「天然」の時、与えるマイナス効果量+{1}％ | Imagination "Izana's Guitar Technique!" | Implemented | done: potency_given_minus; buff@break_hit grants crit_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
 | 4991312 | 得意属性が雷属性かつブレイカーの時、対象をブレイク時、味方全員に「バーストクリティカルダメージ+{0}％」を1回行動終了するまで付与<br>「天然」の時、与えるマイナス効果量+{1}％ | Imagination "Izana's Guitar Technique!" | Implemented | done: potency_given_minus; buff@break_hit grants crit_damage; 2/2 description effects mapped; unsure: buff@break_hit conditions: role,attr,target_broken |
-| 4991313 | 得意属性が打属性かつアタッカーの時、パネル獲得時、自身に「物攻+{0}％」を1回行動終了するまで付与<br>「世話焼き」の時、バーストスキルダメージ+{1}％ | Imagination "Combat is Dialogue" | Implemented | done: stat_up; skill_damage; 2/2 description effects mapped; unsure: stat_up conditions: role,attr |
-| 4991314 | 得意属性が打属性かつアタッカーの時、パネル獲得時、自身に「物攻+{0}％」を1回行動終了するまで付与<br>「世話焼き」の時、バーストスキルダメージ+{1}％ | Imagination "Combat is Dialogue" | Implemented | done: stat_up; skill_damage; 2/2 description effects mapped; unsure: stat_up conditions: role,attr |
-| 4991315 | 得意属性が打属性かつアタッカーの時、パネル獲得時、自身に「物攻+{0}％」を1回行動終了するまで付与<br>「世話焼き」の時、バーストスキルダメージ+{1}％ | Imagination "Combat is Dialogue" | Implemented | done: stat_up; skill_damage; 2/2 description effects mapped; unsure: stat_up conditions: role,attr |
-| 4991316 | 得意属性が打属性かつアタッカーの時、パネル獲得時、自身に「物攻+{0}％」を1回行動終了するまで付与<br>「世話焼き」の時、バーストスキルダメージ+{1}％ | Imagination "Combat is Dialogue" | Implemented | done: stat_up; skill_damage; 2/2 description effects mapped; unsure: stat_up conditions: role,attr |
-| 4991317 | 得意属性が打属性かつアタッカーの時、パネル獲得時、自身に「物攻+{0}％」を1回行動終了するまで付与<br>「世話焼き」の時、バーストスキルダメージ+{1}％ | Imagination "Combat is Dialogue" | Implemented | done: stat_up; skill_damage; 2/2 description effects mapped; unsure: stat_up conditions: role,attr |
+| 4991313 | 得意属性が打属性かつアタッカーの時、パネル獲得時、自身に「物攻+{0}％」を1回行動終了するまで付与<br>「世話焼き」の時、バーストスキルダメージ+{1}％ | Imagination "Combat is Dialogue" | Implemented | done: stat_up; burst_damage; 2/2 description effects mapped; unsure: stat_up conditions: role,attr |
+| 4991314 | 得意属性が打属性かつアタッカーの時、パネル獲得時、自身に「物攻+{0}％」を1回行動終了するまで付与<br>「世話焼き」の時、バーストスキルダメージ+{1}％ | Imagination "Combat is Dialogue" | Implemented | done: stat_up; burst_damage; 2/2 description effects mapped; unsure: stat_up conditions: role,attr |
+| 4991315 | 得意属性が打属性かつアタッカーの時、パネル獲得時、自身に「物攻+{0}％」を1回行動終了するまで付与<br>「世話焼き」の時、バーストスキルダメージ+{1}％ | Imagination "Combat is Dialogue" | Implemented | done: stat_up; burst_damage; 2/2 description effects mapped; unsure: stat_up conditions: role,attr |
+| 4991316 | 得意属性が打属性かつアタッカーの時、パネル獲得時、自身に「物攻+{0}％」を1回行動終了するまで付与<br>「世話焼き」の時、バーストスキルダメージ+{1}％ | Imagination "Combat is Dialogue" | Implemented | done: stat_up; burst_damage; 2/2 description effects mapped; unsure: stat_up conditions: role,attr |
+| 4991317 | 得意属性が打属性かつアタッカーの時、パネル獲得時、自身に「物攻+{0}％」を1回行動終了するまで付与<br>「世話焼き」の時、バーストスキルダメージ+{1}％ | Imagination "Combat is Dialogue" | Implemented | done: stat_up; burst_damage; 2/2 description effects mapped; unsure: stat_up conditions: role,attr |
 | 4991318 | 自身がブレイカーの時、スキル2またはバーストスキルで攻撃前、対象に「全属性耐性-{0}％」を2回攻撃を受けるまで付与 | Imagination "Bunny's Scheme" | Implemented | done: buff@pre_attack executes resist_down; 2/2 description effects mapped |
 | 4991319 | 自身がブレイカーの時、スキル2またはバーストスキルで攻撃前、対象に「全属性耐性-{0}％」を2回攻撃を受けるまで付与 | Imagination "Bunny's Scheme" | Implemented | done: buff@pre_attack executes resist_down; 2/2 description effects mapped |
 | 4991320 | 自身がブレイカーの時、スキル2またはバーストスキルで攻撃前、対象に「全属性耐性-{0}％」を2回攻撃を受けるまで付与 | Imagination "Bunny's Scheme" | Implemented | done: buff@pre_attack executes resist_down; 2/2 description effects mapped |
@@ -4139,11 +4139,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4991395 | 得意属性が斬属性の時、与える強化効果量+{0}% | Slash Enhance Up II | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: attr |
 | 4991396 | 得意属性が斬属性の時、与える強化効果量+{0}% | Slash Affinity Enhancer Up II | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: attr |
 | 4991397 | 得意属性が斬属性の時、与える強化効果量+{0}% | Slash Affinity Enhancer Up II | Implemented | done: potency_given_plus; 1/1 description effects mapped; unsure: potency_given_plus conditions: attr |
-| 4991398 | 得意属性が斬属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「騎士」の時、味方全員の物攻+{1}％ | Imagination "Fun-Filled Vacation" | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 4991399 | 得意属性が斬属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「騎士」の時、味方全員の物攻+{1}％ | Imagination "Fun-Filled Vacation" | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 4991400 | 得意属性が斬属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「騎士」の時、味方全員の物攻+{1}％ | Imagination "Fun-Filled Vacation" | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 4991401 | 得意属性が斬属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「騎士」の時、味方全員の物攻+{1}％ | Imagination "Fun-Filled Vacation" | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
-| 4991402 | 得意属性が斬属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「騎士」の時、味方全員の物攻+{1}％ | Imagination "Lively Vacation" | Implemented | done: skill_damage; stat_up; 2/2 description effects mapped; unsure: skill_damage conditions: role,attr |
+| 4991398 | 得意属性が斬属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「騎士」の時、味方全員の物攻+{1}％ | Imagination "Fun-Filled Vacation" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991399 | 得意属性が斬属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「騎士」の時、味方全員の物攻+{1}％ | Imagination "Fun-Filled Vacation" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991400 | 得意属性が斬属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「騎士」の時、味方全員の物攻+{1}％ | Imagination "Fun-Filled Vacation" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991401 | 得意属性が斬属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「騎士」の時、味方全員の物攻+{1}％ | Imagination "Fun-Filled Vacation" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
+| 4991402 | 得意属性が斬属性かつサポーターの時、味方全員のバーストスキルダメージ+{0}％<br>「騎士」の時、味方全員の物攻+{1}％ | Imagination "Lively Vacation" | Implemented | done: burst_damage; stat_up; 2/2 description effects mapped; unsure: burst_damage conditions: role,attr |
 | 4991403 | 得意属性が斬属性かつブレイカーの時、ブレイク状態の対象を攻撃後、対象に「受けるダメージ+{0}％」を1回攻撃を受けるまで付与<br>「寡黙」の時、単体攻撃のブレイクダメージ+{1}％ | Imagination "Her Bare Face" | Implemented | done: break_damage; buff@post_attack grants taken_damage; 2/2 description effects mapped; unsure: break_damage conditions: scope; buff@post_attack conditions: role,attr,target_broken |
 | 4991404 | 得意属性が斬属性かつブレイカーの時、ブレイク状態の対象を攻撃後、対象に「受けるダメージ+{0}％」を1回攻撃を受けるまで付与<br>「寡黙」の時、単体攻撃のブレイクダメージ+{1}％ | Imagination "Her Bare Face" | Implemented | done: break_damage; buff@post_attack grants taken_damage; 2/2 description effects mapped; unsure: break_damage conditions: scope; buff@post_attack conditions: role,attr,target_broken |
 | 4991405 | 得意属性が斬属性かつブレイカーの時、ブレイク状態の対象を攻撃後、対象に「受けるダメージ+{0}％」を1回攻撃を受けるまで付与<br>「寡黙」の時、単体攻撃のブレイクダメージ+{1}％ | Imagination "Her Bare Face" | Implemented | done: break_damage; buff@post_attack grants taken_damage; 2/2 description effects mapped; unsure: break_damage conditions: scope; buff@post_attack conditions: role,attr,target_broken |
@@ -4219,41 +4219,41 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 7000054 | スキルダメージ{0}%アップ | Dealt Damage Up (3) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 7000055 | スキルダメージ{0}%アップ | Damage Dealt Up (4) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 7000056 | スキルダメージ{0}%アップ | Dealt Damage Up (5) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 7000057 | 突属性耐性{0}%アップ | Stab Resistance Up (1) | Missing | missing: unmapped effect ids 3000019; description text unparsed |
-| 7000058 | 突属性耐性{0}%アップ | Stab Resistance Up (2) | Missing | missing: unmapped effect ids 3000019; description text unparsed |
-| 7000059 | 突属性耐性{0}%アップ | Stab Resistance Up (3) | Missing | missing: unmapped effect ids 3000019; description text unparsed |
-| 7000060 | 突属性耐性{0}%アップ | Stab Resistance Up (4) | Missing | missing: unmapped effect ids 3000019; description text unparsed |
-| 7000061 | 突属性耐性{0}%アップ | Stab Resistance Up (5) | Missing | missing: unmapped effect ids 3000019; description text unparsed |
-| 7000062 | 斬属性耐性{0}%アップ | Slash Resistance Up (1) | Missing | missing: unmapped effect ids 3000020; description text unparsed |
-| 7000063 | 斬属性耐性{0}%アップ | Slash Resistance Up (2) | Missing | missing: unmapped effect ids 3000020; description text unparsed |
-| 7000064 | 斬属性耐性{0}%アップ | Slash Resistance Up (3) | Missing | missing: unmapped effect ids 3000020; description text unparsed |
-| 7000065 | 斬属性耐性{0}%アップ | Slash Resistance Up (4) | Missing | missing: unmapped effect ids 3000020; description text unparsed |
-| 7000066 | 斬属性耐性{0}%アップ | Slash Resistance Up (5) | Missing | missing: unmapped effect ids 3000020; description text unparsed |
-| 7000067 | 打属性耐性{0}%アップ | Strike Resistance Up (1) | Missing | missing: unmapped effect ids 3000021; description text unparsed |
-| 7000068 | 打属性耐性{0}%アップ | Strike Resistance Up (2) | Missing | missing: unmapped effect ids 3000021; description text unparsed |
-| 7000069 | 打属性耐性{0}%アップ | Strike Resistance Up (3) | Missing | missing: unmapped effect ids 3000021; description text unparsed |
-| 7000070 | 打属性耐性{0}%アップ | Strike Resistance Up (4) | Missing | missing: unmapped effect ids 3000021; description text unparsed |
-| 7000071 | 打属性耐性{0}%アップ | Strike Resistance Up (5) | Missing | missing: unmapped effect ids 3000021; description text unparsed |
-| 7000072 | 火属性耐性{0}%アップ | Fire Resistance Up (1) | Missing | missing: unmapped effect ids 3000022; description text unparsed |
-| 7000073 | 火属性耐性{0}%アップ | Fire Resistance Up (2) | Missing | missing: unmapped effect ids 3000022; description text unparsed |
-| 7000074 | 火属性耐性{0}%アップ | Fire Resistance Up (3) | Missing | missing: unmapped effect ids 3000022; description text unparsed |
-| 7000075 | 火属性耐性{0}%アップ | Fire Resistance Up (4) | Missing | missing: unmapped effect ids 3000022; description text unparsed |
-| 7000076 | 火属性耐性{0}%アップ | Fire Resistance Up (5) | Missing | missing: unmapped effect ids 3000022; description text unparsed |
-| 7000077 | 氷属性耐性{0}%アップ | Ice Resistance Up (1) | Missing | missing: unmapped effect ids 3000023; description text unparsed |
-| 7000078 | 氷属性耐性{0}%アップ | Ice Resistance Up (2) | Missing | missing: unmapped effect ids 3000023; description text unparsed |
-| 7000079 | 氷属性耐性{0}%アップ | Ice Resistance Up (3) | Missing | missing: unmapped effect ids 3000023; description text unparsed |
-| 7000080 | 氷属性耐性{0}%アップ | Ice Resistance Up (4) | Missing | missing: unmapped effect ids 3000023; description text unparsed |
-| 7000081 | 氷属性耐性{0}%アップ | Ice Resistance Up (5) | Missing | missing: unmapped effect ids 3000023; description text unparsed |
-| 7000082 | 雷属性耐性{0}%アップ | Bolt Resistance Up (1) | Missing | missing: unmapped effect ids 3000024; description text unparsed |
-| 7000083 | 雷属性耐性{0}%アップ | Bolt Resistance Up (2) | Missing | missing: unmapped effect ids 3000024; description text unparsed |
-| 7000084 | 雷属性耐性{0}%アップ | Bolt Resistance Up (3) | Missing | missing: unmapped effect ids 3000024; description text unparsed |
-| 7000085 | 雷属性耐性{0}%アップ | Bolt Resistance Up (4) | Missing | missing: unmapped effect ids 3000024; description text unparsed |
-| 7000086 | 雷属性耐性{0}%アップ | Bolt Resistance Up (5) | Missing | missing: unmapped effect ids 3000024; description text unparsed |
-| 7000087 | 風属性耐性{0}%アップ | Air Resistance Up (1) | Missing | missing: unmapped effect ids 3000025; description text unparsed |
-| 7000088 | 風属性耐性{0}%アップ | Air Resistance Up (2) | Missing | missing: unmapped effect ids 3000025; description text unparsed |
-| 7000089 | 風属性耐性{0}%アップ | Air Resistance Up (3) | Missing | missing: unmapped effect ids 3000025; description text unparsed |
-| 7000090 | 風属性耐性{0}%アップ | Air Resistance Up (4) | Missing | missing: unmapped effect ids 3000025; description text unparsed |
-| 7000091 | 風属性耐性{0}%アップ | Air Resistance Up (5) | Missing | missing: unmapped effect ids 3000025; description text unparsed |
+| 7000057 | 突属性耐性{0}%アップ | Stab Resistance Up (1) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000058 | 突属性耐性{0}%アップ | Stab Resistance Up (2) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000059 | 突属性耐性{0}%アップ | Stab Resistance Up (3) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000060 | 突属性耐性{0}%アップ | Stab Resistance Up (4) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000061 | 突属性耐性{0}%アップ | Stab Resistance Up (5) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000062 | 斬属性耐性{0}%アップ | Slash Resistance Up (1) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000063 | 斬属性耐性{0}%アップ | Slash Resistance Up (2) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000064 | 斬属性耐性{0}%アップ | Slash Resistance Up (3) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000065 | 斬属性耐性{0}%アップ | Slash Resistance Up (4) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000066 | 斬属性耐性{0}%アップ | Slash Resistance Up (5) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000067 | 打属性耐性{0}%アップ | Strike Resistance Up (1) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000068 | 打属性耐性{0}%アップ | Strike Resistance Up (2) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000069 | 打属性耐性{0}%アップ | Strike Resistance Up (3) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000070 | 打属性耐性{0}%アップ | Strike Resistance Up (4) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000071 | 打属性耐性{0}%アップ | Strike Resistance Up (5) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000072 | 火属性耐性{0}%アップ | Fire Resistance Up (1) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000073 | 火属性耐性{0}%アップ | Fire Resistance Up (2) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000074 | 火属性耐性{0}%アップ | Fire Resistance Up (3) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000075 | 火属性耐性{0}%アップ | Fire Resistance Up (4) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000076 | 火属性耐性{0}%アップ | Fire Resistance Up (5) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000077 | 氷属性耐性{0}%アップ | Ice Resistance Up (1) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000078 | 氷属性耐性{0}%アップ | Ice Resistance Up (2) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000079 | 氷属性耐性{0}%アップ | Ice Resistance Up (3) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000080 | 氷属性耐性{0}%アップ | Ice Resistance Up (4) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000081 | 氷属性耐性{0}%アップ | Ice Resistance Up (5) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000082 | 雷属性耐性{0}%アップ | Bolt Resistance Up (1) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000083 | 雷属性耐性{0}%アップ | Bolt Resistance Up (2) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000084 | 雷属性耐性{0}%アップ | Bolt Resistance Up (3) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000085 | 雷属性耐性{0}%アップ | Bolt Resistance Up (4) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000086 | 雷属性耐性{0}%アップ | Bolt Resistance Up (5) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000087 | 風属性耐性{0}%アップ | Air Resistance Up (1) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000088 | 風属性耐性{0}%アップ | Air Resistance Up (2) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000089 | 風属性耐性{0}%アップ | Air Resistance Up (3) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000090 | 風属性耐性{0}%アップ | Air Resistance Up (4) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 7000091 | 風属性耐性{0}%アップ | Air Resistance Up (5) | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 7000092 | 物理攻撃から受けるダメージ{0}%ダウン | Physical Damage Resistance Up (1) | Missing | missing: unmapped effect ids 3000026; description text unparsed |
 | 7000093 | 物理攻撃から受けるダメージ{0}%ダウン | Physical Damage Resistance Up (2) | Missing | missing: unmapped effect ids 3000026; description text unparsed |
 | 7000094 | 物理攻撃から受けるダメージ{0}%ダウン | Physical Damage Resistance Up (3) | Missing | missing: unmapped effect ids 3000026; description text unparsed |
@@ -5145,7 +5145,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 21045001 | 麻痺＋パネル効果「被ダメージUP」無効 |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 21046001 | スキル発動後、自身に与ダメージUP(10%/3回)を付与する |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 21048000 | ブレイク後、自身の与ダメージUP(30%/3回)付与 |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 21050001 | ・火傷状態の時、Weak被弾時のHP・ブレイクダメージUP(50%) ・全体攻撃被弾時のHPダメージ+100% ・自分が状態異常を持たない時、攻撃被弾時に与ダメージUP(5%/10回)を付与 ・ブレイク時に自身のバフ全解除 |  | Partial | done: 3/5 description effects mapped; missing: unmapped effect ids 81050001, 81050005; description text unparsed |
+| 21050001 | ・火傷状態の時、Weak被弾時のHP・ブレイクダメージUP(50%) ・全体攻撃被弾時のHPダメージ+100% ・自分が状態異常を持たない時、攻撃被弾時に与ダメージUP(5%/10回)を付与 ・ブレイク時に自身のバフ全解除 |  | Partial | done: 4/5 description effects mapped; missing: unmapped effect ids 81050005; description text unparsed |
 | 21050002 | ・ウェーブ開始時、自身に「ブレイク状態以外での被ダメージ-100%」を付与 ・ウェーブ開始時、自身に「ブレイク状態以外でのクリティカルダメージ-100%」を付与 ・ブレイク時、自身に「属性耐性DOWN」(15%/99回)を付与(最大3回発動) |  | Partial | done: 3/3 description effects mapped; missing: description text unparsed |
 | 21050003 | ・HP85%以下の時、攻撃被弾時に自身のHPを20%回復（「ブレイク状態以外での被ダメージ-100%」効果を持っている時のみ発動） ・HP85%以下の時、攻撃被弾時に自身のBGを25%回復（「ブレイク状態以外での被ダメージ-100%」効果を持っている時のみ発動） ・HP85%以下 |  | Partial | done: 3/3 description effects mapped; missing: description text unparsed |
 | 21050004 | ・HP75%以下の時、攻撃被弾時に自身のHPを50%回復 （「ブレイク状態以外での被ダメージ-100%」を持っておらず、「ブレイク状態以外でのクリティカルダメージ-100%」効果を持っている時のみ発動） ・HP75%以下の時、攻撃被弾時に自身の「ブレイク状態以外でのクリティカルダ |  | Partial | done: 2/2 description effects mapped; missing: description text unparsed |
@@ -5235,13 +5235,13 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 21212003 | 1回目のブレイク復帰時、素早さUP(5%/上限100%/永続)付与 2回目のブレイク復帰時、素早さUP(5%/上限100%/永続)付与 3回目のブレイク復帰時、素早さUP(5%/上限100%/永続)付与 ブレイク復帰時、自身のマイナス効果をすべて解除 |  | Partial | done: 4/4 description effects mapped; missing: description text unparsed |
 | 21214001 | 戦闘不能時、弱体パネルを暗闇パネルに変更(20マス) |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 21218001 | 遠洋移動時アビリティ。攻撃不可付与、子機4体仲間呼び、仲間呼びカウントバフ付与、ギミック進捗ゲージ発動 |  | Missing | missing: unmapped effect ids 81218005, 81218006, 81218007, 81218008, 81218001, 81218002, 81218003, 81218004; description text unparsed |
-| 21218002 | 接舷移動アビリティ。3ターンカウントバフ解除、仲間呼びカウントバフ解除、攻撃不可状態解除、自身を5ターン遅延 |  | Partial | done: 3/7 description effects mapped; missing: unmapped effect ids 81218009, 81218013, 81218014, 81218023; description text unparsed |
+| 21218002 | 接舷移動アビリティ。3ターンカウントバフ解除、仲間呼びカウントバフ解除、攻撃不可状態解除、自身を5ターン遅延 |  | Partial | done: 4/7 description effects mapped; missing: unmapped effect ids 81218009, 81218014, 81218023; description text unparsed |
 | 21218003 | 遠洋にいるときの、行動後仲間呼び処理 |  | Partial | done: 3/8 description effects mapped; missing: unmapped effect ids 81218018, 81218019, 81218020, 81218021, 81218022; description text unparsed |
 | 21218004 | 遠洋にいるときの、味方戦闘不能時仲間呼び処理 |  | Missing | missing: unmapped effect ids 81218024, 81218025, 81218026, 81218027, 81218028, 81218029, 81218030, 81218031; description text unparsed |
 | 21218005 | 遠洋にいるときの、味方戦闘不能時仲間呼び処理 |  | Missing | missing: unmapped effect ids 81218032, 81218033, 81218034, 81218035; description text unparsed |
 | 21218006 | クヴァレルガ2戦目開始時、本体に全属性耐性UP(90%)、被ダメージDOWN(90%)、被ブレイクダメージDOWN(300%)を付与 |  | Partial | done: 2/3 description effects mapped; missing: unmapped effect ids 81218037; description text unparsed |
 | 21218007 | 遠洋移動時アビリティ。攻撃不可付与、子機4体仲間呼び、仲間呼びカウントバフ付与、ギミック進捗ゲージ発動 |  | Missing | missing: unmapped effect ids 81218046, 81218006, 81218007, 81218008, 81218045, 81218002, 81218003, 81218004; description text unparsed |
-| 21218008 | 接舷移動アビリティ。3ターンカウントバフ解除、仲間呼びカウントバフ解除、攻撃不可状態解除、自身を5ターン遅延 |  | Partial | done: 3/7 description effects mapped; missing: unmapped effect ids 81218009, 81218013, 81218014, 81218052; description text unparsed |
+| 21218008 | 接舷移動アビリティ。3ターンカウントバフ解除、仲間呼びカウントバフ解除、攻撃不可状態解除、自身を5ターン遅延 |  | Partial | done: 4/7 description effects mapped; missing: unmapped effect ids 81218009, 81218014, 81218052; description text unparsed |
 | 21218009 | 遠洋にいるときの、行動後仲間呼び処理 |  | Partial | done: 3/8 description effects mapped; missing: unmapped effect ids 81218047, 81218048, 81218049, 81218050, 81218051; description text unparsed |
 | 21218010 | 遠洋にいるときの、味方戦闘不能時仲間呼び処理 |  | Missing | missing: unmapped effect ids 81218053, 81218054, 81218055, 81218056, 81218057, 81218058, 81218059, 81218060; description text unparsed |
 | 21218011 | 遠洋にいるときの、味方戦闘不能時仲間呼び処理 |  | Missing | missing: unmapped effect ids 81218061, 81218062, 81218063, 81218064; description text unparsed |
@@ -5262,9 +5262,9 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 21228001 | ウェーブ開始時、自身に特殊被ダメージDOWN、全属性耐性UP、受けるマイナス効果量DOWN×2を付与 |  | Partial | done: 3/4 description effects mapped; missing: unmapped effect ids 81228002; description text unparsed |
 | 21228002 | 自身ブレイク中の行動前に、自身に与ダメージUP、素早さUPを付与(発動上限1回) |  | Partial | done: 2/2 description effects mapped; missing: description text unparsed |
 | 21228003 | 自身ブレイク時、味方に特殊スタンを付与、行動前特殊スタン解除、特殊スタン無効、味方破壊時行動再抽選 |  | Partial | done: 3/4 description effects mapped; missing: unmapped effect ids 880134008; description text unparsed |
-| 21229001 | 自身戦闘不能時、本体のBG50％減少、被ダメージDOWNと受けるマイナス効果量DOWNを解除。味方全体のターンを遅らせる |  | Partial | done: 2/4 description effects mapped; missing: unmapped effect ids 81229001, 81229004; description text unparsed |
-| 21230001 | 自身戦闘不能時、本体のBG50％減少、全属性耐性UPと受けるマイナス効果量DOWNを解除を解除。味方全体のターンを遅らせる |  | Partial | done: 2/4 description effects mapped; missing: unmapped effect ids 81230001, 81230004; description text unparsed |
-| 21232001 | HP60％以下になった時、自身のターンを{0}ターン遅らせ、ブレイクゲージを{1}%回復し、自身に与ダメージUP({2}%/1回)、被ブレイクダメージDOWN({3}%/2回)を付与、行動再抽選 アトリエ砲によるダメージを受けた時、自身に攻撃DOWN({5}％/上限40％)を付与 |  | Partial | done: 5/7 description effects mapped; missing: unmapped effect ids 86232011, 81232002; description text unparsed |
+| 21229001 | 自身戦闘不能時、本体のBG50％減少、被ダメージDOWNと受けるマイナス効果量DOWNを解除。味方全体のターンを遅らせる |  | Partial | done: 3/4 description effects mapped; missing: unmapped effect ids 81229001; description text unparsed |
+| 21230001 | 自身戦闘不能時、本体のBG50％減少、全属性耐性UPと受けるマイナス効果量DOWNを解除を解除。味方全体のターンを遅らせる |  | Partial | done: 3/4 description effects mapped; missing: unmapped effect ids 81230001; description text unparsed |
+| 21232001 | HP60％以下になった時、自身のターンを{0}ターン遅らせ、ブレイクゲージを{1}%回復し、自身に与ダメージUP({2}%/1回)、被ブレイクダメージDOWN({3}%/2回)を付与、行動再抽選 アトリエ砲によるダメージを受けた時、自身に攻撃DOWN({5}％/上限40％)を付与 |  | Partial | done: 6/7 description effects mapped; missing: unmapped effect ids 81232002; description text unparsed |
 | 21251001 | ブレイク復帰後、自身に素早さ UP(15%/3回)を付与 |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 21251002 | 攻撃を5回受けると、ランダムな強化系パネルorバーストパネルを3パネル生成する |  | Partial | done: 2/5 description effects mapped; missing: unmapped effect ids 81251008, 81251008, 81251008; description text unparsed |
 | 21254003 | 自身のHPが60%、40%以下のとき、自身の次手番にバーストパネルを生成する |  | Partial | done: 2/2 description effects mapped; missing: description text unparsed |
@@ -5282,7 +5282,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 21263002 | 特殊回避状態でない行動後、自身にターンカウントバフ①Lv.1を付与。(敵3体時のみ) さらにターンカウントバフ①がLv2の場合、味方全体に特殊回避関連状態変化を付与し行動再抽選、ターンカウントバフ①を解除 |  | Partial | done: 8/8 description effects mapped; missing: description text unparsed |
 | 21263003 | 特殊状態で行動後、自身にターンカウントバフ②Lv.1を付与。 さらにターンカウントバフ②がLv.2の場合、自身に特殊BS判定用状態変化を付与し、行動再抽選 |  | Partial | done: 3/3 description effects mapped; missing: description text unparsed |
 | 21263004 | 自身が特殊回避状態を持っていて、スキルが命中した場合、味方全体に攻撃回数カウントバフLv.1を付与。 さらに攻撃回数カウントバフがLv.5のとき味方全体の特殊回避関連状態変化を解除、両脚の被ダメージ+1000％、味方全体の攻撃回数カウントバフとターンカウントバフ②とターンカウント |  | Partial | done: 6/8 description effects mapped; missing: unmapped effect ids 81263015, 81263019; description text unparsed |
-| 21263005 | 自身が特殊回避状態,攻撃回数カウントバフLv.5を持っていて、スキルが命中した場合、味方全体にターンカウントバフ①付与無効を付与し、行動再抽選。 自身以外の全エネミーが戦闘不能時、自身にsubmoition用状態変化を付与し、ターンを遅らせる バトル開始時、味方全員に攻撃カウント |  | Partial | done: 1/6 description effects mapped; missing: unmapped effect ids 81263021, 81263027, 81263041, 81263040, 71263029; description text unparsed |
+| 21263005 | 自身が特殊回避状態,攻撃回数カウントバフLv.5を持っていて、スキルが命中した場合、味方全体にターンカウントバフ①付与無効を付与し、行動再抽選。 自身以外の全エネミーが戦闘不能時、自身にsubmoition用状態変化を付与し、ターンを遅らせる バトル開始時、味方全員に攻撃カウント |  | Partial | done: 2/6 description effects mapped; missing: unmapped effect ids 81263021, 81263027, 81263040, 71263029; description text unparsed |
 | 21264006 | 戦闘不能時、本体のギミック用被ダメージDOWN、全属性耐性UP(右脚)、ターンカウントバフ①を解除し、味方全体ターン遅延。 さらに特殊回避状態の場合、味方全体の特殊回避関連状態変化を解除。 自身が特殊回避状態を持っていて、スキルが命中した場合、味方全体に攻撃回数カウントバフLv. |  | Partial | done: 9/11 description effects mapped; missing: unmapped effect ids 81263015, 81264004; description text unparsed |
 | 21264008 | 自身が特殊回避状態を持っていて、攻撃回数カウントバフがLv.5を持っていて、単体攻撃被弾時、味方全体の特殊回避関連状態変化を解除、両脚の被ダメージ+1000％、味方全体の攻撃回数カウントバフとターンカウントバフ②とターンカウントバフ①を解除し、BGを9900％削り、味方全体にター |  | Partial | done: 7/9 description effects mapped; missing: unmapped effect ids 81264015, 81264017; description text unparsed |
 | 21265007 | 戦闘不能時、本体のギミック用マイナス効果無効、全属性耐性UP(左脚)、ターンカウントバフ①を解除、味方全体ターン遅延。 さらに特殊回避状態の場合、味方全体の特殊回避関連状態変化を解除。 自身が特殊回避状態を持っていて、スキルが命中した場合、味方全体に攻撃回数カウントバフLv.1を |  | Partial | done: 9/11 description effects mapped; missing: unmapped effect ids 81263015, 81265004; description text unparsed |
@@ -5299,8 +5299,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 21281002 | wave開始時、相手からの効果無効を付与 ブレイクした時、自身に防御DOWN(90%)を付与 ブレイク中の手番開始時、防御DOWNを解除 |  | Partial | done: 1/3 description effects mapped; missing: unmapped effect ids 81281025, 81281026; description text unparsed |
 | 22035001 | HP50%以下の時、攻撃被弾時自身に与ダメージUP(10%/1回)を付与 ブレイク時、敵全体に再生10%(2回) |  | Partial | done: 2/2 description effects mapped; missing: description text unparsed |
 | 22035002 | HP50%以下の時、攻撃被弾時自身に与ダメージUP(15%/1回)を付与 ブレイク時、敵全体に再生15%(2回) |  | Partial | done: 2/2 description effects mapped; missing: description text unparsed |
-| 22133001 | ブレイク復帰時、1度のみ自身に魔法ダメージUP(40%/1回)と素早さUP(10%/3回)を付与 バトル開始時、自身に被ダメージ(20%/5回)と被ブレイクダメージ(20%/3回)を付与 自身のHPが70%以下になった時かつ攻撃被弾時、1度のみ自身に被ブレイクダメージDOWN(2 |  | Partial | done: 4/5 description effects mapped; missing: unmapped effect ids 880133001; description text unparsed |
-| 22133002 | ブレイク復帰時、1度のみ自身に魔法ダメージUP(40%/1回)と素早さUP(10%/3回)を付与 バトル開始時、自身に被ダメージ(25%/5回)と被ブレイクダメージ(25%/3回)を付与 自身のHPが70%以下になった時かつ攻撃被弾時、1度のみ自身に被ブレイクダメージDOWN(2 |  | Partial | done: 5/6 description effects mapped; missing: unmapped effect ids 880133001; description text unparsed |
+| 22133001 | ブレイク復帰時、1度のみ自身に魔法ダメージUP(40%/1回)と素早さUP(10%/3回)を付与 バトル開始時、自身に被ダメージ(20%/5回)と被ブレイクダメージ(20%/3回)を付与 自身のHPが70%以下になった時かつ攻撃被弾時、1度のみ自身に被ブレイクダメージDOWN(2 |  | Partial | done: 5/5 description effects mapped; missing: description text unparsed |
+| 22133002 | ブレイク復帰時、1度のみ自身に魔法ダメージUP(40%/1回)と素早さUP(10%/3回)を付与 バトル開始時、自身に被ダメージ(25%/5回)と被ブレイクダメージ(25%/3回)を付与 自身のHPが70%以下になった時かつ攻撃被弾時、1度のみ自身に被ブレイクダメージDOWN(2 |  | Partial | done: 6/6 description effects mapped; missing: description text unparsed |
 | 22212004 | 1回目のブレイク復帰時、素早さUP(10%/上限100%/永続)付与 2回目のブレイク復帰時、素早さUP(10%/上限100%/永続)付与 3回目のブレイク復帰時、素早さUP(10%/上限100%/永続)付与 ブレイク復帰時、自身のマイナス効果をすべて解除 |  | Partial | done: 4/4 description effects mapped; missing: description text unparsed |
 | 22212005 | バトル開始時、被ダメージDOWN(1回目)(100%/永続)を付与 バトル開始時、被ダメージDOWN(2回目)(75%/永続)を付与 バトル開始時、被ダメージDOWN(3回目)(50%/永続)を付与 effect_motion_バトル開始時 |  | Partial | done: 4/4 description effects mapped; missing: description text unparsed |
 | 23067001 | スキル対象がデバフを所持時、与ダメージUP スキル使用後自身のHPを回復 |  | Missing | missing: unmapped effect ids 880067002, 880067003; description text unparsed |
@@ -5328,7 +5328,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 24120002 | 戦闘不能時、弱体系・状態異常系パネル以外を麻痺パネルに変更(10マス) |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 24122001 | バトル開始時、自身にダメージ無効(4回)を付与 |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 24132001 | 自身が戦闘不能時、相手に悪性状態異常が付与されていない場合、被ダメージUP(20%/5回)を付与 |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 24133001 | WAVE開始時、自身に被ブレイクダメージDOWN(20%/3回)を付与 自身のブレイク復帰時、魔法与ダメージUP(50%/3回)を付与(バトル中1回) 自身のブレイク復帰時、素早さUP(20%/3回)(バトル中1回) 自身のBGが50%以下になった時、自身に被ブレイクダメージDO |  | Partial | done: 3/4 description effects mapped; missing: unmapped effect ids 84133007; description text unparsed |
+| 24133001 | WAVE開始時、自身に被ブレイクダメージDOWN(20%/3回)を付与 自身のブレイク復帰時、魔法与ダメージUP(50%/3回)を付与(バトル中1回) 自身のブレイク復帰時、素早さUP(20%/3回)(バトル中1回) 自身のBGが50%以下になった時、自身に被ブレイクダメージDO |  | Partial | done: 4/4 description effects mapped; missing: description text unparsed |
 | 24133002 | WAVE開始時、自身にダメージ無効(永続)を付与 ブレイク時、自身のダメージ無効を解除 |  | Partial | done: 2/2 description effects mapped; missing: description text unparsed |
 | 24133003 | WAVE開始時、相手全員にクリティカル確率DOWN(999%/永続)を付与 WAVE開始時、相手全員に確定クリティカル無効を付与 |  | Partial | done: 1/2 description effects mapped; missing: unmapped effect ids 84133004; description text unparsed |
 | 24166001 | 相手を撃破した時、自身に与ダメージUP(100%/永続)を付与 |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
@@ -5481,8 +5481,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 26130002 | 戦闘不能時、味方全体に与ダメージ+30%を永続付与 戦闘不能時、味方全体に素早さ+5%を永続付与 戦闘不能時、味方全体のマイナス効果を解除 戦闘不能時、味方全体に被ダメージDOWN30%を永続付与 攻撃者の戦闘中付与されたバフの数に応じて被ダメージ上昇（10~20個以上で+20% |  | Partial | done: 14/15 description effects mapped; missing: unmapped effect ids 86130003; description text unparsed |
 | 26132001 | 戦闘不能時、敵全体に毒３回３つを付与率100％で付与 クリティカル被弾時自身に被ダメージUP+20%(最大100%)を累積付与  |  | Partial | done: 4/4 description effects mapped; missing: description text unparsed |
 | 26132002 | 戦闘不能時、相手全員に毒(2回)×3を付与 |  | Partial | done: 3/3 description effects mapped; missing: description text unparsed |
-| 26133001 | Wave開始時、自身に被ダメージDOWN(20%/5回)を付与 Wave開始時、自身に被ブレイクダメージDOWN(20%/3回)を付与 自身のブレイク復帰時、魔法ダメージUP(40%/1回)を付与(バトル中1回) 自身のブレイク復帰時、素早さUP(10%/3回)(バトル中1回)  |  | Partial | done: 5/6 description effects mapped; missing: unmapped effect ids 880133001; description text unparsed |
-| 26133002 |  自身のHPが70%以下になった時、1度のみ自身に被ブレイクダメージDOWN(25%/3回)と被ダメージDOWN(25%/3回)を付与　ブレイク復帰時、1度のみ自身に魔法ダメージUP(40%/1回)と素早さUP(10%/3回)を付与 バトル開始時、自身に被ダメージ(25%/5回) |  | Partial | done: 5/6 description effects mapped; missing: unmapped effect ids 880133001; description text unparsed |
+| 26133001 | Wave開始時、自身に被ダメージDOWN(20%/5回)を付与 Wave開始時、自身に被ブレイクダメージDOWN(20%/3回)を付与 自身のブレイク復帰時、魔法ダメージUP(40%/1回)を付与(バトル中1回) 自身のブレイク復帰時、素早さUP(10%/3回)(バトル中1回)  |  | Partial | done: 6/6 description effects mapped; missing: description text unparsed |
+| 26133002 |  自身のHPが70%以下になった時、1度のみ自身に被ブレイクダメージDOWN(25%/3回)と被ダメージDOWN(25%/3回)を付与　ブレイク復帰時、1度のみ自身に魔法ダメージUP(40%/1回)と素早さUP(10%/3回)を付与 バトル開始時、自身に被ダメージ(25%/5回) |  | Partial | done: 6/6 description effects mapped; missing: description text unparsed |
 | 26133015 | 突属性以外の属性耐性DOWN無効 |  | Partial | done: 6/6 description effects mapped; missing: description text unparsed |
 | 26138001 | 攻撃被弾時、HP60%以下の時、ダメージ無効(1回)を付与（一度だけ） 攻撃被弾時、HP60%以下の時、被ダメージDOWN(15%/永続)を付与（一度だけ） 戦闘アイテムの攻撃で被弾時、自身に被ダメージUP(30%/3回)を付与(一度だけ) 女性キャラから攻撃をされた時、自身に与 |  | Partial | done: 4/5 description effects mapped; missing: unmapped effect ids 780052015; description text unparsed |
 | 26138002 | 雷、突属性以外の属性耐性DOWN無効 |  | Partial | done: 5/5 description effects mapped; missing: description text unparsed |
@@ -5609,7 +5609,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 26226011 | HP30%以下で被弾時、自身のターンを3ターン早める HP30%以下で被弾時、行動再抽選 effect_motionあり |  | Partial | done: 1/2 description effects mapped; missing: unmapped effect ids 86226012; description text unparsed |
 | 26231001 | WEAK攻撃を10回被弾時、相手全員に雷耐性UPを付与 |  | Partial | done: 2/3 description effects mapped; missing: unmapped effect ids 86231001; description text unparsed |
 | 26231002 | スキル使用後、自身に与ダメージUP(100%/2回)を付与 単体攻撃を5回受けた時、自身の与ダメージUPをすべて解除 |  | Partial | done: 4/4 description effects mapped; missing: description text unparsed |
-| 26232001 | 戦闘アイテムによるダメージを受けた時、自身に物攻DOWN(上限30％/6％)を付与 HP60％以下で攻撃を受けた時、自身のターンを3ターン遅らせ、ブレイクゲージを40%回復し、自身に与ダメージUP(40%/1回)、被ブレイクダメージDOWN(40%/2回)を付与 ブレイク時、自身 |  | Partial | done: 5/6 description effects mapped; missing: unmapped effect ids 86232011; description text unparsed |
+| 26232001 | 戦闘アイテムによるダメージを受けた時、自身に物攻DOWN(上限30％/6％)を付与 HP60％以下で攻撃を受けた時、自身のターンを3ターン遅らせ、ブレイクゲージを40%回復し、自身に与ダメージUP(40%/1回)、被ブレイクダメージDOWN(40%/2回)を付与 ブレイク時、自身 |  | Partial | done: 6/6 description effects mapped; missing: description text unparsed |
 | 26232002 | ウェーブ開始時、自身にマイナス効果無効を付与 ブレイクされるとマイナス効果無効を解除 |  | Partial | done: 2/2 description effects mapped; missing: description text unparsed |
 | 26233001 | WEAK攻撃後、自身に再生(10%/3回)を付与 |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 26234001 | 戦闘アイテムによるダメージを受けた時自身のバフ全て解除(1回のみ) |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
@@ -5627,7 +5627,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 26244001 | 自身戦闘不能時、フィールド効果発動(相手全員に与ダメージDOWN(20%/5回を付与)) |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 26245001 | ブレイク復帰時、味方全体に与ダメージUP(30%/2回)と再生(10%/2回)付与 |  | Partial | done: 2/2 description effects mapped; missing: description text unparsed |
 | 26246001 | ブレイク時、自身のバフを全て解除 |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 26246002 | HPが40％以下になった時、自身に与ダメージUP(100％/1回)とクリティカル率UP(100%/1回)を付与し、自身のターンを２ターン遅らせる その後、行動再抽選 |  | Partial | done: 2/4 description effects mapped; missing: unmapped effect ids 86246004, 86246005; description text unparsed |
+| 26246002 | HPが40％以下になった時、自身に与ダメージUP(100％/1回)とクリティカル率UP(100%/1回)を付与し、自身のターンを２ターン遅らせる その後、行動再抽選 |  | Partial | done: 3/4 description effects mapped; missing: unmapped effect ids 86246005; description text unparsed |
 | 26247001 | WEAK攻撃を10回受けるごとに自身に被ダメージUP(累積)と被ブレイクダメージUP(累積)を付与 |  | Partial | done: 4/4 description effects mapped; missing: description text unparsed |
 | 26247002 | 氷・雷・斬以外の属性耐性DOWN無効 |  | Partial | done: 4/4 description effects mapped; missing: description text unparsed |
 | 26247003 | WAVE開始時、自身に被ダメージDOWN(50%)を付与。WEAK攻撃を10回受けるとそれを解除 |  | Partial | done: 3/3 description effects mapped; missing: description text unparsed |
@@ -6117,10 +6117,10 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 280132001 | 戦闘不能時、敵全体に毒3回5つを付与率100%で付与 |  | Partial | done: 5/5 description effects mapped; missing: description text unparsed |
 | 280132003 | 戦闘不能時、敵全体に毒3回を100%の付与率で10個付与 |  | Partial | done: 10/10 description effects mapped; missing: description text unparsed |
 | 280132004 | 戦闘不能時、敵全体に毒3回を5個付与 受けるパネル効果量+50%UP |  | Partial | done: 5/6 description effects mapped; missing: unmapped effect ids 780052015; description text unparsed |
-| 280133001 | 手番開始前、自身がブレイク復帰時に魔法ダメージUP40%(1回)を付与、1回のみ 手番開始前、自身がブレイク復帰時に素早さUP10%(3回)を付与、1回のみ バトル開始時、自身に被ダメージ-20%(5回)を付与 攻撃被弾時、自身のHPが70%以下になった時、自身に被ブレイクダメー |  | Partial | done: 4/5 description effects mapped; missing: unmapped effect ids 880133001; description text unparsed |
-| 280133002 | 手番開始前、自身がブレイク復帰時に魔法ダメージUP60%(1回)を付与、1回のみ 手番開始前、自身がブレイク復帰時に素早さUP10%(3回)を付与、1回のみ 攻撃被弾時、自身のHPが70%以下になった時、自身に被ブレイクダメージDOWN15%5回を付与、1回のみ |  | Partial | done: 2/3 description effects mapped; missing: unmapped effect ids 880133001; description text unparsed |
-| 280133003 | 手番開始前、自身がブレイク復帰時に魔法ダメージUP40%(1回)を付与、1回のみ 手番開始前、自身がブレイク復帰時に素早さUP10%(3回)を付与、1回のみ バトル開始時、自身に被ダメージ-20%(5回)を付与 攻撃被弾時、自身のHPが70%以下になった時、自身に被ブレイクダメー |  | Partial | done: 5/6 description effects mapped; missing: unmapped effect ids 880133001; description text unparsed |
-| 280133004 | [古の魔像][MainStory/汎用アビリティ]自身に被ブレイクダメージUP(10回)を付与 [古の魔像][MainStory/汎用アビリティ]自身がブレイク中、被ダメージUP [古の魔像][MainStory/汎用アビリティ]自身のHPが70%以下になった時、自身に被ブレイク |  | Partial | done: 4/5 description effects mapped; missing: unmapped effect ids 880133001; description text unparsed |
+| 280133001 | 手番開始前、自身がブレイク復帰時に魔法ダメージUP40%(1回)を付与、1回のみ 手番開始前、自身がブレイク復帰時に素早さUP10%(3回)を付与、1回のみ バトル開始時、自身に被ダメージ-20%(5回)を付与 攻撃被弾時、自身のHPが70%以下になった時、自身に被ブレイクダメー |  | Partial | done: 5/5 description effects mapped; missing: description text unparsed |
+| 280133002 | 手番開始前、自身がブレイク復帰時に魔法ダメージUP60%(1回)を付与、1回のみ 手番開始前、自身がブレイク復帰時に素早さUP10%(3回)を付与、1回のみ 攻撃被弾時、自身のHPが70%以下になった時、自身に被ブレイクダメージDOWN15%5回を付与、1回のみ |  | Partial | done: 3/3 description effects mapped; missing: description text unparsed |
+| 280133003 | 手番開始前、自身がブレイク復帰時に魔法ダメージUP40%(1回)を付与、1回のみ 手番開始前、自身がブレイク復帰時に素早さUP10%(3回)を付与、1回のみ バトル開始時、自身に被ダメージ-20%(5回)を付与 攻撃被弾時、自身のHPが70%以下になった時、自身に被ブレイクダメー |  | Partial | done: 6/6 description effects mapped; missing: description text unparsed |
+| 280133004 | [古の魔像][MainStory/汎用アビリティ]自身に被ブレイクダメージUP(10回)を付与 [古の魔像][MainStory/汎用アビリティ]自身がブレイク中、被ダメージUP [古の魔像][MainStory/汎用アビリティ]自身のHPが70%以下になった時、自身に被ブレイク |  | Partial | done: 5/5 description effects mapped; missing: description text unparsed |
 | 280134001 | １、行動開始時、ブレイク状態でない場合、自身に「被ダメージDOWN(ウェルテックス)」(80%/回数無制限)を付与。(既に同名効果を所持する場合、発動しない) ２、行動開始時、ウェルテックス第二形態B非ブレイク中、自身の「与ダメージDOWN(ウェルテックス(ブレイク時))」の効果 |  | Partial | done: 5/6 description effects mapped; missing: unmapped effect ids 880134008; description text unparsed |
 | 280135001 | １、攻撃被弾時、自身ブレイクした場合、ウェルテックス第二形態Aに「与ダメージDOWN(ウェルテックス(ブレイク時))」(30%/回数無制限)を付与。(既に同名効果を所持する場合、発動しない) ２、自身戦闘不能時、ウェルテックス第二形態Aに「与ダメージDOWN(ウェルテックス(戦闘 |  | Partial | done: 3/3 description effects mapped; missing: description text unparsed |
 | 280136001 | １、攻撃被弾時、自身ブレイクした場合、ウェルテックス第二形態Aに「被ブレイクダメージUP(ウェルテックス(ブレイク時))」(30%/回数無制限)を付与。(既に同名効果を所持する場合、発動しない) ２、自身戦闘不能時、ウェルテックス第二形態Aに「被ブレイクダメージUP(ウェルテック |  | Partial | done: 3/3 description effects mapped; missing: description text unparsed |
@@ -6251,12 +6251,12 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 600000138 | WEAK攻撃時、スキル威力+30% | [Weakness] Skill Power +30% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000139 | WEAK攻撃時、スキル威力+50% | [Weakness] Skill Power +50% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000140 | WEAK攻撃時、スキル威力+75% | [Weakness] Skill Power +75% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 600000141 | 火属性スキル威力+20% | [Fire] Skill Power +20% | Missing | missing: unmapped effect ids 120000163; description text unparsed |
-| 600000142 | 火属性スキル威力+30% | [Fire] Skill Power +30% | Missing | missing: unmapped effect ids 120000163; description text unparsed |
-| 600000143 | 火属性スキル威力+40% | [Fire] Skill Power +40% | Missing | missing: unmapped effect ids 120000163; description text unparsed |
-| 600000144 | 全体攻撃スキル威力+10% | [Area] Skill Power +10% | Missing | missing: unmapped effect ids 120000164; description text unparsed |
-| 600000145 | 全体攻撃スキル威力+20% | [Area] Skill Power +20% | Missing | missing: unmapped effect ids 120000164; description text unparsed |
-| 600000146 | 全体攻撃スキル威力+30% | [Area] Skill Power +30% | Missing | missing: unmapped effect ids 120000164; description text unparsed |
+| 600000141 | 火属性スキル威力+20% | [Fire] Skill Power +20% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 600000142 | 火属性スキル威力+30% | [Fire] Skill Power +30% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 600000143 | 火属性スキル威力+40% | [Fire] Skill Power +40% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 600000144 | 全体攻撃スキル威力+10% | [Area] Skill Power +10% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 600000145 | 全体攻撃スキル威力+20% | [Area] Skill Power +20% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 600000146 | 全体攻撃スキル威力+30% | [Area] Skill Power +30% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000147 | WEAK攻撃時、バーストスキル威力+30% | [Weakness] Burst Power +30% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000148 | WEAK攻撃時、バーストスキル威力+50% | [Weakness] Burst Power +50% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000149 | WEAK攻撃時、バーストスキル威力+75% | [Weakness] Burst Power +75% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
@@ -6301,8 +6301,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 600000189 | HP70%以上の時スキル威力+50% | [HP 70%] Skill Power +50% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000190 | 強化効果が付与された時、効果量+100% | [Buffs Effects] Potency +100% | Missing | missing: unmapped effect ids 120000161; description text unparsed |
 | 600000191 | WEAK攻撃時、スキル威力+150% | [Weakness] Skill Power +150% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 600000192 | 火属性スキル威力+200% | [Fire] Skill Power +200% | Missing | missing: unmapped effect ids 120000163; description text unparsed |
-| 600000193 | 全体攻撃スキル威力+100% | [All] Skill Power +100% | Missing | missing: unmapped effect ids 120000164; description text unparsed |
+| 600000192 | 火属性スキル威力+200% | [Fire] Skill Power +200% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 600000193 | 全体攻撃スキル威力+100% | [All] Skill Power +100% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000194 | WEAK攻撃時、バーストスキル威力+150% | [Weakness] Burst Power +150% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000195 | 単体ブレイクダメージ+20% | [Single] Stun Power +20% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000196 | 単体ブレイクダメージ+30% | [Single] Stun Power +30% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
@@ -6328,9 +6328,9 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 600000216 | 強化効果が付与された時、効果量+15% | [Buffs Given] Potency +15% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000217 | 強化効果が付与された時、効果量+25% | [Buffs Given] Potency +25% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000218 | 強化効果が付与された時、効果量+40% | [Buffs Given] Potency +40% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 600000219 | 風属性スキルダメージ+20% | [Air] Skill Power +20% | Missing | missing: unmapped effect ids 120000196; description text unparsed |
-| 600000220 | 風属性スキルダメージ+30% | [Air] Skill Power +30% | Missing | missing: unmapped effect ids 120000196; description text unparsed |
-| 600000221 | 風属性スキルダメージ+40% | [Air] Skill Power +40% | Missing | missing: unmapped effect ids 120000196; description text unparsed |
+| 600000219 | 風属性スキルダメージ+20% | [Air] Skill Power +20% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 600000220 | 風属性スキルダメージ+30% | [Air] Skill Power +30% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
+| 600000221 | 風属性スキルダメージ+40% | [Air] Skill Power +40% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000222 | 味方全体への与えるHP回復量+20% | [All] Recovery +20% | Missing | missing: unmapped effect ids 120000197; description text unparsed |
 | 600000223 | 味方全体への与えるHP回復量+30% | [All] Recovery +30% | Missing | missing: unmapped effect ids 120000197; description text unparsed |
 | 600000224 | 味方全体への与えるHP回復量+50% | [All] Recovery +50% | Missing | missing: unmapped effect ids 120000197; description text unparsed |
@@ -6373,7 +6373,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 600000268 | 与えるHP回復量+20% | Recovery +20% | Missing | missing: unmapped effect ids 120000238; description text unparsed |
 | 600000269 | 与えるHP回復量+30% | Recovery +30% | Missing | missing: unmapped effect ids 120000238; description text unparsed |
 | 600000271 | ﾌﾞﾚｲｸ強化ﾊﾟﾈﾙ獲得時、自身に「ｽｷﾙﾀﾞﾒｰｼﾞ+50%」を1回行動終了するまで付与 | Stun Boost Panel Skill Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 600000273 | 攻撃対象がブレイク状態の時、スキルダメージ+50% | Damage Up Vs. Stun | Missing | missing: unmapped effect ids 120000220; description text unparsed |
+| 600000273 | 攻撃対象がブレイク状態の時、スキルダメージ+50% | Damage Up Vs. Stun | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000275 | 味方全員の物攻+150% | All Allies P. ATK Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000276 | 味方全員の魔攻+150% | All Allies M. ATK Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000277 | 攻撃時、対象の状態異常種類数が多いほどブレイクダメージUP | Stun Damage Up Per Status Effect | Partial | done: 8/8 description effects mapped; missing: description text unparsed |
@@ -6521,7 +6521,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 600000420 | WEAK攻撃時、バーストスキルダメージ+150% | [Weakness] Burst Damage +150% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000421 | WEAK攻撃時、自身の最大HP+20%(上限100%) | [Weakness] Max HP +20% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000422 | 強化効果が付与された時、効果量+100% | [Buffs Effects] Potency +100% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 600000423 | 風属性スキルダメージ+200% | [Air] Skill Damage +200% | Missing | missing: unmapped effect ids 120000196; description text unparsed |
+| 600000423 | 風属性スキルダメージ+200% | [Air] Skill Damage +200% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000424 | 味方全体への与えるHP回復量+100% | [All] Recovery Up +100% | Missing | missing: unmapped effect ids 120000197; description text unparsed |
 | 600000425 | 行動前、自身に「行動前、HP回復+20%」を付与 | [Before Turn] Regen +20% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600000426 | 行動前、自身のｽｷﾙﾀﾞﾒｰｼﾞ+20% | [Before Turn] Skill Damage +20% | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
@@ -6917,7 +6917,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 600010009 | 麻痺付与率+150% | Paralysis Rate Up | Missing | missing: unmapped effect ids 120010018; description text unparsed |
 | 600010010 | 得意属性が火属性の時、スキルダメージ+100% | Fire Skill Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010011 | 得意属性が火属性の時、ブレイクダメージ+30% | Fire Stun Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 600010012 | 得意属性が火属性の時、ブレイク状態対象へのスキルダメージ+100% | Fire Damage Up Vs. Stun | Missing | missing: unmapped effect ids 120010034; description text unparsed |
+| 600010012 | 得意属性が火属性の時、ブレイク状態対象へのスキルダメージ+100% | Fire Damage Up Vs. Stun | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010013 | 得意属性が火のサポーターの与える強化効果量+50% | Fire Supporter Buff Potency Up | Missing | missing: unmapped effect ids 120010035; description text unparsed |
 | 600010014 | 得意属性が火のサポーターの与えるマイナス効果量+100% | Fire Supporter Neg Potency Up | Missing | missing: unmapped effect ids 120010036; description text unparsed |
 | 600010015 | 得意属性が火の時、受ける回復量+30% | Fire Recovery Received Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
@@ -6938,7 +6938,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 600010031 | 得意属性が火の時、受ける回復量+20% | Fire Recovery Received Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010032 | 得意属性が風属性の時、スキルダメージ+120% | Air Skill Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010033 | 得意属性が風属性の時、ブレイクダメージ+30% | Air Stun Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 600010034 | 得意属性が風属性の時、ブレイク状態対象へのスキルダメージ+120% | Air Damage Up Vs. Stun | Missing | missing: unmapped effect ids 120010076; description text unparsed |
+| 600010034 | 得意属性が風属性の時、ブレイク状態対象へのスキルダメージ+120% | Air Damage Up Vs. Stun | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010035 | 得意属性が風のサポーターの与える強化効果量+50% | Air Supporter Buff Potency Up | Missing | missing: unmapped effect ids 120010077; description text unparsed |
 | 600010036 | 得意属性が風のサポーターの与えるマイナス効果量+100% | Air Supporter Neg Potency Up | Missing | missing: unmapped effect ids 120010078; description text unparsed |
 | 600010037 | 得意属性が風の時、受ける回復量+30% | Air Received Recovery Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
@@ -6959,7 +6959,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 600010053 | 攻撃対象がブレイクした時、味方全員に1回行動終了するまでスキルダメージ+150% | All Allies Skill Damage Up on Stun | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010054 | 得意属性が氷属性の時、スキルダメージ+120% | Ice Skill Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010055 | 得意属性が氷属性の時、ブレイクダメージ+30% | Ice Stun Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 600010056 | 得意属性が氷属性の時、ブレイク状態対象へのスキルダメージ+120% | Ice Damage Up Vs. Stun | Missing | missing: unmapped effect ids 120010116; description text unparsed |
+| 600010056 | 得意属性が氷属性の時、ブレイク状態対象へのスキルダメージ+120% | Ice Damage Up Vs. Stun | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010057 | 得意属性が氷のサポーターの与える強化効果量+50% | Ice Supporter Buff Potency Up | Missing | missing: unmapped effect ids 120010117; description text unparsed |
 | 600010058 | 得意属性が氷のサポーターの与えるマイナス効果量+100% | Ice Supporter Neg Potency Up | Missing | missing: unmapped effect ids 120010118; description text unparsed |
 | 600010059 | 得意属性が氷の時、受ける回復量+30% | Ice Recovery Received Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
@@ -6980,7 +6980,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 600010075 | 得意属性が氷属性の時、与える強化効果量+30% | Boosts potency of buff effects for those with Ice affinity | Missing | missing: unmapped effect ids 120010143; description text unparsed |
 | 600010076 | 得意属性が雷属性の時、スキルダメージ+120% | Bolt Skill Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010077 | 得意属性が雷属性の時、ブレイクダメージ+30% | Bolt Stun Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 600010078 | 得意属性が雷属性の時、ブレイク状態対象へのスキルダメージ+120% | Bolt Damage Up Vs. Stun | Missing | missing: unmapped effect ids 120010159; description text unparsed |
+| 600010078 | 得意属性が雷属性の時、ブレイク状態対象へのスキルダメージ+120% | Bolt Damage Up Vs. Stun | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010079 | 得意属性が雷のサポーターの与える強化効果量+50% | Bolt Supporter Buff Potency Up | Missing | missing: unmapped effect ids 120010160; description text unparsed |
 | 600010080 | 得意属性が雷のサポーターの与えるマイナス効果量+100% | Bolt Supporter Neg Potency Up | Missing | missing: unmapped effect ids 120010161; description text unparsed |
 | 600010081 | 得意属性が雷の時、受ける回復量+30% | Bolt Recovery Received Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
@@ -6997,11 +6997,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 600010093 | 自身に強化効果が3個以上ある時、被ダメージ-75% | 3 Buffs Damage Reduction | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010094 | 得意属性が雷属性の時、スキルダメージ+100% | Bolt Skill Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010095 | ディフェンダーの与えるマイナス効果量+50% | Defenders Neg Potency Up | Missing | missing: unmapped effect ids 120010184; description text unparsed |
-| 600010096 | 得意属性が雷属性の時、状態異常対象へのスキルダメージ+400% | Bolt Damage Up Vs. Status Effects | Missing | missing: unmapped effect ids 120010185; description text unparsed |
+| 600010096 | 得意属性が雷属性の時、状態異常対象へのスキルダメージ+400% | Bolt Damage Up Vs. Status Effects | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010097 | 攻撃対象がブレイクした時、味方全員にスキルダメージ+15%(上限150%) | All Allies Skill Damage Up on Stun | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010098 | 得意属性が斬属性の時、スキルダメージ+100% | Slash Skill Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010099 | 得意属性が斬属性の時、ブレイクダメージ+30% | Slash Stun Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 600010100 | 得意属性が斬属性の時、ブレイク状態対象へのスキルダメージ+100% | Slash Damage Up Vs. Stun | Missing | missing: unmapped effect ids 120010202; description text unparsed |
+| 600010100 | 得意属性が斬属性の時、ブレイク状態対象へのスキルダメージ+100% | Slash Damage Up Vs. Stun | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010101 | 得意属性が斬のサポーターの与える強化効果量+50% | Slash Supporter Buff Potency Up | Missing | missing: unmapped effect ids 120010203; description text unparsed |
 | 600010102 | 得意属性が斬のサポーターの与えるマイナス効果量+100% | Slash Supporter Neg Potency Up | Missing | missing: unmapped effect ids 120010204; description text unparsed |
 | 600010103 | 得意属性が斬の時、受ける回復量+30% | Slash Received Recovery Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
@@ -7022,7 +7022,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 600010119 | 得意属性が斬属性の時、与える強化効果量+50% | Slash Buff Potency Up | Missing | missing: unmapped effect ids 120010228; description text unparsed |
 | 600010120 | 得意属性が打属性の時、スキルダメージ+120% | Strike Skill Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010121 | 得意属性が打属性の時、ブレイクダメージ+30% | Strike Stun Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 600010122 | 得意属性が打属性の時、ブレイク状態対象へのスキルダメージ+120% | Strike Damage Up Vs. Stun | Missing | missing: unmapped effect ids 120010244; description text unparsed |
+| 600010122 | 得意属性が打属性の時、ブレイク状態対象へのスキルダメージ+120% | Strike Damage Up Vs. Stun | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010123 | 得意属性が打のサポーターの与える強化効果量+50% | Strike Supporter Buff Potency Up | Missing | missing: unmapped effect ids 120010245; description text unparsed |
 | 600010124 | 得意属性が打のサポーターの与えるマイナス効果量+100% | Strike Supporter Neg Potency Up | Missing | missing: unmapped effect ids 120010246; description text unparsed |
 | 600010125 | 得意属性が打の時、受ける回復量+30% | Strike Received Recovery Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
@@ -7043,7 +7043,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 600010141 | 攻撃対象がブレイクした時、味方全員にクリティカルダメージ+10% | Critical Damage Up on Stun | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010142 | 得意属性が突属性の時、スキルダメージ+120% | Stab Skill Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010143 | 得意属性が突属性の時、ブレイクダメージ+30% | Stab Stun Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 600010144 | 得意属性が突属性の時、ブレイク状態対象へのスキルダメージ+120% | Stab Damage Up Vs. Stun | Missing | missing: unmapped effect ids 120010286; description text unparsed |
+| 600010144 | 得意属性が突属性の時、ブレイク状態対象へのスキルダメージ+120% | Stab Damage Up Vs. Stun | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010145 | 得意属性が突のサポーターの与える強化効果量+50% | Stab Supporter Buff Potency Up | Missing | missing: unmapped effect ids 120010287; description text unparsed |
 | 600010146 | 得意属性が突のサポーターの与えるマイナス効果量+100% | Stab Supporter Neg Potency Up | Missing | missing: unmapped effect ids 120010288; description text unparsed |
 | 600010147 | 得意属性が突の時、受ける回復量+30% | Stab Received Recovery Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
@@ -7059,7 +7059,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 600010158 | 得意属性が突属性の時、クリティカルダメージ+100% | Stab Critical Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010159 | 得意属性が突属性の時、クリティカル確率+50% | Stab Critical Rate Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010160 | 毒状態対象への攻撃時、必ずクリティカルが発生 | Guaranteed Critical Vs. Poison | Missing | missing: unmapped effect ids 120010311; description text unparsed |
-| 600010161 | スキル発動後、自身に突ダメージ+20%(上限200%)を付与 | Stab Damage Up Each Turn | Missing | missing: unmapped effect ids 120010312; description text unparsed |
+| 600010161 | スキル発動後、自身に突ダメージ+20%(上限200%)を付与 | Stab Damage Up Each Turn | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010162 | WAVE開始時、自身にスキルダメージ-75%を付与 | Skill Damage Down | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010163 | 得意属性が突属性の時、クリティカルダメージ+75% | Stab Critical Damage Up | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 600010164 | スキル発動後、自身にクリティカル確率+5%を付与 | Critical Rate Up Each Turn | Partial | done: 1/1 description effects mapped; missing: description text unparsed |

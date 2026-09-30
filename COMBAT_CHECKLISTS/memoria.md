@@ -71,7 +71,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 30028 | 私たちのマスターピース | Our Masterpiece | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30029 | 冒険は新天地へ | Adventure to New Horizons | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30030 | 新発見は止まらない | Endless Discoveries | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
-| 30031 | 星誕祭の夜に | Starbirth Festival Night | r3 | Partial | done: growth+6 start stat buffs; 0/5 abilities parsed; missing: abilities not fully implemented 4990353, 4990354, 4990355, 4990356, 4990357; unsure: limit-break growth scaling unconfirmed |
+| 30031 | 星誕祭の夜に | Starbirth Festival Night | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30032 | 星の導きで運命を辿る者 | Destined by the Stars | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30033 | 月夜に暗躍する漆黒の影 | Ebony Shadows of a Moonlit Night | r3 | Partial | done: growth+6 start stat buffs; 0/5 abilities parsed; missing: abilities not fully implemented 4990363, 4990364, 4990365, 4990366, 4990367; unsure: limit-break growth scaling unconfirmed |
 | 30034 | 冒険者たちの羽休め | Adventurer's Feathered Respite | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
@@ -228,7 +228,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 30189 | 大切なものを取り戻しに | To Reclaim What's Precious | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30190 | 亜空の道を行く者たち | Those Who Walk the Subspace Path | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30191 | マリー・ローズの秘密 | Marie Rose's Secret | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
-| 30192 | レンズの奥の存在 | The Presence Behind the Lens | r3 | Partial | done: growth+6 start stat buffs; 0/5 abilities parsed; missing: abilities not fully implemented 4991143, 4991144, 4991145, 4991146, 4991147; unsure: limit-break growth scaling unconfirmed |
+| 30192 | レンズの奥の存在 | The Presence Behind the Lens | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30193 | ほのかの秘密 | A Secret Warmth | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30194 | 優勝間違いなし！ | Victory Is Guaranteed! | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30195 | 彼女が紡いだ光 | The Light She Wove | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
@@ -240,7 +240,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 30201 | 斬撃に舞う | Dancing Through Slashes | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30202 | 追いつきたい存在 | Someone to Look Up To | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30203 | 星誕祭の夜は一緒に | Together for the Festival | r3 | Partial | done: growth+6 start stat buffs; 0/5 abilities parsed; missing: abilities not fully implemented 4991198, 4991199, 4991200, 4991201, 4991202; unsure: limit-break growth scaling unconfirmed |
-| 30204 | 幸多からんことを | Wishing You Happiness | r3 | Partial | done: growth+6 start stat buffs; 0/5 abilities parsed; missing: abilities not fully implemented 4991203, 4991204, 4991205, 4991206, 4991207; unsure: limit-break growth scaling unconfirmed |
+| 30204 | 幸多からんことを | Wishing You Happiness | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30205 | ドキドキ・おそろい | Nervous and Cute | r3 | Partial | done: growth+6 start stat buffs; 0/5 abilities parsed; missing: abilities not fully implemented 4991208, 4991209, 4991210, 4991211, 4991212; unsure: limit-break growth scaling unconfirmed |
 | 30206 | 心休まるひととき | A Heartwarming Moment | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30207 | 冒険者のカン | An Adventurer's Intuition | r3 | Partial | done: growth+6 start stat buffs; 0/5 abilities parsed; missing: abilities not fully implemented 4991218, 4991219, 4991220, 4991221, 4991222; unsure: limit-break growth scaling unconfirmed |
@@ -260,7 +260,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 30222 | 秩序を纏う | Upholding Order | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30223 | 秩序を守る者たち | Those Who Maintain Order | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30224 | 鬼門のステージ忍術☆ | Kimon's Stage Ninjutsu☆ | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
-| 30225 | ヨハナのかわいいとこ♪ | Johanna's Cute Side♪ | r3 | Partial | done: growth+6 start stat buffs; 0/5 abilities parsed; missing: abilities not fully implemented 4991303, 4991304, 4991305, 4991306, 4991307; unsure: limit-break growth scaling unconfirmed |
+| 30225 | ヨハナのかわいいとこ♪ | Johanna's Cute Side♪ | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30226 | イザナのギターテク！ | Izana's Guitar Technique! | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30227 | 戦いとは対話なのです | Battle is Dialogue | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30228 | バニーの企み | Bunny Scheme | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |

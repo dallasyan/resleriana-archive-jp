@@ -29,8 +29,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 21 | クォーツネックレス | Quartz Necklace | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 22 | 闘志のマフラー | Battle Scarf | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 23 | 闘志のマフラー | Battle Scarf | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 24 | 白銀の双剣 | Silver Twin Swords | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300114; unsure: flat start stats, growth scaling unconfirmed |
-| 25 | 白銀の双剣 | Silver Twin Swords | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300115; unsure: flat start stats, growth scaling unconfirmed |
+| 24 | 白銀の双剣 | Silver Twin Swords | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 25 | 白銀の双剣 | Silver Twin Swords | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 26 | 魔獣の革鎧 | Beast Armor | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300116; unsure: flat start stats, growth scaling unconfirmed |
 | 27 | 魔獣の革鎧 | Beast Armor | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300117; unsure: flat start stats, growth scaling unconfirmed |
 | 28 | ハッスルベルト | Hustle Belt | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
@@ -223,8 +223,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 215 | 薬草のポンチョ | Herbal Poncho | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 216 | オーレスケイル | Ore Scale Armor | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 217 | オーレスケイル | Ore Scale Armor | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 218 | デイフーガ | Daylight | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300308; unsure: flat start stats, growth scaling unconfirmed |
-| 219 | デイフーガ | Daylight | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300309; unsure: flat start stats, growth scaling unconfirmed |
+| 218 | デイフーガ | Daylight | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 219 | デイフーガ | Daylight | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 220 | コールドハンマー | Cold Hammer | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 221 | コールドハンマー | Cold Hammer | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 222 | ラギーソード | Rugged Sword | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
@@ -241,8 +241,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 233 | オルフィックリング・雷 | Orphic Ring: Bolt | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 234 | ビギナースタッフ | Beginner's Staff | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 235 | ビギナースタッフ | Beginner's Staff | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 236 | ブラッディクロー | Bloody Claw | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300326; unsure: flat start stats, growth scaling unconfirmed |
-| 237 | ブラッディクロー | Bloody Claw | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300327; unsure: flat start stats, growth scaling unconfirmed |
+| 236 | ブラッディクロー | Bloody Claw | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 237 | ブラッディクロー | Bloody Claw | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 238 | 幻月の服 | Paraselene Clothes | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300328; unsure: flat start stats, growth scaling unconfirmed |
 | 239 | 幻月の服 | Paraselene Clothes | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300329; unsure: flat start stats, growth scaling unconfirmed |
 | 240 | ハードローブ | Hard Robe | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
@@ -317,8 +317,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 309 | ザシュテーレン | Zerstören | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 310 | ドヒドリンゲン | Durchdringen | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 311 | ドヒドリンゲン | Durchdringen | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 312 | 天恵の杖 | Blessed Staff | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300402; unsure: flat start stats, growth scaling unconfirmed |
-| 313 | 天恵の杖 | Blessed Staff | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300403; unsure: flat start stats, growth scaling unconfirmed |
+| 312 | 天恵の杖 | Blessed Staff | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 313 | 天恵の杖 | Blessed Staff | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 314 | 冥護の杖 | Shadowguard Staff | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 315 | 冥護の杖 | Shadowguard Staff | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 316 | 聖寵の杖 | Holy Favor Staff | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
@@ -407,8 +407,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 399 | 異国の甲冑 | Exotic Armor | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 400 | 福の杖 | Fortune Staff | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 401 | 福の杖 | Fortune Staff | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 402 | 福の振袖 | Fortune Kimono | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300498; unsure: flat start stats, growth scaling unconfirmed |
-| 403 | 福の振袖 | Fortune Kimono | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300499; unsure: flat start stats, growth scaling unconfirmed |
+| 402 | 福の振袖 | Fortune Kimono | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 403 | 福の振袖 | Fortune Kimono | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 404 | 福のしめ縄 | Fortune Shimenawa | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300500; unsure: flat start stats, growth scaling unconfirmed |
 | 405 | 福のしめ縄 | Fortune Shimenawa | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300501; unsure: flat start stats, growth scaling unconfirmed |
 | 406 | 寿の杵 | Longevity Mallet | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
@@ -471,8 +471,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 463 | アービデルトネ | Arbidel Torne | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 464 | アネンドトス | Anendtos | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 465 | アネンドトス | Anendtos | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 466 | 招雷の冠 | Thundercall Crown | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300556; unsure: flat start stats, growth scaling unconfirmed |
-| 467 | 招雷の冠 | Thundercall Crown | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300557; unsure: flat start stats, growth scaling unconfirmed |
+| 466 | 招雷の冠 | Thundercall Crown | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 467 | 招雷の冠 | Thundercall Crown | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 468 | 烽火の弓 | Signal Fire Bow | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 469 | 烽火の弓 | Signal Fire Bow | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 470 | サピエンスコート | Sapience Coat | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
@@ -613,8 +613,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 605 | 委員長の杖 | Class President's Cane | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 606 | 委員長の制服 | Class President's Uniform | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 607 | 委員長の制服 | Class President's Uniform | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 608 | 委員長のリボン | Class President's Ribbon | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300698; unsure: flat start stats, growth scaling unconfirmed |
-| 609 | 委員長のリボン | Class President's Ribbon | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300699; unsure: flat start stats, growth scaling unconfirmed |
+| 608 | 委員長のリボン | Class President's Ribbon | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 609 | 委員長のリボン | Class President's Ribbon | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 610 | 高嶺の剣 | Lofty Longsword | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 611 | 高嶺の剣 | Lofty Longsword | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 612 | 高嶺の制服 | Lofty Uniform | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
@@ -641,14 +641,14 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 633 | 寛ぎのハンドタオル | Hand Towel of Relaxation | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 634 | カフトスクーパ | Kaftí Skoúpa | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 635 | カフトスクーパ | Kaftí Skoúpa | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 636 | フローガスモキン | Flóga Smókin | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300726; unsure: flat start stats, growth scaling unconfirmed |
-| 637 | フローガスモキン | Flóga Smókin | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300727; unsure: flat start stats, growth scaling unconfirmed |
+| 636 | フローガスモキン | Flóga Smókin | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 637 | フローガスモキン | Flóga Smókin | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 638 | サンティテロン | Scinti Talon | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300728; unsure: flat start stats, growth scaling unconfirmed |
 | 639 | サンティテロン | Scinti Talon | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300729; unsure: flat start stats, growth scaling unconfirmed |
 | 640 | クリオスクーパ | Krýa Skoúpa | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 641 | クリオスクーパ | Krýa Skoúpa | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 642 | パゴニャスモキン | Pagoniá Smókin | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300732; unsure: flat start stats, growth scaling unconfirmed |
-| 643 | パゴニャスモキン | Pagoniá Smókin | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300733; unsure: flat start stats, growth scaling unconfirmed |
+| 642 | パゴニャスモキン | Pagoniá Smókin | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 643 | パゴニャスモキン | Pagoniá Smókin | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 644 | グラソテロン | Glaço Talon | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 645 | グラソテロン | Glaço Talon | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 646 | シエラスクーバ | Thýella Skoúpa | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
@@ -657,8 +657,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 649 | キクロスモキン | Kykló Smókin | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 650 | シエルテロン | Ciel Talon | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 651 | シエルテロン | Ciel Talon | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 652 | アストゥラスクーバ | Astra Skoúpa | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300742; unsure: flat start stats, growth scaling unconfirmed |
-| 653 | アストゥラスクーバ | Astra Skoúpa | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300743; unsure: flat start stats, growth scaling unconfirmed |
+| 652 | アストゥラスクーバ | Astra Skoúpa | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 653 | アストゥラスクーバ | Astra Skoúpa | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 654 | ケラヴスモキン | Kerá Smókin | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300744; unsure: flat start stats, growth scaling unconfirmed |
 | 655 | ケラヴスモキン | Kerá Smókin | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300745; unsure: flat start stats, growth scaling unconfirmed |
 | 656 | フードルテロン | Foudre Talon | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
@@ -669,8 +669,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 661 | ヒメルマンテ | Himmel Mantel | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300751; unsure: flat start stats, growth scaling unconfirmed |
 | 662 | テレールテロン | Tutél Talon | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 663 | テレールテロン | Tutél Talon | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 664 | 潰滅の戦棍 | Mace of Devastation | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300754; unsure: flat start stats, growth scaling unconfirmed |
-| 665 | 潰滅の戦棍 | Mace of Devastation | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300755; unsure: flat start stats, growth scaling unconfirmed |
+| 664 | 潰滅の戦棍 | Mace of Devastation | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 665 | 潰滅の戦棍 | Mace of Devastation | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 666 | エーデマンテ | Erde Mantel | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 667 | エーデマンテ | Erde Mantel | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 668 | ディアンテロン | Dien Talon | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
@@ -823,8 +823,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 815 | 業火箒 | Hellfire Broom | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 816 | ヴァルキリーメイル | Valkyrie Mail | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 817 | ヴァルキリーメイル | Valkyrie Mail | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 818 | 浄火の腕輪 | Purifying Flame Bracelet | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300908; unsure: flat start stats, growth scaling unconfirmed |
-| 819 | 浄火の腕輪 | Purifying Flame Bracelet | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300909; unsure: flat start stats, growth scaling unconfirmed |
+| 818 | 浄火の腕輪 | Purifying Flame Bracelet | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 819 | 浄火の腕輪 | Purifying Flame Bracelet | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 820 | 護りのロッド | Guardian Rod | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 821 | 護りのロッド | Guardian Rod | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 822 | 淡氷の鎧 | Crystal Ice Armor | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
@@ -934,8 +934,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 926 | エミナンスコート | Eminence Coat | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 927 | フィエールガント | Fière Gauntlets | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 928 | フィエールガント | Fière Gauntlets | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 929 | 冥闇の杖 | Darkveil Rod | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301016; unsure: flat start stats, growth scaling unconfirmed |
-| 930 | 冥闇の杖 | Darkveil Rod | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301017; unsure: flat start stats, growth scaling unconfirmed |
+| 929 | 冥闇の杖 | Darkveil Rod | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 930 | 冥闇の杖 | Darkveil Rod | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 931 | 寧静の服 | Tranquil Tunic | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 932 | 寧静の服 | Tranquil Tunic | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 933 | 花占いの札 | Fortune Talisman | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
@@ -1056,8 +1056,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1049 | エフェメラルレコード | Ephemeral Record | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1050 | 流浪の服 | Nomadic Clothing | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1051 | 流浪の服 | Nomadic Clothing | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 1052 | サペンシアアニュラス | Sapiencia Annulus | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301139; unsure: flat start stats, growth scaling unconfirmed |
-| 1053 | サペンシアアニュラス | Sapiencia Annulus | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301140; unsure: flat start stats, growth scaling unconfirmed |
+| 1052 | サペンシアアニュラス | Sapiencia Annulus | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 1053 | サペンシアアニュラス | Sapiencia Annulus | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1054 | 黄泉之蟷螂 | Hellion Mantis | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1055 | ハンターウェア | Hunter's Wear | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1056 | ハンターウェア | Hunter's Wear | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
@@ -1084,8 +1084,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1077 | エターナルフラワー | Eternal Flower | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1078 | エターナルフラワー | Eternal Flower | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1080 | アルテミスコンパウンド | Artemis Compound | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 1081 | 箱入り娘のセーラー服 | Dollhouse Sailor Uniform | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301167; unsure: flat start stats, growth scaling unconfirmed |
-| 1082 | 箱入り娘のセーラー服 | Dollhouse Sailor Uniform | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301168; unsure: flat start stats, growth scaling unconfirmed |
+| 1081 | 箱入り娘のセーラー服 | Dollhouse Sailor Uniform | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 1082 | 箱入り娘のセーラー服 | Dollhouse Sailor Uniform | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1083 | 箱入り娘のローファー | Dollhouse Loafers | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1084 | 箱入り娘のローファー | Dollhouse Loafers | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1085 | ブルーミングクローバー | Blooming Clover | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301171; unsure: flat start stats, growth scaling unconfirmed |
@@ -1102,20 +1102,20 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1096 | サイバネティクスケース | Cybanetics Case | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1097 | サイエンティストの白衣 | Scientist's White Coat | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1098 | サイエンティストの白衣 | Scientist's White Coat | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 1099 | サイエンティストの靴 | Scientist's Shoes | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301185; unsure: flat start stats, growth scaling unconfirmed |
-| 1100 | サイエンティストの靴 | Scientist's Shoes | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301186; unsure: flat start stats, growth scaling unconfirmed |
+| 1099 | サイエンティストの靴 | Scientist's Shoes | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 1100 | サイエンティストの靴 | Scientist's Shoes | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1101 | 正義と誇りの象徴 | Symbol of Justice and Pride | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1102 | 模範者の制服 | Model Student Uniform | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1103 | 模範者の制服 | Model Student Uniform | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 1104 | 模範者のネクタイ | Model Student Tie | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301190; unsure: flat start stats, growth scaling unconfirmed |
-| 1105 | 模範者のネクタイ | Model Student Tie | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301191; unsure: flat start stats, growth scaling unconfirmed |
+| 1104 | 模範者のネクタイ | Model Student Tie | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 1105 | 模範者のネクタイ | Model Student Tie | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1106 | マイティチェーン | Mighty Chain | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301192; unsure: flat start stats, growth scaling unconfirmed |
 | 1107 | 投票券 | Voting Ticket | Implemented | done: 1 start stat buffs; unsure: flat start stats, growth scaling unconfirmed |
 | 1108 | ケットシーブゥアル | Katzsiebel | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1109 | フェアリードレス | Fairy Dress | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1110 | フェアリードレス | Fairy Dress | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 1111 | 闘士のバングル | Warrior's Bangle | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301196; unsure: flat start stats, growth scaling unconfirmed |
-| 1112 | 闘士のバングル | Warrior's Bangle | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301197; unsure: flat start stats, growth scaling unconfirmed |
+| 1111 | 闘士のバングル | Warrior's Bangle | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 1112 | 闘士のバングル | Warrior's Bangle | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1113 | フギ＝ムニ | Fugi=Muni | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1114 | シャドウトゥシャドウ | Shadow to Shadow | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1115 | シャドウトゥシャドウ | Shadow to Shadow | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
@@ -1135,8 +1135,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1129 | 漁村の錬金術士の杖 | Fishing Village Alchemist's Staff | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1130 | クレージュチョッキ | Cradle Chalk | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301215; unsure: flat start stats, growth scaling unconfirmed |
 | 1131 | クレージュチョッキ | Cradle Chalk | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301216; unsure: flat start stats, growth scaling unconfirmed |
-| 1132 | シュランクメートヒェン | Slunk Teammate | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301217; unsure: flat start stats, growth scaling unconfirmed |
-| 1133 | シュランクメートヒェン | Slunk Teammate | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301218; unsure: flat start stats, growth scaling unconfirmed |
+| 1132 | シュランクメートヒェン | Slunk Teammate | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 1133 | シュランクメートヒェン | Slunk Teammate | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1134 | 無敵のロッド | Invincible Rod | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1135 | ランシュ=ブラネージュ | Lanch-Brunage | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1136 | ランシュ=ブラネージュ | Lanch-Brunage | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
@@ -1171,7 +1171,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1166 | クレプスコ・ストラ | Krepusco Stra | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301249; unsure: flat start stats, growth scaling unconfirmed |
 | 1168 | 影切刀 | Shadow Cutter | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1169 | 折型の護符 | Origami Amulet | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 1170 | 星天輝刃 | Stellar Radiant Blade | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301253; unsure: flat start stats, growth scaling unconfirmed |
+| 1170 | 星天輝刃 | Stellar Radiant Blade | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1171 | ナイーバティ・ナイト | Naïve & Night | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1172 | トラブルテンペスト | Trouble Tempest | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1173 | スウィート・フレッシュ | Sweet & Fresh | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301256; unsure: flat start stats, growth scaling unconfirmed |
@@ -1202,7 +1202,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1198 | メイクアップ・コスタ | Makeup Costa | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1199 | ホワイトハートイヤリング | White Heart Earrings | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1200 | エンジェル・ブーケ | Angel Bouquet | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 1201 | ゆるふわシュシュ | Fluffy Choux | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301284; unsure: flat start stats, growth scaling unconfirmed |
+| 1201 | ゆるふわシュシュ | Fluffy Choux | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1202 | 歴戦のローブ | Veteran's Robe | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1203 | 歴戦のローブ | Veteran's Robe | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1204 | アトラスバングル | Atlas Bangle | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
@@ -1219,11 +1219,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1215 | ノワールラパン | Noel Lapin | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1216 | スターリーチェーン | Starry Chain | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1217 | シローナステッキ | Sirona Stick | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 1218 | ルクス・トランペット | Lux Trumpet | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301301; unsure: flat start stats, growth scaling unconfirmed |
+| 1218 | ルクス・トランペット | Lux Trumpet | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1219 | 新春来福の羽子板 | New Year's Battledore | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301302; unsure: flat start stats, growth scaling unconfirmed |
 | 1220 | グラシアシュターフ | Graciaschuturf | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1221 | ペルシェルツヴァイ | Perchel Zwei | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301304; unsure: flat start stats, growth scaling unconfirmed |
-| 1222 | ウィッチクラフト | Witchcraft | Partial | done: 2 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301305; unsure: flat start stats, growth scaling unconfirmed |
+| 1222 | ウィッチクラフト | Witchcraft | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1223 | 執事の襟締 | Seneschal's Sash | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1224 | 奔放なる衣 | Unbridled Garb | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1225 | 奔放なる衣 | Unbridled Garb | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |

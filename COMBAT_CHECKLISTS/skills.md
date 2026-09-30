@@ -16,11 +16,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 11000018 | アナライズ | Analyze | 76/21 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000932 unmapped |
 | 11000019 | アナライズ | Analyze | 80/22 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000932 unmapped |
 | 11000020 | アナライズ | Analyze | 85/23 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000932 unmapped |
-| 11000031 | 杖インパクト | Cane Impact | 60/6 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000991 unmapped |
-| 11000032 | 杖インパクト | Cane Impact | 63/6 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000991 unmapped |
-| 11000033 | 杖インパクト | Cane Impact | 67/6 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000991 unmapped |
-| 11000034 | 杖インパクト | Cane Impact | 71/6 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000991 unmapped |
-| 11000035 | 杖インパクト | Cane Impact | 75/7 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000991 unmapped |
+| 11000031 | 杖インパクト | Cane Impact | 60/6 | t3/e1 | Implemented | done: 91000991 hidden taken_damage buff; skill effect path: damage; unsure: 91000991:taken_damage explicit text value |
+| 11000032 | 杖インパクト | Cane Impact | 63/6 | t3/e1 | Implemented | done: 91000991 hidden taken_damage buff; skill effect path: damage; unsure: 91000991:taken_damage explicit text value |
+| 11000033 | 杖インパクト | Cane Impact | 67/6 | t3/e1 | Implemented | done: 91000991 hidden taken_damage buff; skill effect path: damage; unsure: 91000991:taken_damage explicit text value |
+| 11000034 | 杖インパクト | Cane Impact | 71/6 | t3/e1 | Implemented | done: 91000991 hidden taken_damage buff; skill effect path: damage; unsure: 91000991:taken_damage explicit text value |
+| 11000035 | 杖インパクト | Cane Impact | 75/7 | t3/e1 | Implemented | done: 91000991 hidden taken_damage buff; skill effect path: damage; unsure: 91000991:taken_damage explicit text value |
 | 11000046 | フラッシュカット | Flash Cut | 74/7 | t3/e1 | Implemented | done: 91000982 hidden skill_damage buff; skill effect path: damage; unsure: 91000982:skill_damage explicit text value |
 | 11000047 | フラッシュカット | Flash Cut | 78/7 | t3/e1 | Implemented | done: 91000982 hidden skill_damage buff; skill effect path: damage; unsure: 91000982:skill_damage explicit text value |
 | 11000048 | フラッシュカット | Flash Cut | 83/7 | t3/e1 | Implemented | done: 91000982 hidden skill_damage buff; skill effect path: damage; unsure: 91000982:skill_damage explicit text value |
@@ -31,11 +31,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 11000063 | ホーリーエッジ | Holy Edge | 74/9 | t3/e1 | Implemented | done: skill effect path: damage |
 | 11000064 | ホーリーエッジ | Holy Edge | 78/9 | t3/e1 | Implemented | done: skill effect path: damage |
 | 11000065 | ホーリーエッジ | Holy Edge | 82/10 | t3/e1 | Implemented | done: skill effect path: damage |
-| 11000076 | ラビットバッシュ | Rabbit Bash | 62/7 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000994 unmapped |
-| 11000077 | ラビットバッシュ | Rabbit Bash | 65/7 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000994 unmapped |
-| 11000078 | ラビットバッシュ | Rabbit Bash | 69/7 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000994 unmapped |
-| 11000079 | ラビットバッシュ | Rabbit Bash | 73/7 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000994 unmapped |
-| 11000080 | ラビットバッシュ | Rabbit Bash | 77/8 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000994 unmapped |
+| 11000076 | ラビットバッシュ | Rabbit Bash | 62/7 | t3/e1 | Implemented | done: 91000994 hidden taken_damage buff; skill effect path: damage; unsure: 91000994:taken_damage explicit text value |
+| 11000077 | ラビットバッシュ | Rabbit Bash | 65/7 | t3/e1 | Implemented | done: 91000994 hidden taken_damage buff; skill effect path: damage; unsure: 91000994:taken_damage explicit text value |
+| 11000078 | ラビットバッシュ | Rabbit Bash | 69/7 | t3/e1 | Implemented | done: 91000994 hidden taken_damage buff; skill effect path: damage; unsure: 91000994:taken_damage explicit text value |
+| 11000079 | ラビットバッシュ | Rabbit Bash | 73/7 | t3/e1 | Implemented | done: 91000994 hidden taken_damage buff; skill effect path: damage; unsure: 91000994:taken_damage explicit text value |
+| 11000080 | ラビットバッシュ | Rabbit Bash | 77/8 | t3/e1 | Implemented | done: 91000994 hidden taken_damage buff; skill effect path: damage; unsure: 91000994:taken_damage explicit text value |
 | 11000091 | ステラフォール | Stellar Fall | 41/5 | t3/e1 | Partial | done: behavior post_heal_allies post-attack; skill effect path: damage; missing: 91000925 unmapped |
 | 11000092 | ステラフォール | Stellar Fall | 43/5 | t3/e1 | Partial | done: behavior post_heal_allies post-attack; skill effect path: damage; missing: 91000925 unmapped |
 | 11000093 | ステラフォール | Stellar Fall | 46/5 | t3/e1 | Partial | done: behavior post_heal_allies post-attack; skill effect path: damage; missing: 91000925 unmapped |
@@ -71,11 +71,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 11000183 | エーテルシュート | Ether Shot | 57/20 | t3/e1 | Implemented | done: skill effect path: damage |
 | 11000184 | エーテルシュート | Ether Shot | 60/21 | t3/e1 | Implemented | done: skill effect path: damage |
 | 11000185 | エーテルシュート | Ether Shot | 63/22 | t3/e1 | Implemented | done: skill effect path: damage |
-| 11000196 | ブラッドスラスト | Blood Thrust | 63/7 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000989 unmapped |
-| 11000197 | ブラッドスラスト | Blood Thrust | 66/7 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000989 unmapped |
-| 11000198 | ブラッドスラスト | Blood Thrust | 70/7 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000989 unmapped |
-| 11000199 | ブラッドスラスト | Blood Thrust | 74/7 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000989 unmapped |
-| 11000200 | ブラッドスラスト | Blood Thrust | 78/8 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000989 unmapped |
+| 11000196 | ブラッドスラスト | Blood Thrust | 63/7 | t3/e1 | Implemented | done: 91000989 hidden taken_damage buff; skill effect path: damage; unsure: 91000989:taken_damage explicit text value |
+| 11000197 | ブラッドスラスト | Blood Thrust | 66/7 | t3/e1 | Implemented | done: 91000989 hidden taken_damage buff; skill effect path: damage; unsure: 91000989:taken_damage explicit text value |
+| 11000198 | ブラッドスラスト | Blood Thrust | 70/7 | t3/e1 | Implemented | done: 91000989 hidden taken_damage buff; skill effect path: damage; unsure: 91000989:taken_damage explicit text value |
+| 11000199 | ブラッドスラスト | Blood Thrust | 74/7 | t3/e1 | Implemented | done: 91000989 hidden taken_damage buff; skill effect path: damage; unsure: 91000989:taken_damage explicit text value |
+| 11000200 | ブラッドスラスト | Blood Thrust | 78/8 | t3/e1 | Implemented | done: 91000989 hidden taken_damage buff; skill effect path: damage; unsure: 91000989:taken_damage explicit text value |
 | 11000211 | 黒鳥の羽 | Raven's Feather | 92/9 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000942 unmapped |
 | 11000212 | 黒鳥の羽 | Raven's Feather | 97/9 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000942 unmapped |
 | 11000213 | 黒鳥の羽 | Raven's Feather | 103/10 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000942 unmapped |
@@ -91,11 +91,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 11000243 | ステラシャワー | Stellar Shower | 76/6 | t3/e1 | Partial | done: skill effect path: damage; missing: 91001006 unmapped |
 | 11000244 | ステラシャワー | Stellar Shower | 80/6 | t3/e1 | Partial | done: skill effect path: damage; missing: 91001006 unmapped |
 | 11000245 | ステラシャワー | Stellar Shower | 85/7 | t3/e1 | Partial | done: skill effect path: damage; missing: 91001006 unmapped |
-| 11000256 | ライザスペシャル | Ryza Special | 73/7 | t3/e1 | Implemented | done: 91000958 hidden skill_damage buff; skill effect path: damage; unsure: 91000958:skill_damage explicit text value |
-| 11000257 | ライザスペシャル | Ryza Special | 77/7 | t3/e1 | Implemented | done: 91000958 hidden skill_damage buff; skill effect path: damage; unsure: 91000958:skill_damage explicit text value |
-| 11000258 | ライザスペシャル | Ryza Special | 82/7 | t3/e1 | Implemented | done: 91000958 hidden skill_damage buff; skill effect path: damage; unsure: 91000958:skill_damage explicit text value |
-| 11000259 | ライザスペシャル | Ryza Special | 86/7 | t3/e1 | Implemented | done: 91000958 hidden skill_damage buff; skill effect path: damage; unsure: 91000958:skill_damage explicit text value |
-| 11000260 | ライザスペシャル | Ryza Special | 91/8 | t3/e1 | Implemented | done: 91000958 hidden skill_damage buff; skill effect path: damage; unsure: 91000958:skill_damage explicit text value |
+| 11000256 | ライザスペシャル | Ryza Special | 73/7 | t3/e1 | Implemented | done: 91000958 hidden burst_damage buff; skill effect path: damage; unsure: 91000958:burst_damage explicit text value |
+| 11000257 | ライザスペシャル | Ryza Special | 77/7 | t3/e1 | Implemented | done: 91000958 hidden burst_damage buff; skill effect path: damage; unsure: 91000958:burst_damage explicit text value |
+| 11000258 | ライザスペシャル | Ryza Special | 82/7 | t3/e1 | Implemented | done: 91000958 hidden burst_damage buff; skill effect path: damage; unsure: 91000958:burst_damage explicit text value |
+| 11000259 | ライザスペシャル | Ryza Special | 86/7 | t3/e1 | Implemented | done: 91000958 hidden burst_damage buff; skill effect path: damage; unsure: 91000958:burst_damage explicit text value |
+| 11000260 | ライザスペシャル | Ryza Special | 91/8 | t3/e1 | Implemented | done: 91000958 hidden burst_damage buff; skill effect path: damage; unsure: 91000958:burst_damage explicit text value |
 | 11000271 | ルナティックスフィア | Lunatic Sphere | 49/17 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000911 unmapped |
 | 11000272 | ルナティックスフィア | Lunatic Sphere | 52/18 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000911 unmapped |
 | 11000273 | ルナティックスフィア | Lunatic Sphere | 55/19 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000911 unmapped |
@@ -111,11 +111,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 11000303 | 脳天割 | Head Splitter | 81/7 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000929 unmapped |
 | 11000304 | 脳天割 | Head Splitter | 85/7 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000929 unmapped |
 | 11000305 | 脳天割 | Head Splitter | 90/8 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000929 unmapped |
-| 11000316 | エンゲルスピリット | Engel Spirit | 72/7 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000975 stat_up records-only |
-| 11000317 | エンゲルスピリット | Engel Spirit | 76/7 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000975 stat_up records-only |
-| 11000318 | エンゲルスピリット | Engel Spirit | 81/7 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000975 stat_up records-only |
-| 11000319 | エンゲルスピリット | Engel Spirit | 85/7 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000975 stat_up records-only |
-| 11000320 | エンゲルスピリット | Engel Spirit | 90/8 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000975 stat_up records-only |
+| 11000316 | エンゲルスピリット | Engel Spirit | 72/7 | t3/e1 | Implemented | done: 91000975 hidden dealt_damage buff; skill effect path: damage; unsure: 91000975:dealt_damage explicit text value; 91000975:dealt_damage conditions: hp_below |
+| 11000317 | エンゲルスピリット | Engel Spirit | 76/7 | t3/e1 | Implemented | done: 91000975 hidden dealt_damage buff; skill effect path: damage; unsure: 91000975:dealt_damage explicit text value; 91000975:dealt_damage conditions: hp_below |
+| 11000318 | エンゲルスピリット | Engel Spirit | 81/7 | t3/e1 | Implemented | done: 91000975 hidden dealt_damage buff; skill effect path: damage; unsure: 91000975:dealt_damage explicit text value; 91000975:dealt_damage conditions: hp_below |
+| 11000319 | エンゲルスピリット | Engel Spirit | 85/7 | t3/e1 | Implemented | done: 91000975 hidden dealt_damage buff; skill effect path: damage; unsure: 91000975:dealt_damage explicit text value; 91000975:dealt_damage conditions: hp_below |
+| 11000320 | エンゲルスピリット | Engel Spirit | 90/8 | t3/e1 | Implemented | done: 91000975 hidden dealt_damage buff; skill effect path: damage; unsure: 91000975:dealt_damage explicit text value; 91000975:dealt_damage conditions: hp_below |
 | 11000331 | スピッツダガー | Spitz Dagger | 53/5 | t3/e1 | Implemented | done: 91000981 hidden skill_damage buff; skill effect path: damage; unsure: 91000981:skill_damage explicit text value |
 | 11000332 | スピッツダガー | Spitz Dagger | 56/5 | t3/e1 | Implemented | done: 91000981 hidden skill_damage buff; skill effect path: damage; unsure: 91000981:skill_damage explicit text value |
 | 11000333 | スピッツダガー | Spitz Dagger | 59/5 | t3/e1 | Implemented | done: 91000981 hidden skill_damage buff; skill effect path: damage; unsure: 91000981:skill_damage explicit text value |
@@ -136,11 +136,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 11000378 | メルルショット | Meruru Shot | 67/7 | t3/e1 | Partial | done: behavior post_taken_up_target post-attack; skill effect path: damage; missing: 91000966 unmapped |
 | 11000379 | メルルショット | Meruru Shot | 71/7 | t3/e1 | Partial | done: behavior post_taken_up_target post-attack; skill effect path: damage; missing: 91000966 unmapped |
 | 11000380 | メルルショット | Meruru Shot | 75/8 | t3/e1 | Partial | done: behavior post_taken_up_target post-attack; skill effect path: damage; missing: 91000966 unmapped |
-| 11000391 | ヘヴィースラッシュ | Heavy Slash | 43/5 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000987 unmapped |
-| 11000392 | ヘヴィースラッシュ | Heavy Slash | 45/5 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000987 unmapped |
-| 11000393 | ヘヴィースラッシュ | Heavy Slash | 48/5 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000987 unmapped |
-| 11000394 | ヘヴィースラッシュ | Heavy Slash | 50/5 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000987 unmapped |
-| 11000395 | ヘヴィースラッシュ | Heavy Slash | 53/6 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000987 unmapped |
+| 11000391 | ヘヴィースラッシュ | Heavy Slash | 43/5 | t3/e1 | Implemented | done: 91000987 hidden taken_damage buff; skill effect path: damage; unsure: 91000987:taken_damage explicit text value |
+| 11000392 | ヘヴィースラッシュ | Heavy Slash | 45/5 | t3/e1 | Implemented | done: 91000987 hidden taken_damage buff; skill effect path: damage; unsure: 91000987:taken_damage explicit text value |
+| 11000393 | ヘヴィースラッシュ | Heavy Slash | 48/5 | t3/e1 | Implemented | done: 91000987 hidden taken_damage buff; skill effect path: damage; unsure: 91000987:taken_damage explicit text value |
+| 11000394 | ヘヴィースラッシュ | Heavy Slash | 50/5 | t3/e1 | Implemented | done: 91000987 hidden taken_damage buff; skill effect path: damage; unsure: 91000987:taken_damage explicit text value |
+| 11000395 | ヘヴィースラッシュ | Heavy Slash | 53/6 | t3/e1 | Implemented | done: 91000987 hidden taken_damage buff; skill effect path: damage; unsure: 91000987:taken_damage explicit text value |
 | 11000406 | ファストシュート | Fast Shot | 31/15 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000970 unmapped |
 | 11000407 | ファストシュート | Fast Shot | 32/15 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000970 unmapped |
 | 11000408 | ファストシュート | Fast Shot | 34/16 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000970 unmapped |
@@ -1196,11 +1196,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 12000023 | ツインカリバーン | Twin Caliburn | 207/141 | t3/e1 | Partial | done: 91000954 hidden break_damage buff; skill effect path: damage; missing: 91000955 unmapped; unsure: 91000954:break_damage explicit text value |
 | 12000024 | ツインカリバーン | Twin Caliburn | 218/149 | t3/e1 | Partial | done: 91000954 hidden break_damage buff; skill effect path: damage; missing: 91000955 unmapped; unsure: 91000954:break_damage explicit text value |
 | 12000025 | ツインカリバーン | Twin Caliburn | 230/157 | t3/e1 | Partial | done: 91000954 hidden break_damage buff; skill effect path: damage; missing: 91000955 unmapped; unsure: 91000954:break_damage explicit text value |
-| 12000036 | デュプリケイト | Duplicate | 300/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000992 unmapped; 91000939 unmapped |
-| 12000037 | デュプリケイト | Duplicate | 307/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000992 unmapped; 91000939 unmapped |
-| 12000038 | デュプリケイト | Duplicate | 315/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000992 unmapped; 91000939 unmapped |
-| 12000039 | デュプリケイト | Duplicate | 322/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000992 unmapped; 91000939 unmapped |
-| 12000040 | デュプリケイト | Duplicate | 330/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000992 unmapped; 91000939 unmapped |
+| 12000036 | デュプリケイト | Duplicate | 300/0 | t2/e2 | Partial | done: 91000992 hidden taken_damage buff; skill effect path: heal; missing: 91000939 unmapped; unsure: 91000992:taken_damage explicit text value |
+| 12000037 | デュプリケイト | Duplicate | 307/0 | t2/e2 | Partial | done: 91000992 hidden taken_damage buff; skill effect path: heal; missing: 91000939 unmapped; unsure: 91000992:taken_damage explicit text value |
+| 12000038 | デュプリケイト | Duplicate | 315/0 | t2/e2 | Partial | done: 91000992 hidden taken_damage buff; skill effect path: heal; missing: 91000939 unmapped; unsure: 91000992:taken_damage explicit text value |
+| 12000039 | デュプリケイト | Duplicate | 322/0 | t2/e2 | Partial | done: 91000992 hidden taken_damage buff; skill effect path: heal; missing: 91000939 unmapped; unsure: 91000992:taken_damage explicit text value |
+| 12000040 | デュプリケイト | Duplicate | 330/0 | t2/e2 | Partial | done: 91000992 hidden taken_damage buff; skill effect path: heal; missing: 91000939 unmapped; unsure: 91000992:taken_damage explicit text value |
 | 12000051 | デュアルブラスト | Dual Blast | 242/30 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000906 unmapped |
 | 12000052 | デュアルブラスト | Dual Blast | 257/31 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000906 unmapped |
 | 12000053 | デュアルブラスト | Dual Blast | 272/33 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000906 unmapped |
@@ -1211,11 +1211,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 12000068 | カレイドスター | Kaleid Star | 227/33 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000959 evade records-only |
 | 12000069 | カレイドスター | Kaleid Star | 239/35 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000959 evade records-only |
 | 12000070 | カレイドスター | Kaleid Star | 252/37 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000959 evade records-only |
-| 12000081 | とっておきクレープ | Exceptional Crepe | 300/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000995 unmapped |
-| 12000082 | とっておきクレープ | Exceptional Crepe | 307/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000995 unmapped |
-| 12000083 | とっておきクレープ | Exceptional Crepe | 315/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000995 unmapped |
-| 12000084 | とっておきクレープ | Exceptional Crepe | 322/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000995 unmapped |
-| 12000085 | とっておきクレープ | Exceptional Crepe | 330/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000995 unmapped |
+| 12000081 | とっておきクレープ | Exceptional Crepe | 300/0 | t2/e2 | Implemented | done: 91000995 hidden taken_damage buff; skill effect path: heal; unsure: 91000995:taken_damage explicit text value |
+| 12000082 | とっておきクレープ | Exceptional Crepe | 307/0 | t2/e2 | Implemented | done: 91000995 hidden taken_damage buff; skill effect path: heal; unsure: 91000995:taken_damage explicit text value |
+| 12000083 | とっておきクレープ | Exceptional Crepe | 315/0 | t2/e2 | Implemented | done: 91000995 hidden taken_damage buff; skill effect path: heal; unsure: 91000995:taken_damage explicit text value |
+| 12000084 | とっておきクレープ | Exceptional Crepe | 322/0 | t2/e2 | Implemented | done: 91000995 hidden taken_damage buff; skill effect path: heal; unsure: 91000995:taken_damage explicit text value |
+| 12000085 | とっておきクレープ | Exceptional Crepe | 330/0 | t2/e2 | Implemented | done: 91000995 hidden taken_damage buff; skill effect path: heal; unsure: 91000995:taken_damage explicit text value |
 | 12000096 | コメットハレーション | Comet Halation | 106/9 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000924 unmapped |
 | 12000097 | コメットハレーション | Comet Halation | 112/9 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000924 unmapped |
 | 12000098 | コメットハレーション | Comet Halation | 119/10 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000924 unmapped |
@@ -1231,11 +1231,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 12000128 | エンゼルスピリット | Angel Spirit | 294/39 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000947 unmapped |
 | 12000129 | エンゼルスピリット | Angel Spirit | 310/41 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000947 unmapped |
 | 12000130 | エンゼルスピリット | Angel Spirit | 327/43 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000947 unmapped |
-| 12000141 | 花の加護 | Flower's Protection | 200/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000961 unmapped |
-| 12000142 | 花の加護 | Flower's Protection | 212/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000961 unmapped |
-| 12000143 | 花の加護 | Flower's Protection | 225/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000961 unmapped |
-| 12000144 | 花の加護 | Flower's Protection | 237/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000961 unmapped |
-| 12000145 | 花の加護 | Flower's Protection | 250/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000961 unmapped |
+| 12000141 | 花の加護 | Flower's Protection | 200/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000961 stat_up records-only |
+| 12000142 | 花の加護 | Flower's Protection | 212/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000961 stat_up records-only |
+| 12000143 | 花の加護 | Flower's Protection | 225/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000961 stat_up records-only |
+| 12000144 | 花の加護 | Flower's Protection | 237/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000961 stat_up records-only |
+| 12000145 | 花の加護 | Flower's Protection | 250/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91000961 stat_up records-only |
 | 12000156 | 四元の法 | Law of the Elements | 117/56 | t5/e1 | Implemented | done: skill effect path: damage |
 | 12000157 | 四元の法 | Law of the Elements | 124/59 | t5/e1 | Implemented | done: skill effect path: damage |
 | 12000158 | 四元の法 | Law of the Elements | 131/63 | t5/e1 | Implemented | done: skill effect path: damage |
@@ -1251,11 +1251,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 12000188 | エーテルスピア | Ether Spear | 180/135 | t3/e1 | Partial | done: 91000956 hidden break_damage buff; 91000957 hidden break_damage buff; skill effect path: damage; missing: 91000933 unmapped; 91000937 unmapped; unsure: 91000956:break_damage explicit text value; 91000957:break_damage explicit text value |
 | 12000189 | エーテルスピア | Ether Spear | 190/142 | t3/e1 | Partial | done: 91000956 hidden break_damage buff; 91000957 hidden break_damage buff; skill effect path: damage; missing: 91000933 unmapped; 91000937 unmapped; unsure: 91000956:break_damage explicit text value; 91000957:break_damage explicit text value |
 | 12000190 | エーテルスピア | Ether Spear | 200/150 | t3/e1 | Partial | done: 91000956 hidden break_damage buff; 91000957 hidden break_damage buff; skill effect path: damage; missing: 91000933 unmapped; 91000937 unmapped; unsure: 91000956:break_damage explicit text value; 91000957:break_damage explicit text value |
-| 12000201 | アクセルダイブ | Excel Drive | 203/30 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000990 unmapped |
-| 12000202 | アクセルダイブ | Excel Drive | 215/31 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000990 unmapped |
-| 12000203 | アクセルダイブ | Excel Drive | 228/33 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000990 unmapped |
-| 12000204 | アクセルダイブ | Excel Drive | 240/35 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000990 unmapped |
-| 12000205 | アクセルダイブ | Excel Drive | 253/37 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000990 unmapped |
+| 12000201 | アクセルダイブ | Excel Drive | 203/30 | t3/e1 | Implemented | done: 91000990 hidden taken_damage buff; skill effect path: damage; unsure: 91000990:taken_damage explicit text value |
+| 12000202 | アクセルダイブ | Excel Drive | 215/31 | t3/e1 | Implemented | done: 91000990 hidden taken_damage buff; skill effect path: damage; unsure: 91000990:taken_damage explicit text value |
+| 12000203 | アクセルダイブ | Excel Drive | 228/33 | t3/e1 | Implemented | done: 91000990 hidden taken_damage buff; skill effect path: damage; unsure: 91000990:taken_damage explicit text value |
+| 12000204 | アクセルダイブ | Excel Drive | 240/35 | t3/e1 | Implemented | done: 91000990 hidden taken_damage buff; skill effect path: damage; unsure: 91000990:taken_damage explicit text value |
+| 12000205 | アクセルダイブ | Excel Drive | 253/37 | t3/e1 | Implemented | done: 91000990 hidden taken_damage buff; skill effect path: damage; unsure: 91000990:taken_damage explicit text value |
 | 12000216 | 桎梏の罠 | Ensnaring Lure | 272/36 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000944 unmapped |
 | 12000217 | 桎梏の罠 | Ensnaring Lure | 289/38 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000944 unmapped |
 | 12000218 | 桎梏の罠 | Ensnaring Lure | 306/40 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000944 unmapped |
@@ -1316,11 +1316,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 12000383 | 生きてるメルキシル剤 | Living Merulixir | 126/0 | t4/e2 | Partial | done: skill effect path: heal; missing: 91000919 unmapped |
 | 12000384 | 生きてるメルキシル剤 | Living Merulixir | 129/0 | t4/e2 | Partial | done: skill effect path: heal; missing: 91000919 unmapped |
 | 12000385 | 生きてるメルキシル剤 | Living Merulixir | 132/0 | t4/e2 | Partial | done: skill effect path: heal; missing: 91000919 unmapped |
-| 12000396 | アークブレイク | Arc Breaker | 179/24 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000988 unmapped |
-| 12000397 | アークブレイク | Arc Breaker | 190/25 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000988 unmapped |
-| 12000398 | アークブレイク | Arc Breaker | 201/27 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000988 unmapped |
-| 12000399 | アークブレイク | Arc Breaker | 212/28 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000988 unmapped |
-| 12000400 | アークブレイク | Arc Breaker | 223/30 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000988 unmapped |
+| 12000396 | アークブレイク | Arc Breaker | 179/24 | t3/e1 | Implemented | done: 91000988 hidden taken_damage buff; skill effect path: damage; unsure: 91000988:taken_damage explicit text value |
+| 12000397 | アークブレイク | Arc Breaker | 190/25 | t3/e1 | Implemented | done: 91000988 hidden taken_damage buff; skill effect path: damage; unsure: 91000988:taken_damage explicit text value |
+| 12000398 | アークブレイク | Arc Breaker | 201/27 | t3/e1 | Implemented | done: 91000988 hidden taken_damage buff; skill effect path: damage; unsure: 91000988:taken_damage explicit text value |
+| 12000399 | アークブレイク | Arc Breaker | 212/28 | t3/e1 | Implemented | done: 91000988 hidden taken_damage buff; skill effect path: damage; unsure: 91000988:taken_damage explicit text value |
+| 12000400 | アークブレイク | Arc Breaker | 223/30 | t3/e1 | Implemented | done: 91000988 hidden taken_damage buff; skill effect path: damage; unsure: 91000988:taken_damage explicit text value |
 | 12000411 | リープシュート | Leap Shot | 160/132 | t3/e1 | Implemented | done: skill effect path: damage |
 | 12000412 | リープシュート | Leap Shot | 170/140 | t3/e1 | Implemented | done: skill effect path: damage |
 | 12000413 | リープシュート | Leap Shot | 180/148 | t3/e1 | Implemented | done: skill effect path: damage |
@@ -2376,11 +2376,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 14000028 | マナを断絶するもの | Mana Extinguisher | 360/337 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000964 unmapped |
 | 14000029 | マナを断絶するもの | Mana Extinguisher | 380/356 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000964 unmapped |
 | 14000030 | マナを断絶するもの | Mana Extinguisher | 400/375 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000964 unmapped |
-| 14000041 | ラケーテレヘルン | Rocket Ice Bomb | 240/26 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000993 unmapped |
-| 14000042 | ラケーテレヘルン | Rocket Ice Bomb | 255/27 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000993 unmapped |
-| 14000043 | ラケーテレヘルン | Rocket Ice Bomb | 270/29 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000993 unmapped |
-| 14000044 | ラケーテレヘルン | Rocket Ice Bomb | 285/30 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000993 unmapped |
-| 14000045 | ラケーテレヘルン | Rocket Ice Bomb | 300/32 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000993 unmapped |
+| 14000041 | ラケーテレヘルン | Rocket Ice Bomb | 240/26 | t5/e1 | Implemented | done: 91000993 hidden taken_damage buff; skill effect path: damage; unsure: 91000993:taken_damage explicit text value |
+| 14000042 | ラケーテレヘルン | Rocket Ice Bomb | 255/27 | t5/e1 | Implemented | done: 91000993 hidden taken_damage buff; skill effect path: damage; unsure: 91000993:taken_damage explicit text value |
+| 14000043 | ラケーテレヘルン | Rocket Ice Bomb | 270/29 | t5/e1 | Implemented | done: 91000993 hidden taken_damage buff; skill effect path: damage; unsure: 91000993:taken_damage explicit text value |
+| 14000044 | ラケーテレヘルン | Rocket Ice Bomb | 285/30 | t5/e1 | Implemented | done: 91000993 hidden taken_damage buff; skill effect path: damage; unsure: 91000993:taken_damage explicit text value |
+| 14000045 | ラケーテレヘルン | Rocket Ice Bomb | 300/32 | t5/e1 | Implemented | done: 91000993 hidden taken_damage buff; skill effect path: damage; unsure: 91000993:taken_damage explicit text value |
 | 14000056 | プラズマブレイク | Plasma Break | 240/30 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000906 unmapped |
 | 14000057 | プラズマブレイク | Plasma Break | 255/31 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000906 unmapped |
 | 14000058 | プラズマブレイク | Plasma Break | 270/33 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000906 unmapped |
@@ -2391,16 +2391,16 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 14000073 | ヴァルキリエ・ロンド | Valkyrie Rondo | 450/84 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000976 evade records-only |
 | 14000074 | ヴァルキリエ・ロンド | Valkyrie Rondo | 475/88 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000976 evade records-only |
 | 14000075 | ヴァルキリエ・ロンド | Valkyrie Rondo | 500/93 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000976 evade records-only |
-| 14000086 | ぷにぷにデリバー | Puni Delivery | 400/75 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000996 unmapped |
-| 14000087 | ぷにぷにデリバー | Puni Delivery | 425/79 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000996 unmapped |
-| 14000088 | ぷにぷにデリバー | Puni Delivery | 450/84 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000996 unmapped |
-| 14000089 | ぷにぷにデリバー | Puni Delivery | 475/88 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000996 unmapped |
-| 14000090 | ぷにぷにデリバー | Puni Delivery | 500/93 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000996 unmapped |
-| 14000101 | セクター07 | Sector 07 | 240/30 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000945 unmapped |
-| 14000102 | セクター07 | Sector 07 | 255/31 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000945 unmapped |
-| 14000103 | セクター07 | Sector 07 | 270/33 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000945 unmapped |
-| 14000104 | セクター07 | Sector 07 | 285/35 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000945 unmapped |
-| 14000105 | セクター07 | Sector 07 | 300/37 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000945 unmapped |
+| 14000086 | ぷにぷにデリバー | Puni Delivery | 400/75 | t3/e1 | Implemented | done: 91000996 hidden taken_damage buff; skill effect path: damage; unsure: 91000996:taken_damage explicit text value |
+| 14000087 | ぷにぷにデリバー | Puni Delivery | 425/79 | t3/e1 | Implemented | done: 91000996 hidden taken_damage buff; skill effect path: damage; unsure: 91000996:taken_damage explicit text value |
+| 14000088 | ぷにぷにデリバー | Puni Delivery | 450/84 | t3/e1 | Implemented | done: 91000996 hidden taken_damage buff; skill effect path: damage; unsure: 91000996:taken_damage explicit text value |
+| 14000089 | ぷにぷにデリバー | Puni Delivery | 475/88 | t3/e1 | Implemented | done: 91000996 hidden taken_damage buff; skill effect path: damage; unsure: 91000996:taken_damage explicit text value |
+| 14000090 | ぷにぷにデリバー | Puni Delivery | 500/93 | t3/e1 | Implemented | done: 91000996 hidden taken_damage buff; skill effect path: damage; unsure: 91000996:taken_damage explicit text value |
+| 14000101 | セクター07 | Sector 07 | 240/30 | t5/e1 | Implemented | done: 91000945 hidden dealt_damage buff; skill effect path: damage; unsure: 91000945:dealt_damage explicit text value |
+| 14000102 | セクター07 | Sector 07 | 255/31 | t5/e1 | Implemented | done: 91000945 hidden dealt_damage buff; skill effect path: damage; unsure: 91000945:dealt_damage explicit text value |
+| 14000103 | セクター07 | Sector 07 | 270/33 | t5/e1 | Implemented | done: 91000945 hidden dealt_damage buff; skill effect path: damage; unsure: 91000945:dealt_damage explicit text value |
+| 14000104 | セクター07 | Sector 07 | 285/35 | t5/e1 | Implemented | done: 91000945 hidden dealt_damage buff; skill effect path: damage; unsure: 91000945:dealt_damage explicit text value |
+| 14000105 | セクター07 | Sector 07 | 300/37 | t5/e1 | Implemented | done: 91000945 hidden dealt_damage buff; skill effect path: damage; unsure: 91000945:dealt_damage explicit text value |
 | 14000116 | アインツェルカンプ | Einzelkampf | 400/75 | t3/e1 | Partial | done: behavior scaling_damage in damage calc; skill effect path: damage; missing: 91000943 unmapped; 91000927 unmapped; unsure: behavior scaling_damage thresholds estimated (hp 50%%, foe counts) |
 | 14000117 | アインツェルカンプ | Einzelkampf | 425/79 | t3/e1 | Partial | done: behavior scaling_damage in damage calc; skill effect path: damage; missing: 91000943 unmapped; 91000927 unmapped; unsure: behavior scaling_damage thresholds estimated (hp 50%%, foe counts) |
 | 14000118 | アインツェルカンプ | Einzelkampf | 450/84 | t3/e1 | Partial | done: behavior scaling_damage in damage calc; skill effect path: damage; missing: 91000943 unmapped; 91000927 unmapped; unsure: behavior scaling_damage thresholds estimated (hp 50%%, foe counts) |
@@ -2471,11 +2471,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 14000313 | 輝煌斬 | Shining Slash | 450/84 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000929 unmapped |
 | 14000314 | 輝煌斬 | Shining Slash | 475/88 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000929 unmapped |
 | 14000315 | 輝煌斬 | Shining Slash | 500/93 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000929 unmapped |
-| 14000326 | ニンジンフエール | Carrot Faire | 400/75 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000975 stat_up records-only |
-| 14000327 | ニンジンフエール | Carrot Faire | 425/79 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000975 stat_up records-only |
-| 14000328 | ニンジンフエール | Carrot Faire | 450/84 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000975 stat_up records-only |
-| 14000329 | ニンジンフエール | Carrot Faire | 475/88 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000975 stat_up records-only |
-| 14000330 | ニンジンフエール | Carrot Faire | 500/93 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000975 stat_up records-only |
+| 14000326 | ニンジンフエール | Carrot Faire | 400/75 | t3/e1 | Implemented | done: 91000975 hidden dealt_damage buff; skill effect path: damage; unsure: 91000975:dealt_damage explicit text value; 91000975:dealt_damage conditions: hp_below |
+| 14000327 | ニンジンフエール | Carrot Faire | 425/79 | t3/e1 | Implemented | done: 91000975 hidden dealt_damage buff; skill effect path: damage; unsure: 91000975:dealt_damage explicit text value; 91000975:dealt_damage conditions: hp_below |
+| 14000328 | ニンジンフエール | Carrot Faire | 450/84 | t3/e1 | Implemented | done: 91000975 hidden dealt_damage buff; skill effect path: damage; unsure: 91000975:dealt_damage explicit text value; 91000975:dealt_damage conditions: hp_below |
+| 14000329 | ニンジンフエール | Carrot Faire | 475/88 | t3/e1 | Implemented | done: 91000975 hidden dealt_damage buff; skill effect path: damage; unsure: 91000975:dealt_damage explicit text value; 91000975:dealt_damage conditions: hp_below |
+| 14000330 | ニンジンフエール | Carrot Faire | 500/93 | t3/e1 | Implemented | done: 91000975 hidden dealt_damage buff; skill effect path: damage; unsure: 91000975:dealt_damage explicit text value; 91000975:dealt_damage conditions: hp_below |
 | 14000341 | とっておきザンバー | Exceptional Zanber | 400/75 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000952 unmapped |
 | 14000342 | とっておきザンバー | Exceptional Zanber | 425/79 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000952 unmapped |
 | 14000343 | とっておきザンバー | Exceptional Zanber | 450/84 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000952 unmapped |
@@ -3057,7 +3057,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 14002302 | ビヨンドアウローラ | Beyond Aurora | 320/296 | t5/e1 | Partial | done: behavior weak_break_up in damage calc; skill effect path: damage; missing: 91000907 unmapped; 91000955 unmapped; 91001592 unmapped; 91001404 unmapped; unsure: behavior weak_break_up weakness determination |
 | 14002303 | ビヨンドアウローラ | Beyond Aurora | 337/312 | t5/e1 | Partial | done: behavior weak_break_up in damage calc; skill effect path: damage; missing: 91000907 unmapped; 91000955 unmapped; 91001592 unmapped; 91001404 unmapped; unsure: behavior weak_break_up weakness determination |
 | 14002304 | 星と月のソナタ | Sonata of Stars and Moon | 416/390 | t3/e1 | Partial | done: skill effect path: damage; missing: 91000912 unmapped |
-| 14002305 | セクター07 | Sector 07 | 312/39 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000945 unmapped |
+| 14002305 | セクター07 | Sector 07 | 312/39 | t5/e1 | Implemented | done: 91000945 hidden dealt_damage buff; skill effect path: damage; unsure: 91000945:dealt_damage explicit text value |
 | 14002306 | ヘブンズクエーサー | Heaven's Quasar | 520/97 | t3/e1 | Implemented | done: 91000974 hidden skill_damage buff; skill effect path: damage; unsure: 91000974:skill_damage explicit text value |
 | 14002313 | 直伝昇竜賦羅霧 | Straight Rising Dragon Dense Fog | 390/39 | t5/e1 | Partial | done: skill effect path: damage; missing: 91001249 unmapped; 91001230 unmapped |
 | 14002315 | ダズリングビビッド | Dazzling Vivid | 416/390 | t3/e1 | Partial | done: skill effect path: damage; missing: 91001263 unmapped; 91001264 unmapped |
@@ -3412,7 +3412,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 14003507 | デュプリケイト | Duplicate | 399/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91001201 unmapped; 91002070 unmapped; 91002072 unmapped; 91002071 unmapped; 91000939 unmapped; 91002073 unmapped |
 | 14003508 | デュプリケイト | Duplicate | 420/0 | t2/e2 | Partial | done: skill effect path: heal; missing: 91001201 unmapped; 91002070 unmapped; 91002072 unmapped; 91002071 unmapped; 91000939 unmapped; 91002073 unmapped |
 | 14003509 | ラケーテレヘルン | Rocket Helmet | 360/37 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000925 unmapped; 91001069 unmapped; 91002070 unmapped; 91002072 unmapped; 91002071 unmapped |
-| 14003510 | ラケーテレヘルン | Rocket Helmet | 312/33 | t5/e1 | Partial | done: skill effect path: damage; missing: 91000993 unmapped |
+| 14003510 | ラケーテレヘルン | Rocket Helmet | 312/33 | t5/e1 | Implemented | done: 91000993 hidden taken_damage buff; skill effect path: damage; unsure: 91000993:taken_damage explicit text value |
 | 14003521 | エンデフィンスタニス | Ende Finsternis | 504/75 | t3/e1 | Partial | done: behavior atk_penetration in damage calc; skill effect path: damage; missing: 91001337 unmapped; 91002078 unmapped |
 | 14003522 | エンデフィンスタニス | Ende Finsternis | 519/79 | t3/e1 | Partial | done: behavior atk_penetration in damage calc; skill effect path: damage; missing: 91001337 unmapped; 91002078 unmapped |
 | 14003523 | エンデフィンスタニス | Ende Finsternis | 535/84 | t3/e1 | Partial | done: behavior atk_penetration in damage calc; skill effect path: damage; missing: 91001337 unmapped; 91002078 unmapped |

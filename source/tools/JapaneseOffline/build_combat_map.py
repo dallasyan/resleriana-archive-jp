@@ -64,8 +64,9 @@ ATTRS = {
 
 AILMENTS = {
     "毒": "poison", "猛毒": "venom", "火傷": "burn", "麻痺": "paralysis",
-    "眠り": "sleep", "睡眠": "sleep", "凍結": "frozen", "カチコチ": "frozen",
+    "眠り": "sleep", "ねむり": "sleep", "睡眠": "sleep", "凍結": "frozen", "カチコチ": "frozen",
     "スタン": "stun", "気絶": "stun", "暗闇": "darkness", "挑発": "taunt",
+    "王の威光": "high_dominance",
 }
 
 
@@ -78,12 +79,35 @@ def parse_conditions(text: str) -> list:
     for name, code in ATTRS.items():
         if ("得意属性が%s" % name) in text or ("%s属性キャラ" % name) in text:
             conds.append({"cond": "attr", "attr": code})
-    match = re.search(r"対象が(.{1,8}?)の時", text)
+    target_chunk = None
+    match = re.search(r"対象が(.{1,32}?)の時", text)
     if match:
-        chunk = match.group(1)
-        for keyword, code in list(AILMENTS.items()) + [("ブレイク", "broken"), ("弱点", "weak")]:
-            if keyword in chunk:
-                conds.append({"cond": "target_state", "state": code})
+        target_chunk = match.group(1)
+    else:
+        match = re.search(r"(.{1,12}?)状態の敵への", text)
+        if match:
+            target_chunk = match.group(1)
+    if target_chunk:
+        target_states = []
+        for keyword, code in sorted(AILMENTS.items(), key=lambda item: -len(item[0])):
+            if keyword in target_chunk and code not in target_states:
+                target_states.append(code)
+        for keyword, code in (("ブレイク", "broken"), ("弱点", "weak")):
+            if keyword in target_chunk and code not in target_states:
+                target_states.append(code)
+        if len(target_states) > 1 and re.search(r"[・、]|または|もしくは", target_chunk):
+            conds.append({"cond": "target_any_state", "states": target_states})
+        else:
+            conds.extend({"cond": "target_state", "state": state}
+                         for state in target_states)
+    quoted_state = re.search(r"対象に「(.+?)」が付与", text)
+    if quoted_state:
+        state_name = quoted_state.group(1)
+        state = next((code for keyword, code in sorted(
+            AILMENTS.items(), key=lambda item: -len(item[0])
+        ) if keyword in state_name), None)
+        if state:
+            conds.append({"cond": "target_state", "state": state})
     match = re.search(r"HPが([0-9]+)%以上", text)
     if match:
         conds.append({"cond": "hp_above", "value": int(match.group(1))})
@@ -98,6 +122,11 @@ def parse_conditions(text: str) -> list:
     match = re.search(r"HPが([0-9]+)%以下", text)
     if match:
         conds.append({"cond": "hp_below", "value": int(match.group(1))})
+    match = re.search(r"対象のマイナス効果が([0-9]+)個以上", text)
+    if match:
+        conds.append({"cond": "target_debuff_count", "min": int(match.group(1))})
+    if "被弾時" in text:
+        conds.append({"cond": "on_damaged"})
     if "全体攻撃" in text:
         conds.append({"cond": "scope", "scope": "aoe"})
     if "単体攻撃" in text:
@@ -145,7 +174,7 @@ def parse_common(text: str) -> dict:
         rate = 85
     cap = find_number(r"上限([0-9]+)%", text)
     stack_max = find_number(r"上限([0-9]+)個", text)
-    fixed = ("固定" in text)
+    fixed = ("固定" in text or "強化効果量変化の効果を受けない" in text)
     text_value = find_number(r"([0-9]+)%", text)
     return {
         "rate": rate, "cap": cap, "stack_max": stack_max, "fixed": fixed,
@@ -353,9 +382,56 @@ def parse_effect(text: str) -> dict:
                 return {"code": "on_hit_resist", "attr": ATTRS[name], **base}
     if "使用回数が1回" in raw:
         return {"code": "first_use_damage", **base}
-    if "スキルダメージ" in raw or "バーストスキルダメージ" in raw:
+    if "バーストスキルダメージ" in raw:
+        direction = -1 if ("ダウン" in raw or "減少" in raw or "-" in raw) else 1
+        return {"code": "burst_damage", "direction": direction, **base}
+    if "スキルダメージ" in raw:
         direction = -1 if ("ダウン" in raw or "減少" in raw or "-" in raw) else 1
         return {"code": "skill_damage", "direction": direction, **base}
+    if "属性攻撃から受けるダメージ" in raw:
+        for name, attr in sorted(ATTRS.items(), key=lambda item: -len(item[0])):
+            if len(name) > 1 and name in raw:
+                return {"code": "resist_down", "attr": attr, **base}
+        return {"code": "resist_down", "attr": "unknown", **base}
+    if "属性ダメージ" in raw and "受ける" not in raw:
+        attrs = []
+        for name, attr in sorted(ATTRS.items(), key=lambda item: -len(item[0])):
+            if len(name) > 1 and name in raw and attr not in attrs:
+                attrs.append(attr)
+        if attrs:
+            direction = -1 if ("ダウン" in raw or "減少" in raw or "-" in raw) else 1
+            return {"code": "dealt_damage", "direction": direction,
+                    "attrs": attrs, **base}
+    if ("物理攻撃ダメージ" in raw or "魔法攻撃ダメージ" in raw) and "受ける" not in raw:
+        direction = -1 if ("ダウン" in raw or "減少" in raw or "-" in raw) else 1
+        attack_type = "physical" if "物理攻撃ダメージ" in raw else "magic"
+        return {"code": "dealt_damage", "direction": direction,
+                "attack_type": attack_type, **base}
+    if "受ける" in raw and "属性ダメージ" in raw:
+        attrs = []
+        for name, attr in sorted(ATTRS.items(), key=lambda item: -len(item[0])):
+            if len(name) > 1 and name in raw and attr not in attrs:
+                attrs.append(attr)
+        direction = 1 if ("アップ" in raw or "上昇" in raw or "+" in raw) else -1
+        entry = {"code": "taken_damage", "direction": direction, **base}
+        if attrs:
+            entry["attrs"] = attrs
+        if "物理攻撃" in raw:
+            entry["attack_type"] = "physical"
+        elif "魔法攻撃" in raw:
+            entry["attack_type"] = "magic"
+        return entry
+    if "受ける物理攻撃ダメージ" in raw or "受ける魔法攻撃ダメージ" in raw:
+        direction = 1 if ("アップ" in raw or "上昇" in raw or "+" in raw) else -1
+        attack_type = "physical" if "受ける物理攻撃ダメージ" in raw else "magic"
+        return {"code": "taken_damage", "direction": direction,
+                "attack_type": attack_type, **base}
+    if "対象が被ダメージUP状態" in raw:
+        return {"code": "dealt_damage", "direction": 1, **base}
+    if (("ダメージ+" in raw or "ダメージUP" in raw or "ダメージアップ" in raw)
+            and "受ける" not in raw and "被ダメージ" not in raw):
+        direction = -1 if ("ダウン" in raw or "減少" in raw or "-" in raw) else 1
+        return {"code": "dealt_damage", "direction": direction, **base}
     if "与ダメージ" in raw or "与えるダメージ" in raw:
         direction = -1 if ("ダウン" in raw or "減少" in raw) else 1
         return {"code": "dealt_damage", "direction": direction, **base}
@@ -366,6 +442,8 @@ def parse_effect(text: str) -> dict:
         return {"code": "heal_given", **base}
     if "受けるHP回復量" in raw or "被回復量" in raw or "受ける回復量" in raw:
         return {"code": "heal_received", **base}
+    if "回復力" in raw and ("アップ" in raw or "上昇" in raw or "+" in raw):
+        return {"code": "heal_given", **base}
     if "耐性" in raw and ("ダウン" in raw or "減少" in raw or "-" in raw or "DOWN" in raw):
         for name, code in sorted(ATTRS.items(), key=lambda kv: -len(kv[0])):
             if name in raw:
@@ -387,16 +465,26 @@ def parse_effect(text: str) -> dict:
                         "attack": "out", "magic": "out", "defense": "defense",
                         "mental": "defense", "speed": "speed"}.get(stat)
                 if slot:
-                    return {"code": "target_debuff", "slot": slot, **base}
+                    return {"code": "target_debuff", "slot": slot,
+                            "stat": stat, **base}
         if "ダメージ" in raw and ("ダウン" in raw or "減少" in raw or "DOWN" in raw) and "受ける" not in raw:
             return {"code": "target_debuff", "slot": "skill_damage", **base}
         if "受けるダメージ" in raw and ("アップ" in raw or "上昇" in raw or "UP" in raw):
             return {"code": "target_debuff", "slot": "taken", **base}
     for word, stat in STAT_EXTENDED:
+        match = re.search(re.escape(word) + r"\s*([+-])\s*(?:\{(?:value|[0-9]+)\}|[0-9]+)", raw)
+        if match:
+            return {"code": "stat_up" if match.group(1) == "+" else "stat_down",
+                    "stat": stat, **base}
+    for word, stat in STAT_EXTENDED:
         if word in raw and ("アップ" in raw or "上昇" in raw or "増加" in raw or "UP" in raw):
             return {"code": "stat_up", "stat": stat, **base}
         if word in raw and ("ダウン" in raw or "減少" in raw or "低下" in raw or "DOWN" in raw):
             return {"code": "stat_down", "stat": stat, **base}
+    if "スキル発動後" in raw and "HP" in raw and "回復" in raw:
+        return {"code": "post_skill_heal", **base}
+    if "攻撃を受けた時" in raw and "HP" in raw and "回復" in raw:
+        return {"code": "reactive_heal", **base}
     if "HPを回復" in raw or "HP回復" in raw:
         return {"code": "heal", **base}
     if "先駆け" in raw:
@@ -433,10 +521,11 @@ def parse_effect(text: str) -> dict:
         return {"code": "counter_immune", **base}
     if "命中率" in raw and ("ダウン" in raw or "減少" in raw or "-" in raw):
         return {"code": "accuracy_down", **base}
-    if "手番を遅らせる" in raw or "手番遅延" in raw:
-        return {"code": "delay_turn", **base}
-    if "手番を早める" in raw:
-        return {"code": "hasten_turn", **base}
+    turns = find_number(r"([0-9]+)手番", raw)
+    if "手番" in raw and re.search(r"遅らせ|遅め|遅延", raw):
+        return {"code": "delay_turn", "turns": turns, **base}
+    if "手番" in raw and re.search(r"早め|早ま", raw):
+        return {"code": "hasten_turn", "turns": turns, **base}
     if "攻撃を受けた時" in raw and "HP" in raw and "回復" in raw:
         return {"code": "reactive_heal", **base}
     if "スキル発動後" in raw and "HP" in raw and "回復" in raw:
@@ -517,33 +606,139 @@ AILMENT_STATES = {
 def classify_state(row: dict) -> dict:
     state_type = row.get("state_change_type")
     name = row.get("name") or ""
-    out = {"kind": "special", "unremovable": bool(row.get("is_unremovable"))}
+    text = normalize(row.get("description") or name)
+    parsed = mark_foe(parse_effect(text), text)
+    parsed["placeholder"] = "{0}" in text or "{value}" in text
+    out = {"kind": "special", "unremovable": bool(row.get("is_unremovable")),
+           "effect": parsed}
+
     if name in AILMENT_STATES:
         out["kind"] = "ailment"
         out["ailment"] = AILMENT_STATES[name]
+        out["potency_kind"] = "ailment"
         return out
+
     if "耐性UP" in name or "耐性+" in name:
-        for keyword, code in AILMENTS.items():
+        for keyword, code in sorted(AILMENTS.items(), key=lambda item: -len(item[0])):
             if keyword in name:
                 out["kind"] = "resist_up"
                 out["ailment"] = code
+                out["potency_kind"] = "out"
+                return out
+        for keyword, attr in sorted(ATTRS.items(), key=lambda item: -len(item[0])):
+            if keyword in name:
+                out.update({"kind": "resist_elem", "attr": attr,
+                            "potency_kind": "out"})
                 return out
         out["kind"] = "resist_up"
+        out["potency_kind"] = "out"
         return out
+
     for keyword, kind in STATE_KEYWORDS:
         if keyword in name:
-            out["kind"] = kind
+            out["kind"] = "special" if kind == "revive" else kind
+            out["potency_kind"] = "out"
             if kind == "reflect":
                 out["reflect"] = "magic" if "魔法" in name else "phys" if "物理" in name else "any"
             return out
-    if state_type == 1:
-        out["kind"] = "out"
-    elif state_type == 2:
-        out["kind"] = "taken"
-    elif state_type == 4:
-        out["kind"] = "special"
-    else:
-        out["kind"] = "special"
+
+    code = parsed.get("code")
+    direction = int(parsed.get("direction", -1 if code == "stat_down" else 1) or 1)
+    slot_kinds = {
+        "skill_damage": "skill_damage", "dealt_damage": "skill_damage",
+        "skill_power": "skill_power", "crit_rate": "crit_rate",
+        "crit_damage": "crit_damage", "break_damage": "break_up",
+        "taken_break": "taken_break", "taken_crit_damage": "taken_crit_damage",
+        "penetration": "penetration", "burst_damage": "burst_damage",
+        "taken_damage": "taken", "heal_given": "recovery_given",
+        "heal_received": "recovery_received", "resist_up": "resist_up",
+        "resist_down": "resist_down", "ailment_resist": "resist_up",
+        "ailment_resist_one": "resist_up", "ailment_immune": "ailment_immune",
+        "pioneer": "pioneer", "item_damage": "item_damage",
+        "item_crit": "item_crit", "item_heal": "item_heal",
+        "cannon_damage": "cannon_damage", "cannon_crit": "cannon_crit",
+        "ailment": "ailment", "ailment_dot": "ailment",
+        "reactive_heal": "reactive_heal", "post_skill_heal": "post_skill_heal",
+        "cleanse": "cleanse_turn_start",
+        "regen": "regen", "barrier": "barrier", "evade": "evade",
+        "reflect": "reflect", "reflect_magic": "reflect", "reflect_phys": "reflect",
+        "cover": "cover", "null_damage": "null_damage", "counter": "counter",
+        "break_power": "break_power", "panel_null": "panel_null",
+    }
+
+    if code in ("stat_up", "stat_down"):
+        stat = {
+            "patk": "attack", "matk": "magic", "pdef": "defense",
+            "mdef": "mental", "spd": "speed",
+        }.get(parsed.get("stat"), parsed.get("stat"))
+        if stat in ("attack", "magic", "defense", "mental"):
+            out.update({"kind": "stat", "stat": stat, "direction": direction,
+                        "potency_kind": "out" if direction > 0 else "taken"})
+            return out
+        if stat == "speed":
+            out.update({"kind": "speed", "direction": direction,
+                        "potency_kind": "out" if direction > 0 else "taken"})
+            return out
+
+    if code == "target_debuff":
+        slot = parsed.get("slot")
+        stat = {"patk": "attack", "matk": "magic", "pdef": "defense",
+                "mdef": "mental", "spd": "speed"}.get(
+                    parsed.get("stat"), parsed.get("stat")
+                )
+        if stat in ("attack", "magic", "defense", "mental"):
+            out.update({"kind": "stat", "stat": stat, "direction": -1,
+                        "potency_kind": "taken"})
+            return out
+        if stat == "speed":
+            out.update({"kind": "speed", "direction": -1,
+                        "potency_kind": "taken"})
+            return out
+        if slot == "skill_damage":
+            kind, direction = "skill_damage", -1
+        elif slot == "taken":
+            kind, direction = "taken", 1
+        elif slot == "defense":
+            kind, direction = "defense", -1
+        elif slot == "speed":
+            kind, direction = "speed", -1
+        elif slot == "out":
+            kind, direction = "out", -1
+        else:
+            kind = "special"
+        if kind != "special":
+            out.update({"kind": kind, "direction": direction,
+                        "potency_kind": "taken"})
+            return out
+
+    if code in slot_kinds:
+        kind = slot_kinds[code]
+        potency_kind = "out"
+        if code in ("resist_down", "ailment_resist_one"):
+            potency_kind = "taken"
+        elif code in ("ailment", "ailment_dot"):
+            potency_kind = "ailment"
+        elif code == "taken_damage":
+            potency_kind = "taken" if direction > 0 else "out"
+        elif direction < 0:
+            potency_kind = "taken"
+        out.update({"kind": kind, "direction": direction,
+                    "potency_kind": potency_kind})
+        for key in ("stat", "attr", "ailment", "reflect"):
+            if parsed.get(key) is not None:
+                out[key] = parsed[key]
+        for key in ("attrs", "attack_type", "scope"):
+            if parsed.get(key) is not None:
+                out[key] = parsed[key]
+        if code == "ailment_resist_one":
+            out["ailment"] = parsed.get("ailment")
+        if code in ("reflect_magic", "reflect_phys"):
+            out["reflect"] = "magic" if code == "reflect_magic" else "phys"
+        return out
+
+    # state_change_type only says positive/negative/ailment. Unknown states
+    # are left inert instead of being treated as generic damage buffs.
+    out["state_change_type"] = state_type
     return out
 
 
@@ -757,6 +952,10 @@ def parse_effect_en(text: str) -> dict:
         return {"code": "ailment_immune", **base}
     if re.search(r"[Ss]wap.{0,20}[Tt]urn|[Tt]urn.{0,20}[Ss]wap", raw):
         return {"code": "turn_swap", **base}
+    if re.search(r"[Dd]elay.{0,30}turn|turn.{0,30}[Dd]elay", raw):
+        return {"code": "delay_turn", **base}
+    if re.search(r"[Hh]asten.{0,30}turn|turn.{0,30}[Hh]asten", raw):
+        return {"code": "hasten_turn", **base}
     if re.search(r"[Ee]xtra turn", raw):
         return {"code": "extra_turn_grant", "cond": "unconditional", **base}
     if re.search(r"[Ii]tem gauge", raw):

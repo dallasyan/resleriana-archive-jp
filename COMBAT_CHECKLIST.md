@@ -8,7 +8,7 @@ and where to look for more evidence. Local capture paths are analysis
 pointers only; never copy private session or profile data into shared files.
 
 Source precedence on conflicts: linked websites beat `BATTLE_DETAILS.md`.
-Canonical mechanics reference: `COMBAT_IMPLEMENTATION.md`.
+Canonical workspace mechanics reference: `COMBAT_IMPLEMENTATION.md`.
 Simulator: `tools/JapaneseOffline/battle_japanese.py`.
 Derived data: `tools/JapaneseOffline/build_combat_map.py` plus
 `battle-master/combat_map.json` (built from
@@ -26,7 +26,8 @@ Contract oracle: `C:\Program Files (x86)\Steam\steamapps\common\AtelierReslerian
 - [x] Skill 1 / Skill 2 normal actions (Done)
   - Description: basic attacks, heals, and buff/state skills with master wait.
   - Implement: resolve via `battle-master/skill.json`; community damage, break,
-    heal, and status rules; timeline move by master wait; burst/item gauges.
+    heal, and status rules; relative-wait timeline move using the speed-adjusted
+    master wait; burst/item gauges.
   - Data: `battle/attack` in `local battle captures`; three-character
     attacks in `local battle captures`.
 - [x] Extra skills (Done)
@@ -191,10 +192,11 @@ Contract oracle: `C:\Program Files (x86)\Steam\steamapps\common\AtelierReslerian
 
 ## Battle items
 
-- [x] Item slots, uses, gauge (Done)
+- [ ] Item slots, uses, gauge (Partial)
   - Description: 3 normal / 5 dungeon tools; 50 start, +10 per ally action,
     usable at 100, reset on use.
-  - Implement: existing profile/master tool resolution and use tracking.
+  - Implement: profile/master tool resolution and use tracking; battle-kind
+    capacity is not enforced yet.
   - Data: `party/battle_tools_set`; `battle_tool.json`.
 - [x] Fixed item targeting (Done)
   - Description: fixed conditions override taunt; ties go to nearest turn.
@@ -228,11 +230,14 @@ Contract oracle: `C:\Program Files (x86)\Steam\steamapps\common\AtelierReslerian
   - Data: `ship_tool.json`, `ship_tool_level.json`; cannon captures.
 - [ ] Cannon gauge and turn cost (Partial)
   - Description: cannon gauge fills per ally action; firing costs a turn.
-  - Implement: separate cannon gauge from item gauge; one use at maximum.
+  - Implement: separate cannon identity/use tracking; gauge is not modeled.
+    Captured cannon commands have no timeline move; the panel/request counter
+    advances, while general guides describe a turn cost.
   - Data: cannon captures in `local battle captures`.
-- [ ] Cannon-only bonuses (Missing)
+- [x] Cannon-only bonuses (Done, formulas estimated)
   - Description: only cannon damage/crit bonuses apply, never item bonuses.
-  - Implement: separate cannon bonus pipeline from the item pipeline.
+  - Implement: pooled-mod filtering has separate cannon damage/crit slots from
+    the item slots; exact bonus stacking still needs capture calibration.
   - Data: Atelier cannon reference page.
 
 ## Subspace memoria
@@ -297,13 +302,18 @@ Contract oracle: `C:\Program Files (x86)\Steam\steamapps\common\AtelierReslerian
   - Implement: panel-state mutation hooks plus `overwritten_timeline_panels`
     emission (contract fields 10/19).
   - Data: panel-manipulation captures and skill effects.
-- [x] Timeline advance/delay (Done, estimated steps)
-  - Description: wait adjustments move units on the timeline.
-  - Implement: wait-based ordering and move records; free actions skip moves.
+- [ ] Timeline advance/delay (Partial)
+  - Description: relative wait values move units on the timeline; turn delay
+    and hasten effects modify those waits.
+  - Implement: field 6 carries remaining Int32 wait, current event is 0, and
+    every advance subtracts the minimum pending wait. Initial and requeue waits
+    use `floor(57600 / Speed) + master_skill.wait`; timeline delay/hasten still
+    uses estimated slot-step gaps. Free actions skip moves.
   - Data: setups/actions with `timeline_moves`.
-- [ ] Consecutive actions (Partial)
+- [x] Consecutive actions (Done)
   - Description: speed/weight manipulation enables back-to-back turns.
-  - Implement: exact wait math preserved so setups emerge naturally.
+  - Implement: relative wait math and speed-adjusted requeueing produce
+    consecutive turns where scheduled; ally-turn rotation has regression tests.
   - Data: timeline captures; wait formula page.
 
 ## Emblems
@@ -327,10 +337,14 @@ Contract oracle: `C:\Program Files (x86)\Steam\steamapps\common\AtelierReslerian
 
 ## Status conditions
 
-- [x] Positive/negative buffs (Done)
-  - Description: stat up/down, damage dealt/taken modifiers with durations.
-  - Implement: additive same-slot buffs; separate taken-down multipliers;
-    turn/use durations; hard caps.
+- [ ] Positive/negative buffs (Partial, slot-mapped)
+  - Description: stat up/down, damage dealt/taken modifiers, typed resistance,
+    and conditional state effects with durations.
+  - Implement: parsed state descriptions map known slots; relative stat/damage
+    modifiers and separate taken-down multipliers apply. Unknown state rows are
+    inert instead of defaulting to generic outgoing/taken damage. Generic
+    stacking caps, several trigger families, and some status categories remain
+    incomplete.
   - Data: status cases under `status`; `state_change.json`.
 - [x] Ailments (Done, rates estimated)
   - Description: poison, burn, paralysis, sleep, frozen, darkness, stun, taunt.
@@ -342,13 +356,15 @@ Contract oracle: `C:\Program Files (x86)\Steam\steamapps\common\AtelierReslerian
   - Description: regen, barrier, evade, counter, reflect, cover, null damage,
     panel-null, range states, dummies/counters.
   - Implement: regen ticks, barrier absorb, evade rolls, null-damage
-    thresholds, cover redirection with `protector_id`; counter retaliation
-    and reflect damage stay display-only until values are mapped.
+    thresholds, cover redirection with `protector_id`, and reflect damage.
+    Counter damage remains records-only; reflect amount/type details are
+    estimated.
   - Data: state-change reference page; contract barrier/protector fields.
-- [ ] Immunity, cleanse, block (Missing)
+- [ ] Immunity, cleanse, block (Partial)
   - Description: prevention and removal mechanics.
-  - Implement: application checks, removal paths, resistance emission
-    (contract field 18).
+  - Implement: ailment immunity/resistance and explicit cleanse/dispel paths;
+    turn-start cleanse states are modeled. General positive-effect blocking and
+    resistance emission (contract field 18) are incomplete.
   - Data: status captures.
 - [x] Permanent debuffs (Done)
   - Description: raid-style persistent stacks with caps.
@@ -378,9 +394,10 @@ Contract oracle: `C:\Program Files (x86)\Steam\steamapps\common\AtelierReslerian
   - Implement: enemy-side support hooks; on-break/on-KO triggers; AoE
     suppression falls out of simultaneous resolution.
   - Data: boss behavior notes; status captures.
-- [x] Multiple break gauges (Done)
+- [ ] Multiple break gauges (Missing)
   - Description: multi-gauge enemies; minor vs full break.
-  - Implement: per-gauge break state; minor break slows order only.
+  - Implement: one break gauge per enemy; multiple-gauge depletion, minor
+    break timing, and break-induced timeline delay are not modeled.
   - Data: multi-gauge enemy captures.
 
 ## Battle framework
@@ -470,14 +487,18 @@ in `COMBAT_CHECKLISTS/`.
   mapping for unknown record layouts.
 - Panels: Implemented (22/30 fully, 4 partial). Missing: rewrite panel,
   generation/conversion/enhancement hooks. Unsure: panel-null interactions.
-- Timeline/panels adjustments: wait math exact; delay/hasten estimated
-  steps. Consecutive actions emerge naturally: Implemented.
-- Status conditions: buffs/ailments implemented; regen/barrier/evade/
-  reflect/cover/null implemented; counter retaliation display-only;
-  immunity implemented; cleanse implemented. Unsure: application rates,
-  barrier durability scale, reflect damage formula.
-- Enemy attacks: stats/AI/bursts/targeting/multi-gauge implemented
-  (growth estimated). Missing: telegraphs, forced actions, death rattles.
+- Timeline/panels adjustments: relative wait model and speed-adjusted
+  requeue math implemented; delay/hasten use estimated turn-slot gaps; enemy
+  schedules and opening waits remain estimates. Consecutive actions emerge
+  naturally: Implemented.
+- Status conditions: mapped state slots cover common stat/damage/resistance,
+  ailment, item/cannon, healing, barrier, evade, cover, reflect, and null paths.
+  Counter damage, general effect block, panel-null behavior, revival, and many
+  complex state triggers are missing. Unknown state rows stay inert. Unsure:
+  effect-specific duration, potency, caps, and some trigger timing.
+- Enemy attacks: stats/AI/bursts/targeting and one break gauge implemented
+  (growth estimated). Missing: multiple gauges, telegraphs, forced actions,
+  death rattles.
   Unsure: enemy skill wait values; burst-panel forcing.
 - Waves/status/score/finish/protocol: Implemented with estimated weights.
   Missing: task counts, missions, level-ups. Unsure: per-quest score bases.

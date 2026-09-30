@@ -92,14 +92,14 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | equipment:15 | 魔法ブレイクダメージ上昇 | Magic Stun Damage Boost | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |
 | equipment:16 | ブレイクダメージ上昇【背水】 | Stun Damage Boost [Resolve] | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |
 | equipment:17 | ブレイクダメージ上昇【渾身】 | Stun Damage Boost [Full] | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |
-| equipment:18 | 斬耐性上昇 | Slash Resistance Up | Missing | missing: unparsed abilities 7000062, 7000063, 7000064, 7000065, 7000066; unsure: trait filter matching vs item seed unconfirmed |
-| equipment:19 | 打耐性上昇 | Strike Resistance Up | Missing | missing: unparsed abilities 7000067, 7000068, 7000069, 7000070, 7000071; unsure: trait filter matching vs item seed unconfirmed |
+| equipment:18 | 斬耐性上昇 | Slash Resistance Up | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |
+| equipment:19 | 打耐性上昇 | Strike Resistance Up | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |
 | equipment:2 | スキル威力上昇 | Skill Power Up | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |
-| equipment:20 | 突耐性上昇 | Stab Resistance Up | Missing | missing: unparsed abilities 7000057, 7000058, 7000059, 7000060, 7000061; unsure: trait filter matching vs item seed unconfirmed |
-| equipment:21 | 火耐性上昇 | Fire Resistance Up | Missing | missing: unparsed abilities 7000072, 7000073, 7000074, 7000075, 7000076; unsure: trait filter matching vs item seed unconfirmed |
-| equipment:22 | 氷耐性上昇 | Ice Resistance Up | Missing | missing: unparsed abilities 7000077, 7000078, 7000079, 7000080, 7000081; unsure: trait filter matching vs item seed unconfirmed |
-| equipment:23 | 風耐性上昇 | Air Resistance Up | Missing | missing: unparsed abilities 7000087, 7000088, 7000089, 7000090, 7000091; unsure: trait filter matching vs item seed unconfirmed |
-| equipment:24 | 雷耐性上昇 | Bolt Resistance Up | Missing | missing: unparsed abilities 7000082, 7000083, 7000084, 7000085, 7000086; unsure: trait filter matching vs item seed unconfirmed |
+| equipment:20 | 突耐性上昇 | Stab Resistance Up | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |
+| equipment:21 | 火耐性上昇 | Fire Resistance Up | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |
+| equipment:22 | 氷耐性上昇 | Ice Resistance Up | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |
+| equipment:23 | 風耐性上昇 | Air Resistance Up | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |
+| equipment:24 | 雷耐性上昇 | Bolt Resistance Up | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |
 | equipment:25 | 物理耐性上昇 | Physical Resistance Up | Missing | missing: unparsed abilities 7000092, 7000093, 7000094, 7000095, 7000096; unsure: trait filter matching vs item seed unconfirmed |
 | equipment:26 | 魔法耐性上昇 | Magic Resistance Up | Missing | missing: unparsed abilities 7000097, 7000098, 7000099, 7000100, 7000101; unsure: trait filter matching vs item seed unconfirmed |
 | equipment:27 | 単体攻撃威力上昇 | Single Attack Power Up | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |

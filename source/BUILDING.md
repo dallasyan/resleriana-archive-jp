@@ -86,6 +86,31 @@ The package's `game-root\battle-master\*.json` carries the slim battle tables us
 
 Character/rarity/level/memoria tables are reused from `progression-master` at runtime.
 
+## Combat Map and Checklists
+
+`build_combat_map.py` translates Japanese effect/state/panel descriptions into
+the runtime `combat_map.json`. Regenerate the share runtime map after changing
+the parser or battle simulator:
+
+```powershell
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" "tools\JapaneseOffline\build_combat_map.py" "resleriana-db-main\data\master\jp" "tools\JapaneseToolkit\share\game-root\battle-master" --machine "AtelierResleriana-master\Localization\MasterData\Machine\en"
+```
+
+Then copy the share `battle-master` directory to `tools\JapaneseOffline\dist`,
+`tools\JapaneseToolkit\share\source\game-root`, and the installed game as
+shown under Runtime Synchronization. The generator prints effect coverage,
+JP/EN disagreements, and state-kind counts for review.
+
+After a combat-map, parser, or simulator change, regenerate the workspace and
+sanitized share checklists:
+
+```powershell
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" "tools\JapaneseOffline\build_granular_checklists.py" "resleriana-db-main\data\master\jp" "tools\JapaneseToolkit\share\game-root" "COMBAT_CHECKLISTS" --localization "AtelierResleriana-master\Localization\MasterDataLocalizationData.json" --machine "AtelierResleriana-master\Localization\MasterData\Machine\en" --share-dir "tools\JapaneseToolkit\share"
+```
+
+Review newly unmapped/partial rows and verify the share checklist copies contain
+no session tokens or profile references before rebuilding the archive.
+
 ## JapaneseCaptureObserver.exe
 
 The observer is optional diagnostics. It requires Frida `16.7.19` and PyInstaller.
@@ -131,6 +156,10 @@ Copy-Item $battle "tools\JapaneseOffline\dist\battle_japanese.py" -Force
 Copy-Item $battle "tools\JapaneseToolkit\share\game-root\battle_japanese.py" -Force
 Copy-Item $battle "tools\JapaneseToolkit\share\source\game-root\battle_japanese.py" -Force
 Copy-Item $battle "C:\Program Files (x86)\Steam\steamapps\common\AtelierResleriana\battle_japanese.py" -Force
+$combatMapBuilder = "tools\JapaneseOffline\build_combat_map.py"
+Copy-Item $combatMapBuilder "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\build_combat_map.py" -Force
+$checklistBuilder = "tools\JapaneseOffline\build_granular_checklists.py"
+Copy-Item $checklistBuilder "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\build_granular_checklists.py" -Force
 $battleBuilder = "tools\JapaneseOffline\build_battle_master.py"
 Copy-Item $battleBuilder "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\build_battle_master.py" -Force
 $battleMaster = "tools\JapaneseToolkit\share\game-root\battle-master"

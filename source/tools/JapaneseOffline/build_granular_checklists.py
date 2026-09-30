@@ -806,42 +806,50 @@ def main() -> int:
                 legend_status, ["id", "ja", "en", "status", "note"], rows)
 
     # -- states ----------------------------------------------------------------------------
-    # State ids grant visible buffs via grant_state_buff (special/dummy/
-    # counter_state are records-only). Amounts and durations arrive with the
-    # triggering skill effect; the state row itself carries no magnitude.
+    # The state description supplies the semantic slot; the effect/skill row
+    # supplies the runtime grant value, target, and application conditions.
     states = load(args.master, "state_change")
     srows = states if isinstance(states, list) else states.values()
     rows = []
     for row in srows:
         sid = str(row.get("id"))
-        kind = (cmap.get("states", {}).get(sid, {}) or {}).get("kind", "special")
-        ailment = (cmap.get("states", {}).get(sid, {}) or {}).get("ailment", "")
+        state_info = cmap.get("states", {}).get(sid, {}) or {}
+        kind = state_info.get("kind", "special")
+        ailment = state_info.get("ailment", "")
         en_name = en("state_change", sid) or EN_AILMENTS.get(ailment, "")
         done, missing, unsure = [], [], []
         if kind in ("special", "dummy", "counter_state"):
-            missing.append("kind=%s never granted, records-only" % kind)
-            status = "Partial"
-        elif kind == "resist_up":
-            done.append("kind=resist_up granted as visible buff")
-            missing.append("resist_up buff amounts ignored downstream")
-            unsure.append("resist magnitude/duration need capture confirmation")
+            missing.append("kind=%s has no runtime behavior; effect records only" % kind)
             status = "Partial"
         elif kind == "counter":
-            done.append("kind=counter granted and counterattacks")
-            unsure.append("counter magnitude/duration from triggering effect")
-            status = "Implemented"
-        elif kind in ("out", "taken", "ailment", "regen", "barrier", "evade",
-                      "reflect", "cover", "null_damage", "panel_null",
-                      "range_in", "range_out"):
-            done.append("kind=%s granted as visible buff" % kind)
-            unsure.append("magnitude/duration from triggering effect, potency-scaled")
+            done.append("counter state is detected on hit")
+            missing.append("counter damage/targeting is not resolved")
+            status = "Partial"
+        elif kind in ("pioneer", "panel_null", "range_in", "range_out"):
+            done.append("kind=%s granted and serialized" % kind)
+            missing.append("state-specific battle behavior is not fully connected")
+            status = "Partial"
+        elif kind in ("reflect",):
+            done.append("reflect state is applied on received hits")
+            missing.append("reflect amount/type behavior needs capture validation")
+            status = "Partial"
+        elif kind in (
+            "out", "taken", "stat", "speed", "skill_damage", "skill_power",
+            "crit_rate", "crit_damage", "break_up", "break_power", "taken_break",
+            "taken_crit_damage", "penetration", "burst_damage", "item_damage",
+            "item_crit", "item_heal", "cannon_damage", "cannon_crit",
+            "recovery_given", "recovery_received", "resist_down", "resist_up",
+            "resist_elem", "ailment", "ailment_immune", "regen", "barrier",
+            "evade", "cover", "null_damage", "reactive_heal", "post_skill_heal",
+            "cleanse_turn_start",
+        ):
+            done.append("kind=%s applies its mapped combat slot/trigger" % kind)
+            unsure.append("grant value, remaining duration, and potency need capture confirmation")
             if kind == "ailment":
                 unsure.append("ailment %s application roll" % (ailment or "unknown"))
-            if kind == "reflect":
-                unsure.append("reflect phys/magic/any split from state row")
-            status = "Implemented"
+            status = "Partial" if unsure else "Implemented"
         else:
-            missing.append("kind=%s unrecognized" % kind)
+            missing.append("kind=%s has no validated runtime handler" % kind)
             status = "Unsure"
         note = join_note(done, missing, unsure)
         rows.append([sid, row.get("name") or "", en_name, status, note])
