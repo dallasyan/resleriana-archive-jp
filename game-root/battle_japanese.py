@@ -2316,10 +2316,18 @@ def apply_skill_effects(
                                         "rest": 2, "kind": "out", "display": False})
                 applied[target["id"]] = None
         elif info is not None:
-            for target in eligible:
-                applied[target["id"]] = grant_state_buff(
-                    sim, actor, target, effect_id, value, parsed
-                )
+            state_info = state_kind(sim.game_dir, effect_id)
+            if state_info.get("kind") == "delay_turn_attack":
+                effect_record_targets = [actor]
+                if eligible:
+                    applied[actor["id"]] = grant_state_buff(
+                        sim, actor, actor, effect_id, value, parsed
+                    )
+            else:
+                for target in eligible:
+                    applied[target["id"]] = grant_state_buff(
+                        sim, actor, target, effect_id, value, parsed
+                    )
         elif code in SLOT_BUFF_KINDS or code == "target_debuff":
             for target in eligible:
                 applied[target["id"]] = grant_parsed_slot_buff(
@@ -2534,6 +2542,9 @@ def grant_state_buff(sim: "BattleSim", actor: dict, target: dict, state_id: int,
     cap = int(metadata.get("cap", 0) or 0)
     if cap:
         buff["cap"] = cap
+    if kind == "delay_turn_attack":
+        buff["delay_turns"] = timeline_shift_count(magnitude, state_effect)
+        buff["rest"] = None
     target["buffs"].append(buff)
     return buff
 
@@ -2657,6 +2668,35 @@ def timeline_shift_count(value: int, parsed: dict | None = None) -> int:
         return abs(explicit)
     raw = abs(int(value or 0))
     return max(raw // 100 if raw >= 100 else raw, 1)
+
+
+def apply_attack_delay_states(sim: BattleSim, actor: dict, targets: list[dict],
+                              pending_buffs: list[dict], skill: dict) -> list[int]:
+    """Consume one-shot attacks that delay each selected foe on the timeline."""
+    if int(skill.get("effect", 0) or 0) != 1:
+        return []
+    positions = {member_id: index for index, (member_id, _) in enumerate(sim.order)}
+    unique_targets = {
+        int(target["id"]): target
+        for target in targets
+        if target.get("alive") and target.get("side") != actor.get("side")
+        and int(target["id"]) in positions
+    }
+    ordered_targets = sorted(
+        unique_targets.values(), key=lambda target: positions[int(target["id"])],
+        reverse=True,
+    )
+    shifted: list[int] = []
+    for buff in pending_buffs:
+        if buff not in actor.get("buffs", []):
+            continue
+        turns = max(int(buff.get("delay_turns", 0) or 0), 1)
+        for target in ordered_targets:
+            target_id = int(target["id"])
+            if shift_order(sim, target_id, turns):
+                shifted.append(target_id)
+        actor["buffs"].remove(buff)
+    return shifted
 
 
 def tick_buffs(member: dict) -> None:
@@ -3325,6 +3365,10 @@ def resolve_ally_action(
     damage, buffs, and effect records but consume no status turns and
     trigger no post-action behavior.
     """
+    pending_attack_delays = [
+        buff for buff in actor.get("buffs", [])
+        if buff.get("kind") == "delay_turn_attack"
+    ]
     skills = battle_table(sim.game_dir, "skill")
     skill_id = (
         skill_id_override
@@ -3401,6 +3445,9 @@ def resolve_ally_action(
             sim, actor, skill, targets, skill_results, skill_id=skill_id, panel=panel
         )
     )
+    apply_attack_delay_states(
+        sim, actor, targets, pending_attack_delays, skill
+    )
     if post_hooks:
         skill_results.extend(apply_post_behaviors(sim, actor, skill_id, targets, effect_blobs))
         tick_buffs(actor)
@@ -3408,6 +3455,10 @@ def resolve_ally_action(
 
 
 def resolve_enemy_action(sim: "BattleSim", actor: dict, turn: int, panel: int | None) -> tuple[list[dict], list[dict], int, int]:
+    pending_attack_delays = [
+        buff for buff in actor.get("buffs", [])
+        if buff.get("kind") == "delay_turn_attack"
+    ]
     skills = battle_table(sim.game_dir, "skill")
     ai_cycle = actor.get("ai") or []
     skill_id = 0
@@ -3468,6 +3519,9 @@ def resolve_enemy_action(sim: "BattleSim", actor: dict, turn: int, panel: int | 
         skill_results.append(result)
     effect_blobs = apply_skill_effects(
         sim, actor, skill, targets, skill_results, skill_id=skill_id, panel=panel
+    )
+    apply_attack_delay_states(
+        sim, actor, targets, pending_attack_delays, skill
     )
     skill_results.extend(apply_post_behaviors(sim, actor, skill_id, targets, effect_blobs))
     tick_buffs(actor)

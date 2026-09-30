@@ -48,7 +48,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 510025 | 痛いのはダメです！ | No Hurting Me! | Partial | done: kind=evade applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510026 | カチコチ攻撃(1回) | Brittle Attack (1 Attack) | Partial | done: kind=ailment applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation; ailment frozen application roll |
 | 510027 | さあ、追い打ちと行こうか！ | Come On, Follow Up Attack! | Partial | done: kind=item_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 510044 | ターンを遅らせる攻撃(1回) | Attack Delays Turn (1 Turn) | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 510044 | ターンを遅らせる攻撃(1回) | Attack Delays Turn (1 Turn) | Partial | done: holder's next attack delays selected living foes and consumes the state; unsure: turn-slot gap and AoE/miss consumption need capture confirmation |
 | 510045 | 腰抜かしちゃえ！ | Buckle at the Knees! | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 510047 | 一球入魂 | Spirit-driven Pitch | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510048 | マイナスパネル無効 | Negative Panel Immunity | Partial | done: kind=panel_null granted and serialized; missing: state-specific battle behavior is not fully connected |

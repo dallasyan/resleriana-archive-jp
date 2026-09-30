@@ -521,10 +521,11 @@ def parse_effect(text: str) -> dict:
         return {"code": "counter_immune", **base}
     if "命中率" in raw and ("ダウン" in raw or "減少" in raw or "-" in raw):
         return {"code": "accuracy_down", **base}
-    turns = find_number(r"([0-9]+)手番", raw)
-    if "手番" in raw and re.search(r"遅らせ|遅め|遅延", raw):
+    turns = find_number(r"([0-9]+)(?:手番|ターン)", raw)
+    has_turn_unit = "手番" in raw or "ターンを" in raw
+    if has_turn_unit and re.search(r"遅らせ|遅め|遅延", raw):
         return {"code": "delay_turn", "turns": turns, **base}
-    if "手番" in raw and re.search(r"早め|早ま", raw):
+    if has_turn_unit and re.search(r"早め|早ま", raw):
         return {"code": "hasten_turn", "turns": turns, **base}
     if "攻撃を受けた時" in raw and "HP" in raw and "回復" in raw:
         return {"code": "reactive_heal", **base}
@@ -644,6 +645,10 @@ def classify_state(row: dict) -> dict:
 
     code = parsed.get("code")
     direction = int(parsed.get("direction", -1 if code == "stat_down" else 1) or 1)
+    if code == "delay_turn" and text.startswith("攻撃後、対象のターンを"):
+        out.update({"kind": "delay_turn_attack", "direction": 1,
+                    "potency_kind": "none"})
+        return out
     slot_kinds = {
         "skill_damage": "skill_damage", "dealt_damage": "skill_damage",
         "skill_power": "skill_power", "crit_rate": "crit_rate",

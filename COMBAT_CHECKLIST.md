@@ -49,11 +49,13 @@ Contract oracle: `C:\Program Files (x86)\Steam\steamapps\common\AtelierReslerian
     parsed panel triggers (plus/burst/minus categories, use caps, target
     tags); emitted as setup-less actions.
   - Data: ability descriptions with panel-skill hyperlinks; `hyperlink.json`.
-- [x] Active abilities (Done)
+- [ ] Active abilities (Partial)
   - Description: limited-use skills with rest counts.
   - Implement: `activeN_skill_id` plus skill-master limits; member field 7,
-    setup field 15, mode-7 field 8, action field 28; free action.
-  - Data: Totori captures; `local decrypted captures`.
+    setup field 15, mode-7 field 8, action field 28. Most are free actions;
+    captured Totori timeline-swap active emits timeline moves and advances
+    other waits, which the simulator does not yet reproduce.
+  - Data: Totori active-skill timeline capture; active skill 14002908.
 - [x] Additional attacks (Done)
   - Description: conditional follow-up after a triggering skill.
   - Implement: hyperlink skills resolve free with `post_hooks=False` on
@@ -89,12 +91,13 @@ Contract oracle: `C:\Program Files (x86)\Steam\steamapps\common\AtelierReslerian
     offer/resolve the destination skill 1; post-attack range moves with
     display state buffs; starting-range swap abilities.
   - Data: 120 range skills; range states in `combat_map.json`.
-- [x] Timeline erase/swap skills (Done)
+- [ ] Timeline erase/swap skills (Partial)
   - Description: target type 6 skills erase or swap timeline turns.
   - Implement: `turn_swap`/`turn_erase` effect tags resolve in
     `apply_parsed_skill_effect` and post-attack behaviors; swap validates
-    the front-five range; erase marks one skip in rebuilds.
-  - Data: skills 14003047/14003939 summaries; `combat_map.json` effects.
+    the front-five range; erase marks one skip in rebuilds. Active swap moves,
+    wait rebasing, and extra scheduled actor events remain incomplete.
+  - Data: skills 14003047/14003939; active skill 14002908 capture.
 
 ## Burst
 
@@ -398,7 +401,8 @@ Contract oracle: `C:\Program Files (x86)\Steam\steamapps\common\AtelierReslerian
   - Description: multi-gauge enemies; minor vs full break.
   - Implement: one break gauge per enemy; multiple-gauge depletion, minor
     break timing, and break-induced timeline delay are not modeled.
-  - Data: multi-gauge enemy captures.
+  - Data: enemy 10282002 capture showed break damage 2692 consuming gauge 5,
+    resetting it to 3000 at gauge 4, with `small_break` timeline records.
 
 ## Battle framework
 
@@ -436,7 +440,8 @@ in `COMBAT_CHECKLISTS/`.
   variants, re-grant chains.
 - Panel skills: Implemented. Hyperlink resolution, free actions, use caps.
   Unsure: exact client history shapes for panel-skill actions.
-- Active abilities: Implemented. All 10 verified end to end.
+- Active abilities: Partial. Use limits and request/response shapes are
+  implemented; active timeline-swap timing/move records remain incomplete.
 - Additional attacks: Implemented, including 200%+ overdrive with gauge
   consume. Unsure: whether bonus actions trigger their own post effects.
 - Skill ranks/evolution: Implemented.
@@ -449,8 +454,9 @@ in `COMBAT_CHECKLISTS/`.
 - Range switching: Implemented with bidirectional links and display states.
   Unsure: default range for non-crossover characters; Memoria range-swap
   edge cases.
-- Timeline erase/swap: Implemented. Unsure: target-range validation for
-  type-6 skills.
+- Timeline erase/swap: Partial. Position changes/erase skips are implemented;
+  active-swap wait rebasing, extra event scheduling, and move-record parity
+  remain open.
 - Burst selection/gauge/stocks: Implemented, including per-member stocked
   caps. Unsure: stock display fields; burst-panel forcing details.
 - Character/board passives: Implemented via description parsing (2,881
@@ -497,8 +503,9 @@ in `COMBAT_CHECKLISTS/`.
   complex state triggers are missing. Unknown state rows stay inert. Unsure:
   effect-specific duration, potency, caps, and some trigger timing.
 - Enemy attacks: stats/AI/bursts/targeting and one break gauge implemented
-  (growth estimated). Missing: multiple gauges, telegraphs, forced actions,
-  death rattles.
+  (growth estimated). Missing: multi-gauge depletion, telegraphs, forced
+  actions, death rattles. A capture confirms a five-gauge 3000-point break
+  sequence and small-break response fields.
   Unsure: enemy skill wait values; burst-panel forcing.
 - Waves/status/score/finish/protocol: Implemented with estimated weights.
   Missing: task counts, missions, level-ups. Unsure: per-quest score bases.

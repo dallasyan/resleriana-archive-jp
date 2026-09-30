@@ -2398,7 +2398,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1990167 | 状態異常無効 | Final Battle Gear: Schwarz Rose | Implemented | done: ailment_immune; 1/1 description effects mapped |
 | 1990168 | 味方全員の物攻・魔攻・物防・魔防+{0}% | Angelic Embrace | Implemented | done: stat_up; 4/4 description effects mapped |
 | 1990169 | 状態異常無効 | Final Battle Gear: Schwarz Rose | Implemented | done: ailment_immune; 1/1 description effects mapped |
-| 1990170 | パーティの誰かが戦闘アイテム使用後、自身に「攻撃後、対象のターンを1ターン遅らせる」を1回スキル発動するまで付与(発動上限3回)<br>※アイテムを複数同時に使用しても発動は1回 | Buckle at the Knees! | Missing | missing: unmapped effect ids 72001037; description text unparsed |
+| 1990170 | パーティの誰かが戦闘アイテム使用後、自身に「攻撃後、対象のターンを1ターン遅らせる」を1回スキル発動するまで付与(発動上限3回)<br>※アイテムを複数同時に使用しても発動は1回 | Buckle at the Knees! | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 1990171 | 状態異常無効 | Final Battle Gear: Schwarz Rose | Implemented | done: ailment_immune; 1/1 description effects mapped |
 | 1990175 | 強化系パネル獲得時、自身に「スキルダメージ+{0}%」を1回行動終了するまで付与(重複不可) | Spirit-driven Pitch | Implemented | done: buff@panel_gain grants skill_damage; 1/1 description effects mapped; unsure: buff@panel_gain conditions: panel |
 | 1990176 | マイナスパネル無効<br>プラスパネルから受ける効果量+{0}% | Kitty Cat Team | Partial | done: potency_received; 1/2 description effects mapped; missing: panel_null mod ignored; unmapped effect ids 72001045; unsure: panel_null conditions: panel; potency_received conditions: panel |
@@ -5196,7 +5196,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 21170001 | 被ブレイク時、キャラ陣営に付与されているデバフを全て解除 |  | Missing | missing: unmapped effect ids 81170005; description text unparsed |
 | 21173001 | 自身のHPが30%になった時、一度だけ自身のターンを5ターン早める |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 21174001 | 戦闘アイテムによるデバフを受けた時、自身のデバフを解除する |  | Missing | missing: unmapped effect ids 81174001, 81174001; description text unparsed |
-| 21174002 | ブレイク中戦闘アイテムによるダメージを受けた時、自身に全属性耐性DOWN(20%/2回)を付与する ブレイク中戦闘アイテムによるダメージを受けた時、自身のターンを3ターン遅らせる |  | Partial | done: 1/2 description effects mapped; missing: unmapped effect ids 81174003; description text unparsed |
+| 21174002 | ブレイク中戦闘アイテムによるダメージを受けた時、自身に全属性耐性DOWN(20%/2回)を付与する ブレイク中戦闘アイテムによるダメージを受けた時、自身のターンを3ターン遅らせる |  | Partial | done: 2/2 description effects mapped; missing: description text unparsed |
 | 21175001 | 戦闘不能時、仲間全体のターンを早める |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 21176001 | 強化系パネルを獲得した時、自身に与ダメージ25%UPを付与(上限100%) 強化系パネルを獲得した時、与ダメージDOWN状態を解除 弱化パネルを獲得した時、自身に与ダメージ25%DOWNを付与(上限100%) 弱化パネルを獲得した時、与ダメージUP状態を解除 |  | Partial | done: 4/4 description effects mapped; missing: description text unparsed |
 | 21177001 | 戦闘不能時、3パネル分の空パネルを癒パネルに変化させる |  | Missing | missing: unmapped effect ids 81177001; description text unparsed |
@@ -5604,7 +5604,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 26217001 | 戦闘不能時、敵全体に再生(5%)を付与 |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 26224002 | 攻撃を受けるたび、自身に被ダメージUP(3%/上限60％)を付与 |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 26226001 | 自身に受ける素早さDOWN付与無効 |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
-| 26226002 | HP30％以下になったとき、自身のターンを3ターン早め、行動再抽選 |  | Missing | missing: unmapped effect ids 86226002, 86226003; description text unparsed |
+| 26226002 | HP30％以下になったとき、自身のターンを3ターン早め、行動再抽選 |  | Partial | done: 1/2 description effects mapped; missing: unmapped effect ids 86226003; description text unparsed |
 | 26226003 | ブレイク時、自身の素早さUPを3つ解除 |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 26226011 | HP30%以下で被弾時、自身のターンを3ターン早める HP30%以下で被弾時、行動再抽選 effect_motionあり |  | Partial | done: 1/2 description effects mapped; missing: unmapped effect ids 86226012; description text unparsed |
 | 26231001 | WEAK攻撃を10回被弾時、相手全員に雷耐性UPを付与 |  | Partial | done: 2/3 description effects mapped; missing: unmapped effect ids 86231001; description text unparsed |

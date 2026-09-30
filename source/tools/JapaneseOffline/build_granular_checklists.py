@@ -472,6 +472,8 @@ def main() -> int:
                     unsure.append("%s %s" % (label, flag))
             elif code in SKILL_EXEC_CODES:
                 done.append("%s executes %s" % (eid, code))
+                if code == "turn_swap":
+                    missing.append("%s timeline move serialization/rebase is incomplete" % eid)
                 for flag in unsure_flags(parsed):
                     unsure.append("%s %s" % (label, flag))
             else:
@@ -828,6 +830,10 @@ def main() -> int:
         elif kind in ("pioneer", "panel_null", "range_in", "range_out"):
             done.append("kind=%s granted and serialized" % kind)
             missing.append("state-specific battle behavior is not fully connected")
+            status = "Partial"
+        elif kind == "delay_turn_attack":
+            done.append("holder's next attack delays selected living foes and consumes the state")
+            unsure.append("turn-slot gap and AoE/miss consumption need capture confirmation")
             status = "Partial"
         elif kind in ("reflect",):
             done.append("reflect state is applied on received hits")
