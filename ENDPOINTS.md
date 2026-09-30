@@ -93,6 +93,18 @@ A local audit of the Japanese full-playthrough captures counted 59 sessions, 8,2
 | `/user/unlink_steam` | 1 |
 | `/web_session/token` | 11 |
 
+## Supplemental Recent Exploration Capture
+
+The installed current-session captures include two exploration routes not
+present in the full-playthrough audit above. The archived capture tree added no
+other exploration route names beyond that inventory; session names and payloads
+remain private.
+
+| Endpoint | Captured records |
+|---|---:|
+| `/exploration/retire` | 1 |
+| `/exploration/skip` | 1 |
+
 ## Supplemental Upgrade Capture
 
 A separate local upgrade session added 23 progression operations. The raw session and profile snapshot are not shared.
@@ -186,9 +198,20 @@ A local Japanese session on 2026-09-25 recorded 24 pulls from one banner, three 
 | `/profile/update_selected_home_id` | Generated | Updates selected Home; persists changes. |
 | `/illustrated_book/start` | Generated | Uses unique profile Memoria IDs and configured expedition/exploration treasure IDs. |
 | `/recipe/learn` | Partial/stub | Returns a fixed successful no-op response; its captured 17-byte envelope omits `X-Content-Encoding: gzip`. |
+| `/recipe/favorite` | Generated | Updates the learned recipe's favorite flag in profile resources and persists it. |
+| `/dish/order` | Generated | Uses Japanese dish rewards, consumes one available order, updates dish refresh time, task counts, and profile resources. |
+| `/synthesis/bulk_execute` | Generated (approximate) | Consumes recipe costs, Mana, and optional ingredient; creates Battle/Equipment Tools from Japanese character/item trait pools. Selected eligible traits are forced into output slots; ranks use the requested 60% rank-5 / 10% rank-1–4 distribution. Persists tools, items, Mana, and recipe history. |
+| `/synthesis/execute_easy` | Generated (profile-local fallback) | Uses the recipe's most recent local character/material combination, or an owned-character/material fallback, then runs generated synthesis. |
+| `/synthesis/combination_ranking` | Partial (local history) | Returns the profile's most recent local combination for each ranking period; empty lists when the recipe has no history. No public leaderboard is bundled. |
+| `/synthesis/execute_rental` | Partial (local fallback) | Generates rental synthesis using a local recipe combination or owned-character/material fallback, with a daily count limit. It does not reproduce the online public rental ranking. |
 | `/exploration/start` | Generated | Starts exploration from the selected profile party and route table; persists progress. |
-| `/exploration/finish` | Partial/stub | Returns an empty successful finish response. |
-| `/expedition/reward_receive` | Partial/stub | Generated mode returns an empty response; special reward patch is available only in replay mode. |
+| `/exploration/update_party` | Generated | Updates the active exploration's party number and applies a captured party-status template when available. |
+| `/exploration/explore` | Partial | Advances talk/gathering routes, persists progress, and applies gathering rewards immediately; common event/story gathering mappings are implemented, with a generic material fallback for unmapped types. Battle routes use `/exploration/battle_start`; their win updates route progress. |
+| `/exploration/finish` | Generated | Applies the completed quest clear and removes active progress; gathering items are already persisted when `/exploration/explore` succeeds. |
+| `/exploration/retire` | Generated | Clears active non-story progress and returns the captured bodyless success response. |
+| `/exploration/skip` | Partial | Returns per-clear and aggregate gathering rewards, updates clear count, and persists item totals. Other skip reward/task details remain approximate. |
+| `/expedition/start` | Generated | Collects elapsed rewards for replaced slots, saves new expedition assignments, and persists item/Cole changes. |
+| `/expedition/reward_receive` | Partial | Refreshes active expedition timers and generates rank/material-pool rewards with a 120-hour cap; special rewards and character-piece details remain approximate. Full replay still patches its captured response. |
 | `/mana/use_item` | Generated | Consumes Mana items, applies Japanese hourly regeneration, updates Mana, and persists. |
 | `/ship/bulk_update` | Generated (Japanese capture) | Updates ship-party characters and Memoria selections; persists changes. |
 | `/ship/ship_tools_set` | Generated (Japanese capture) | Updates ship-party support/cannon selections; persists changes. |
@@ -247,15 +270,10 @@ These routes are not currently implemented by the generated/hybrid Japanese repl
 
 ### Expedition and exploration
 
-- [ ] `/expedition/start` (also observed in Japanese captures)
-- [ ] `/exploration/update_party`
-- [ ] `/exploration/explore`
-- [ ] `/exploration/retire`
-- [ ] `/exploration/skip`
+- All prioritized expedition and exploration routes are listed under **Currently Covered** above.
 
 ### Economy, shops, synthesis, and gacha
 
-- [ ] `/dish/order` (also observed in Japanese captures)
 - [ ] `/mana/purchase`
 - [ ] `/stamina/purchase` (also observed in Japanese captures)
 - [ ] `/stamina/use_item`
@@ -266,16 +284,12 @@ These routes are not currently implemented by the generated/hybrid Japanese repl
 - [ ] `/shop/random_shop/purchase`
 - [ ] `/shop/piece_exchange` (Japanese capture only; absent from reference route registry)
 - [ ] `/shop/random_shop/refresh` (Japanese capture only; absent from reference route registry)
-- [ ] `/synthesis/bulk_execute` (also observed in Japanese captures)
-- [ ] `/synthesis/combination_ranking` (also observed in Japanese captures)
-- [ ] `/synthesis/execute_rental` (also observed in Japanese captures)
-- [ ] `/synthesis/execute_easy`
+- All prioritized synthesis routes are listed under **Currently Covered** above.
 - [x] `/gacha/list` (generated from the sanitized `gacha-snapshot.json`: 27 snapshot banners, 5 decoded rate sets, 22 verbatim mixed-wishlist sets; wishlist states and button counts from the runtime `gacha-state.json` sidecar)
 - [x] `/gacha/execute` (generated weighted draws from snapshot pools: all five standard banners including mixed character/Memoria pools and single draws, plus wishlist banners with and without selections; wishlist picks weigh 1.0 each, unselected pickup cards 0.5 each, base/dynamic pools keep captured weights; rarity-keyed duplicate conversion (1/10/50 pieces), duplicate Memoria granted as extra entities with a first-copy flag, ticket/item/gem cost handling, medal grants, Memoria entity allocation, profile persistence, and sidecar counts; bonus and step-up pulls return 503)
 - [x] `/gacha/wish_list_set` (generated; validates pickup membership and select counts against snapshot wishlist rules and persists selections in the `gacha-state.json` sidecar)
 - [ ] `/growth_pack/bulk_receive` (Japanese capture only)
 - [ ] `/emblem/acquisition_drama` (Japanese capture only)
-- [ ] `/recipe/favorite` (Japanese capture only)
 - [ ] `/recipe/count_reward_receive` (Japanese capture only)
 - [ ] `/event/top` (Japanese capture only; absent from reference route registry)
 - [ ] `/auth/sign_up` (Japanese capture only)

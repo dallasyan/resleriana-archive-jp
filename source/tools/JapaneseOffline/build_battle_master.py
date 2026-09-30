@@ -50,6 +50,7 @@ def main() -> int:
                     "rank": r.get("rank"),
                     "score": r.get("score") or 0,
                     "rewards": r.get("reward_set_ids") or [],
+                    "drops": r.get("drop_reward_set_ids") or [],
                 }
                 for r in score.get("ranks") or []
             ],

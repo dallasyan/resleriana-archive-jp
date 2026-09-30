@@ -18,11 +18,14 @@ Do not run `dotnet build` against a `.py` file. Python tools are built with Pyth
 ```powershell
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\replay_japanese.py"
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\edit_japanese_capture.py"
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\analyze_japanese_capture.py"
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\build_gameplay_master.py"
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\create_starter_profile.py"
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseProfileEditor\profile_editor.py"
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\tests\test_replay_progression.py"
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\tests\test_replay_gacha.py"
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\tests\test_replay_battle.py"
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\tests\test_replay_noncombat.py"
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\build_gacha_snapshot.py"
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\battle_japanese.py"
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m py_compile "tools\JapaneseOffline\build_battle_master.py"
@@ -76,6 +79,22 @@ The package's `game-root\gacha-snapshot.json` carries the public banner/rate dat
 
 `progression-master` also contains Japanese `battle_tool.json`, `battle_tool_trait.json`, `equipment_tool.json`, `equipment_tool_trait.json`, `memoria_level.json`, `memoria_buff_growth.json`, `memoria.json`, `memoria_rarity.json`, `memoria_sp_bonus.json`, `trait_rank_total.json`, `ship_part.json`, `ship_level.json`, `ship_tool.json`, and `ship_tool_level.json` tables used by generated battle, tool-conversion, Memoria, and ship handlers. Keep these files synchronized across `dist`, share runtime/source, and the installed game.
 
+## Non-Combat Gameplay Master
+
+The runtime's `gameplay-master.json` contains compact Japanese recipe, dish,
+expedition, expedition-recommendation, and exploration-area tables. Character,
+item, battle-tool, equipment-tool, and trait tables are reused from
+`progression-master`; quest score and drop tables are reused from
+`battle-master`. Regenerate it from Japanese master tables (no capture data is
+used):
+
+```powershell
+& "<configured Python 3.10 executable>" "tools\JapaneseOffline\build_gameplay_master.py" "resleriana-db-main\data\master\jp" "tools\JapaneseToolkit\share\game-root\gameplay-master.json"
+```
+
+Copy `gameplay-master.json` to `tools\JapaneseOffline\dist`,
+`tools\JapaneseToolkit\share\source\game-root`, and the installed game.
+
 ## Battle Master
 
 The package's `game-root\battle-master\*.json` carries the slim battle tables used by the generated battle simulation (`battle_japanese.py`): quests, battles, waves, enemies, skills, timeline panels, state-change kinds, drop/reward sets, enemy AI, exploration areas, gacha battles, fixed parties, and character growth. Regenerate it from the Japanese master tables:
@@ -110,6 +129,9 @@ sanitized share checklists:
 
 Review newly unmapped/partial rows and verify the share checklist copies contain
 no session tokens or profile references before rebuilding the archive.
+This command also writes `COMBAT_UNIMPLEMENTED_EFFECTS.md`, a bilingual backlog
+of state-change rows with missing mechanics and effect-master IDs whose parser
+code is still `unmapped`; duplicate descriptions are grouped with all IDs kept.
 
 ## JapaneseCaptureObserver.exe
 
@@ -134,6 +156,16 @@ $captureEditor = "tools\JapaneseOffline\edit_japanese_capture.py"
 Copy-Item $captureEditor "tools\JapaneseOffline\dist\edit_japanese_capture.py" -Force
 Copy-Item $captureEditor "tools\JapaneseToolkit\share\game-root\edit_japanese_capture.py" -Force
 Copy-Item $captureEditor "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\edit_japanese_capture.py" -Force
+$captureAnalyzer = "tools\JapaneseOffline\analyze_japanese_capture.py"
+Copy-Item $captureAnalyzer "tools\JapaneseOffline\dist\analyze_japanese_capture.py" -Force
+Copy-Item $captureAnalyzer "tools\JapaneseToolkit\share\game-root\analyze_japanese_capture.py" -Force
+Copy-Item $captureAnalyzer "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\analyze_japanese_capture.py" -Force
+$gameplayBuilder = "tools\JapaneseOffline\build_gameplay_master.py"
+Copy-Item $gameplayBuilder "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\build_gameplay_master.py" -Force
+$gameplayMaster = "tools\JapaneseToolkit\share\game-root\gameplay-master.json"
+Copy-Item $gameplayMaster "tools\JapaneseOffline\dist\gameplay-master.json" -Force
+Copy-Item $gameplayMaster "tools\JapaneseToolkit\share\source\game-root\gameplay-master.json" -Force
+Copy-Item $gameplayMaster "C:\Program Files (x86)\Steam\steamapps\common\AtelierResleriana\gameplay-master.json" -Force
 $starterProfileTool = "tools\JapaneseOffline\create_starter_profile.py"
 Copy-Item $starterProfileTool "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\create_starter_profile.py" -Force
 $gachaSnapshotTool = "tools\JapaneseOffline\build_gacha_snapshot.py"

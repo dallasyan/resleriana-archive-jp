@@ -6,6 +6,8 @@ Use [`BUILDING.md`](BUILDING.md) for the verified build, data-bundling, synchron
 
 The parent package's [`ENDPOINTS.md`](../ENDPOINTS.md) tracks route coverage against the reference server/API schemas and observed Japanese routes, with battle endpoints maintained separately.
 
+The parent package's [`COMBAT_UNIMPLEMENTED_EFFECTS.md`](../COMBAT_UNIMPLEMENTED_EFFECTS.md) lists bilingual state-change gaps and unmapped effect-master IDs with proposed implementation approaches. Duplicate effect descriptions share a row, with every ID retained; blank-text IDs are grouped for master/capture cross-referencing.
+
 ## Layout
 
 ```text

@@ -16,6 +16,11 @@ from decrypt_japanese_capture import AES_IV, AES_KEYS, format_fields, read_wire_
 
 
 ENDPOINT_TYPES = {
+    "/dish/order": ("blend.api.DishOrderRequest", "blend.api.DishOrderResponse"),
+    "/expedition/start": ("blend.api.ExpeditionStartRequest", "blend.api.ExpeditionStartResponse"),
+    "/expedition/reward_receive": (
+        "google.protobuf.Empty", "blend.api.ExpeditionRewardReceiveResponse"
+    ),
     "/login_bonus/receive": ("google.protobuf.Empty", "blend.api.LoginBonusReceiveResponse"),
     "/gacha/list": ("google.protobuf.Empty", "blend.api.GachaListResponse"),
     "/gacha/execute": ("blend.api.GachaExecuteRequest", "blend.api.GachaExecuteResponse"),
@@ -34,6 +39,20 @@ ENDPOINT_TYPES = {
     "/exploration/finish": ("blend.api.ExplorationFinishRequest", "blend.api.ExplorationFinishResponse"),
     "/exploration/retire": ("blend.api.ExplorationRetireRequest", "blend.api.ChangedResourcesResponse"),
     "/exploration/skip": ("blend.api.ExplorationSkipRequest", "blend.api.ExplorationSkipResponse"),
+    "/recipe/favorite": ("blend.api.RecipeFavoriteRequest", "blend.api.ChangedResourcesResponse"),
+    "/synthesis/bulk_execute": (
+        "blend.api.SynthesisBulkExecuteRequest", "blend.api.SynthesisExecuteResponse"
+    ),
+    "/synthesis/combination_ranking": (
+        "blend.api.SynthesisCombinationRankingRequest",
+        "blend.api.SynthesisCombinationRankingResponse",
+    ),
+    "/synthesis/execute_easy": (
+        "blend.api.SynthesisExecuteEasyRequest", "blend.api.SynthesisExecuteEasyResponse"
+    ),
+    "/synthesis/execute_rental": (
+        "blend.api.SynthesisExecuteRentalRequest", "blend.api.SynthesisExecuteResponse"
+    ),
     "/party/bulk_update": ("blend.api.PartyBulkUpdateRequest", "blend.api.ChangedResourcesResponse"),
     "/party/battle_tools_set": ("blend.api.PartyBattleToolsSetRequest", "blend.api.ChangedResourcesResponse"),
     "/character/enhance": ("blend.api.CharacterEnhanceRequest", "blend.api.ChangedResourcesResponse"),

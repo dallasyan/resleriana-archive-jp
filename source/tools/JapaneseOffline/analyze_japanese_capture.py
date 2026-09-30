@@ -7,32 +7,22 @@ import argparse
 import gzip
 import hashlib
 import json
-import sys
 from collections import Counter
 from pathlib import Path
 from typing import Any
 
 from Crypto.Cipher import AES
-from google.protobuf import json_format, message_factory
-from google.protobuf.message import DecodeError
 
-
-def find_editor_dir() -> Path:
-    for parent in Path(__file__).resolve().parents:
-        for name in ("JapaneseProfileEditor", "profile-editor"):
-            candidate = parent / name
-            if (candidate / "profile_editor.py").is_file():
-                return candidate
-    raise FileNotFoundError("could not locate profile_editor.py")
-
-
-EDITOR_DIR = find_editor_dir()
-sys.path.insert(0, str(EDITOR_DIR))
-
-import profile_editor
+import contract_codec
 
 
 ENDPOINT_TYPES = {
+    "/dish/order": ("blend.api.DishOrderRequest", "blend.api.DishOrderResponse"),
+    "/expedition/start": ("blend.api.ExpeditionStartRequest", "blend.api.ExpeditionStartResponse"),
+    "/expedition/reward_receive": (
+        "google.protobuf.Empty",
+        "blend.api.ExpeditionRewardReceiveResponse",
+    ),
     "/exploration/start": ("blend.api.ExplorationStartRequest", "blend.api.ChangedResourcesResponse"),
     "/exploration/update_party": ("blend.api.ExplorationUpdatePartyRequest", "blend.api.ChangedResourcesResponse"),
     "/exploration/explore": ("blend.api.ExplorationExploreRequest", "blend.api.ExplorationExploreResponse"),
@@ -64,7 +54,43 @@ ENDPOINT_TYPES = {
     ),
     "/quest/battle/skip": ("blend.api.QuestBattleSkipRequest", "blend.api.QuestBattleSkipResponse"),
     "/gacha/battle_start": ("blend.api.GachaBattleStartRequest", "blend.api.BattleStartResponse"),
+    "/recipe/favorite": ("blend.api.RecipeFavoriteRequest", "blend.api.ChangedResourcesResponse"),
+    "/synthesis/bulk_execute": (
+        "blend.api.SynthesisBulkExecuteRequest",
+        "blend.api.SynthesisExecuteResponse",
+    ),
+    "/synthesis/combination_ranking": (
+        "blend.api.SynthesisCombinationRankingRequest",
+        "blend.api.SynthesisCombinationRankingResponse",
+    ),
+    "/synthesis/execute_easy": (
+        "blend.api.SynthesisExecuteEasyRequest",
+        "blend.api.SynthesisExecuteEasyResponse",
+    ),
+    "/synthesis/execute_rental": (
+        "blend.api.SynthesisExecuteRentalRequest",
+        "blend.api.SynthesisExecuteResponse",
+    ),
 }
+
+
+JAPANESE_AES_IV = bytes.fromhex("65a99b89a634fca3193c5212e5219378")
+
+
+def rotate_key(key: bytes, count: int) -> bytes:
+    value = int.from_bytes(key, "big")
+    value = ((value << count) & ((1 << 128) - 1)) | (value >> (128 - count))
+    return value.to_bytes(16, "big")
+
+
+JAPANESE_AES_KEYS = tuple(
+    rotate_key(seed, rotation)
+    for seed in (
+        bytes.fromhex("487a9961c947f7d92ed6b79fc0545fea"),
+        bytes.fromhex("ea5f54c09fb7d62ed9f747c961997a48"),
+    )
+    for rotation in range(128)
+)
 
 
 def metadata_values(path: Path) -> dict[str, str]:
@@ -76,104 +102,46 @@ def metadata_values(path: Path) -> dict[str, str]:
     return values
 
 
-def infer_game_root(session: Path) -> Path:
-    resolved = session.resolve()
-    if resolved.parent.name == "japanese-capture":
-        return resolved.parent.parent
-    return resolved.parent
-
-
-def material_paths(session: Path, game_root: Path, explicit: list[Path]) -> list[Path]:
-    candidates = list(explicit)
-    candidates.extend((game_root / name for name in ("aes-material.json",)))
-    candidates.append(session / "aes-material.json")
-    candidates.extend((game_root / "japanese-capture").rglob("aes-material.json"))
-
-    result: list[Path] = []
-    for path in candidates:
-        path = path.resolve()
-        if path.is_file() and path not in result:
-            result.append(path)
-    return result
-
-
-def load_candidates(paths: list[Path]) -> tuple[list[bytes], list[bytes]]:
-    keys: list[bytes] = []
-    ivs: list[bytes] = []
-    for path in paths:
-        try:
-            path_keys, path_ivs = profile_editor.load_material(path)
-        except (OSError, TypeError, ValueError, json.JSONDecodeError):
-            continue
-        for key in path_keys:
-            if key not in keys:
-                keys.append(key)
-        for iv in path_ivs:
-            if iv not in ivs:
-                ivs.append(iv)
-    if not keys or not ivs:
-        raise ValueError("no usable AES material was found")
-    return keys, ivs
-
-
-def decrypt_request(
-    data: bytes,
-    message_class,
-    keys: list[bytes],
-    ivs: list[bytes],
-) -> tuple[Any, bytes, bytes]:
+def pkcs7_unpad(data: bytes) -> bytes:
     if not data:
-        message = message_class()
-        return message, b"", b""
+        raise ValueError("empty padded payload")
+    padding = data[-1]
+    if not 0 < padding <= AES.block_size or data[-padding:] != bytes([padding]) * padding:
+        raise ValueError("invalid PKCS#7 padding")
+    return data[:-padding]
+
+
+def decrypt_request(data: bytes) -> tuple[bytes, bytes, bytes]:
+    if not data:
+        return b"", b"", b""
     if len(data) < 17 or (len(data) - 1) % AES.block_size:
         raise ValueError("request is not a marker followed by AES blocks")
-    last_error: Exception | None = None
-    for key in keys:
-        for iv in ivs:
-            try:
-                padded = AES.new(key, AES.MODE_CBC, iv).decrypt(data[1:])
-                plaintext = profile_editor.pkcs7_unpad(padded)
-                message = message_class()
-                message.ParseFromString(plaintext)
-                return message, key, iv
-            except (DecodeError, ValueError, TypeError) as error:
-                last_error = error
-    raise ValueError(f"request could not be decrypted: {last_error}")
+    marker = data[0]
+    key = JAPANESE_AES_KEYS[marker]
+    padded = AES.new(key, AES.MODE_CBC, JAPANESE_AES_IV).decrypt(data[1:])
+    return pkcs7_unpad(padded), key, JAPANESE_AES_IV
 
 
 def decrypt_response(
     data: bytes,
-    message_class,
-    keys: list[bytes],
-    ivs: list[bytes],
-) -> tuple[Any, int, bytes, bytes]:
+) -> tuple[bytes, int, bytes, bytes]:
     if len(data) < 17 or (len(data) - 1) % AES.block_size:
         raise ValueError("response is not a marker followed by AES blocks")
-    last_error: Exception | None = None
-    for key in keys:
-        for iv in ivs:
-            try:
-                padded = AES.new(key, AES.MODE_CBC, iv).decrypt(data[1:])
-                compressed = profile_editor.pkcs7_unpad(padded)
-                plaintext = gzip.decompress(compressed)
-                message = message_class()
-                message.ParseFromString(plaintext)
-                return message, data[0], key, iv
-            except (DecodeError, OSError, EOFError, ValueError, TypeError) as error:
-                last_error = error
-    raise ValueError(f"response could not be decrypted: {last_error}")
+    marker = data[0]
+    key = JAPANESE_AES_KEYS[marker]
+    padded = AES.new(key, AES.MODE_CBC, JAPANESE_AES_IV).decrypt(data[1:])
+    compressed = pkcs7_unpad(padded)
+    try:
+        plaintext = gzip.decompress(compressed)
+    except (OSError, EOFError):
+        plaintext = compressed
+    return plaintext, marker, key, JAPANESE_AES_IV
 
 
-def message_class(pool, name: str):
-    return message_factory.GetMessageClass(pool.FindMessageTypeByName(name))
-
-
-def message_json(message: Any) -> dict[str, Any]:
-    return json_format.MessageToDict(
-        message,
-        preserving_proto_field_name=True,
-        use_integers_for_enums=False,
-    )
+def decode_message(contract_db, name: str, data: bytes) -> dict[str, Any]:
+    if name == "google.protobuf.Empty" and not data:
+        return {"$message": name}
+    return contract_codec.decode_message(contract_db, name, data)
 
 
 def fingerprint(value: bytes) -> str | None:
@@ -200,10 +168,7 @@ def selected_records(session: Path, endpoints: set[str], records: set[int]) -> l
 
 def analyze(args: argparse.Namespace) -> list[dict[str, Any]]:
     session = args.session.resolve()
-    game_root = (args.game_root or infer_game_root(session)).resolve()
-    descriptor_path = args.descriptor.resolve()
-    pool = profile_editor.load_descriptor_pool(descriptor_path)
-    keys, ivs = load_candidates(material_paths(session, game_root, args.material))
+    contract_db = contract_codec.parse_fields_txt(args.contract_fields.resolve())
     endpoints = set(args.endpoint)
     records = set(args.record)
     results: list[dict[str, Any]] = []
@@ -211,8 +176,6 @@ def analyze(args: argparse.Namespace) -> list[dict[str, Any]]:
     for number, metadata_path, values in selected_records(session, endpoints, records):
         endpoint = values["URL"].split("game.resleriana.jp", 1)[-1].split("?", 1)[0]
         request_name, response_name = ENDPOINT_TYPES[endpoint]
-        request_class = message_class(pool, request_name)
-        response_class = message_class(pool, response_name)
         request_path = session / f"{number:04d}-request.bin"
         response_path = session / f"{number:04d}-response.bin"
         result: dict[str, Any] = {
@@ -226,8 +189,8 @@ def analyze(args: argparse.Namespace) -> list[dict[str, Any]]:
         }
         try:
             request_data = request_path.read_bytes() if request_path.exists() else b""
-            request, request_key, request_iv = decrypt_request(request_data, request_class, keys, ivs)
-            result["request"] = message_json(request)
+            request, request_key, request_iv = decrypt_request(request_data)
+            result["request"] = decode_message(contract_db, request_name, request)
             result["request_crypto"] = {
                 "key_fingerprint": fingerprint(request_key),
                 "iv_fingerprint": fingerprint(request_iv),
@@ -237,11 +200,8 @@ def analyze(args: argparse.Namespace) -> list[dict[str, Any]]:
         try:
             response, marker, response_key, response_iv = decrypt_response(
                 response_path.read_bytes(),
-                response_class,
-                keys,
-                ivs,
             )
-            result["response"] = message_json(response)
+            result["response"] = decode_message(contract_db, response_name, response)
             result["response_crypto"] = {
                 "marker": marker,
                 "key_fingerprint": fingerprint(response_key),
@@ -256,17 +216,15 @@ def analyze(args: argparse.Namespace) -> list[dict[str, Any]]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("session", type=Path, help="capture session directory")
-    parser.add_argument("--game-root", type=Path, help="game root containing japanese-capture")
     parser.add_argument(
-        "--descriptor",
+        "--contract-fields",
         type=Path,
-        default=EDITOR_DIR / "profile-descriptors.pb",
-        help="protobuf descriptor set",
+        default=Path("C:/Program Files (x86)/Steam/steamapps/common/AtelierResleriana/contract-dump/fields.txt"),
+        help="client contract-dump fields.txt",
     )
-    parser.add_argument("--material", type=Path, action="append", default=[], help="additional AES material file")
     parser.add_argument("--endpoint", action="append", default=[], help="only analyze this endpoint; repeatable")
     parser.add_argument("--record", type=int, action="append", default=[], help="only analyze this record; repeatable")
-    parser.add_argument("--list", action="store_true", help="list captured battle/exploration endpoints and counts")
+    parser.add_argument("--list", action="store_true", help="list captured endpoints and counts")
     parser.add_argument("--output", type=Path, help="write JSON to this path instead of stdout")
     args = parser.parse_args()
 

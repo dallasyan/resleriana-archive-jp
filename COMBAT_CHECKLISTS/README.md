@@ -16,5 +16,6 @@ English names prefer the official Global localization (61 tables), then fan mach
 - traits.md: battle and equipment trait effect coverage.
 - panels.md: exact parsed panel operations.
 - states.md: status-effect kinds with English names.
+- ../COMBAT_UNIMPLEMENTED_EFFECTS.md: bilingual missing/partial state and effect records with proposals.
 
 Unsure items need capture confirmation; see the capture list in the session summary message.

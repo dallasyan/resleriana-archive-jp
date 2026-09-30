@@ -35,20 +35,20 @@ The package handles Japanese subspace ship-party updates, support/cannon selecti
 
 Generated battles (`battle_japanese.py` with `game-root\battle-master` tables) cover quest, exploration, and gacha battle entry, turn-by-turn actions with previews, win/loss handling, battle skip, retire/resume, and finish rewards (score-rank sets, drops, first-clear rewards, character EXP, missions, quest states) with stamina deducted at entry. Damage numbers are calibrated estimates. Known approximations: enemy growth clamping, estimated wait positions/panel placement, generic buff stacking, no equipment/memoria/research/support/leader/passive stat modeling, no skill panel overwrites or ailment details, and no task-count updates.
 
-For capture analysis, `decrypt_japanese_capture.py` accepts a capture file or directory. A directory such as `session-20260909-094129-067` produces a sibling `decrypted-session-20260909-094129-067` directory containing decrypted payloads and recursive protobuf wire dumps:
+For capture analysis, `decrypt_japanese_capture.py` accepts a capture file or private session directory. It produces a sibling decrypted directory containing payloads and recursive protobuf wire dumps:
 
 ```powershell
-python decrypt_japanese_capture.py "path\to\session-20260909-094129-067"
+python decrypt_japanese_capture.py "<private-session>"
 ```
 
 For editable round trips, use `edit_japanese_capture.py`. It adds descriptor-backed JSON files when a known endpoint type is available. Edit the JSON or plaintext protobuf files, then rebuild a sibling encrypted session:
 
 ```powershell
-python edit_japanese_capture.py decrypt "path\to\session-20260909-094129-067"
-python edit_japanese_capture.py encrypt "path\to\decrypted-session-20260909-094129-067"
+python edit_japanese_capture.py decrypt "<private-session>"
+python edit_japanese_capture.py encrypt "<private-decrypted-session>"
 ```
 
-The encrypt command writes `encrypted-session-20260909-094129-067`. Descriptor-backed JSON is available for the known battle, exploration, party, character, Memoria, Home, recipe, gacha, and illustrated-book endpoints. Every other valid protobuf payload also receives an editable `.wire.json` representation that can be round-tripped without a descriptor.
+The encrypt command writes an encrypted sibling session directory. Descriptor-backed JSON is available for the known battle, exploration, party, character, Memoria, Home, recipe, gacha, and illustrated-book endpoints. Every other valid protobuf payload also receives an editable `.wire.json` representation that can be round-tripped without a descriptor.
 
 Party and equipment editing is locally synthesized for `/party/bulk_update`, `/party/battle_tools_set`, `/character/bulk_set`, `/character/equip`, `/character/memoria_set`, and `/equipment_preset/bulk_set`, using the active profile and request fields. Character and Memoria progression endpoints use the active profile plus Japanese master tables and persist generated changes.
 

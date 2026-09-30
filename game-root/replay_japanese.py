@@ -146,6 +146,23 @@ def progression_master_index(name: str) -> dict[int, dict[str, object]]:
     return {int(record["id"]): record for record in values if isinstance(record, dict) and "id" in record}
 
 
+@lru_cache(maxsize=4)
+def load_gameplay_master(path: str) -> dict[str, object]:
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError("gameplay master data must be a JSON object")
+    return data
+
+
+def gameplay_master_table(name: str) -> dict[int, dict[str, object]]:
+    path = str((GAME_DIR / "gameplay-master.json").resolve())
+    data = load_gameplay_master(path)
+    table = data.get(name)
+    if not isinstance(table, dict):
+        raise ValueError(f"gameplay master has no {name} table")
+    return {int(key): value for key, value in table.items() if isinstance(value, dict)}
+
+
 def observed_aes_sequences() -> tuple[tuple[tuple[bytes, ...], tuple[bytes, ...]], ...]:
     return ((JAPANESE_AES_KEYS, (JAPANESE_AES_IV,)),)
 
@@ -934,6 +951,7 @@ def make_changed_resources_response(
     items: list[bytes] | None = None,
     character_pieces: list[bytes] | None = None,
     memorias: list[bytes] | None = None,
+    recipes: list[bytes] | None = None,
     status: bytes | None = None,
     wallet: bytes | None = None,
     total_task_counts: list[bytes] | None = None,
@@ -949,6 +967,7 @@ def make_changed_resources_response(
     growboard_role_rates: list[bytes] | None = None,
     deleted_resources: bytes | None = None,
     extra_response_fields: list[tuple[int, int, object]] | None = None,
+    extra_resource_fields: list[tuple[int, int, object]] | None = None,
     response_key: bytes | None = None,
     response_iv: bytes | None = None,
     response_marker: int | None = None,
@@ -961,6 +980,7 @@ def make_changed_resources_response(
         items=items,
         character_pieces=character_pieces,
         memorias=memorias,
+        recipes=recipes,
         status=status,
         wallet=wallet,
         total_task_counts=total_task_counts,
@@ -976,6 +996,7 @@ def make_changed_resources_response(
         growboard_role_rates=growboard_role_rates,
         deleted_resources=deleted_resources,
         extra_response_fields=extra_response_fields,
+        extra_resource_fields=extra_resource_fields,
     )
     return bytes([response_marker]) + aes_encrypt(
         pkcs7_pad(gzip.compress(plaintext, mtime=0)),
@@ -990,6 +1011,7 @@ def make_changed_resources_plaintext(
     items: list[bytes] | None = None,
     character_pieces: list[bytes] | None = None,
     memorias: list[bytes] | None = None,
+    recipes: list[bytes] | None = None,
     status: bytes | None = None,
     wallet: bytes | None = None,
     total_task_counts: list[bytes] | None = None,
@@ -1005,6 +1027,7 @@ def make_changed_resources_plaintext(
     growboard_role_rates: list[bytes] | None = None,
     deleted_resources: bytes | None = None,
     extra_response_fields: list[tuple[int, int, object]] | None = None,
+    extra_resource_fields: list[tuple[int, int, object]] | None = None,
 ) -> bytes:
     resources = bytearray()
     if wallet is not None:
@@ -1029,6 +1052,8 @@ def make_changed_resources_plaintext(
         resources.extend(write_field(11, 2, battle_tool))
     for memoria in memorias or []:
         resources.extend(write_field(29, 2, memoria))
+    for recipe in recipes or []:
+        resources.extend(write_field(12, 2, recipe))
     if status is not None:
         resources.extend(write_field(6, 2, status))
     for total_task_count in total_task_counts or []:
@@ -1043,6 +1068,8 @@ def make_changed_resources_plaintext(
         resources.extend(write_field(68, 2, ship_tool))
     for chara_home in chara_homes or []:
         resources.extend(write_field(61, 2, chara_home))
+    for field_number, wire_type, value in extra_resource_fields or []:
+        resources.extend(write_field(field_number, wire_type, value))
     response = bytearray(write_field(1, 2, bytes(resources)))
     if deleted_resources:
         response.extend(write_field(2, 2, deleted_resources))
@@ -1078,6 +1105,8 @@ PROFILE_REPEATED_KEYS: dict[int, tuple[int, ...]] = {
     40: (1,),      # RevivedEvent.event_id
     46: (1,),      # CommunicationState.character_id
     47: (1,),      # CharacterStoryState.character_story_id
+    51: (1,),      # BattleToolTraitStimulator.battle_tool_trait_id
+    52: (1,),      # EquipmentToolTraitStimulator.equipment_tool_trait_id
     61: (1,),      # CharaHome.slot_id
     66: (1,),      # Ship.ship_id
     67: (1,),      # ShipParty.number
@@ -1252,6 +1281,27 @@ def merge_profile_resources_response(profile_plaintext: bytes, response_plaintex
     if deleted_resources:
         merged_resources = remove_deleted_profile_entities(merged_resources, deleted_resources)
     return replace_message_field_in_place(profile_plaintext, 1, merged_resources)
+
+
+def remove_profile_resource_records(
+    profile_plaintext: bytes,
+    resource_field_number: int,
+    key_field_number: int,
+    keys_to_remove: set[int],
+) -> bytes:
+    if not keys_to_remove:
+        return profile_plaintext
+    resources = message_field(profile_plaintext, 1)
+    if resources is None:
+        return profile_plaintext
+    updated = bytearray()
+    for number, wire, value in read_wire_fields(resources):
+        if number == resource_field_number and wire == 2:
+            record = bytes(value)
+            if varint_field(record, key_field_number, -1) in keys_to_remove:
+                continue
+        updated.extend(write_field(number, wire, value))
+    return replace_message_field_in_place(profile_plaintext, 1, bytes(updated))
 
 
 def load_home_profile_state(profile_path: Path) -> tuple[bytes, dict[int, bytes], list[int]]:
@@ -1917,6 +1967,10 @@ def is_api_message(data: bytes) -> bool:
         return False
 
 
+def is_empty_or_api_message(data: bytes) -> bool:
+    return not data or is_api_message(data)
+
+
 def read_varints(data: bytes) -> list[int]:
     values = []
     offset = 0
@@ -1954,7 +2008,19 @@ def captured_response_material(
             "/profile/update_chara_home_favorite_character_list": is_favorite_request,
             "/profile/update_selected_home_id": is_selected_home_request,
             "/exploration/start": is_exploration_start_request,
+            "/exploration/update_party": is_api_message,
+            "/exploration/explore": is_api_message,
+            "/exploration/retire": is_empty_or_api_message,
+            "/exploration/skip": is_api_message,
             "/exploration/finish": is_exploration_finish_request,
+            "/expedition/start": is_api_message,
+            "/expedition/reward_receive": is_empty_or_api_message,
+            "/dish/order": is_api_message,
+            "/recipe/favorite": is_api_message,
+            "/synthesis/bulk_execute": is_api_message,
+            "/synthesis/combination_ranking": is_api_message,
+            "/synthesis/execute_easy": is_api_message,
+            "/synthesis/execute_rental": is_api_message,
             "/party/bulk_update": is_party_bulk_update_request,
             "/party/battle_tools_set": is_party_battle_tools_request,
             "/character/equip": is_character_equip_request,
@@ -2192,6 +2258,108 @@ def updated_reward_item_records(
         record = replace_varint_field(record, 3, total_quantity + amount)
         changed_items.append(record)
     return changed_items
+
+
+def updated_item_records_for_operation(
+    item_records: dict[int, bytes],
+    consumed: dict[int, int],
+    granted: dict[int, int],
+) -> list[bytes]:
+    changed_items: list[bytes] = []
+    for item_id in sorted(set(consumed) | set(granted)):
+        record = item_records.get(item_id, write_field(1, 0, item_id))
+        quantity = varint_field(record, 2, 0)
+        total_quantity = varint_field(record, 3, quantity)
+        consumed_quantity = int(consumed.get(item_id, 0))
+        granted_quantity = int(granted.get(item_id, 0))
+        if quantity < consumed_quantity:
+            raise ValueError(
+                f"item {item_id} quantity {quantity} is below requested {consumed_quantity}"
+            )
+        record = replace_varint_field(
+            record,
+            2,
+            quantity - consumed_quantity + granted_quantity,
+        )
+        record = replace_varint_field(record, 3, total_quantity + granted_quantity)
+        changed_items.append(record)
+    return changed_items
+
+
+def choose_synthesis_trait_ids(
+    candidates: list[int], selected: list[int], trait_count: int
+) -> list[int]:
+    options = [int(value) for value in candidates if int(value) > 0]
+    if not options:
+        raise ValueError("synthesis has no eligible traits for its output type")
+    forced = list(dict.fromkeys(int(value) for value in selected if int(value) > 0))
+    if len(forced) > trait_count:
+        raise ValueError("selected synthesis traits exceed the output trait slots")
+    option_ids = set(options)
+    invalid = [value for value in forced if value not in option_ids]
+    if invalid:
+        raise ValueError(f"selected synthesis trait {invalid[0]} is not available")
+
+    result = list(forced)
+    remaining = list(options)
+    for value in forced:
+        if value in remaining:
+            remaining.remove(value)
+    while len(result) < trait_count:
+        pool = remaining or options
+        value = random.choice(pool)
+        result.append(value)
+        if value in remaining:
+            remaining.remove(value)
+    return result
+
+
+def synthesis_trait_params(
+    candidates: list[int], selected: list[int], trait_count: int
+) -> list[tuple[int, int]]:
+    trait_ids = choose_synthesis_trait_ids(candidates, selected, trait_count)
+    return [
+        (trait_id, random.choices((1, 2, 3, 4, 5), weights=(10, 10, 10, 10, 60), k=1)[0])
+        for trait_id in trait_ids
+    ]
+
+
+def trait_params_message(traits: list[tuple[int, int]]) -> bytes:
+    return b"".join(
+        write_field(3, 2, write_field(1, 0, trait_id) + write_field(2, 0, rank))
+        for trait_id, rank in traits
+    )
+
+
+def synthesis_tool_record(
+    entity_id: int,
+    tool_id: int,
+    traits: list[tuple[int, int]],
+    received_at: int,
+) -> bytes:
+    record = bytearray(write_field(1, 0, entity_id) + write_field(2, 0, tool_id))
+    for trait_id, rank in traits:
+        record.extend(
+            write_field(5, 2, write_field(1, 0, trait_id) + write_field(2, 0, rank))
+        )
+    record.extend(write_field(7, 2, write_field(1, 0, received_at)))
+    return bytes(record)
+
+
+def synthesis_tool_reward(
+    resource_type: int,
+    tool_id: int,
+    entity_id: int,
+    traits: list[tuple[int, int]],
+) -> bytes:
+    reward = bytearray(
+        write_field(1, 0, resource_type)
+        + write_field(2, 0, tool_id)
+        + write_field(3, 0, 1)
+        + write_field(4, 0, entity_id)
+    )
+    reward.extend(write_field(5, 2, trait_params_message(traits)))
+    return bytes(reward)
 
 
 def experience_item_refund(exp: int, item_master: dict[int, dict[str, object]]) -> tuple[int, dict[int, int]]:
@@ -2716,6 +2884,8 @@ def make_exploration_progress(
     progress = bytearray()
     progress.extend(write_field(1, 0, quest_id))
     progress.extend(write_field(2, 0, int(routes[0]["area_id"])))
+    if quest_id >= 100_000_000:
+        progress.extend(write_field(11, 0, 1))
     for route_value in route_values:
         progress.extend(write_field(3, 0, route_value))
     for _ in routes:
@@ -2797,7 +2967,12 @@ class Replay:
             self.profile_backup_failed = True
             self.log(f"PROFILE-BACKUP-FAILED timing=session_start reason={type(error).__name__}:{error}")
 
-    def persist_profile_update(self, changed_response_plaintext: bytes, source: str) -> None:
+    def persist_profile_update(
+        self,
+        changed_response_plaintext: bytes,
+        source: str,
+        remove_exploration_quest_ids: set[int] | None = None,
+    ) -> None:
         if REPLAY_MODE or not changed_response_plaintext:
             return
         profile_path = GAME_DIR / "profile.bin"
@@ -2813,7 +2988,16 @@ class Replay:
                 current_plaintext,
                 changed_response_plaintext,
             )
-            if merged_plaintext is None or merged_plaintext == current_plaintext:
+            if merged_plaintext is None:
+                return
+            for quest_id in remove_exploration_quest_ids or set():
+                merged_plaintext = remove_profile_resource_records(
+                    merged_plaintext,
+                    25,
+                    1,
+                    {int(quest_id)},
+                )
+            if merged_plaintext == current_plaintext:
                 return
 
             if self.profile_backup_path is None:
@@ -4368,10 +4552,13 @@ class Replay:
         memorias: list[bytes] | None = None,
         status: bytes | None = None,
         total_task_counts: list[bytes] | None = None,
+        recipes: list[bytes] | None = None,
         growboard_role_rates: list[bytes] | None = None,
         deleted_resources: bytes | None = None,
         extra_response_fields: list[tuple[int, int, object]] | None = None,
+        extra_resource_fields: list[tuple[int, int, object]] | None = None,
         persistence_plaintext: bytes | None = None,
+        persistence_remove_exploration_quest_ids: set[int] | None = None,
     ) -> bytes:
         plaintext = make_changed_resources_plaintext(
             profile=profile,
@@ -4381,6 +4568,7 @@ class Replay:
             memorias=memorias,
             status=status,
             total_task_counts=total_task_counts,
+            recipes=recipes,
             parties=parties,
             party_members=party_members,
             equipment_tools=equipment_tools,
@@ -4393,16 +4581,731 @@ class Replay:
             chara_homes=chara_homes,
             deleted_resources=deleted_resources,
             extra_response_fields=extra_response_fields,
+            extra_resource_fields=extra_resource_fields,
         )
         self.persist_profile_update(
             plaintext if persistence_plaintext is None else persistence_plaintext,
             "generated_changed_resources",
+            remove_exploration_quest_ids=persistence_remove_exploration_quest_ids,
         )
         return bytes([response_marker]) + aes_encrypt(
             pkcs7_pad(gzip.compress(plaintext, mtime=0)),
             response_key,
             response_iv,
         )
+
+    def recipe_favorite_response(self, flow: http.HTTPFlow) -> bytes:
+        request_plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                flow.request.raw_content or b"",
+                is_api_message,
+                "/recipe/favorite",
+            )
+        )
+        values = {
+            number: int(value)
+            for number, wire, value in read_wire_fields(request_plaintext)
+            if wire == 0
+        }
+        recipe_id = values.get(1, 0)
+        if recipe_id <= 0:
+            raise ValueError("recipe favorite request has no recipe_id")
+        profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+        recipes = profile_resource_records(profile_plaintext, 12)
+        record = recipes.get(recipe_id)
+        if record is None:
+            raise ValueError(f"profile has no learned recipe {recipe_id}")
+        record = replace_varint_field(record, 5, int(values.get(2, 0) != 0))
+        self.log(
+            f"LOCAL-RECIPE-FAVORITE path=/recipe/favorite status=200 recipe_id={recipe_id} "
+            f"is_favorite={int(values.get(2, 0) != 0)}"
+        )
+        return self.changed_resources_encrypted_response(
+            response_key,
+            response_iv,
+            response_marker,
+            recipes=[record],
+        )
+
+    def dish_order_response(self, flow: http.HTTPFlow) -> bytes:
+        request_plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                flow.request.raw_content or b"",
+                is_api_message,
+                "/dish/order",
+            )
+        )
+        dish_id = varint_field(request_plaintext, 1, 0)
+        dish = gameplay_master_table("dishes").get(dish_id)
+        if dish is None:
+            raise ValueError(f"unknown dish_id={dish_id}")
+        profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+        status = message_field(profile_resources(profile_plaintext), 6)
+        if status is None:
+            raise ValueError("profile has no Status message for dish order")
+        dishes_remaining = varint_field(status, 17, 1)
+        if dishes_remaining <= 0:
+            raise ValueError("no dish orders remain")
+        now = int(time.time())
+        status = replace_varint_field(status, 17, dishes_remaining - 1)
+        status = replace_message_field(status, 19, write_field(1, 0, now))
+
+        item_grants: dict[int, int] = {}
+        cole_grant = 0
+        rewards: list[bytes] = []
+        for reward in dish.get("rewards") or []:
+            resource_type = int(reward.get("type") or 0)
+            resource_id = int(reward.get("id") or 0)
+            quantity = int(reward.get("quantity") or 0)
+            if quantity <= 0:
+                continue
+            rewards.append(resource_reward(resource_type, quantity, resource_id))
+            if resource_type == 5:
+                item_grants[resource_id] = item_grants.get(resource_id, 0) + quantity
+            elif resource_type == 3 and resource_id == 1:
+                cole_grant += quantity
+        if cole_grant:
+            status = replace_varint_field(status, 3, varint_field(status, 3, 0) + cole_grant)
+        items = updated_item_records_for_operation(
+            profile_resource_records(profile_plaintext, 3),
+            {},
+            item_grants,
+        )
+        task_records = profile_resource_records(profile_plaintext, 32)
+        total_tasks = [
+            updated_total_task_count_record(task_records, condition_id)
+            for condition_id in (1, 119, 734)
+        ]
+        persist_plaintext = make_changed_resources_plaintext(
+            items=items,
+            status=status,
+            total_task_counts=total_tasks,
+        )
+        response_plaintext = make_changed_resources_plaintext(
+            items=items,
+            status=status,
+            total_task_counts=total_tasks,
+            extra_response_fields=[(2, 2, reward) for reward in rewards],
+        )
+        self.persist_profile_update(persist_plaintext, "/dish/order")
+        self.log(f"LOCAL-DISH-ORDER path=/dish/order status=200 dish_id={dish_id}")
+        return encrypt_api_response(
+            response_marker,
+            response_plaintext,
+            response_key,
+            response_iv,
+        )
+
+    def synthesis_combination_ranking_response(self, flow: http.HTTPFlow) -> bytes:
+        request_plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                flow.request.raw_content or b"",
+                is_api_message,
+                "/synthesis/combination_ranking",
+            )
+        )
+        recipe_id = varint_field(request_plaintext, 1, 0)
+        profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+        recipe = profile_resource_records(profile_plaintext, 12).get(recipe_id, b"")
+        character_ids = varint_values(recipe, 3) if recipe else []
+        ingredient_field = message_field(recipe, 4) if recipe else None
+        ingredient_id = varint_field(ingredient_field or b"", 1, 0)
+        ranks = b""
+        if len(character_ids) >= 2:
+            rank = write_field(1, 0, character_ids[0]) + write_field(2, 0, character_ids[1])
+            if ingredient_id > 0:
+                rank += write_field(3, 2, write_field(1, 0, ingredient_id))
+            ranks = write_field(2, 2, rank)
+        calculated_at = write_field(1, 0, int(time.time()))
+        ranking = calculated_at + ranks
+        response_plaintext = b"".join(
+            write_field(field_number, 2, ranking)
+            for field_number in (1, 2, 3)
+        )
+        return encrypt_api_response(
+            response_marker,
+            response_plaintext,
+            response_key,
+            response_iv,
+        )
+
+    def synthesis_fallback_combination(
+        self,
+        profile_plaintext: bytes,
+        recipe_id: int,
+        recipe: dict[str, object],
+        requested_ingredient_id: int | None,
+    ) -> tuple[list[int], int | None]:
+        resources = profile_resources(profile_plaintext)
+        characters = profile_resource_records(profile_plaintext, 2)
+        items = profile_resource_records(profile_plaintext, 3)
+        previous = profile_resource_records(profile_plaintext, 12).get(recipe_id, b"")
+        character_ids = varint_values(previous, 3) if previous else []
+        if len(character_ids) < 2:
+            character_ids = sorted(characters)[:2]
+        if len(character_ids) < 2:
+            raise ValueError("rental synthesis requires at least two owned characters")
+
+        ingredient_id = requested_ingredient_id
+        if ingredient_id is None and previous:
+            wrapped = message_field(previous, 4)
+            ingredient_id = varint_field(wrapped or b"", 1, 0) or None
+        if ingredient_id is None or ingredient_id not in items:
+            output_types = {
+                int(value.get("type") or 0)
+                for value in recipe.get("rewards") or []
+                if value.get("is_target")
+            }
+            item_master = progression_master_index("item")
+            trait_key = "battle_tool_trait_ids" if 14 in output_types else "equipment_tool_trait_ids"
+            eligible = [
+                item_id
+                for item_id in sorted(items)
+                if item_id in item_master
+                and item_master[item_id].get(trait_key)
+                and varint_field(items[item_id], 2, 0) > 0
+            ]
+            ingredient_id = eligible[0] if eligible else None
+        return character_ids[:2], ingredient_id
+
+    def synthesis_execute_plaintext(
+        self,
+        profile_plaintext: bytes,
+        recipe_id: int,
+        character_ids: list[int],
+        ingredient_id: int | None,
+        selected_trait_ids: list[int],
+        count: int,
+        rental: bool,
+    ) -> tuple[bytes, bytes, int]:
+        if count <= 0 or count > 99:
+            raise ValueError("synthesis count must be between 1 and 99")
+        if len(character_ids) != 2 or character_ids[0] == character_ids[1]:
+            raise ValueError("synthesis requires two distinct supporting characters")
+
+        recipe = gameplay_master_table("recipes").get(recipe_id)
+        if recipe is None:
+            raise ValueError(f"unknown recipe_id={recipe_id}")
+        resources = profile_resources(profile_plaintext)
+        character_records = profile_resource_records(profile_plaintext, 2)
+        for character_id in character_ids:
+            if character_id not in character_records:
+                raise ValueError(f"profile has no synthesis character {character_id}")
+        character_master = progression_master_index("character")
+        characters = [character_master.get(character_id) for character_id in character_ids]
+        if any(value is None for value in characters):
+            raise ValueError("synthesis character master data is missing")
+
+        item_master = progression_master_index("item")
+        item_records = profile_resource_records(profile_plaintext, 3)
+        ingredient_data = None
+        if ingredient_id is not None:
+            ingredient_data = item_master.get(ingredient_id)
+            if ingredient_data is None or ingredient_id not in item_records:
+                raise ValueError(f"profile or master data has no ingredient item {ingredient_id}")
+
+        consumed_items: dict[int, int] = {}
+        for cost in recipe.get("costs") or []:
+            if int(cost.get("type") or 0) != 5:
+                raise ValueError("synthesis only supports item recipe costs")
+            item_id = int(cost.get("id") or 0)
+            consumed_items[item_id] = consumed_items.get(item_id, 0) + int(cost.get("quantity") or 0) * count
+        if ingredient_id is not None:
+            consumed_items[ingredient_id] = consumed_items.get(ingredient_id, 0) + count
+
+        output_item_grants: dict[int, int] = {}
+        output_resource_rewards: dict[tuple[int, int], int] = {}
+        battle_tools: list[bytes] = []
+        equipment_tools: list[bytes] = []
+        reward_messages: list[bytes] = []
+        tool_records = profile_resource_records(profile_plaintext, 11)
+        equipment_records = profile_resource_records(profile_plaintext, 4)
+        next_entity_ids = {
+            14: max(tool_records, default=0) + 1,
+            6: max(equipment_records, default=0) + 1,
+        }
+        now = int(time.time())
+
+        def grant_resource(resource: dict[str, object]) -> None:
+            resource_type = int(resource.get("type") or 0)
+            resource_id = int(resource.get("id") or 0)
+            quantity = int(resource.get("quantity") or 0)
+            if resource_id <= 0 or quantity <= 0:
+                return
+            if resource_type in (6, 14):
+                tool_table = "equipment_tool" if resource_type == 6 else "battle_tool"
+                tool_master = progression_master_index(tool_table)
+                if resource_id not in tool_master:
+                    raise ValueError(f"synthesis output tool {resource_id} is missing from master data")
+                category = "equipment_tool_trait_ids" if resource_type == 6 else "battle_tool_trait_ids"
+                candidate_traits: list[int] = []
+                for character in characters:
+                    candidate_traits.extend(int(value) for value in character.get(category) or [])
+                if ingredient_data is not None:
+                    candidate_traits.extend(
+                        int(value) for value in ingredient_data.get(category) or []
+                    )
+                slot_count = 2 if resource_type == 6 else 3
+                for _ in range(quantity):
+                    traits = synthesis_trait_params(candidate_traits, selected_trait_ids, slot_count)
+                    entity_id = next_entity_ids[resource_type]
+                    next_entity_ids[resource_type] += 1
+                    tool_record = synthesis_tool_record(entity_id, resource_id, traits, now)
+                    if resource_type == 6:
+                        equipment_tools.append(tool_record)
+                    else:
+                        battle_tools.append(tool_record)
+                    reward_messages.append(
+                        synthesis_tool_reward(resource_type, resource_id, entity_id, traits)
+                    )
+                return
+            if resource_type == 5:
+                output_item_grants[resource_id] = output_item_grants.get(resource_id, 0) + quantity
+            output_resource_rewards[(resource_type, resource_id)] = (
+                output_resource_rewards.get((resource_type, resource_id), 0) + quantity
+            )
+
+        reward_specs = list(recipe.get("rewards") or [])
+        target_specs = [value for value in reward_specs if value.get("is_target")]
+        bonus_pool = [value for value in reward_specs if not value.get("is_target")]
+        if not target_specs:
+            raise ValueError(f"recipe {recipe_id} has no target output")
+        for _ in range(count):
+            for target in target_specs:
+                grant_resource(target)
+            for _ in range(2):
+                if bonus_pool:
+                    grant_resource(random.choice(bonus_pool))
+
+        item_updates = updated_item_records_for_operation(
+            item_records,
+            consumed_items,
+            output_item_grants,
+        )
+        status = message_field(resources, 6)
+        if status is None:
+            raise ValueError("profile has no Status message for synthesis")
+        cole_grant = output_resource_rewards.get((3, 1), 0)
+        if rental:
+            daily_count = varint_field(status, 25, 0)
+            last_update = message_field(status, 26)
+            last_update_at = varint_field(last_update or b"", 1, 0)
+            day_number = (now - 3 * 3600) // 86400
+            if last_update_at and (last_update_at - 3 * 3600) // 86400 != day_number:
+                daily_count = 0
+            if daily_count + count > 10:
+                raise ValueError("daily rental synthesis count exceeds 10")
+            status = replace_varint_field(status, 25, daily_count + count)
+            status = replace_message_field(status, 26, write_field(1, 0, now))
+        else:
+            status, _ = mana_status_after_delta(
+                status,
+                -int(recipe.get("mana_cost") or 0) * count,
+                now,
+            )
+        if cole_grant:
+            status = replace_varint_field(status, 3, varint_field(status, 3, 0) + cole_grant)
+
+        recipe_records = profile_resource_records(profile_plaintext, 12)
+        recipe_record = recipe_records.get(recipe_id, write_field(1, 0, recipe_id))
+        if not message_field(recipe_record, 2):
+            recipe_record = replace_message_field(recipe_record, 2, write_field(1, 0, now))
+        recipe_record = replace_repeated_varint_field(recipe_record, 3, character_ids)
+        ingredient_wrapper = (
+            write_field(1, 0, ingredient_id) if ingredient_id is not None else None
+        )
+        recipe_record = replace_message_field(recipe_record, 4, ingredient_wrapper)
+        recipe_record = replace_repeated_varint_field(recipe_record, 6, selected_trait_ids)
+
+        task_records = profile_resource_records(profile_plaintext, 32)
+        total_task_counts = [updated_total_task_count_record(task_records, 293, count)]
+        changed_items = item_updates
+        for (resource_type, resource_id), quantity in sorted(output_resource_rewards.items()):
+            reward_messages.append(resource_reward(resource_type, quantity, resource_id))
+        grade = random.randint(1, 4)
+
+        persist_plaintext = make_changed_resources_plaintext(
+            items=changed_items,
+            status=status,
+            total_task_counts=total_task_counts,
+            equipment_tools=equipment_tools,
+            battle_tools=battle_tools,
+            recipes=[recipe_record],
+        )
+        response_plaintext = make_changed_resources_plaintext(
+            items=changed_items,
+            status=status,
+            total_task_counts=total_task_counts,
+            equipment_tools=equipment_tools,
+            battle_tools=battle_tools,
+            recipes=[recipe_record],
+            extra_response_fields=[
+                *((2, 2, reward) for reward in reward_messages),
+                (3, 0, grade),
+            ],
+        )
+        self.persist_profile_update(
+            persist_plaintext,
+            "/synthesis/execute_rental" if rental else "/synthesis/bulk_execute",
+        )
+        return response_plaintext, persist_plaintext, grade
+
+    def synthesis_response(self, flow: http.HTTPFlow, path: str) -> bytes:
+        request_plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                flow.request.raw_content or b"",
+                is_api_message,
+                path,
+            )
+        )
+        profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+        request_values = {
+            number: int(value)
+            for number, wire, value in read_wire_fields(request_plaintext)
+            if wire == 0
+        }
+        recipe_id = request_values.get(1, 0)
+        if path == "/synthesis/combination_ranking":
+            return self.synthesis_combination_ranking_response(flow)
+
+        recipe = gameplay_master_table("recipes").get(recipe_id)
+        if recipe is None:
+            raise ValueError(f"unknown recipe_id={recipe_id}")
+        if path == "/synthesis/execute_rental":
+            count = request_values.get(4, 1)
+            ingredient_field = message_field(request_plaintext, 3)
+            ingredient_id = varint_field(ingredient_field or b"", 1, 0) or None
+            character_ids, ingredient_id = self.synthesis_fallback_combination(
+                profile_plaintext,
+                recipe_id,
+                recipe,
+                ingredient_id,
+            )
+            selected_trait_ids = varint_values(request_plaintext, 6)
+            response_plaintext, _, _ = self.synthesis_execute_plaintext(
+                profile_plaintext,
+                recipe_id,
+                character_ids,
+                ingredient_id,
+                selected_trait_ids,
+                count,
+                rental=True,
+            )
+        elif path == "/synthesis/execute_easy":
+            count = request_values.get(2, 1)
+            character_ids, ingredient_id = self.synthesis_fallback_combination(
+                profile_plaintext,
+                recipe_id,
+                recipe,
+                None,
+            )
+            response_plaintext, _, _ = self.synthesis_execute_plaintext(
+                profile_plaintext,
+                recipe_id,
+                character_ids,
+                ingredient_id,
+                [],
+                count,
+                rental=False,
+            )
+        else:
+            character_ids = varint_values(request_plaintext, 2)
+            ingredient_field = message_field(request_plaintext, 3)
+            ingredient_id = varint_field(ingredient_field or b"", 1, 0) or None
+            response_plaintext, _, _ = self.synthesis_execute_plaintext(
+                profile_plaintext,
+                recipe_id,
+                character_ids,
+                ingredient_id,
+                varint_values(request_plaintext, 6),
+                request_values.get(4, 1),
+                rental=False,
+            )
+        return encrypt_api_response(
+            response_marker,
+            response_plaintext,
+            response_key,
+            response_iv,
+        )
+
+    def expedition_rewards_for_state(
+        self,
+        profile_plaintext: bytes,
+        state: bytes,
+        now: int,
+    ) -> tuple[dict[int, int], int]:
+        character_ids = varint_values(state, 3)
+        if not character_ids:
+            return {}, 0
+        expedition_id = varint_field(state, 2, 0)
+        expedition_data = gameplay_master_table("expeditions").get(expedition_id)
+        if expedition_data is None:
+            raise ValueError(f"unknown expedition_id={expedition_id}")
+        started_at = message_field(state, 4)
+        started_at_value = varint_field(started_at or b"", 1, now)
+        ticks = max(0, min(120 * 60, (now - started_at_value) // 60))
+
+        status = message_field(profile_resources(profile_plaintext), 6)
+        rank = varint_field(status or b"", 2, 1)
+        if rank < 11:
+            coles_per_minute = 4
+        elif rank < 21:
+            coles_per_minute = 11
+        elif rank < 31:
+            coles_per_minute = 18
+        elif rank < 41:
+            coles_per_minute = 19
+        else:
+            coles_per_minute = 20
+
+        rarity_bonus = (1, 3, 5, 6, 8, 9, 10)
+        character_records = profile_resource_records(profile_plaintext, 2)
+        recommendations = gameplay_master_table("expedition_recommendations").get(
+            expedition_id, {}
+        )
+        bonus_rate = 0
+        for character_id in character_ids:
+            character = character_records.get(character_id)
+            if character is not None:
+                rarity = max(1, min(7, varint_field(character, 11, 1)))
+                bonus_rate += rarity_bonus[rarity - 1]
+            bonus_rate += int(recommendations.get(str(character_id), 0)) // 100
+        ticks = (100 + bonus_rate) * ticks // 100
+
+        quest_states = profile_resource_records(profile_plaintext, 22)
+        quests = battle_japanese.battle_table(GAME_DIR, "quest")
+        reward_sets = battle_japanese.battle_table(GAME_DIR, "reward_set")
+        drop_sets = battle_japanese.battle_table(GAME_DIR, "drop_reward_set")
+        material_sets: list[list[int]] = []
+        for quest_id in expedition_data.get("score_battle_quest_ids") or []:
+            quest = quests.get(str(int(quest_id)))
+            quest_state = quest_states.get(int(quest_id))
+            score_rank = varint_field(quest_state or b"", 7, 0)
+            if quest is None or score_rank <= 0:
+                continue
+            rank_data = next(
+                (
+                    entry
+                    for entry in quest.get("ranks") or []
+                    if int(entry.get("rank") or 0) == score_rank
+                ),
+                None,
+            )
+            if rank_data is None:
+                ranks = quest.get("ranks") or []
+                rank_data = ranks[min(score_rank - 1, len(ranks) - 1)] if ranks else None
+            if rank_data is None:
+                continue
+            for drop_set_id in rank_data.get("drops") or []:
+                for chance_pool in drop_sets.get(str(int(drop_set_id)), []):
+                    items = [
+                        int(value["id"])
+                        for value in chance_pool.get("rewards") or []
+                        if int(value.get("type") or 0) == 5
+                        and not 98 <= int(value.get("id") or 0) <= 124
+                    ]
+                    if items:
+                        material_sets.append(items)
+            for reward_set_id in rank_data.get("rewards") or []:
+                items = [
+                    int(value["id"])
+                    for value in reward_sets.get(str(int(reward_set_id)), [])
+                    if int(value.get("type") or 0) == 5
+                    and not 98 <= int(value.get("id") or 0) <= 124
+                ]
+                if items:
+                    material_sets.append(items)
+
+        if not material_sets:
+            fallback_items = [
+                int(value)
+                for value in expedition_data.get("items") or []
+                if not 98 <= int(value) <= 124
+            ]
+            if fallback_items:
+                material_sets.append(fallback_items)
+
+        item_rewards: dict[int, int] = {}
+
+        def grant(item_id: int) -> None:
+            item_rewards[item_id] = item_rewards.get(item_id, 0) + 1
+
+        orb_levels = (108, 111, 114, 117, 120)
+        for _ in range(ticks):
+            if random.random() < 1 / 6:
+                if random.random() < 1 / 2:
+                    grant(random.choice(orb_levels))
+                elif random.random() < 1 / 2:
+                    grant(random.choice([value + 1 for value in orb_levels]))
+                else:
+                    grant(random.choice([value + 2 for value in orb_levels]))
+            if random.random() < 1 / 600:
+                grant(124 if random.random() < 0.3 else 123)
+            if random.random() < 1 / 120:
+                grant(99)
+            if random.random() < 1 / 20:
+                grant(104)
+            if material_sets and random.random() < 1 / 10:
+                material_set = random.choice(material_sets)
+                if material_set:
+                    grant(random.choice(material_set))
+
+        return item_rewards, coles_per_minute * ticks
+
+    def expedition_start_response(self, flow: http.HTTPFlow) -> bytes:
+        request_plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                flow.request.raw_content or b"",
+                is_api_message,
+                "/expedition/start",
+            )
+        )
+        profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+        resources = profile_resources(profile_plaintext)
+        status = message_field(resources, 6)
+        if status is None:
+            raise ValueError("profile has no Status message for expedition start")
+        max_count = varint_field(status, 5, 3)
+        expedition_master = gameplay_master_table("expeditions")
+        character_records = profile_resource_records(profile_plaintext, 2)
+        expedition_records = profile_resource_records(profile_plaintext, 18)
+        requested: dict[int, tuple[int, list[int]]] = {}
+        for number, wire, value in read_wire_fields(request_plaintext):
+            if number != 1 or wire != 2:
+                continue
+            entry = bytes(value)
+            slot = varint_field(entry, 1, 0)
+            expedition_id = varint_field(entry, 2, 0)
+            character_ids = varint_values(entry, 3)
+            if slot <= 0 or slot > max_count or slot in requested:
+                raise ValueError(f"invalid or duplicate expedition slot {slot}")
+            if expedition_id not in expedition_master:
+                raise ValueError(f"unknown expedition_id={expedition_id}")
+            if not character_ids or len(character_ids) > 5 or len(character_ids) != len(set(character_ids)):
+                raise ValueError("expedition requires one to five unique characters")
+            if any(character_id not in character_records for character_id in character_ids):
+                raise ValueError("expedition request contains a character not in the profile")
+            requested[slot] = (expedition_id, character_ids)
+        if not requested:
+            raise ValueError("expedition start request contains no assignments")
+
+        now = int(time.time())
+        item_grants: dict[int, int] = {}
+        cole_grant = 0
+        returned_rewards: list[bytes] = []
+        for slot in requested:
+            previous = expedition_records.get(slot)
+            if previous is None:
+                continue
+            items, cole = self.expedition_rewards_for_state(profile_plaintext, previous, now)
+            for item_id, quantity in items.items():
+                item_grants[item_id] = item_grants.get(item_id, 0) + quantity
+            cole_grant += cole
+
+        changed_states = []
+        for slot, (expedition_id, character_ids) in requested.items():
+            state = write_field(1, 0, slot) + write_field(2, 0, expedition_id)
+            for character_id in character_ids:
+                state += write_field(3, 0, character_id)
+            state += write_field(4, 2, write_field(1, 0, now))
+            changed_states.append(state)
+
+        if cole_grant:
+            status = replace_varint_field(status, 3, varint_field(status, 3, 0) + cole_grant)
+            returned_rewards.append(resource_reward(3, cole_grant, 1))
+        for item_id, quantity in sorted(item_grants.items()):
+            returned_rewards.append(resource_reward(5, quantity, item_id))
+        items = updated_item_records_for_operation(
+            profile_resource_records(profile_plaintext, 3),
+            {},
+            item_grants,
+        )
+        tasks = [
+            updated_total_task_count_record(
+                profile_resource_records(profile_plaintext, 32),
+                1084,
+                len(requested),
+            )
+        ]
+        extra_resources = [(18, 2, state) for state in changed_states]
+        persist_plaintext = make_changed_resources_plaintext(
+            items=items,
+            status=status,
+            total_task_counts=tasks,
+            extra_resource_fields=extra_resources,
+        )
+        response_plaintext = make_changed_resources_plaintext(
+            items=items,
+            status=status,
+            total_task_counts=tasks,
+            extra_resource_fields=extra_resources,
+            extra_response_fields=[(2, 2, reward) for reward in returned_rewards],
+        )
+        self.persist_profile_update(persist_plaintext, "/expedition/start")
+        self.log(f"LOCAL-EXPEDITION-START path=/expedition/start status=200 assignments={len(requested)}")
+        return encrypt_api_response(response_marker, response_plaintext, response_key, response_iv)
+
+    def expedition_reward_receive_response(self, flow: http.HTTPFlow) -> bytes:
+        request_plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                flow.request.raw_content or b"",
+                is_empty_or_api_message,
+                EXPEDITION_REWARD_PATH,
+            )
+        )
+        profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+        states = profile_resource_records(profile_plaintext, 18)
+        now = int(time.time())
+        item_grants: dict[int, int] = {}
+        cole_grant = 0
+        updated_states: list[bytes] = []
+        for slot, state in sorted(states.items()):
+            if not varint_values(state, 3):
+                continue
+            rewards, cole = self.expedition_rewards_for_state(profile_plaintext, state, now)
+            for item_id, quantity in rewards.items():
+                item_grants[item_id] = item_grants.get(item_id, 0) + quantity
+            cole_grant += cole
+            updated_states.append(
+                replace_message_field(state, 4, write_field(1, 0, now))
+            )
+
+        resources = profile_resources(profile_plaintext)
+        status = message_field(resources, 6)
+        if status is None:
+            raise ValueError("profile has no Status message for expedition reward")
+        if cole_grant:
+            status = replace_varint_field(status, 3, varint_field(status, 3, 0) + cole_grant)
+        items = updated_item_records_for_operation(
+            profile_resource_records(profile_plaintext, 3),
+            {},
+            item_grants,
+        )
+        returned_rewards = []
+        if cole_grant:
+            returned_rewards.append(resource_reward(3, cole_grant, 1))
+        returned_rewards.extend(
+            resource_reward(5, quantity, item_id)
+            for item_id, quantity in sorted(item_grants.items())
+        )
+        extra_resources = [(18, 2, state) for state in updated_states]
+        persist_plaintext = make_changed_resources_plaintext(
+            items=items,
+            status=status,
+            extra_resource_fields=extra_resources,
+        )
+        response_plaintext = make_changed_resources_plaintext(
+            items=items,
+            status=status,
+            extra_resource_fields=extra_resources,
+            extra_response_fields=[(2, 2, reward) for reward in returned_rewards],
+        )
+        self.persist_profile_update(persist_plaintext, EXPEDITION_REWARD_PATH)
+        self.log(
+            f"LOCAL-EXPEDITION-REWARD path={EXPEDITION_REWARD_PATH} "
+            f"active={len(updated_states)} item_types={len(item_grants)}"
+        )
+        return encrypt_api_response(response_marker, response_plaintext, response_key, response_iv)
 
     def expedition_reward_response(self, record: Record) -> bytes:
         if not self.expedition_special_reward_ids:
@@ -4493,6 +5396,59 @@ class Replay:
         self.exploration_fallback_template = fallback
         return self.exploration_templates.get(cache_key, fallback)
 
+    def exploration_battle_progress(
+        self,
+        profile_plaintext: bytes,
+        changed_resources_response: bytes,
+        response_plaintext: bytes,
+        area_id: int,
+        total_turn: int,
+        party_gauge: int,
+    ) -> tuple[bytes, bytes] | None:
+        progresses = profile_resource_records(profile_plaintext, 25)
+        for quest_id, progress in progresses.items():
+            routes = exploration_routes(quest_id)
+            route_index = next(
+                (index for index, route in enumerate(routes) if int(route["area_id"]) == area_id),
+                -1,
+            )
+            if route_index < 0:
+                continue
+            route_indices = varint_values(progress, 4)
+            while len(route_indices) < len(routes):
+                route_indices.append(0)
+            route_indices[route_index] = 0xFFFFFFFFFFFFFFFF
+            updated = replace_repeated_varint_field(progress, 4, route_indices)
+            updated = replace_varint_field(updated, 2, area_id)
+            updated = replace_varint_field(updated, 6, total_turn)
+            party_status = message_field(updated, 14)
+            if party_status is not None:
+                party_status = replace_varint_field(party_status, 3, party_gauge)
+                updated = replace_message_field(updated, 14, party_status)
+
+            response_resources = message_field(response_plaintext, 2) or b""
+            response_resources = merge_profile_resources(
+                response_resources,
+                write_field(25, 2, updated),
+            )
+            response_plaintext = replace_message_field(
+                response_plaintext,
+                2,
+                response_resources,
+            )
+            persistence_resources = message_field(changed_resources_response, 1) or b""
+            persistence_resources = merge_profile_resources(
+                persistence_resources,
+                write_field(25, 2, updated),
+            )
+            changed_resources_response = replace_message_field(
+                changed_resources_response,
+                1,
+                persistence_resources,
+            )
+            return response_plaintext, changed_resources_response
+        return None
+
     def exploration_start_response(self, flow: http.HTTPFlow) -> bytes:
         request_body = flow.request.raw_content or b""
         request_plaintext, response_key, response_iv, response_marker = decrypt_request_with_response_material(
@@ -4569,6 +5525,320 @@ class Replay:
             response_iv,
         )
 
+    def exploration_gathering_rewards(
+        self,
+        area: dict[str, object],
+        gathering_index: int = 0,
+    ) -> list[tuple[int, int, bool]]:
+        gatherings = area.get("gatherings") or []
+        if not gatherings:
+            raise ValueError(f"exploration area {area.get('id')} has no gathering point")
+        if gathering_index < 0 or gathering_index >= len(gatherings):
+            raise ValueError("exploration gathering_index is outside the area's gathering points")
+        gathering = gatherings[gathering_index]
+        gathering_type = int(gathering.get("gathering_type") or 0)
+        area_number = int(area.get("number") or 0)
+        point_count = max(1, int(gathering.get("point_count") or 1))
+        if area.get("is_event_gathering"):
+            if gathering_type == 2:
+                return [(1012, 20 * point_count, False)]
+            if gathering_type == 4 and area_number <= 6:
+                return [(1013, 2 * point_count, True)]
+            if gathering_type == 4 and area_number >= 10:
+                return [(1011, 20 * point_count, False)]
+        else:
+            story_gathering_rewards = {
+                2: (4, 5),
+                3: (56, 58),
+                4: (14, 16),
+            }
+            reward_pair = story_gathering_rewards.get(gathering_type)
+            if reward_pair is not None:
+                common_id, rare_id = reward_pair
+                return [
+                    (common_id, 5 * point_count, False),
+                    (rare_id, point_count, True),
+                ]
+
+        item_master = progression_master_index("item")
+        candidates = [
+            item_id
+            for item_id, item in sorted(item_master.items())
+            if int(item.get("item_type") or 0) == 1
+            and int(item_id) > 0
+            and not item.get("hide_from_container")
+        ]
+        if not candidates:
+            raise ValueError("Japanese item master has no exploration gathering candidates")
+        area_id = int(area.get("id") or 0)
+        item_id = candidates[(area_id + gathering_index) % len(candidates)]
+        return [(item_id, point_count, False)]
+
+    def exploration_update_party_response(self, flow: http.HTTPFlow) -> bytes:
+        request_plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                flow.request.raw_content or b"",
+                is_api_message,
+                "/exploration/update_party",
+            )
+        )
+        party_number = varint_field(request_plaintext, 1, 0)
+        if party_number <= 0:
+            raise ValueError("exploration update-party request has no party_number")
+        profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+        progresses = profile_resource_records(profile_plaintext, 25)
+        if not progresses:
+            raise ValueError("profile has no active exploration progress")
+        quest_id, progress = min(progresses.items())
+        updated = replace_varint_field(progress, 5, party_number)
+        template = self.exploration_template(quest_id, party_number)
+        if template is not None and template[1]:
+            updated = replace_message_field(updated, 14, template[1])
+        self.log(
+            f"LOCAL-EXPLORATION-PARTY path=/exploration/update_party status=200 "
+            f"quest_id={quest_id} party_number={party_number}"
+        )
+        return self.changed_resources_encrypted_response(
+            response_key,
+            response_iv,
+            response_marker,
+            extra_resource_fields=[(25, 2, updated)],
+        )
+
+    def exploration_explore_response(self, flow: http.HTTPFlow) -> bytes:
+        request_plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                flow.request.raw_content or b"",
+                is_api_message,
+                "/exploration/explore",
+            )
+        )
+        area_id = varint_field(request_plaintext, 1, 0)
+        gathering_index = varint_field(request_plaintext, 2, 0)
+        if area_id <= 0:
+            raise ValueError("exploration explore request has no area_id")
+        area = gameplay_master_table("exploration_areas").get(area_id)
+        if area is None:
+            raise ValueError(f"unknown exploration area {area_id}")
+        route_type = str(area.get("route_type") or "unknown")
+        if route_type == "battle":
+            raise ValueError(f"exploration area {area_id} must be entered through /exploration/battle_start")
+        if route_type not in ("gathering", "talk"):
+            raise ValueError(f"exploration area {area_id} has an unsupported route type")
+
+        profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+        progress_records = profile_resource_records(profile_plaintext, 25)
+        quest_id = int(area.get("quest_id") or 0)
+        progress = progress_records.get(quest_id)
+        if progress is None:
+            raise ValueError(f"profile has no active exploration quest {quest_id}")
+        routes = exploration_routes(quest_id)
+        route_index = next(
+            (index for index, route in enumerate(routes) if int(route["area_id"]) == area_id),
+            -1,
+        )
+        if route_index < 0:
+            raise ValueError(f"exploration area {area_id} is not in quest {quest_id}")
+
+        item_id = 0
+        quantity = 0
+        is_rare = False
+        gathering_type = 0
+        changed_items: list[bytes] = []
+        total_task_counts: list[bytes] = []
+        updated_progress = progress
+        if route_type == "talk":
+            route_indices = varint_values(progress, 4)
+            while len(route_indices) < len(routes):
+                route_indices.append(0)
+            route_indices[route_index] = 0xFFFFFFFFFFFFFFFF
+            updated_progress = replace_repeated_varint_field(progress, 4, route_indices)
+        else:
+            gatherings = area.get("gatherings") or []
+            if gathering_index >= len(gatherings):
+                raise ValueError("exploration gathering_index is outside the area's gathering points")
+            gathering_type = int(gatherings[gathering_index].get("gathering_type") or 0)
+            gathering_rewards = self.exploration_gathering_rewards(area, gathering_index)
+            item_id, quantity, is_rare = gathering_rewards[0]
+            gathering_states = varint_values(progress, 12)
+            while len(gathering_states) < len(routes):
+                gathering_states.append(0)
+            point_count = max(1, int(gatherings[gathering_index].get("point_count") or 1))
+            if gathering_states[route_index] >= point_count:
+                raise ValueError(f"exploration area {area_id} gathering point is already complete")
+            gathering_states[route_index] += 1
+            item_grants: dict[int, int] = {}
+            for reward_id, reward_quantity, _ in gathering_rewards:
+                item_grants[reward_id] = item_grants.get(reward_id, 0) + reward_quantity
+            changed_items = updated_item_records_for_operation(
+                profile_resource_records(profile_plaintext, 3),
+                {},
+                item_grants,
+            )
+            if varint_field(progress, 11, 0):
+                task_records = profile_resource_records(profile_plaintext, 32)
+                total_task_counts = [
+                    updated_total_task_count_record(
+                        task_records,
+                        290,
+                        sum(item_grants.values()),
+                    )
+                ]
+            updated_progress = replace_repeated_varint_field(
+                progress,
+                12,
+                gathering_states,
+            )
+        updated_progress = replace_varint_field(updated_progress, 2, area_id)
+        if route_type == "gathering":
+            updated_progress = replace_repeated_varint_field(
+                updated_progress,
+                12,
+                gathering_states,
+            )
+            new_rewards = [
+                resource_reward(5, reward_quantity, reward_id)
+                for reward_id, reward_quantity, _ in gathering_rewards
+            ]
+            existing_rewards = [
+                bytes(value)
+                for number, wire, value in read_wire_fields(progress)
+                if number == 13 and wire == 2
+            ]
+            updated_progress = replace_repeated_message_field(
+                updated_progress,
+                13,
+                existing_rewards + new_rewards,
+            )
+
+        result = b""
+        if route_type == "gathering":
+            result = b"".join(
+                write_field(
+                    1,
+                    2,
+                    write_field(1, 0, reward_id)
+                    + write_field(2, 0, reward_quantity)
+                    + (write_field(3, 0, 1) if rare else b""),
+                )
+                for reward_id, reward_quantity, rare in gathering_rewards
+            )
+        persist_plaintext = make_changed_resources_plaintext(
+            items=changed_items,
+            total_task_counts=total_task_counts,
+            extra_resource_fields=[(25, 2, updated_progress)]
+        )
+        resources = message_field(persist_plaintext, 1) or b""
+        response_plaintext = write_field(1, 2, result) + write_field(2, 2, resources)
+        self.persist_profile_update(persist_plaintext, "/exploration/explore")
+        self.log(
+            f"LOCAL-EXPLORATION-EXPLORE path=/exploration/explore status=200 "
+            f"quest_id={quest_id} area_id={area_id} route={route_index} "
+            f"route_type={route_type} gathering_type={gathering_type} "
+            f"item_id={item_id} quantity={quantity} rare={is_rare}"
+        )
+        return encrypt_api_response(response_marker, response_plaintext, response_key, response_iv)
+
+    def exploration_retire_response(self, flow: http.HTTPFlow) -> bytes:
+        request_plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                flow.request.raw_content or b"",
+                is_empty_or_api_message,
+                "/exploration/retire",
+            )
+        )
+        is_story = bool(varint_field(request_plaintext, 1, 0)) if request_plaintext else False
+        profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+        progress_records = profile_resource_records(profile_plaintext, 25)
+        remove_ids = {
+            quest_id
+            for quest_id, progress in progress_records.items()
+            if bool(varint_field(progress, 11, 0)) == is_story
+        }
+        response_plaintext = make_changed_resources_plaintext()
+        self.persist_profile_update(
+            response_plaintext,
+            "/exploration/retire",
+            remove_exploration_quest_ids=remove_ids,
+        )
+        self.log(
+            f"LOCAL-EXPLORATION-RETIRE path=/exploration/retire status=200 "
+            f"removed={len(remove_ids)} is_story={is_story}"
+        )
+        return b""
+
+    def exploration_skip_response(self, flow: http.HTTPFlow) -> bytes:
+        request_plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                flow.request.raw_content or b"",
+                is_api_message,
+                "/exploration/skip",
+            )
+        )
+        quest_id = varint_field(request_plaintext, 1, 0)
+        party_number = varint_field(request_plaintext, 2, 0)
+        repeat_count = varint_field(request_plaintext, 3, 0)
+        if quest_id <= 0 or party_number <= 0 or repeat_count <= 0 or repeat_count > 99:
+            raise ValueError("invalid exploration skip quest, party, or repeat_count")
+        routes = exploration_routes(quest_id)
+        if not routes:
+            raise ValueError(f"Japanese exploration route data has no quest {quest_id}")
+        area_table = gameplay_master_table("exploration_areas")
+        per_clear: dict[int, int] = {}
+        for route in routes:
+            area = area_table.get(int(route["area_id"]))
+            if area is None or area.get("route_type") != "gathering":
+                continue
+            for gathering_index, _ in enumerate(area.get("gatherings") or []):
+                for item_id, quantity, _ in self.exploration_gathering_rewards(area, gathering_index):
+                    per_clear[item_id] = per_clear.get(item_id, 0) + quantity
+        if not per_clear:
+            raise ValueError(f"exploration quest {quest_id} has no gathering rewards")
+
+        profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+        quest_records = profile_resource_records(profile_plaintext, 22)
+        quest_state = quest_records.get(quest_id, write_field(1, 0, quest_id))
+        quest_state = replace_varint_field(
+            quest_state,
+            2,
+            varint_field(quest_state, 2, 0) + repeat_count,
+        )
+        total_rewards = {item_id: amount * repeat_count for item_id, amount in per_clear.items()}
+        items = updated_item_records_for_operation(
+            profile_resource_records(profile_plaintext, 3),
+            {},
+            total_rewards,
+        )
+        per_clear_messages = []
+        for _ in range(repeat_count):
+            reward_list = b"".join(
+                write_field(1, 2, resource_reward(5, quantity, item_id))
+                for item_id, quantity in sorted(per_clear.items())
+            )
+            per_clear_messages.append(reward_list)
+        rewards = [
+            resource_reward(5, quantity, item_id)
+            for item_id, quantity in sorted(total_rewards.items())
+        ]
+        persist_plaintext = make_changed_resources_plaintext(
+            items=items,
+            extra_resource_fields=[(22, 2, quest_state)],
+        )
+        resources = message_field(persist_plaintext, 1) or b""
+        response_plaintext = b"".join(
+            (
+                *(write_field(1, 2, value) for value in per_clear_messages),
+                *(write_field(2, 2, reward) for reward in rewards),
+                write_field(3, 2, resources),
+            )
+        )
+        self.persist_profile_update(persist_plaintext, "/exploration/skip")
+        self.log(
+            f"LOCAL-EXPLORATION-SKIP path=/exploration/skip status=200 quest_id={quest_id} "
+            f"repeat_count={repeat_count}"
+        )
+        return encrypt_api_response(response_marker, response_plaintext, response_key, response_iv)
+
     def exploration_finish_response(self, flow: http.HTTPFlow) -> bytes:
         request_body = flow.request.raw_content or b""
         request_plaintext, response_key, response_iv, response_marker = decrypt_request_with_response_material(
@@ -4581,15 +5851,43 @@ class Replay:
             for number, wire_type, value in read_wire_fields(request_plaintext)
             if number == 1 and wire_type == 0
         )
+        profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+        progress = profile_resource_records(profile_plaintext, 25).get(quest_id)
+        if progress is None:
+            raise ValueError(f"profile has no active exploration quest {quest_id}")
+        completed_item_ids: set[int] = set()
+        for number, wire, value in read_wire_fields(progress):
+            if number != 13 or wire != 2:
+                continue
+            reward = bytes(value)
+            if varint_field(reward, 1, 0) == 5:
+                completed_item_ids.add(varint_field(reward, 2, 0))
+        item_records = profile_resource_records(profile_plaintext, 3)
+        items = [item_records[item_id] for item_id in sorted(completed_item_ids) if item_id in item_records]
+        quest_records = profile_resource_records(profile_plaintext, 22)
+        quest_state = quest_records.get(quest_id, write_field(1, 0, quest_id))
+        quest_state = replace_varint_field(
+            quest_state,
+            2,
+            varint_field(quest_state, 2, 0) + 1,
+        )
+        persist_plaintext = make_changed_resources_plaintext(
+            items=items,
+            extra_resource_fields=[(22, 2, quest_state)],
+        )
+        resources = message_field(persist_plaintext, 1) or b""
+        response_plaintext = write_field(2, 2, resources)
+        self.persist_profile_update(
+            persist_plaintext,
+            "/exploration/finish",
+            remove_exploration_quest_ids={quest_id},
+        )
         self.log(
             f"LOCAL-EXPLORATION-FINISH host={flow.request.host} method=POST "
-            f"path=/exploration/finish status=200 quest_id={quest_id} changed_resources=empty"
+            f"path=/exploration/finish status=200 quest_id={quest_id} "
+            f"rewards={len(completed_item_ids)}"
         )
-        return bytes([response_marker]) + aes_encrypt(
-            pkcs7_pad(gzip.compress(make_exploration_finish_response(), mtime=0)),
-            response_key,
-            response_iv,
-        )
+        return encrypt_api_response(response_marker, response_plaintext, response_key, response_iv)
 
     def home_response(self, flow: http.HTTPFlow) -> bytes:
         self.ensure_home_state()
@@ -5348,6 +6646,55 @@ class Replay:
                 },
             )
             return
+        if method == "POST" and path in {"/recipe/favorite", "/dish/order"}:
+            try:
+                response_body = (
+                    self.recipe_favorite_response(flow)
+                    if path == "/recipe/favorite"
+                    else self.dish_order_response(flow)
+                )
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
+                self.log(f"GAMEPLAY-ENDPOINT-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time())),
+                },
+            )
+            return
+        if method == "POST" and path in {
+            "/synthesis/bulk_execute",
+            "/synthesis/combination_ranking",
+            "/synthesis/execute_easy",
+            "/synthesis/execute_rental",
+        }:
+            try:
+                response_body = self.synthesis_response(flow, path)
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
+                self.log(f"SYNTHESIS-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            headers = {
+                "Content-Type": "application/octet-stream",
+                "x-server-timestamp": str(int(time.time())),
+            }
+            if path != "/exploration/retire":
+                headers["X-Content-Encoding"] = "gzip"
+            flow.response = http.Response.make(200, response_body, headers)
+            return
         if method == "POST" and path == "/gacha/list":
             try:
                 response_body = self.gacha_list_response()
@@ -5501,9 +6848,29 @@ class Replay:
                         )
                     )
                     profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+                    active_battle = getattr(battle_japanese, "_ACTIVE", None)
+                    active_sim = active_battle.get("sim") if isinstance(active_battle, dict) else None
+                    exploration_ref = (
+                        int(active_sim.ref_id)
+                        if active_sim is not None and getattr(active_sim, "kind", None) == "exploration"
+                        else None
+                    )
+                    exploration_turn = int(getattr(active_sim, "total_turn", 0)) if exploration_ref else 0
+                    exploration_gauge = int(getattr(active_sim, "party_gauge", 0)) if exploration_ref else 0
                     response_plain, persist_plain, log_message = battle_japanese.finish_battle(
                         GAME_DIR, profile_plaintext
                     )
+                    if exploration_ref is not None and persist_plain is not None:
+                        updated = self.exploration_battle_progress(
+                            profile_plaintext,
+                            persist_plain,
+                            response_plain,
+                            exploration_ref,
+                            exploration_turn,
+                            exploration_gauge,
+                        )
+                        if updated is not None:
+                            response_plain, persist_plain = updated
                 elif path == "/battle/retire":
                     _, response_key, response_iv, response_marker = (
                         decrypt_request_with_response_material(
@@ -5554,47 +6921,39 @@ class Replay:
                     "x-server-timestamp": str(int(time.time()))},
             )
             return
-        if method == "POST" and path == "/exploration/start":
+        if method == "POST" and path in {
+            "/exploration/start",
+            "/exploration/update_party",
+            "/exploration/explore",
+            "/exploration/finish",
+            "/exploration/retire",
+            "/exploration/skip",
+        }:
             try:
-                response_body = self.exploration_start_response(flow)
-            except (OSError, RuntimeError, ValueError, StopIteration) as error:
-                self.log(f"EXPLORATION-START-FAILED path={path} reason={type(error).__name__}:{error}")
+                handlers = {
+                    "/exploration/start": self.exploration_start_response,
+                    "/exploration/update_party": self.exploration_update_party_response,
+                    "/exploration/explore": self.exploration_explore_response,
+                    "/exploration/finish": self.exploration_finish_response,
+                    "/exploration/retire": self.exploration_retire_response,
+                    "/exploration/skip": self.exploration_skip_response,
+                }
+                response_body = handlers[path](flow)
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
+                self.log(f"EXPLORATION-FAILED path={path} reason={type(error).__name__}:{error}")
                 flow.response = http.Response.make(
                     503,
                     b"",
                     {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
                 )
                 return
-            flow.response = http.Response.make(
-                200,
-                response_body,
-                {
-                    "Content-Type": "application/octet-stream",
-                    "X-Content-Encoding": "gzip",
-                    "x-server-timestamp": str(int(time.time())),
-                },
-            )
-            return
-        if method == "POST" and path == "/exploration/finish":
-            try:
-                response_body = self.exploration_finish_response(flow)
-            except (OSError, RuntimeError, ValueError, StopIteration) as error:
-                self.log(f"EXPLORATION-FINISH-FAILED path={path} reason={type(error).__name__}:{error}")
-                flow.response = http.Response.make(
-                    503,
-                    b"",
-                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
-                )
-                return
-            flow.response = http.Response.make(
-                200,
-                response_body,
-                {
-                    "Content-Type": "application/octet-stream",
-                    "X-Content-Encoding": "gzip",
-                    "x-server-timestamp": str(int(time.time())),
-                },
-            )
+            headers = {
+                "Content-Type": "application/octet-stream",
+                "x-server-timestamp": str(int(time.time())),
+            }
+            if path != "/exploration/retire":
+                headers["X-Content-Encoding"] = "gzip"
+            flow.response = http.Response.make(200, response_body, headers)
             return
         if method == "POST" and path == "/character/skin_set":
             try:
@@ -5758,6 +7117,34 @@ class Replay:
                 response_body = record.response_body
             flow.response = http.Response.make(
                 record.status,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time())),
+                },
+            )
+            return
+        if method == "POST" and (
+            path == "/expedition/start"
+            or (path == EXPEDITION_REWARD_PATH and not REPLAY_MODE)
+        ):
+            try:
+                response_body = (
+                    self.expedition_start_response(flow)
+                    if path == "/expedition/start"
+                    else self.expedition_reward_receive_response(flow)
+                )
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
+                self.log(f"EXPEDITION-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
                 response_body,
                 {
                     "Content-Type": "application/octet-stream",

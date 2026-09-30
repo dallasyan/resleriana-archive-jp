@@ -88,6 +88,38 @@ def load_localization(path: Path | None) -> dict[str, dict[str, str]]:
     return tables
 
 
+def load_localization_fields(path: Path | None) -> dict[str, dict[str, dict[str, str]]]:
+    """Load official English names/descriptions keyed by table and ID."""
+    if path is None:
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    tables: dict[str, dict[str, dict[str, str]]] = {}
+    for table, rows in (data.get("en") or {}).items():
+        entries = rows if isinstance(rows, list) else rows.items() if isinstance(rows, dict) else []
+        fields: dict[str, dict[str, str]] = {}
+        for entry in entries:
+            if isinstance(rows, dict):
+                key, row = entry
+                row_id = row.get("id", key) if isinstance(row, dict) else key
+            else:
+                row = entry
+                row_id = row.get("id") if isinstance(row, dict) else None
+            if row_id is None or not isinstance(row, dict):
+                continue
+            values = {
+                field: str(row[field]) for field in ("name", "description", "popup_text")
+                if row.get(field)
+            }
+            if values:
+                fields[str(row_id)] = values
+        if fields:
+            tables[str(table)] = fields
+    return tables
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("master", type=Path)
@@ -103,19 +135,33 @@ def main() -> int:
     out = args.output
     out.mkdir(parents=True, exist_ok=True)
     loc = load_localization(args.localization)
+    loc_fields = load_localization_fields(args.localization)
 
     machine: dict[str, dict[str, str]] = {}
+    machine_fields: dict[str, dict[str, dict[str, str]]] = {}
     if args.machine is not None:
         try:
             for path in sorted(args.machine.glob("*.json")):
                 rows = json.loads(path.read_text(encoding="utf-8"))
                 names: dict[str, str] = {}
+                fields: dict[str, dict[str, str]] = {}
                 entries = rows if isinstance(rows, list) else rows.values()
                 for row in entries:
-                    if isinstance(row, dict) and row.get("id") is not None and row.get("name"):
-                        names[str(row["id"])] = row["name"]
+                    if not isinstance(row, dict) or row.get("id") is None:
+                        continue
+                    row_id = str(row["id"])
+                    if row.get("name"):
+                        names[row_id] = row["name"]
+                    values = {
+                        field: str(row[field]) for field in ("name", "description", "popup_text")
+                        if row.get(field)
+                    }
+                    if values:
+                        fields[row_id] = values
                 if names:
                     machine[path.stem] = names
+                if fields:
+                    machine_fields[path.stem] = fields
         except (OSError, ValueError):
             pass
 
@@ -124,6 +170,303 @@ def main() -> int:
         if name:
             return name
         return machine.get(table, {}).get(str(item_id), fallback)
+
+    def en_field(table: str, item_id, field: str, fallback: str = "") -> str:
+        value = loc_fields.get(table, {}).get(str(item_id), {}).get(field)
+        if value:
+            return value
+        return machine_fields.get(table, {}).get(str(item_id), {}).get(field, fallback)
+
+    def state_solution(state_id: str, row: dict, state_info: dict) -> str:
+        kind = state_info.get("kind", "special")
+        effect = state_info.get("effect", {}) or {}
+        code = effect.get("code", "unmapped")
+        text = row.get("description") or row.get("name") or ""
+        if state_id == "510045":
+            return (
+                "On one item_use event per command, grant the holder 510044; "
+                "consume it on the next skill attack even if several items "
+                "were used together."
+            )
+        if kind == "delay_turn_attack":
+            return (
+                "Calibrate the per-turn wait gap, target scope, and miss/AoE "
+                "consumption against an attack capture; keep the status one-shot."
+            )
+        if kind in ("dummy", "counter_state"):
+            return (
+                "Cross-reference every skill/ability/state link and capture. "
+                "Keep this bookkeeping/dummy entry inert unless the client "
+                "requires a specific state level or counter value."
+            )
+        if kind == "counter":
+            return (
+                "Resolve a counter after the triggering hit using its linked "
+                "counter skill, target rules, damage formula, and chain limit."
+            )
+        if kind == "panel_null":
+            return (
+                "Apply this state in panel acquisition/resolution to suppress "
+                "the blocked panel effect and emit the captured panel result."
+            )
+        if kind in ("range_in", "range_out"):
+            return (
+                "Connect the state to the member's range flag, usable-skill "
+                "selection, and range-change action/timeline record."
+            )
+        if kind == "reflect":
+            return (
+                "Capture reflect kind and coefficient, then apply reflection "
+                "at the correct point relative to barrier, HP damage, and death."
+            )
+        if kind == "special":
+            if code in ("potency_given_plus", "potency_given_minus", "potency_received"):
+                if "パネル" in text:
+                    return (
+                        "Add a panel-category-scoped potency modifier at panel "
+                        "grant time; it changes the effect amount and does not "
+                        "mutate the panel sequence."
+                    )
+                return (
+                    "Read this active potency state in apply_potency, with "
+                    "giver/receiver side, positive/negative category, duration, "
+                    "fixed flags, and caps kept separate."
+                )
+            if code in ("stat_up", "stat_down"):
+                if effect.get("stat") in ("hp", "maxhp") or "最大HP" in text or "基礎HP" in text:
+                    return (
+                        "Add a reversible max-HP modifier, define current-HP "
+                        "rescaling at grant/expiry, and serialize the resulting "
+                        "current/max HP values."
+                    )
+                return (
+                    "Map the parsed stat and direction to a timed stat buff; "
+                    "evaluate it in damage/status previews and restore the "
+                    "unmodified base stat when it expires."
+                )
+            if code in ("skill_damage", "dealt_damage", "crit_damage", "crit_rate",
+                        "break_damage", "taken_damage", "taken_break",
+                        "taken_crit_damage", "skill_power"):
+                if "追加攻撃" in text and "ダメージ" in text:
+                    return (
+                        "Apply this as a damage-slot modifier only while "
+                        "resolving the linked follow-up attack; do not spawn "
+                        "another attack from a damage-up state."
+                    )
+                return (
+                        "Create the mapped timed slot modifier and carry its "
+                        "attribute/type/target conditions into damage_slot_mults."
+                    )
+            if code == "extra_attack" and "ダメージ" in text:
+                return (
+                    "Apply this as a damage-slot modifier only while resolving "
+                    "the linked follow-up attack; do not spawn an extra attack "
+                    "from a damage-up state."
+                )
+            if code == "burst_gauge" and any(word in text for word in ("増加量", "与える", "受ける")):
+                return (
+                    "Apply a scoped multiplier to future burst-gauge gains at "
+                    "the correct owner/receiver action trigger; preserve caps "
+                    "and direction."
+                )
+            if code == "item_gauge" and any(word in text for word in ("回復量", "回復速度", "増加量")):
+                return (
+                    "Apply a scoped modifier to future item-gauge gains, not "
+                    "an immediate gauge refill; verify the item-use and "
+                    "multi-item trigger count."
+                )
+            if code == "heal" and "無効" in text:
+                return (
+                    "Add a heal-block state checked by every direct, skill, "
+                    "item, regen, and reactive-heal path; keep cleanse behavior "
+                    "separate."
+                )
+            if code == "dispel":
+                return (
+                    "Run the parsed dispel on its described trigger and remove "
+                    "only the named buff category/state, respecting "
+                    "unremovable-state rules."
+                )
+            if "マイナス効果無効" in text or "プラス効果無効" in text:
+                return (
+                    "Add a direction-scoped effect-block check to state grant "
+                    "resolution; panel and non-panel effects may need separate "
+                    "rules."
+                )
+            if code == "delay_turn" and "戦闘アイテム使用後" in text:
+                return (
+                    "Hook item_use once per command, grant the one-shot "
+                    "delay-turn attack to the holder, and consume it on the "
+                    "next skill attack."
+                )
+            if code == "turn_swap":
+                return (
+                    "Maintain per-event timeline waits, swap the requested "
+                    "future event, and emit manipulated_turn moves with the "
+                    "captured rebase/extra-event behavior."
+                )
+            if code == "turn_erase":
+                return (
+                    "Remove the selected pending event, emit delete_wait_turn, "
+                    "and preserve later event numbers/waits."
+                )
+            if code == "delay_turn":
+                return (
+                    "Attach the delay to its trigger, shift selected targets "
+                    "by the captured number of turns, and serialize the moves."
+                )
+            if code == "hasten_turn":
+                return (
+                    "Attach the haste to its trigger, shift the selected "
+                    "member earlier by the captured wait, and serialize moves."
+                )
+            if code in ("panel_generate", "panel_convert", "panel_enhance"):
+                return (
+                    "Mutate the timeline-panel sequence, enforce holder/target "
+                    "scope and limits, and emit overwritten_timeline_panels."
+                )
+            if "パネル" in text and any(word in text for word in ("生成", "変換", "強化", "変更")):
+                return (
+                    "Implement the described panel generation/conversion at its "
+                    "item/skill/turn trigger, apply holder/target scope and caps, "
+                    "and emit overwritten_timeline_panels."
+                )
+            if code == "break_gauge_heal" or "ブレイクゲージ" in text:
+                return (
+                    "Update the correct enemy gauge (including gauge number), "
+                    "clamp at its maximum, and emit the gauge/timeline result."
+                )
+            if "強制ブレイク" in text:
+                return (
+                    "Force the targeted enemy's current gauge to its break "
+                    "transition, decrement/reset multi-gauges correctly, and "
+                    "emit the captured break reason and moves."
+                )
+            if code in ("item_gauge", "burst_gauge") or "ゲージ" in text:
+                return (
+                    "Apply the value to the correct party/member gauge at the "
+                    "named trigger, clamp to capacity, and deduplicate multi-use events."
+                )
+            if code == "cleanse" or "解除" in text:
+                return (
+                    "Run the cleanse at its described timing and remove only "
+                    "eligible debuffs while preserving unremovable states."
+                )
+            if code == "field" or "フィールド" in text:
+                return (
+                    "Track the field ID, overwrite rules, owner/color duration, "
+                    "turn ticking, and BattleState field output."
+                )
+            if code == "revive" or "蘇生" in text or "復活" in text:
+                return (
+                    "Recreate the KO member with the captured HP fraction, "
+                    "state retention, gauge reset, and limited-use rules."
+                )
+            if code == "extra_attack" or "追加攻撃" in text:
+                return (
+                    "Resolve the linked follow-up skill with its target, "
+                    "conditions, use cap, and post-hook policy."
+                )
+            if code == "transform" or "変身" in text:
+                return (
+                    "Apply the transformed stat/skill deltas and duration, "
+                    "then serialize the transformed state."
+                )
+            if code == "unmapped":
+                return (
+                    "Cross-reference this ID in skill, ability, and state "
+                    "masters plus a representative capture; add a typed "
+                    "parser/runtime handler only after the trigger and target "
+                    "are established."
+                )
+            return (
+                "Implement a typed state/trigger handler for this parsed "
+                "behavior, preserving target, timing, duration, limits, and "
+                "wire result fields."
+            )
+        return (
+            "Capture-calibrate this mapped slot's value, duration, scope, "
+            "condition, and stacking/cap behavior; add a focused regression test."
+        )
+
+    def unmapped_effect_solution(description: str, popup: str) -> str:
+        text = description or ""
+        if not text.strip() or text.strip() == "state_change用":
+            return (
+                "Cross-reference the IDs from skill/ability/state effect lists "
+                "and capture data; no independent combat behavior can be "
+                "implemented from this empty/internal marker."
+            )
+        if "パネル" in text and any(word in text for word in ("効果量", "効果の効果量")):
+            return (
+                "Add a panel-category-scoped potency modifier at panel grant "
+                "time; do not treat this as panel sequence generation or conversion."
+            )
+        if "パネル" in text and any(word in text for word in ("生成", "変換", "強化", "変更")):
+            return (
+                "Add a panel-operation parser/runtime path with holder, panel "
+                "type, generation/conversion scope, limits, and response emission."
+            )
+        if "強制ブレイク" in text:
+            return (
+                "Force the targeted enemy's current gauge through the correct "
+                "small/large break transition and emit its timeline effects."
+            )
+        if "ブレイクゲージ" in text:
+            return (
+                "Map the exact break operation to the current gauge number, "
+                "small/large break transition, and captured timeline move."
+            )
+        if "ブレイク中" in text or "ブレイク状態" in text:
+            return (
+                "Add a target_broken condition to the appropriate HP-damage or "
+                "break-damage slot and verify it with a broken-target capture."
+            )
+        if "ブレイクダメージ" in text:
+            return (
+                "Map this to the break-damage slot, separate from HP damage, "
+                "crit, break power, and received-break modifiers."
+            )
+        if "ブレイク" in text:
+            return (
+                "Cross-reference the consuming skill/state and capture the "
+                "specific break action before adding a gauge/timeline handler."
+            )
+        if "ターン" in text or "手番" in text:
+            return (
+                "Map this to a relative-wait operation with explicit trigger, "
+                "target, turn count, event insertion/removal, and move records."
+            )
+        if "ゲージ" in text:
+            return (
+                "Identify item/burst/cannon gauge ownership and trigger, then "
+                "apply a clamped, once-per-event gauge change."
+            )
+        if any(word in text for word in ("回復", "HP")):
+            return (
+                "Resolve the named heal at the specified trigger using the "
+                "correct HP/attack basis, target scope, and recovery modifiers."
+            )
+        if any(word in text for word in ("召喚", "仲間呼び", "呼び出し")):
+            return (
+                "Resolve the summon link into battle members, preserve owner/"
+                "enemy numbering, and serialize the summons response."
+            )
+        if any(word in text for word in ("状態変化", "状態異常", "付与")):
+            return (
+                "Link the effect to its state-change ID, then implement target, "
+                "application rate, resistance, potency, and duration."
+            )
+        if any(word in text for word in ("ダメージ", "攻撃", "威力", "耐性")):
+            return (
+                "Map the text to its typed combat slot and evaluate its "
+                "attribute, attack-type, target-state, and trigger conditions."
+            )
+        return (
+            "Cross-reference the effect ID with its consuming skill/ability "
+            "and a capture, then add a typed parser rule and regression test."
+        )
+
     cmap = json.loads((args.gameroot / "battle-master" / "combat_map.json").read_text(encoding="utf-8"))
     slim_skill = load_table(args.gameroot / "battle-master" / "skill.json")
     characters = load(args.master, "character")
@@ -811,9 +1154,10 @@ def main() -> int:
     # The state description supplies the semantic slot; the effect/skill row
     # supplies the runtime grant value, target, and application conditions.
     states = load(args.master, "state_change")
-    srows = states if isinstance(states, list) else states.values()
+    state_rows = states if isinstance(states, list) else list(states.values())
+    states_by_id = {str(row.get("id")): row for row in state_rows}
     rows = []
-    for row in srows:
+    for row in state_rows:
         sid = str(row.get("id"))
         state_info = cmap.get("states", {}).get(sid, {}) or {}
         kind = state_info.get("kind", "special")
@@ -863,6 +1207,160 @@ def main() -> int:
     write_table(out / "states.md", "Status effects",
                 legend_status, ["id", "ja", "en", "status", "note"], rows)
 
+    # -- bilingual implementation backlog -----------------------------------
+    backlog_kinds = {
+        "special", "dummy", "counter_state", "counter", "panel_null",
+        "pioneer", "range_in", "range_out", "reflect", "delay_turn_attack",
+    }
+    backlog_state_rows = []
+    for row in state_rows:
+        sid = str(row.get("id"))
+        info = cmap.get("states", {}).get(sid, {}) or {}
+        kind = info.get("kind", "special")
+        if kind not in backlog_kinds:
+            continue
+        effect = info.get("effect", {}) or {}
+        if kind in ("special", "dummy", "counter_state"):
+            status = "No handler (records-only)"
+        elif kind == "delay_turn_attack":
+            status = "Partial: estimated wait gap and trigger edge cases"
+        elif kind == "counter":
+            status = "Partial: counter damage/targeting missing"
+        elif kind == "reflect":
+            status = "Partial: amount/type order needs capture calibration"
+        else:
+            status = "Partial: state-specific behavior is not fully connected"
+        backlog_state_rows.append([
+            sid,
+            row.get("name") or "",
+            en_field("state_change", sid, "name", en("state_change", sid)) or "(untranslated)",
+            row.get("description") or "",
+            en_field("state_change", sid, "description", "(no local EN description)"),
+            kind + "; effect code=" + str(effect.get("code", "unmapped")),
+            status,
+            state_solution(sid, row, info),
+        ])
+    backlog_state_rows.sort(key=lambda item: int(item[0]))
+
+    effect_rows = load(args.master, "effect")
+    unmapped_rows = [
+        row for row in effect_rows
+        if (cmap.get("effects", {}).get(str(row.get("id")), {}) or {}).get("code") == "unmapped"
+        and str(row.get("id")) not in states_by_id
+    ]
+    described_effect_groups: dict[tuple[str, str, str, str, str], list[dict]] = {}
+    blank_effect_groups: dict[tuple[str, str], list[dict]] = {}
+    for row in unmapped_rows:
+        effect_id = str(row.get("id"))
+        description = str(row.get("description") or "").strip()
+        popup = str(row.get("popup_text") or "").strip()
+        en_description = en_field("effect", effect_id, "description").strip()
+        en_popup = en_field("effect", effect_id, "popup_text").strip()
+        en_name = en_field("effect", effect_id, "name").strip()
+        if description:
+            key = (description, popup, en_description, en_popup, en_name)
+            described_effect_groups.setdefault(key, []).append(row)
+        else:
+            key = (popup, en_popup)
+            blank_effect_groups.setdefault(key, []).append(row)
+
+    effect_backlog_rows = []
+    for (description, popup, en_description, en_popup, en_name), group in sorted(
+        described_effect_groups.items(), key=lambda item: int(item[1][0].get("id", 0))
+    ):
+        ids = sorted((str(row.get("id")) for row in group), key=int)
+        ja_name = str(group[0].get("name") or popup or "効果レコード")
+        english_name = en_name or en_popup or "Effect record (unnamed in master)"
+        effect_backlog_rows.append([
+            ", ".join(ids), ja_name, english_name, description,
+            en_description or "(no local English description)", "unmapped",
+            unmapped_effect_solution(description, popup),
+        ])
+    for (popup, en_popup), group in sorted(
+        blank_effect_groups.items(),
+        key=lambda item: int(item[1][0].get("id", 0)),
+    ):
+        ids = sorted((str(row.get("id")) for row in group), key=int)
+        ja_name = popup or "説明のない効果レコード"
+        english_name = en_popup or "Unnamed effect records"
+        for start in range(0, len(ids), 60):
+            chunk = ids[start:start + 60]
+            effect_backlog_rows.append([
+                ", ".join(chunk), ja_name, english_name,
+                "(effect.json に説明なし)", "(no effect description in local English data)",
+                "unmapped",
+                unmapped_effect_solution("", popup),
+            ])
+    effect_backlog_rows.sort(key=lambda row: int(row[0].split(",", 1)[0]))
+
+    backlog_headers = [
+        "ID(s)", "Japanese name / label", "English name / label",
+        "Japanese description", "English description", "map code",
+        "proposed solution",
+    ]
+
+    def append_markdown_table(lines: list[str], headers: list[str], rows: list[list]) -> None:
+        lines.append("| " + " | ".join(headers) + " |")
+        lines.append("|" + "|".join(["---"] * len(headers)) + "|")
+        for row in rows:
+            lines.append("| " + " | ".join(esc(cell) for cell in row) + " |")
+        lines.append("")
+
+    report = [
+        "# Unimplemented combat effects (Japanese / English)",
+        "",
+        "Generated from the Japanese `state_change` and `effect` masters, the "
+        "combat map, official Global localization, and local machine translation.",
+        "The state section lists every row with no runtime handler or a known "
+        "missing behavior; rows whose only gaps are value/duration calibration "
+        "remain in `COMBAT_CHECKLISTS/states.md`. "
+        "Every `effect.json` row whose map code is `unmapped` is also listed; "
+        "identical descriptions share a row, but all IDs are retained.",
+        "Current inventory: %d state rows; %d unmapped effect IDs in %d "
+        "description groups." % (
+            len(backlog_state_rows), len(unmapped_rows), len(effect_backlog_rows)
+        ),
+        "",
+        "The `effect` master has no display-name field for most rows, so the ID "
+        "or `popup_text` is used as its label. Empty descriptions are grouped "
+        "into ID chunks and require linkage through skills, abilities, state "
+        "rows, or captures before behavior can be inferred.",
+        "",
+        "## State-change effects with missing or partial behavior",
+        "",
+    ]
+    append_markdown_table(report, [
+        "ID", "Japanese name", "English name", "Japanese description",
+        "English description", "current kind / code", "proposed solution",
+    ], backlog_state_rows)
+    report.extend([
+        "## Effect-master descriptions with no combat-map parser code",
+        "",
+        "Unmapped IDs that also have a `state_change` row are covered in the "
+        "first table; their state row is the runtime link. The second table "
+        "contains the remaining unmapped effect records. Mapped codes with "
+        "known downstream gaps are tracked under their consuming skills, "
+        "abilities, panels, and other categories in `COMBAT_CHECKLISTS/`.",
+        "",
+    ])
+    append_markdown_table(report, backlog_headers, effect_backlog_rows)
+    report.extend([
+        "## Suggested workflow",
+        "",
+        "For an entry with text, first cross-reference its IDs in the consuming "
+        "skill/ability and state masters; then verify target, trigger, value, "
+        "duration, and stacking with a representative capture. Add a typed "
+        "combat-map code and regression test only after those semantics are "
+        "established. For empty-text IDs, keep them inert until a master link or "
+        "capture identifies the behavior. Never infer semantics from ID ranges.",
+        "",
+    ])
+    backlog_text = "\n".join(report)
+    backlog_path = out.parent / "COMBAT_UNIMPLEMENTED_EFFECTS.md"
+    backlog_path.write_text(backlog_text, encoding="utf-8")
+    print("unimplemented backlog: %d state rows, %d unmapped effect ids, %d effect-description groups" % (
+        len(backlog_state_rows), len(unmapped_rows), len(effect_backlog_rows)))
+
     loc_tables = len(loc)
     summary = [
         "# Combat checklists",
@@ -885,6 +1383,7 @@ def main() -> int:
         "- traits.md: battle and equipment trait effect coverage.",
         "- panels.md: exact parsed panel operations.",
         "- states.md: status-effect kinds with English names.",
+        "- ../COMBAT_UNIMPLEMENTED_EFFECTS.md: bilingual missing/partial state and effect records with proposals.",
         "",
         "Unsure items need capture confirmation; see the capture list in the "
         "session summary message.",
@@ -897,19 +1396,13 @@ def main() -> int:
     return 0
 
 
-SHARE_REPLACEMENTS = [
-    ("dm_lara_criselda_antje/session-20260927-141441-620", "local battle captures"),
-    ("session-20260928-123435-331", "local battle captures"),
-    ("decrypted-session-20260928-075711-658", "local decrypted captures"),
-    ("session_lepl/session_lepl", "local battle captures"),
-    ("session_brust/session_brust", "local battle captures"),
-    ("session_geron_0916/session_geron", "local battle captures"),
-    ("Season2_skills", "local skill captures"),
-]
+SHARE_REPLACEMENTS: list[tuple[str, str]] = []
 SHARE_PATTERNS = [
     (re.compile(r"C:\\Users\\[^`\s]+"), "<user dir>"),
-    (re.compile(r"decrypted-session-[A-Za-z0-9_-]+"), "local decrypted captures"),
-    (re.compile(r"(?<![A-Za-z0-9_-])session-[0-9]{8}-[0-9]+-[0-9]+"), "local battle captures"),
+    (re.compile(r"(?:[A-Za-z0-9_-]+[\\/])*decrypted-session-[A-Za-z0-9_-]+"), "local decrypted captures"),
+    (re.compile(r"(?:[A-Za-z0-9_-]+[\\/])*session-[0-9]{8}-[0-9]+-[0-9]+"), "local battle captures"),
+    (re.compile(r"(?:[A-Za-z0-9_-]+[\\/])*session_[A-Za-z0-9_-]+"), "local battle captures"),
+    (re.compile(r"Season[0-9]+_skills"), "local skill captures"),
 ]
 SHARE_HEADER = (
     "> Share copy (sanitized per AGENTS.md): local capture session paths, "
@@ -935,6 +1428,12 @@ def write_share_copies(out: Path, share_dir: Path) -> None:
     if root_checklist.is_file():
         (share_dir / "COMBAT_CHECKLIST.md").write_text(
             SHARE_HEADER + sanitize_share_text(root_checklist.read_text(encoding="utf-8")),
+            encoding="utf-8",
+        )
+    backlog = out.parent / "COMBAT_UNIMPLEMENTED_EFFECTS.md"
+    if backlog.is_file():
+        (share_dir / backlog.name).write_text(
+            SHARE_HEADER + sanitize_share_text(backlog.read_text(encoding="utf-8")),
             encoding="utf-8",
         )
     for path in sorted(out.glob("*.md")):
