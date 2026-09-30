@@ -2003,10 +2003,19 @@ def captured_response_material(
             "/user/log_in": is_api_message,
             "/login_bonus/receive": is_api_message,
             "/external_purchase/receive": is_api_message,
+            "/mail/list": is_empty_or_api_message,
+            "/mail/open": is_api_message,
             "/character/skin_set": is_skin_request_plaintext,
             "/chara_home/register": is_home_register_request,
+            "/profile/update_name": is_empty_or_api_message,
+            "/profile/update_memo": is_empty_or_api_message,
+            "/profile/update_favorite_character": is_empty_or_api_message,
+            "/profile/update_favorite_party": is_empty_or_api_message,
+            "/profile/update_favorite_battle_tools": is_empty_or_api_message,
             "/profile/update_chara_home_favorite_character_list": is_favorite_request,
             "/profile/update_selected_home_id": is_selected_home_request,
+            "/quest/street/start": is_api_message,
+            "/quest/street/talk": is_api_message,
             "/exploration/start": is_exploration_start_request,
             "/exploration/update_party": is_api_message,
             "/exploration/explore": is_api_message,
@@ -2972,6 +2981,8 @@ class Replay:
         changed_response_plaintext: bytes,
         source: str,
         remove_exploration_quest_ids: set[int] | None = None,
+        remove_street_state_quest_ids: set[int] | None = None,
+        replace_profile_record: bool = False,
     ) -> None:
         if REPLAY_MODE or not changed_response_plaintext:
             return
@@ -2997,6 +3008,29 @@ class Replay:
                     1,
                     {int(quest_id)},
                 )
+            for quest_id in remove_street_state_quest_ids or set():
+                merged_plaintext = remove_profile_resource_records(
+                    merged_plaintext,
+                    7,
+                    1,
+                    {int(quest_id)},
+                )
+            if replace_profile_record:
+                update_resources = message_field(changed_response_plaintext, 1)
+                updated_profile = message_field(update_resources or b"", 39)
+                if updated_profile is not None:
+                    merged_resources = message_field(merged_plaintext, 1)
+                    if merged_resources is not None:
+                        merged_resources = replace_message_field(
+                            merged_resources,
+                            39,
+                            updated_profile,
+                        )
+                        merged_plaintext = replace_message_field(
+                            merged_plaintext,
+                            1,
+                            merged_resources,
+                        )
             if merged_plaintext == current_plaintext:
                 return
 
@@ -4559,6 +4593,7 @@ class Replay:
         extra_resource_fields: list[tuple[int, int, object]] | None = None,
         persistence_plaintext: bytes | None = None,
         persistence_remove_exploration_quest_ids: set[int] | None = None,
+        persistence_replace_profile: bool = False,
     ) -> bytes:
         plaintext = make_changed_resources_plaintext(
             profile=profile,
@@ -4587,6 +4622,7 @@ class Replay:
             plaintext if persistence_plaintext is None else persistence_plaintext,
             "generated_changed_resources",
             remove_exploration_quest_ids=persistence_remove_exploration_quest_ids,
+            replace_profile_record=persistence_replace_profile,
         )
         return bytes([response_marker]) + aes_encrypt(
             pkcs7_pad(gzip.compress(plaintext, mtime=0)),
@@ -4955,7 +4991,7 @@ class Replay:
         request_plaintext, response_key, response_iv, response_marker = (
             decrypt_request_with_response_material(
                 flow.request.raw_content or b"",
-                is_api_message,
+                is_empty_or_api_message,
                 path,
             )
         )
@@ -5890,6 +5926,188 @@ class Replay:
         )
         return encrypt_api_response(response_marker, response_plaintext, response_key, response_iv)
 
+    def quest_street_start_response(self, flow: http.HTTPFlow) -> bytes:
+        request_plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                flow.request.raw_content or b"",
+                is_api_message,
+                "/quest/street/start",
+            )
+        )
+        quest_id = varint_field(request_plaintext, 1, 0)
+        if quest_id <= 0:
+            raise ValueError("street start request has no quest_id")
+        master = load_gameplay_master(str((GAME_DIR / "gameplay-master.json").resolve()))
+        phases = master.get("street_phases") or {}
+        phase_rows = phases.get(str(quest_id)) or []
+        if not phase_rows:
+            raise ValueError(f"Japanese street master has no quest {quest_id}")
+        phase = min(int(value.get("phase") or 0) for value in phase_rows)
+        street_state = b"".join(
+            (
+                write_field(1, 0, quest_id),
+                write_field(2, 0, phase),
+                write_field(3, 2, b""),
+                write_field(4, 2, b""),
+            )
+        )
+        self.log(f"LOCAL-STREET-START path=/quest/street/start status=200 quest_id={quest_id} phase={phase}")
+        return self.changed_resources_encrypted_response(
+            response_key,
+            response_iv,
+            response_marker,
+            extra_resource_fields=[(7, 2, street_state)],
+        )
+
+    def quest_street_talk_response(self, flow: http.HTTPFlow) -> bytes:
+        request_plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                flow.request.raw_content or b"",
+                is_api_message,
+                "/quest/street/talk",
+            )
+        )
+        talk_id = varint_field(request_plaintext, 1, 0)
+        master = load_gameplay_master(str((GAME_DIR / "gameplay-master.json").resolve()))
+        talk = (master.get("street_talks") or {}).get(str(talk_id))
+        if talk is None:
+            raise ValueError(f"Japanese street talk master has no talk_id={talk_id}")
+        quest_id = int(talk["quest_id"])
+        resources = profile_resources(
+            decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+        )
+        street_state = message_field(resources, 7)
+        if street_state is None:
+            raise ValueError("profile has no active StreetState")
+        if varint_field(street_state, 1, 0) != quest_id:
+            raise ValueError(f"talk_id={talk_id} does not match the active street quest")
+        current_phase = varint_field(street_state, 2, 0)
+        phase_rows = (master.get("street_phases") or {}).get(str(quest_id)) or []
+        current_row = next(
+            (
+                row
+                for row in phase_rows
+                if int(row.get("phase") or 0) == current_phase
+                and any(
+                    int(trigger.get("talk_id") or 0) == talk_id
+                    for trigger in row.get("triggers") or []
+                )
+            ),
+            None,
+        )
+        if current_row is None:
+            raise ValueError(f"talk_id={talk_id} is not available in street phase {current_phase}")
+
+        played = varint_values(street_state, 4)
+        if talk_id not in played:
+            played.append(talk_id)
+        phase_talks = [
+            int(trigger.get("talk_id") or 0)
+            for trigger in current_row.get("triggers") or []
+            if int(trigger.get("talk_id") or 0) > 0
+        ]
+        phase_complete = all(value in played for value in phase_talks)
+        future_phases = sorted(
+            int(row.get("phase") or 0)
+            for row in phase_rows
+            if int(row.get("phase") or 0) > current_phase
+        )
+        is_final = phase_complete and not future_phases
+        if is_final:
+            status = message_field(resources, 6)
+            if status is None:
+                raise ValueError("profile has no Status message for final street talk")
+            status = replace_varint_field(status, 8, quest_id)
+            task = updated_total_task_count_record(
+                profile_resource_records(
+                    decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes()),
+                    32,
+                ),
+                350,
+            )
+            plaintext = make_changed_resources_plaintext(
+                status=status,
+                total_task_counts=[task],
+            )
+            self.persist_profile_update(
+                plaintext,
+                "/quest/street/talk",
+                remove_street_state_quest_ids={quest_id},
+            )
+            self.log(
+                f"LOCAL-STREET-TALK path=/quest/street/talk status=200 quest_id={quest_id} "
+                f"talk_id={talk_id} complete=true"
+            )
+            return encrypt_api_response(response_marker, plaintext, response_key, response_iv)
+
+        next_phase = future_phases[0] if phase_complete else current_phase
+        updated_state = replace_varint_field(street_state, 2, next_phase)
+        updated_state = replace_repeated_varint_field(updated_state, 4, played)
+        plaintext = make_changed_resources_plaintext(
+            extra_resource_fields=[(7, 2, updated_state)]
+        )
+        self.persist_profile_update(plaintext, "/quest/street/talk")
+        self.log(
+            f"LOCAL-STREET-TALK path=/quest/street/talk status=200 quest_id={quest_id} "
+            f"talk_id={talk_id} phase={next_phase}"
+        )
+        return encrypt_api_response(response_marker, plaintext, response_key, response_iv)
+
+    def profile_response(self, flow: http.HTTPFlow) -> bytes:
+        path = urlsplit(flow.request.pretty_url).path
+        request_plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                flow.request.raw_content or b"",
+                is_empty_or_api_message,
+                path,
+            )
+        )
+        values = {
+            number: int(value)
+            for number, wire, value in read_wire_fields(request_plaintext)
+            if wire == 0
+        }
+        profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+        profile = message_field(profile_resources(profile_plaintext), 39) or b""
+
+        if path == "/profile/update_name":
+            name = message_field(request_plaintext, 1)
+            if name is None:
+                raise ValueError("profile name request has no name")
+            profile = replace_message_field(profile, 1, name)
+        elif path == "/profile/update_memo":
+            memo = message_field(request_plaintext, 1)
+            if memo is None:
+                raise ValueError("profile memo request has no memo")
+            profile = replace_message_field(profile, 2, memo)
+        elif path == "/profile/update_favorite_character":
+            profile = replace_varint_field(profile, 3, values.get(1, 0))
+        elif path == "/profile/update_favorite_party":
+            for request_field in range(1, 6):
+                profile_field = request_field + 3
+                profile = replace_message_field(
+                    profile,
+                    profile_field,
+                    message_field(request_plaintext, request_field),
+                )
+        elif path == "/profile/update_favorite_battle_tools":
+            profile = replace_repeated_varint_field(
+                profile,
+                9,
+                varint_values(request_plaintext, 1),
+            )
+        else:
+            raise ValueError(f"unsupported profile endpoint: {path}")
+
+        self.log(f"LOCAL-PROFILE path={path} status=200")
+        return self.changed_resources_encrypted_response(
+            response_key,
+            response_iv,
+            response_marker,
+            profile=profile,
+            persistence_replace_profile=True,
+        )
+
     def home_response(self, flow: http.HTTPFlow) -> bytes:
         self.ensure_home_state()
         path = urlsplit(flow.request.pretty_url).path
@@ -6036,6 +6254,32 @@ class Replay:
         except (OSError, TypeError, ValueError, KeyError, json.JSONDecodeError) as error:
             self.log(f"AUTH-ID-OVERRIDE-FAILED reason={type(error).__name__}:{error}")
             return response_body
+
+    def mail_response(self, flow: http.HTTPFlow) -> bytes:
+        path = urlsplit(flow.request.pretty_url).path
+        if path not in {"/mail/list", "/mail/open"}:
+            raise ValueError(f"unsupported mail endpoint: {path}")
+        request_plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                flow.request.raw_content or b"",
+                is_empty_or_api_message,
+                path,
+            )
+        )
+        empty_mail_list = b""
+        if path == "/mail/list":
+            # MailListResponse.list; the local starter account has no captured mailbox.
+            response_plaintext = write_field(1, 2, empty_mail_list)
+        else:
+            # MailOpenResponse.changed_resources and list; no captured account mail is replayed.
+            response_plaintext = write_field(1, 2, b"") + write_field(4, 2, empty_mail_list)
+        self.log(f"LOCAL-MAIL path={path} status=200 empty=true")
+        return encrypt_api_response(
+            response_marker,
+            response_plaintext,
+            response_key,
+            response_iv,
+        )
 
     def default_response(self, flow: http.HTTPFlow) -> bool:
         path = urlsplit(flow.request.pretty_url).path
@@ -6612,6 +6856,27 @@ class Replay:
                     self.hybrid_logged_in = True
                     self.log("HYBRID login handshake complete; switching to generated responses")
                 return
+        if method == "POST" and path in {"/mail/list", "/mail/open"} and not REPLAY_MODE:
+            try:
+                response_body = self.mail_response(flow)
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError) as error:
+                self.log(f"MAIL-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time())),
+                },
+            )
+            return
         if method == "POST" and path == "/illustrated_book/start":
             try:
                 response_body = make_illustrated_book_response(
@@ -6688,13 +6953,67 @@ class Replay:
                     {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
                 )
                 return
-            headers = {
-                "Content-Type": "application/octet-stream",
-                "x-server-timestamp": str(int(time.time())),
-            }
-            if path != "/exploration/retire":
-                headers["X-Content-Encoding"] = "gzip"
-            flow.response = http.Response.make(200, response_body, headers)
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time())),
+                },
+            )
+            return
+        if method == "POST" and path in {
+            "/profile/update_name",
+            "/profile/update_memo",
+            "/profile/update_favorite_character",
+            "/profile/update_favorite_party",
+            "/profile/update_favorite_battle_tools",
+        }:
+            try:
+                response_body = self.profile_response(flow)
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
+                self.log(f"PROFILE-UPDATE-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time())),
+                },
+            )
+            return
+        if method == "POST" and path in {"/quest/street/start", "/quest/street/talk"}:
+            try:
+                response_body = (
+                    self.quest_street_start_response(flow)
+                    if path == "/quest/street/start"
+                    else self.quest_street_talk_response(flow)
+                )
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
+                self.log(f"STREET-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time())),
+                },
+            )
             return
         if method == "POST" and path == "/gacha/list":
             try:

@@ -96,12 +96,44 @@ def build(master: Path) -> dict:
             ],
         }
 
+    street_phases: dict[str, list[dict]] = {}
+    for row in load(master, "street_phase"):
+        quest_id = int(row["quest_id"])
+        street_phases.setdefault(str(quest_id), []).append(
+            {
+                "id": int(row["id"]),
+                "phase": int(row.get("phase") or 0),
+                "show_after_phase": int(row.get("show_after_phase") or 0),
+                "triggers": [
+                    {
+                        "talk_id": int(trigger["talk_id"]) if trigger.get("talk_id") is not None else 0,
+                        "move_part_id": int(trigger["move_part_id"])
+                        if trigger.get("move_part_id") is not None
+                        else 0,
+                    }
+                    for trigger in row.get("triggers") or []
+                ],
+            }
+        )
+    for phase_rows in street_phases.values():
+        phase_rows.sort(key=lambda value: (value["phase"], value["id"]))
+
+    street_talks = {
+        str(int(row["id"])): {
+            "id": int(row["id"]),
+            "quest_id": int(row["quest_id"]),
+        }
+        for row in load(master, "street_talk")
+    }
+
     return {
         "recipes": recipes,
         "dishes": dishes,
         "expeditions": expeditions,
         "expedition_recommendations": recommendations,
         "exploration_areas": exploration_areas,
+        "street_phases": street_phases,
+        "street_talks": street_talks,
     }
 
 
@@ -119,7 +151,8 @@ def main() -> int:
     )
     print(
         f"WROTE {args.output} recipes={len(data['recipes'])} dishes={len(data['dishes'])} "
-        f"expeditions={len(data['expeditions'])} areas={len(data['exploration_areas'])}"
+        f"expeditions={len(data['expeditions'])} areas={len(data['exploration_areas'])} "
+        f"street_quests={len(data['street_phases'])} street_talks={len(data['street_talks'])}"
     )
     return 0
 

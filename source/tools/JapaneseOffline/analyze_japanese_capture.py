@@ -31,6 +31,8 @@ ENDPOINT_TYPES = {
     "/exploration/retire": ("blend.api.ExplorationRetireRequest", "blend.api.ChangedResourcesResponse"),
     "/exploration/skip": ("blend.api.ExplorationSkipRequest", "blend.api.ExplorationSkipResponse"),
     "/login_bonus/receive": ("google.protobuf.Empty", "blend.api.LoginBonusReceiveResponse"),
+    "/mail/list": ("google.protobuf.Empty", "blend.api.MailListResponse"),
+    "/mail/open": ("blend.api.MailOpenRequest", "blend.api.MailOpenResponse"),
     "/party/bulk_update": ("blend.api.PartyBulkUpdateRequest", "blend.api.ChangedResourcesResponse"),
     "/party/battle_tools_set": ("blend.api.PartyBattleToolsSetRequest", "blend.api.ChangedResourcesResponse"),
     "/character/equip": ("blend.api.CharacterEquipRequest", "blend.api.ChangedResourcesResponse"),
@@ -54,6 +56,28 @@ ENDPOINT_TYPES = {
     ),
     "/quest/battle/skip": ("blend.api.QuestBattleSkipRequest", "blend.api.QuestBattleSkipResponse"),
     "/gacha/battle_start": ("blend.api.GachaBattleStartRequest", "blend.api.BattleStartResponse"),
+    "/profile/update_name": ("blend.api.ProfileUpdateNameRequest", "blend.api.ChangedResourcesResponse"),
+    "/profile/update_memo": ("blend.api.ProfileUpdateMemoRequest", "blend.api.ChangedResourcesResponse"),
+    "/profile/update_favorite_character": (
+        "blend.api.ProfileUpdateFavoriteCharacterRequest",
+        "blend.api.ChangedResourcesResponse",
+    ),
+    "/profile/update_favorite_party": (
+        "blend.api.ProfileUpdateFavoritePartyRequest",
+        "blend.api.ChangedResourcesResponse",
+    ),
+    "/profile/update_favorite_battle_tools": (
+        "blend.api.ProfileUpdateFavoriteBattleToolsRequest",
+        "blend.api.ChangedResourcesResponse",
+    ),
+    "/profile/update_chara_home_favorite_character_list": (
+        "blend.api.ProfileUpdateCharaHomeFavoriteCharacterListRequest",
+        "blend.api.ChangedResourcesResponse",
+    ),
+    "/profile/update_selected_home_id": (
+        "blend.api.ProfileUpdateSelectedHomeIdRequest",
+        "blend.api.ChangedResourcesResponse",
+    ),
     "/recipe/favorite": ("blend.api.RecipeFavoriteRequest", "blend.api.ChangedResourcesResponse"),
     "/synthesis/bulk_execute": (
         "blend.api.SynthesisBulkExecuteRequest",
@@ -70,6 +94,14 @@ ENDPOINT_TYPES = {
     "/synthesis/execute_rental": (
         "blend.api.SynthesisExecuteRentalRequest",
         "blend.api.SynthesisExecuteResponse",
+    ),
+    "/quest/street/start": (
+        "blend.api.QuestStreetStartRequest",
+        "blend.api.ChangedResourcesResponse",
+    ),
+    "/quest/street/talk": (
+        "blend.api.QuestStreetTalkRequest",
+        "blend.api.ChangedResourcesResponse",
     ),
 }
 
@@ -233,7 +265,8 @@ def main() -> int:
         output: Any = dict(sorted(counts.items()))
     else:
         output = analyze(args)
-    text = json.dumps(output, ensure_ascii=False, indent=2) + "\n"
+    # Keep stdout portable across Windows consoles that do not use UTF-8.
+    text = json.dumps(output, ensure_ascii=True, indent=2) + "\n"
     if args.output:
         args.output.write_text(text, encoding="utf-8")
     else:

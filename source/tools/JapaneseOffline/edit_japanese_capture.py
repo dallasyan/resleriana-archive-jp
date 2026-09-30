@@ -21,6 +21,8 @@ ENDPOINT_TYPES = {
     "/expedition/reward_receive": (
         "google.protobuf.Empty", "blend.api.ExpeditionRewardReceiveResponse"
     ),
+    "/mail/list": ("google.protobuf.Empty", "blend.api.MailListResponse"),
+    "/mail/open": ("blend.api.MailOpenRequest", "blend.api.MailOpenResponse"),
     "/login_bonus/receive": ("google.protobuf.Empty", "blend.api.LoginBonusReceiveResponse"),
     "/gacha/list": ("google.protobuf.Empty", "blend.api.GachaListResponse"),
     "/gacha/execute": ("blend.api.GachaExecuteRequest", "blend.api.GachaExecuteResponse"),
@@ -30,7 +32,30 @@ ENDPOINT_TYPES = {
     "/recipe/learn": ("blend.api.RecipeLearnRequest", "blend.api.ChangedResourcesResponse"),
     "/illustrated_book/start": ("blend.api.IllustratedBookStartRequest", "blend.api.IllustratedBookStartResponse"),
     "/character/skin_set": ("blend.api.CharacterSkinSetRequest", "blend.api.ChangedResourcesResponse"),
-    "/profile/update_selected_home_id": ("blend.api.UpdateSelectedHomeIdRequest", "blend.api.ChangedResourcesResponse"),
+    "/profile/update_selected_home_id": (
+        "blend.api.ProfileUpdateSelectedHomeIdRequest", "blend.api.ChangedResourcesResponse"
+    ),
+    "/profile/update_name": ("blend.api.ProfileUpdateNameRequest", "blend.api.ChangedResourcesResponse"),
+    "/profile/update_memo": ("blend.api.ProfileUpdateMemoRequest", "blend.api.ChangedResourcesResponse"),
+    "/profile/update_favorite_character": (
+        "blend.api.ProfileUpdateFavoriteCharacterRequest", "blend.api.ChangedResourcesResponse"
+    ),
+    "/profile/update_favorite_party": (
+        "blend.api.ProfileUpdateFavoritePartyRequest", "blend.api.ChangedResourcesResponse"
+    ),
+    "/profile/update_favorite_battle_tools": (
+        "blend.api.ProfileUpdateFavoriteBattleToolsRequest", "blend.api.ChangedResourcesResponse"
+    ),
+    "/profile/update_chara_home_favorite_character_list": (
+        "blend.api.ProfileUpdateCharaHomeFavoriteCharacterListRequest",
+        "blend.api.ChangedResourcesResponse",
+    ),
+    "/quest/street/start": (
+        "blend.api.QuestStreetStartRequest", "blend.api.ChangedResourcesResponse"
+    ),
+    "/quest/street/talk": (
+        "blend.api.QuestStreetTalkRequest", "blend.api.ChangedResourcesResponse"
+    ),
     "/chara_home/register": ("blend.api.CharaHomeRegisterRequest", "blend.api.ChangedResourcesResponse"),
     "/exploration/start": ("blend.api.ExplorationStartRequest", "blend.api.ChangedResourcesResponse"),
     "/exploration/update_party": ("blend.api.ExplorationUpdatePartyRequest", "blend.api.ChangedResourcesResponse"),
