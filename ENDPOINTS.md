@@ -327,7 +327,7 @@ Names below come from the installed client `contract-dump/fields.txt`. Shared re
 | `/dish/order` | `blend.api.DishOrderRequest` | `blend.api.DishOrderResponse` |
 | `/emblem/acquisition_drama` | `blend.api.EmblemAcquisitionDramaRequest` | `blend.api.ChangedResourcesResponse` |
 | `/equipment_preset/bulk_set` | `blend.api.EquipmentPresetBulkSetRequest` | `blend.api.ChangedResourcesResponse` |
-| `/event/top` | `No matching request definition in fields.txt` | `blend.api.EventTopResponse` |
+| `/event/top` | `google.protobuf.Empty` | `blend.api.EventTopResponse` |
 | `/expedition/reward_receive` | `google.protobuf.Empty` | `blend.api.ExpeditionRewardReceiveResponse` |
 | `/expedition/start` | `blend.api.ExpeditionStartRequest` | `blend.api.ExpeditionStartResponse` |
 | `/exploration/battle_start` | `blend.api.ExplorationBattleStartRequest` | `blend.api.BattleStartResponse` |
@@ -414,7 +414,7 @@ Names below come from the installed client `contract-dump/fields.txt`. Shared re
 | `/mission/count_reward_receive` | `blend.api.MissionCountRewardReceiveRequest` | `blend.api.MissionCountRewardReceiveResponse` |
 | `/daily_pass/bulk_receive` | `blend.api.DailyPassBulkReceiveRequest` | `blend.api.DailyPassBulkReceiveResponse` |
 | `/mana/purchase` | `blend.api.ManaPurchaseRequest` | `blend.api.ChangedResourcesResponse` |
-| `/shop/gem_list` | `No matching request definition in fields.txt` | `blend.api.ShopGemListResponse` |
+| `/shop/gem_list` | `google.protobuf.Empty` | `blend.api.ShopGemListResponse` |
 | `/shop/random_shop/purchase` | `blend.api.ShopRandomShopPurchaseRequest` | `blend.api.ShopRandomShopPurchaseResponse` |
 
 ### Request/response definitions not assigned to a listed endpoint
@@ -524,4 +524,12 @@ These API messages are present in `fields.txt` but are not selected by the route
 - `blend.api.UserLinksListResponse`
 - `blend.api.UserUpdateBirthdateRequest`
 - `blend.api.UserUpdateLanguageRequest`
+
+### Candidate route names to verify against captures
+
+These are naming-based leads only, not confirmed endpoint registrations:
+
+- `/quest/street/move`, `/quest/street/receive_reward`, `/quest/street/list_talk`, and `/quest/street/replay_talk` from the corresponding `QuestStreet*Request` definitions.
+- `/synthesis/execute` from `blend.api.SynthesisExecuteRequest`.
+- `/user/update_birthdate` and `/user/update_language` from the corresponding `UserUpdate*Request` definitions.
 <!-- END GENERATED PROTOBUF CONTRACT MAP -->
