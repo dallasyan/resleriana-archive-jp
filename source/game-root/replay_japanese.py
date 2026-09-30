@@ -4898,11 +4898,12 @@ class Replay:
             status = replace_varint_field(status, 25, daily_count + count)
             status = replace_message_field(status, 26, write_field(1, 0, now))
         else:
-            status, _ = mana_status_after_delta(
+            mana_update, _ = mana_status_after_delta(
                 status,
                 -int(recipe.get("mana_cost") or 0) * count,
                 now,
             )
+            status = merge_wire_message(status, mana_update)
         if cole_grant:
             status = replace_varint_field(status, 3, varint_field(status, 3, 0) + cole_grant)
 
