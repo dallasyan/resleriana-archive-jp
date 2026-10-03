@@ -19,6 +19,19 @@ from typing import Any
 from Crypto.Cipher import AES
 from google.protobuf import descriptor_pb2, descriptor_pool, json_format, message_factory
 
+_PROFILE_EDITOR_DIRECTORY = Path(__file__).resolve().parent
+for _candidate in (
+    _PROFILE_EDITOR_DIRECTORY.parent.parent / "JapaneseOffline",
+    _PROFILE_EDITOR_DIRECTORY.parent / "JapaneseOffline",
+    _PROFILE_EDITOR_DIRECTORY.parent / "game-root",
+    _PROFILE_EDITOR_DIRECTORY.parent,
+):
+    if (_candidate / "contract_codec.py").is_file():
+        sys.path.insert(0, str(_candidate))
+        break
+
+import contract_codec
+
 
 DEFAULT_KEY = bytes.fromhex("2c332f491d4bea9813f6fac5db3ee8f9")
 DEFAULT_IV = bytes.fromhex("65a99b89a634fca3193c5212e5219378")
@@ -70,6 +83,34 @@ def default_game_root() -> Path:
 
 def default_profile_path() -> Path:
     return default_game_root() / "profile.bin"
+
+
+def default_contract_fields_path() -> Path:
+    candidates: list[Path] = []
+    frozen_root = getattr(sys, "_MEIPASS", None)
+    if frozen_root:
+        candidates.append(Path(frozen_root) / "contract-fields.txt")
+    candidates.extend(
+        (
+            _PROFILE_EDITOR_DIRECTORY / "contract-fields.txt",
+            default_game_root() / "contract-dump" / "fields.txt",
+            Path(
+                "C:/Program Files (x86)/Steam/steamapps/common/AtelierResleriana"
+                "/contract-dump/fields.txt"
+            ),
+        )
+    )
+    return next((path for path in candidates if path.is_file()), candidates[-1])
+
+
+def load_contract_db(path: Path):
+    try:
+        database = contract_codec.parse_fields_txt(path)
+    except (OSError, ValueError) as error:
+        raise ValueError(f"could not load protobuf contract fields from {path}: {error}") from error
+    if TOP_LEVEL_MESSAGE not in database.messages:
+        raise ValueError(f"protobuf contract fields do not define {TOP_LEVEL_MESSAGE}: {path}")
+    return database
 
 
 def default_observer_material_path(profile_path: Path) -> Path | None:
@@ -206,6 +247,220 @@ def parse_message(data: bytes, pool: descriptor_pool.DescriptorPool):
     return message
 
 
+def parse_contract_message(data: bytes, contract_db) -> dict[str, Any]:
+    return contract_codec.decode_message(contract_db, TOP_LEVEL_MESSAGE, data)
+
+
+def contract_field(db, node: dict[str, Any], name: str) -> tuple[int, dict[str, Any]]:
+    message_name = node.get("$message")
+    schema = db.messages.get(message_name)
+    if schema is None:
+        raise ValueError(f"no contract fields for message {message_name!r}")
+    for number, field in schema.items():
+        if field["name"] == name:
+            return int(number), field
+    raise ValueError(f"unknown field {name!r} for {message_name}")
+
+
+def contract_child(
+    db,
+    node: dict[str, Any],
+    component: str,
+    create: bool = True,
+) -> dict[str, Any]:
+    match = re.fullmatch(r"([A-Za-z_]\w*)(?:\[(\d+)\])?", component)
+    if not match:
+        raise ValueError(f"invalid contract field path component: {component}")
+    name, index_text = match.groups()
+    index = None if index_text is None else int(index_text)
+    _, field = contract_field(db, node, name)
+    if field["kind"] != "Message":
+        raise ValueError(f"{name} is not a contract message field")
+    value = node.get(name)
+    if index is None:
+        if value is None:
+            if not create:
+                raise ValueError(f"message field {name} is absent")
+            value = {"$message": field["type"]}
+            node[name] = value
+        if isinstance(value, list) or (isinstance(value, dict) and "$packed" in value):
+            raise ValueError(f"repeated message field requires an index: {component}")
+        if not isinstance(value, dict) or "$bytes" in value:
+            raise ValueError(f"message field {name} is not editable by name")
+        return value
+
+    if value is None:
+        if not create or index != 0:
+            raise ValueError(f"message field index is unavailable: {component}")
+        value = {"$message": field["type"]}
+        node[name] = value
+        return value
+    if isinstance(value, list):
+        if index >= len(value):
+            raise ValueError(f"index out of range: {component}")
+        child = value[index]
+    elif isinstance(value, dict) and "$packed" not in value:
+        if index != 0:
+            raise ValueError(f"index out of range: {component}")
+        child = value
+    else:
+        raise ValueError(f"message field {name} is not editable by name")
+    if not isinstance(child, dict) or "$bytes" in child:
+        raise ValueError(f"message field {component} is not editable by name")
+    return child
+
+
+def parse_contract_scalar(db, field: dict[str, Any], text: str) -> Any:
+    kind = field["kind"]
+    type_name = field.get("type", "")
+    if kind == "String":
+        try:
+            value = json.loads(text)
+        except json.JSONDecodeError:
+            value = text
+        if not isinstance(value, str):
+            raise ValueError(f"{field['name']} requires a string")
+        return value
+    if kind == "Bytes":
+        if text.startswith("hex:"):
+            value = bytes.fromhex(text[4:])
+        elif text.startswith("base64:"):
+            value = base64.b64decode(text[7:])
+        else:
+            value = bytes.fromhex(text)
+        return {"$bytes": value.hex()}
+    if kind == "Bool":
+        if text.lower() not in ("true", "false", "1", "0"):
+            raise ValueError(f"{field['name']} requires true or false")
+        return text.lower() in ("true", "1")
+    if kind == "Enum":
+        enum_values = db.enum_names.get(type_name, {})
+        if text in enum_values:
+            number = enum_values[text]
+        else:
+            number = int(text, 0)
+        return {"value": number, "name": db.enums.get(type_name, {}).get(number)}
+    if kind in ("Float", "Double"):
+        return float(text)
+    if kind in ("Int32", "Int64"):
+        return int(text, 0)
+    raise ValueError(f"unsupported contract field kind: {kind}")
+
+
+def apply_contract_set(db, message: dict[str, Any], assignment: str) -> None:
+    if "=" not in assignment:
+        raise ValueError(f"assignment requires path=value: {assignment}")
+    path, text = assignment.split("=", 1)
+    parts = path.split(".")
+    if not parts or any(not part for part in parts):
+        raise ValueError(f"invalid contract field path: {path}")
+    current = message
+    for component in parts[:-1]:
+        current = contract_child(db, current, component)
+
+    match = re.fullmatch(r"([A-Za-z_]\w*)(?:\[(\d+)\])?", parts[-1])
+    if not match:
+        raise ValueError(f"invalid final contract field path: {parts[-1]}")
+    name, index_text = match.groups()
+    index = None if index_text is None else int(index_text)
+    _, field = contract_field(db, current, name)
+    if field["kind"] == "Message":
+        raise ValueError(f"target field is a message; edit one of its fields: {path}")
+    parsed = parse_contract_scalar(db, field, text)
+    existing = current.get(name)
+    if index is None:
+        if isinstance(existing, list) or (isinstance(existing, dict) and "$packed" in existing):
+            raise ValueError(f"repeated field requires an index: {path}[0]")
+        current[name] = parsed
+        return
+
+    if isinstance(existing, list):
+        if index >= len(existing):
+            raise ValueError(f"index out of range: {path}")
+        existing[index] = parsed
+    elif isinstance(existing, dict) and "$packed" in existing:
+        packed = existing["$packed"]
+        if index >= len(packed):
+            raise ValueError(f"index out of range: {path}")
+        packed[index] = parsed["value"] if field["kind"] == "Enum" else parsed
+    elif existing is not None and index == 0:
+        current[name] = [parsed]
+    elif existing is None and index == 0:
+        current[name] = [parsed]
+    else:
+        raise ValueError(f"index out of range: {path}")
+
+
+def ensure_contract_repeated_messages(
+    db,
+    parent: dict[str, Any],
+    field_name: str,
+    message_name: str,
+) -> list[dict[str, Any]]:
+    _, schema_field = contract_field(db, parent, field_name)
+    if schema_field["kind"] != "Message" or schema_field["type"] != message_name:
+        raise ValueError(f"{field_name} is not a {message_name} field")
+    current = parent.get(field_name)
+    if current is None:
+        result: list[dict[str, Any]] = []
+    elif isinstance(current, list):
+        result = current
+    elif isinstance(current, dict):
+        result = [current]
+    else:
+        raise ValueError(f"{field_name} is not a repeated message field")
+    parent[field_name] = result
+    return result
+
+
+def apply_contract_state_file(db, message: dict[str, Any], path: Path) -> tuple[int, int]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    resources = message.setdefault("resources", {"$message": "blend.model.Resources"})
+    if not isinstance(resources, dict):
+        raise ValueError("profile contract resources are not editable")
+    quest_states = ensure_contract_repeated_messages(
+        db, resources, "quest_states", "blend.model.QuestState"
+    )
+    revived_events = ensure_contract_repeated_messages(
+        db, resources, "revived_events", "blend.model.RevivedEvent"
+    )
+    added_quests = 0
+    added_events = 0
+    for raw_quest_id, raw_clear_count in (data.get("quest_states") or {}).items():
+        quest_id, clear_count = int(raw_quest_id), int(raw_clear_count)
+        state = next(
+            (value for value in quest_states if int(value.get("quest_id", 0)) == quest_id),
+            None,
+        )
+        if state is None:
+            quest_states.append(
+                {"$message": "blend.model.QuestState", "quest_id": quest_id, "clear_count": clear_count}
+            )
+            added_quests += 1
+        elif int(state.get("clear_count", 0)) < clear_count:
+            state["clear_count"] = clear_count
+    for raw_event_id in data.get("revived_events") or []:
+        event_id = int(raw_event_id)
+        if not any(int(value.get("event_id", 0)) == event_id for value in revived_events):
+            revived_events.append({"$message": "blend.model.RevivedEvent", "event_id": event_id})
+            added_events += 1
+    return added_quests, added_events
+
+
+def apply_contract_player_name(message: dict[str, Any], player_name: str | None) -> None:
+    if player_name is None:
+        return
+    if not player_name.strip():
+        raise ValueError("player name cannot be empty")
+    resources = message.setdefault("resources", {"$message": "blend.model.Resources"})
+    if not isinstance(resources, dict):
+        raise ValueError("profile contract resources are not editable")
+    profile = resources.setdefault("profile", {"$message": "blend.model.Profile"})
+    if not isinstance(profile, dict):
+        raise ValueError("profile contract submessage is not editable")
+    profile["name"] = player_name
+
+
 def scalar_text(field, value: Any) -> str:
     if field.type == field.TYPE_BYTES:
         return f"base64:{base64.b64encode(value).decode('ascii')}"
@@ -310,6 +565,12 @@ def add_common_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--key", help="AES key as hexadecimal")
     parser.add_argument("--iv", help="AES IV as hexadecimal")
     parser.add_argument("--key-file", type=Path, help="aes-material.json captured with the profile session")
+    parser.add_argument(
+        "--contract-fields",
+        type=Path,
+        default=default_contract_fields_path(),
+        help="latest contract-dump fields.txt for schema-aware profile editing",
+    )
     parser.add_argument(
         "--descriptors",
         type=Path,
@@ -1111,18 +1372,37 @@ def main() -> int:
             ivs = [SHARE_PROFILE_IV, DEFAULT_IV]
 
     protobuf_data, marker, key, iv = decrypt_with_candidates(args.profile.read_bytes(), keys, ivs)
-    pool = load_descriptor_pool(args.descriptors)
-    message = parse_message(protobuf_data, pool)
+    contract_db = None
+    contract_message = None
+    message = None
+    if args.command == "complete-collection":
+        pool = load_descriptor_pool(args.descriptors)
+        message = parse_message(protobuf_data, pool)
+    elif args.command in ("inspect", "export", "edit"):
+        if args.contract_fields.is_file():
+            contract_db = load_contract_db(args.contract_fields)
+            contract_message = parse_contract_message(protobuf_data, contract_db)
+        else:
+            pool = load_descriptor_pool(args.descriptors)
+            message = parse_message(protobuf_data, pool)
 
     if args.command == "inspect":
         print(f"profile={args.profile}")
         print(f"protobuf_bytes={len(protobuf_data)} marker=0x{marker:02x}")
-        print_message(message)
+        if contract_message is not None:
+            print(json.dumps(contract_message, indent=2, ensure_ascii=False))
+        else:
+            print_message(message)
     elif args.command == "export":
-        args.json_output.write_text(
-            json_format.MessageToJson(message, preserving_proto_field_name=True, ensure_ascii=False),
-            encoding="utf-8",
-        )
+        if contract_message is not None:
+            exported = json.dumps(contract_message, indent=2, ensure_ascii=False) + "\n"
+        else:
+            exported = json_format.MessageToJson(
+                message,
+                preserving_proto_field_name=True,
+                ensure_ascii=False,
+            )
+        args.json_output.write_text(exported, encoding="utf-8")
         print(f"wrote {args.json_output}")
     elif args.command in ("edit", "complete-collection", "normalize"):
         if args.in_place and args.output is not None:
@@ -1133,10 +1413,20 @@ def main() -> int:
             if not args.set and args.state_file is None and args.player_name is None and args.player_id is None:
                 raise ValueError("edit requires --set, --state-file, --player-name, or --player-id")
             if args.state_file is not None:
-                added_quests, added_events = apply_state_file(message, args.state_file)
+                if contract_message is not None:
+                    added_quests, added_events = apply_contract_state_file(
+                        contract_db,
+                        contract_message,
+                        args.state_file,
+                    )
+                else:
+                    added_quests, added_events = apply_state_file(message, args.state_file)
                 print(f"applied state manifest: new_quest_states={added_quests} new_revived_events={added_events}")
             for assignment in args.set:
-                apply_set(message, assignment)
+                if contract_message is not None:
+                    apply_contract_set(contract_db, contract_message, assignment)
+                else:
+                    apply_set(message, assignment)
         elif args.command == "complete-collection":
             added_quests, added_events = apply_state_file(message, args.state_file)
             (
@@ -1187,9 +1477,22 @@ def main() -> int:
                 f"new_revived_events={added_events}"
             )
         if args.command != "normalize":
-            apply_player_name(message, args.player_name)
+            if contract_message is not None:
+                apply_contract_player_name(contract_message, args.player_name)
+            else:
+                apply_player_name(message, args.player_name)
+        if args.command == "normalize":
+            edited_protobuf = protobuf_data
+        elif contract_message is not None:
+            edited_protobuf = contract_codec.encode_message(
+                contract_db,
+                TOP_LEVEL_MESSAGE,
+                contract_message,
+            )
+        else:
+            edited_protobuf = message.SerializeToString()
         encrypted = encrypt_profile(
-            message.SerializeToString(),
+            edited_protobuf,
             key,
             iv,
             marker,

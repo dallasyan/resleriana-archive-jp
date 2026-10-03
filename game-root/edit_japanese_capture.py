@@ -202,6 +202,10 @@ def contract_path(binary_path: Path) -> Path:
     return binary_path.with_suffix(binary_path.suffix + ".contract.json")
 
 
+def profile_contract_payload(path: Path) -> bool:
+    return path.name.casefold() == "profile.bin"
+
+
 def load_contract_db(fields_path: Path | None):
     """Load the fields.txt contract database, or None when unavailable."""
     if fields_path is None:
@@ -282,6 +286,30 @@ def decrypt_folder(source: Path, destination: Path, descriptor: Path, contract_d
         except ValueError:
             pass
 
+        if profile_contract_payload(path):
+            if contract_db is not None:
+                try:
+                    profile_node = contract_codec.decode_message(
+                        contract_db,
+                        profile_editor.TOP_LEVEL_MESSAGE,
+                        plaintext,
+                    )
+                    json_path(output).write_text(
+                        json.dumps(profile_node, indent=2, ensure_ascii=False) + "\n",
+                        encoding="utf-8",
+                    )
+                except (ValueError, KeyError):
+                    pass
+            try:
+                wire_path = output.with_suffix(output.suffix + ".wire.json")
+                wire_path.write_text(
+                    json.dumps(wire_json(plaintext), indent=2) + "\n",
+                    encoding="utf-8",
+                )
+            except ValueError:
+                pass
+            continue
+
         number_text = path.stem.split("-", 1)[0]
         if not number_text.isdigit():
             continue
@@ -333,17 +361,31 @@ def encrypt_folder(source: Path, destination: Path, descriptor: Path, contract_d
         crypto_file = crypto_path(path)
         crypto = json.loads(crypto_file.read_text(encoding="utf-8")) if crypto_file.exists() else {"encrypted": False}
         plaintext = path.read_bytes()
+        is_profile = profile_contract_payload(path)
+        if is_profile:
+            editable = json_path(path)
+            if editable.exists() and contract_db is not None:
+                plaintext = contract_codec.encode_message(
+                    contract_db,
+                    profile_editor.TOP_LEVEL_MESSAGE,
+                    json.loads(editable.read_text(encoding="utf-8")),
+                )
+            else:
+                wire_editable = path.with_suffix(path.suffix + ".wire.json")
+                if wire_editable.exists():
+                    plaintext = wire_bytes(json.loads(wire_editable.read_text(encoding="utf-8")))
+        else:
+            editable = json_path(path)
         number_text = path.stem.split("-", 1)[0]
         endpoint = endpoint_for(source, int(number_text)) if number_text.isdigit() else None
         kind = "request" if "request" in path.stem else "response"
         type_pair = ENDPOINT_TYPES.get(endpoint or "")
-        editable = json_path(path)
-        if editable.exists() and type_pair is not None:
+        if not is_profile and editable.exists() and type_pair is not None:
             type_name = type_pair[0] if kind == "request" else type_pair[1]
             message = message_class(pool, type_name)()
             json_format.Parse(editable.read_text(encoding="utf-8"), message)
             plaintext = message.SerializeToString()
-        else:
+        elif not is_profile:
             contract_editable = contract_path(path)
             if contract_editable.exists() and contract_db is not None and type_pair is not None:
                 type_name = type_pair[0] if kind == "request" else type_pair[1]
@@ -382,9 +424,7 @@ def main() -> int:
     parser.add_argument(
         "--contract-fields",
         type=Path,
-        default=Path(
-            "C:/Program Files (x86)/Steam/steamapps/common/AtelierResleriana/contract-dump/fields.txt"
-        ),
+        default=profile_editor.default_contract_fields_path(),
         help="contract-dump fields.txt for schema-aware contract JSON",
     )
     args = parser.parse_args()

@@ -50,12 +50,12 @@ Copy the resulting Release DLLs into the installed `BepInEx\plugins` directory a
 
 ## ProfileEditor.exe
 
-The editor requires `pycryptodome`, `protobuf`, and PyInstaller. Its data files must be bundled or the executable will fail to find `profile-descriptors.pb` from its temporary `_MEI` directory.
+The editor requires `pycryptodome`, `protobuf`, and PyInstaller. Bundle the descriptor, latest `contract-fields.txt`, historical-state manifest, and Japanese master tables so the one-file executable can use both contract-backed profile edits and complete-collection updates.
 
 ```powershell
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m pip install -r "tools\JapaneseProfileEditor\requirements.txt"
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m pip install pyinstaller
-& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m PyInstaller --onefile --console --clean --name ProfileEditor --distpath "tools\JapaneseProfileEditor\dist" --workpath "C:\Users\DALLAS~1\AppData\Local\Temp\opencode\profile-editor-build" --add-data "tools\JapaneseProfileEditor\profile-descriptors.pb;." --add-data "tools\JapaneseProfileEditor\historical-event-state.json;." --add-data "tools\JapaneseProfileEditor\dist\master;master" "tools\JapaneseProfileEditor\profile_editor.py"
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" -m PyInstaller --onefile --console --clean --name ProfileEditor --paths "tools\JapaneseOffline" --distpath "tools\JapaneseProfileEditor\dist" --workpath "C:\Users\DALLAS~1\AppData\Local\Temp\opencode\profile-editor-build" --add-data "tools\JapaneseProfileEditor\profile-descriptors.pb;." --add-data "tools\JapaneseProfileEditor\contract-fields.txt;." --add-data "tools\JapaneseProfileEditor\historical-event-state.json;." --add-data "tools\JapaneseProfileEditor\dist\master;master" "tools\JapaneseProfileEditor\profile_editor.py"
 ```
 
 The Japanese key table and fixed IV are compiled into the editor. An AES key file is not required for normal profile operations.

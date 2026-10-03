@@ -50,7 +50,7 @@ Generated-mode `ChangedResourcesResponse` updates for supported profile-backed e
 
 The source package's `game-root/japanese-masterdata.bytes` is the decrypted Japanese master-data payload; the encrypted payload variants are served by the offline proxy through the client's normal master-data update path before user-data initialization. Generated API crypto uses the built-in Japanese 256-key table and fixed IV; the native observer is optional diagnostics.
 
-`tools/JapaneseProfileEditor/profile_editor.py` is the source used to build `ProfileEditor.exe`. Its bundled data comes from the parent package's `profile-editor/profile-descriptors.pb`, `profile-editor/historical-event-state.json`, and `profile-editor/master` directory.
+`tools/JapaneseProfileEditor/profile_editor.py` is the source used to build `ProfileEditor.exe`. Its bundled data comes from the parent package's `profile-editor/profile-descriptors.pb`, `profile-editor/contract-fields.txt`, `profile-editor/historical-event-state.json`, and `profile-editor/master` directory. Inspect, export, and targeted profile edits use the latest `fields.txt` contract and preserve unknown fields; the complete-collection transformation retains the descriptor-backed message API.
 
 The editor selects the Japanese AES key from the profile marker and preserves the fixed-IV profile format, so a recipient does not need the original capture session or AES-material file.
 

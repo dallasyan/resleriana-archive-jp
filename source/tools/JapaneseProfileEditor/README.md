@@ -16,11 +16,13 @@ Inspect the profile and show populated fields:
 python profile_editor.py inspect "path\to\profile.bin"
 ```
 
-Export known protobuf fields to JSON:
+Inspect and export use the latest `contract-dump\fields.txt` schema and retain unknown wire fields in the JSON. The editor uses its bundled contract file first, then checks the installed game contract; use `--contract-fields` to select another dump:
 
 ```text
 python profile_editor.py export "path\to\profile.bin" profile.json
 ```
+
+The exported JSON includes `$message` type tags and an `unknown` list so it can be edited and re-encoded without discarding unrecognized profile fields. Targeted `edit` operations also use this contract by default. `complete-collection` continues to use the bundled descriptor set for its specialized progression updates.
 
 Apply targeted edits to a new encrypted profile:
 

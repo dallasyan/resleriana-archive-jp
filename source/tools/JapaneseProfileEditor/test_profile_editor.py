@@ -4,8 +4,12 @@
 from __future__ import annotations
 
 import sys
+import json
+import subprocess
+import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 EDITOR_ROOT = Path(__file__).resolve().parent
@@ -109,6 +113,240 @@ class CompleteCollectionTests(unittest.TestCase):
         self.assertEqual(second[5], 0)
         self.assertEqual(second[7], 0)
         self.assertEqual(second[8], 0)
+
+
+class ContractProfileTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary_directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary_directory.cleanup)
+        self.root = Path(self.temporary_directory.name)
+        self.fields_path = self.root / "fields.txt"
+        self.fields_path.write_text(
+            "\n".join(
+                (
+                    "message blend.api.UserLogInResponse (api/user.proto)",
+                    "  Message resources = 1 (blend.model.Resources)",
+                    "",
+                    "message blend.model.Resources (model/resources.proto)",
+                    "  Message profile = 39 (blend.model.Profile)",
+                    "  Message quest_states = 22 (blend.model.QuestState)",
+                    "  Message revived_events = 40 (blend.model.RevivedEvent)",
+                    "",
+                    "message blend.model.Profile (model/profile.proto)",
+                    "  String name = 1 ()",
+                    "  String memo = 2 ()",
+                    "  Message favorite_party_character1_id = 4 (google.protobuf.Int32Value)",
+                    "  Int32 favorite_battle_tool_entity_ids = 9 ()",
+                    "  Enum test_ranks = 10 (blend.enum.profile_test.Rank)",
+                    "",
+                    "enum blend.enum.profile_test.Rank",
+                    "  first = 0",
+                    "  second = 1",
+                    "",
+                    "message google.protobuf.Int32Value (google/protobuf/wrappers.proto)",
+                    "  Int32 value = 1 ()",
+                    "",
+                    "message blend.model.QuestState (model/quest_state.proto)",
+                    "  Int32 quest_id = 1 ()",
+                    "  Int32 clear_count = 2 ()",
+                    "",
+                    "message blend.model.RevivedEvent (model/revived_event.proto)",
+                    "  Int32 event_id = 1 ()",
+                )
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        self.db = profile_editor.load_contract_db(self.fields_path)
+
+    def profile_wire(self):
+        message = {
+            "$message": "blend.api.UserLogInResponse",
+            "resources": {
+                "$message": "blend.model.Resources",
+                "profile": {
+                    "$message": "blend.model.Profile",
+                    "name": "Before",
+                    "favorite_party_character1_id": {
+                        "$message": "google.protobuf.Int32Value",
+                        "value": 8,
+                    },
+                    "favorite_battle_tool_entity_ids": [10],
+                    "test_ranks": {"$packed": [1, 0]},
+                },
+                "quest_states": [
+                    {"$message": "blend.model.QuestState", "quest_id": 11, "clear_count": 1}
+                ],
+                "revived_events": [
+                    {"$message": "blend.model.RevivedEvent", "event_id": 5}
+                ],
+            },
+        }
+        return profile_editor.contract_codec.encode_message(
+            self.db,
+            profile_editor.TOP_LEVEL_MESSAGE,
+            message,
+        )
+
+    def test_contract_edits_wrappers_repeated_fields_and_unknown_wire_data(self):
+        unknown = profile_editor.contract_codec._write_varint((200 << 3) | 0)
+        unknown += profile_editor.contract_codec._write_varint(17)
+        payload = self.profile_wire() + unknown
+        message = profile_editor.parse_contract_message(payload, self.db)
+
+        profile_editor.apply_contract_set(self.db, message, "resources.profile.name=Offline Player")
+        profile_editor.apply_contract_set(
+            self.db,
+            message,
+            "resources.profile.favorite_party_character1_id.value=55",
+        )
+        profile_editor.apply_contract_set(
+            self.db,
+            message,
+            "resources.profile.favorite_battle_tool_entity_ids[0]=73",
+        )
+        profile_editor.apply_contract_set(
+            self.db,
+            message,
+            "resources.profile.test_ranks[1]=second",
+        )
+
+        encoded = profile_editor.contract_codec.encode_message(
+            self.db,
+            profile_editor.TOP_LEVEL_MESSAGE,
+            message,
+        )
+        decoded = profile_editor.parse_contract_message(encoded, self.db)
+        edited_profile = decoded["resources"]["profile"]
+        self.assertEqual(edited_profile["name"], "Offline Player")
+        self.assertEqual(edited_profile["favorite_party_character1_id"]["value"], 55)
+        self.assertEqual(edited_profile["favorite_battle_tool_entity_ids"], 73)
+        self.assertEqual(edited_profile["test_ranks"], {"$packed": [1, 1]})
+        self.assertEqual(decoded["unknown"], [{"number": 200, "wire": 0, "hex": "17"}])
+
+    def test_contract_state_manifest_upserts_without_duplicate_records(self):
+        message = profile_editor.parse_contract_message(self.profile_wire(), self.db)
+        manifest_path = self.root / "states.json"
+        manifest_path.write_text(
+            json.dumps({"quest_states": {"11": 3, "12": 2}, "revived_events": [5, 6]}),
+            encoding="utf-8",
+        )
+
+        added_quests, added_events = profile_editor.apply_contract_state_file(
+            self.db,
+            message,
+            manifest_path,
+        )
+
+        resources = message["resources"]
+        self.assertEqual((added_quests, added_events), (1, 1))
+        self.assertEqual(
+            [(state["quest_id"], state["clear_count"]) for state in resources["quest_states"]],
+            [(11, 3), (12, 2)],
+        )
+        self.assertEqual([event["event_id"] for event in resources["revived_events"]], [5, 6])
+
+    def test_edit_command_uses_latest_contract_and_preserves_unknown_fields(self):
+        latest_fields = profile_editor.default_contract_fields_path()
+        latest_db = profile_editor.load_contract_db(latest_fields)
+        message = {
+            "$message": profile_editor.TOP_LEVEL_MESSAGE,
+            "resources": {
+                "$message": "blend.model.Resources",
+                "profile": {
+                    "$message": "blend.model.Profile",
+                    "name": "Before",
+                },
+            },
+        }
+        protobuf_data = profile_editor.contract_codec.encode_message(
+            latest_db,
+            profile_editor.TOP_LEVEL_MESSAGE,
+            message,
+        )
+        protobuf_data += profile_editor.contract_codec._write_varint((200 << 3) | 0)
+        protobuf_data += profile_editor.contract_codec._write_varint(17)
+        marker = 37
+        profile_path = self.root / "profile.bin"
+        output_path = self.root / "profile-edited.bin"
+        profile_path.write_bytes(
+            profile_editor.encrypt_profile(
+                protobuf_data,
+                profile_editor.JAPANESE_AES_KEYS[marker],
+                profile_editor.JAPANESE_AES_IV,
+                marker,
+            )
+        )
+
+        with patch(
+            "sys.argv",
+            [
+                "profile_editor.py",
+                "edit",
+                str(profile_path),
+                str(output_path),
+                "--contract-fields",
+                str(latest_fields),
+                "--set",
+                "resources.profile.name=Edited",
+            ],
+        ):
+            self.assertEqual(profile_editor.main(), 0)
+
+        edited_plaintext, edited_marker, _, _ = profile_editor.decrypt_with_candidates(
+            output_path.read_bytes(),
+            [profile_editor.SHARE_PROFILE_KEY],
+            [profile_editor.SHARE_PROFILE_IV],
+        )
+        edited_message = profile_editor.parse_contract_message(edited_plaintext, latest_db)
+        self.assertEqual(edited_marker, marker)
+        self.assertEqual(edited_message["resources"]["profile"]["name"], "Edited")
+        self.assertEqual(edited_message["unknown"], [{"number": 200, "wire": 0, "hex": "17"}])
+
+    def test_bundled_editor_loads_its_contract_schema(self):
+        executable = EDITOR_ROOT / "dist" / "ProfileEditor.exe"
+        if not executable.is_file():
+            self.skipTest("bundled ProfileEditor.exe has not been built")
+        latest_fields = profile_editor.default_contract_fields_path()
+        latest_db = profile_editor.load_contract_db(latest_fields)
+        message = {
+            "$message": profile_editor.TOP_LEVEL_MESSAGE,
+            "resources": {
+                "$message": "blend.model.Resources",
+                "profile": {
+                    "$message": "blend.model.Profile",
+                    "name": "Bundled Test",
+                },
+            },
+        }
+        protobuf_data = profile_editor.contract_codec.encode_message(
+            latest_db,
+            profile_editor.TOP_LEVEL_MESSAGE,
+            message,
+        )
+        marker = 61
+        profile_path = self.root / "bundled-profile.bin"
+        json_path = self.root / "bundled-profile.json"
+        profile_path.write_bytes(
+            profile_editor.encrypt_profile(
+                protobuf_data,
+                profile_editor.JAPANESE_AES_KEYS[marker],
+                profile_editor.JAPANESE_AES_IV,
+                marker,
+            )
+        )
+
+        completed = subprocess.run(
+            [str(executable), "export", str(profile_path), str(json_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+
+        self.assertIn("wrote", completed.stdout)
+        exported = json.loads(json_path.read_text(encoding="utf-8"))
+        self.assertEqual(exported["resources"]["profile"]["name"], "Bundled Test")
 
 
 if __name__ == "__main__":

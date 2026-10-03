@@ -11,8 +11,8 @@ blocks mapping names to numbers. This module turns that dump into:
 
 Scope notes: the dump carries no ``repeated`` markers, so repetition is
 inferred from the wire (multiple emissions of one number). Scalar kinds
-present in the dump are Bool, Double, Enum, Float, Int32, Int64, Message,
-and String; anything else raises a clear error instead of guessing.
+present in the dump include Bool, Bytes, Double, Enum, Float, Int32, Int64,
+Message, and String; anything else raises a clear error instead of guessing.
 """
 
 from __future__ import annotations
@@ -256,6 +256,12 @@ def _encode_scalar(kind: str, type_name: str, db: ContractDB, value: object) -> 
         if not isinstance(value, str):
             raise ValueError(f"cannot encode string value: {value!r}")
         return 2, value.encode("utf-8")
+    if kind == "Bytes":
+        if isinstance(value, dict) and "$bytes" in value:
+            return 2, bytes.fromhex(value["$bytes"])
+        if isinstance(value, bytes):
+            return 2, value
+        raise ValueError(f"cannot encode bytes value: {value!r}")
     if kind == "Float":
         return 5, struct.pack("<f", float(value))
     if kind == "Double":
