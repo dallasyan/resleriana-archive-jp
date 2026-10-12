@@ -187,6 +187,11 @@ def write_field(field_number: int, wire_type: int, value: object) -> bytes:
     return encoded + bytes(value)  # type: ignore[arg-type]
 
 
+def write_packed_varints(field_number: int, values) -> bytes:
+    packed = b"".join(write_varint(int(value)) for value in values)
+    return write_field(field_number, 2, packed) if packed else b""
+
+
 def write_wrapped_varint(field_number: int, value: int) -> bytes:
     return write_field(field_number, 2, write_field(1, 0, value))
 
@@ -806,6 +811,14 @@ def parsed_effect(game_dir: Path, effect_id: int) -> dict:
     if info is None:
         return {"code": "unmapped"}
     return info
+
+
+CAPTURED_STATE_EFFECT_LINKS = {
+    # Japanese captures show this skill effect grants the ordinary skill-
+    # damage state rather than a state whose ID matches the effect ID.
+    (11001208, 91001270): {"state_id": 910039, "target": "self"},
+    (14002180, 91001270): {"state_id": 910039, "target": "self"},
+}
 
 
 def effect_magnitude(parsed: dict, runtime_value: int) -> int:
@@ -1793,6 +1806,7 @@ class BattleSim:
         self.sent_actions = 0
         self.wave_index = 0
         self.party_gauge = GAUGE_START
+        self.bomb_gauge = 100
         self.status = 0
         self.start_txid = str(uuid.uuid4())
         self.max_dealt = 0
@@ -1931,6 +1945,11 @@ class BattleSim:
             "id": member_id,
             "side": 0,
             "character_id": entry["character_id"],
+            "current_character_id": int(
+                entry.get("current_character_id", entry["character_id"])
+                or entry["character_id"]
+            ),
+            "after_change_character_id": entry.get("after_change_character_id"),
             "level": entry.get("level", 1),
             "role": entry.get("role"),
             "attrs": entry.get("attrs") or [],
@@ -2278,6 +2297,9 @@ def apply_skill_effects(
         if not effect_id:
             continue
         parsed = parsed_effect(sim.game_dir, effect_id)
+        state_link = CAPTURED_STATE_EFFECT_LINKS.get((int(skill_id or 0), effect_id))
+        if state_link is not None:
+            parsed = {**parsed, "code": "state_grant", **state_link}
         info = states.get(str(effect_id))
         if parsed.get("code") in ("turn_swap", "turn_erase"):
             # Skills like Totori 14002908 carry two swap entries for one
@@ -2327,6 +2349,18 @@ def apply_skill_effects(
                 for target in eligible:
                     applied[target["id"]] = grant_state_buff(
                         sim, actor, target, effect_id, value, parsed
+                    )
+        elif code == "state_grant":
+            if parsed.get("target") == "self":
+                effect_record_targets = [actor]
+                if eligible:
+                    applied[actor["id"]] = grant_state_buff(
+                        sim, actor, actor, int(parsed["state_id"]), value, parsed
+                    )
+            else:
+                for target in eligible:
+                    applied[target["id"]] = grant_state_buff(
+                        sim, actor, target, int(parsed["state_id"]), value, parsed
                     )
         elif code in SLOT_BUFF_KINDS or code == "target_debuff":
             for target in eligible:
@@ -2546,6 +2580,23 @@ def grant_state_buff(sim: "BattleSim", actor: dict, target: dict, state_id: int,
         buff["delay_turns"] = timeline_shift_count(magnitude, state_effect)
         buff["rest"] = None
     target["buffs"].append(buff)
+    summary_id = {"skill_damage": 1}.get(kind)
+    if summary_id is not None:
+        summaries = target.setdefault("state_change_summaries", [])
+        summary = next(
+            (
+                item
+                for item in summaries
+                if int(item.get("id", 0) or 0) == summary_id
+            ),
+            None,
+        )
+        if summary is None:
+            summary = {"id": summary_id, "value": int(buff["value"])}
+            summaries.append(summary)
+            summaries.sort(key=lambda item: int(item.get("id", 0) or 0))
+        else:
+            summary["value"] = int(summary.get("value", 0) or 0) + int(buff["value"])
     return buff
 
 
@@ -3002,6 +3053,7 @@ def apply_hit(
             "weak": weak,
             "resist": resist,
             "critical": critical,
+            "critical_rate": crit_rate * 100,
             "critical_damage": (
                 damage if critical else max(int(damage * (CRIT_MULT + slots["crit_damage"])), 0)
             ),
@@ -3553,8 +3605,7 @@ def build_resistance(res: dict) -> bytes:
     for number, key in ((1, "slashing"), (2, "impact"), (3, "piercing"), (5, "fire"), (6, "ice"), (7, "lightning"), (8, "wind")):
         value = int(res.get(key, 0) or 0)
         if value:
-            out.extend(write_varint((number << 3) | 0))
-            out.extend(write_sint(value))
+            out.extend(write_field(number, 0, value))
     return bytes(out)
 
 
@@ -3562,17 +3613,129 @@ def build_state_change(buff: dict) -> bytes:
     out = bytearray(write_field(1, 0, buff["id"]))
     if buff.get("rest"):
         out.extend(write_field(3, 0, buff["rest"]))
-    out.extend(write_field(4, 0, buff.get("value", 0)))
-    if buff.get("kind") == "ailment" and buff.get("ailment") == "taunt":
+    if buff.get("has_value", True):
+        out.extend(write_field(4, 0, buff.get("value", 0)))
+    if buff.get("target_id") is not None:
+        out.extend(write_optional_wrapped_varint(5, int(buff["target_id"])))
+    if buff.get("is_provocation") or (
+        buff.get("kind") == "ailment" and buff.get("ailment") == "taunt"
+    ):
         out.extend(write_field(7, 0, 1))
     if buff.get("kind") == "barrier":
         out.extend(write_field(11, 0, 1))
-    if buff.get("kind") in ("null_damage",):
+    if buff.get("is_invincible") or buff.get("kind") in ("null_damage",):
         out.extend(write_field(9, 0, 1))
     if not buff.get("display", True):
-        out.extend(write_field(10, 0, 1))
+        out.extend(write_field(6, 0, 1))
+    for name, number in (
+        ("is_hidden", 10),
+        ("is_barrier", 11),
+        ("is_special_avoidance", 12),
+        ("is_tip_display", 13),
+    ):
+        if buff.get(name):
+            out.extend(write_field(number, 0, 1))
     if buff.get("level") is not None:
         out.extend(write_field(8, 2, write_field(1, 0, buff["level"])))
+    return bytes(out)
+
+
+def _raw_int(value: Any, default: int | None = None) -> int | None:
+    if value is None:
+        return default
+    if isinstance(value, dict):
+        value = value.get("value")
+    return default if value is None else int(value)
+
+
+def _raw_messages(value: Any) -> list[dict]:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return [item for item in value if isinstance(item, dict)]
+    return [value] if isinstance(value, dict) else []
+
+
+def build_battle_ability(ability: dict) -> bytes:
+    out = bytearray(write_field(1, 0, int(ability.get("ability_id", 0) or 0)))
+    effects = ability.get("effects") or {}
+    params = bytearray()
+    effect_id = _raw_int(effects.get("effect_id")) if isinstance(effects, dict) else None
+    rest_count = _raw_int(effects.get("rest_count")) if isinstance(effects, dict) else None
+    if effect_id is not None:
+        params.extend(write_field(1, 0, effect_id))
+    if rest_count is not None:
+        params.extend(write_field(2, 0, rest_count))
+    if params:
+        out.extend(write_field(2, 2, bytes(params)))
+    return bytes(out)
+
+
+def build_state_change_summary(summary: dict) -> bytes:
+    out = bytearray(write_field(1, 0, int(summary.get("id", 0) or 0)))
+    if summary.get("value") is not None:
+        out.extend(write_field(2, 0, int(summary["value"])))
+    return bytes(out)
+
+
+def build_state_change_resistance(resistance: dict) -> bytes:
+    out = bytearray(write_field(1, 0, int(resistance.get("state_change_id", 0) or 0)))
+    if resistance.get("is_invalid"):
+        out.extend(write_field(2, 0, 1))
+    if resistance.get("value") is not None:
+        out.extend(write_field(4, 0, int(resistance["value"])))
+    return bytes(out)
+
+
+def build_ship_main_memoria(memoria: dict) -> bytes:
+    out = bytearray(write_field(1, 0, int(memoria.get("memoria_id", 0) or 0)))
+    ability_ids = memoria.get("ability_ids") or []
+    if isinstance(ability_ids, dict):
+        ability_ids = ability_ids.get("$packed") or []
+    out.extend(write_packed_varints(2, ability_ids))
+    if memoria.get("level") is not None:
+        out.extend(write_field(3, 0, int(memoria["level"])))
+    if memoria.get("limit_break") is not None:
+        out.extend(write_field(4, 0, int(memoria["limit_break"])))
+    value_coef = _raw_int(memoria.get("value_coef"))
+    if value_coef is not None:
+        out.extend(write_optional_wrapped_varint(5, value_coef))
+    return bytes(out)
+
+
+def build_ship_support_ability(support: dict) -> bytes:
+    out = bytearray()
+    for ability in _raw_messages(support.get("support_abilities")):
+        out.extend(write_field(1, 2, build_battle_ability(ability)))
+    value_coef = _raw_int(support.get("value_coef"))
+    if value_coef is not None:
+        out.extend(write_field(2, 0, value_coef))
+    return bytes(out)
+
+
+def build_ship_state(ship: dict) -> bytes:
+    out = bytearray()
+    for member in _raw_messages(ship.get("members")):
+        blob = bytearray(write_field(1, 0, int(member.get("character_id", 0) or 0)))
+        if member.get("rarity") is not None:
+            blob.extend(write_field(2, 0, int(member["rarity"])))
+        out.extend(write_field(1, 2, bytes(blob)))
+    for field_number, name in (
+        (2, "support_ability_ids"),
+        (4, "main_memoria_ability_ids"),
+        (6, "ship_support_ability_ids"),
+    ):
+        values = ship.get(name) or []
+        if isinstance(values, dict):
+            values = values.get("$packed") or []
+        out.extend(write_packed_varints(field_number, values))
+    for field_number, name in (
+        (3, "support_ability_value_coef"),
+        (5, "main_memoria_value_coef"),
+    ):
+        value = _raw_int(ship.get(name))
+        if value is not None:
+            out.extend(write_optional_wrapped_varint(field_number, value))
     return bytes(out)
 
 
@@ -3587,29 +3750,42 @@ def build_member(member: dict) -> bytes:
     if member.get("stun"):
         out.extend(write_field(16, 0, 1))
     if member["side"] == 0:
+        initial = member.get("initial_status_override") or {}
         out.extend(
             write_field(
                 6,
                 2,
                 build_status(
                     {
-                        "speed": member["speed"],
-                        "attack": member["attack"],
-                        "magic": member["magic"],
-                        "defense": member["defense"],
-                        "mental": member["mental"],
+                        "speed": int(initial.get("speed", member["speed"]) or 1),
+                        "attack": int(initial.get("attack", member["attack"]) or 1),
+                        "magic": int(initial.get("magic", member["magic"]) or 1),
+                        "defense": int(initial.get("defense", member["defense"]) or 1),
+                        "mental": int(initial.get("mental", member["mental"]) or 1),
                     }
                 ),
             )
         )
-        out.extend(write_field(7, 2, build_status(current_stats(member))))
+        current_override = member.get("current_status_override")
+        current = current_override if isinstance(current_override, dict) else current_stats(member)
+        out.extend(write_field(7, 2, build_status(current)))
     else:
         out.extend(write_field(6, 2, write_field(1, 0, member["speed"])))
         out.extend(write_field(7, 2, write_field(1, 0, member["speed"])))
     out.extend(write_field(8, 2, build_resistance(member.get("res", {}))))
     if member["side"] == 0:
         ally = bytearray(write_field(1, 0, member["character_id"]))
-        ally.extend(write_field(5, 0, member["character_id"]))
+        ally.extend(
+            write_field(
+                5,
+                0,
+                int(member.get("current_character_id", member["character_id"]) or member["character_id"]),
+            )
+        )
+        if member.get("after_change_character_id") is not None:
+            ally.extend(
+                write_optional_wrapped_varint(6, int(member["after_change_character_id"]))
+            )
         skill_lamps = member.get("skill_lamps", {}) or {}
         for skill_type in (1, 2, 3):
             skill_id = member["skills"].get(skill_type, 0)
@@ -3635,24 +3811,46 @@ def build_member(member: dict) -> bytes:
         if member.get("leader"):
             ally.extend(write_field(4, 0, 1))
         out.extend(write_field(12, 2, bytes(ally)))
-        for ability_id in member.get("abilities", []):
-            out.extend(write_field(15, 2, write_field(1, 0, ability_id)))
+        raw_abilities = member.get("snapshot_memoria_abilities")
+        if raw_abilities is not None:
+            for ability in _raw_messages(raw_abilities):
+                out.extend(write_field(15, 2, build_battle_ability(ability)))
+        else:
+            for ability_id in member.get("abilities", []):
+                out.extend(write_field(15, 2, write_field(1, 0, ability_id)))
+        if member.get("ship_support_ability"):
+            out.extend(
+                write_field(26, 2, build_ship_support_ability(member["ship_support_ability"]))
+            )
+        if member.get("ship_main_memoria"):
+            out.extend(
+                write_field(27, 2, build_ship_main_memoria(member["ship_main_memoria"]))
+            )
     else:
         foe = bytearray(write_field(1, 0, member["enemy_id"]))
+        if member.get("boss"):
+            foe.extend(write_field(2, 0, 1))
         foe.extend(write_field(3, 0, member["break_max"]))
         foe.extend(write_field(4, 0, member["break_cur"]))
         if member.get("broken"):
             foe.extend(write_field(5, 0, 1))
         if member.get("base_enemy_number") is not None:
             foe.extend(write_wrapped_varint(6, member["base_enemy_number"]))
-        foe.extend(write_field(7, 0, 1))
-        foe.extend(write_field(9, 2, write_field(27, 0, 1)))
+        foe.extend(write_field(7, 0, int(member.get("break_gauge_number", 1) or 1)))
+        foe.extend(write_packed_varints(8, member.get("initial_break_gauges", []) or []))
+        foe.extend(write_packed_varints(9, member.get("break_waits", []) or []))
         out.extend(write_field(13, 2, bytes(foe)))
     for buff in member.get("buffs", []):
-        if not buff.get("display", True):
-            continue
         out.extend(write_field(14, 2, build_state_change(buff)))
-    out.extend(write_field(19, 0, member["max_hp"]))
+    initial_hp = member.get("initial_hp")
+    if initial_hp is not None:
+        out.extend(write_field(19, 0, int(initial_hp)))
+    if "state_change_resistances" in member:
+        for resistance in _raw_messages(member.get("state_change_resistances")):
+            out.extend(write_field(18, 2, build_state_change_resistance(resistance)))
+    if "state_change_summaries" in member:
+        for summary in _raw_messages(member.get("state_change_summaries")):
+            out.extend(write_field(24, 2, build_state_change_summary(summary)))
     barriers = [b for b in member.get("buffs", []) if b.get("kind") == "barrier"]
     for index, barrier in enumerate(barriers):
         durability = max(int(barrier.get("value", 0) or 0), 0)
@@ -3665,19 +3863,31 @@ def build_member(member: dict) -> bytes:
             )
         )
         out.extend(write_field(22, 0, durability))
-    out.extend(build_burst_gauge(int(member.get("burst_gauge", 0) or 0) if member["side"] == 0 else 0))
+    out.extend(
+        build_burst_gauge(
+            int(member.get("burst_gauge", 0) or 0)
+            if member["side"] == 0 and member.get("burst_current_present", True)
+            else None,
+            int(member.get("burst_max", 100) or 100),
+            bool(member.get("burst_is_enabled", False)),
+        )
+    )
     ship_memoria = member.get("ship_memoria")
     if member["side"] == 0 and ship_memoria:
         out.extend(write_field(27, 2, ship_memoria))
     return bytes(out)
 
 
-def build_burst_gauge(current: int = 0) -> bytes:
-    return write_field(
-        25, 2,
-        write_field(1, 0, max(min(int(current), BURST_GAUGE_MAX), 0))
-        + write_field(2, 0, 100),
-    )
+def build_burst_gauge(
+    current: int | None = 0, maximum: int = 100, is_enabled: bool = False
+) -> bytes:
+    payload = bytearray()
+    if current is not None:
+        payload.extend(write_field(1, 0, max(min(int(current), BURST_GAUGE_MAX), 0)))
+    payload.extend(write_field(2, 0, max(int(maximum), 0)))
+    if is_enabled:
+        payload.extend(write_field(3, 0, 1))
+    return write_field(25, 2, bytes(payload))
 
 
 def build_ship_main_memoria_blob(game_dir: Path, profile_plaintext: bytes) -> bytes | None:
@@ -3743,6 +3953,124 @@ def build_unit(
     return bytes(out)
 
 
+def build_captured_unit(unit: dict) -> bytes:
+    out = bytearray(write_field(1, 0, int(unit.get("member_id", 0) or 0)))
+    out.extend(write_field(2, 0, int(unit.get("number", 0) or 0)))
+    enemy_skill_type = _raw_int(unit.get("enemy_skill_type"))
+    if enemy_skill_type is not None:
+        out.extend(write_wrapped_varint(3, enemy_skill_type))
+    if unit.get("is_enemy_strong"):
+        out.extend(write_field(4, 0, 1))
+    unit_type = _raw_int(unit.get("type"))
+    if unit_type is not None:
+        out.extend(write_field(5, 0, unit_type))
+    wait = _raw_int(unit.get("wait"))
+    if wait is not None:
+        out.extend(write_field(6, 0, wait))
+    return bytes(out)
+
+
+def transition_captured_timeline(
+    sim: "BattleSim", actor: dict, skill_id: int
+) -> list[dict] | None:
+    units = getattr(sim, "capture_timeline_units", None)
+    if not units:
+        return None
+    current_index = next(
+        (
+            index
+            for index, unit in enumerate(units)
+            if int(unit.get("member_id", 0) or 0) == int(actor["id"])
+            and int(unit.get("number", 0) or 0) == 1
+        ),
+        None,
+    )
+    if current_index is None:
+        return None
+    future_index = next(
+        (
+            index
+            for index, unit in enumerate(units)
+            if index != current_index
+            and int(unit.get("member_id", 0) or 0) == int(actor["id"])
+            and int(unit.get("number", 0) or 0) == 2
+        ),
+        None,
+    )
+    if future_index is None:
+        return None
+
+    updated = [dict(unit) for index, unit in enumerate(units) if index != current_index]
+    shift = min((_raw_int(unit.get("wait"), 0) or 0) for unit in updated)
+    for unit in updated:
+        if "wait" not in unit:
+            continue
+        wait = max((_raw_int(unit.get("wait"), 0) or 0) - shift, 0)
+        if wait:
+            unit["wait"] = wait
+        else:
+            unit.pop("wait", None)
+
+    skills = battle_table(sim.game_dir, "skill")
+    action_skill = skills.get(str(skill_id), {})
+    action_wait = max(
+        effective_wait(eff_speed(actor), int(action_skill.get("wait", 0) or 0)) - shift,
+        0,
+    )
+    future = next(
+        unit
+        for unit in updated
+        if int(unit.get("member_id", 0) or 0) == int(actor["id"])
+        and int(unit.get("number", 0) or 0) == 2
+    )
+    if action_wait:
+        future["wait"] = action_wait
+    else:
+        future.pop("wait", None)
+
+    skill2_id = int((actor.get("skills") or {}).get(2, 0) or 0)
+    skill2_wait = int(skills.get(str(skill2_id), {}).get("wait", 0) or 0)
+    current_wait = action_wait + max(effective_wait(eff_speed(actor), skill2_wait), 0)
+    current_event = dict(units[current_index])
+    current_event["number"] = 1
+    current_event["wait"] = current_wait
+    updated.append(current_event)
+    updated.sort(key=lambda unit: (_raw_int(unit.get("wait"), 0) or 0))
+
+    future_to = next(
+        index
+        for index, unit in enumerate(updated)
+        if int(unit.get("member_id", 0) or 0) == int(actor["id"])
+        and int(unit.get("number", 0) or 0) == 2
+    ) + 1
+    current_to = next(index for index, unit in enumerate(updated) if unit is current_event)
+    source_future_wait = _raw_int(units[future_index].get("wait"), 0) or 0
+    moves = []
+    if source_future_wait - shift != action_wait:
+        moves.append(
+            {
+                "member": actor["id"],
+                "turn": 2,
+                "reason": 4,
+                "frm": future_index,
+                "to": future_to,
+                "wait": action_wait,
+            }
+        )
+    moves.append(
+        {
+            "member": actor["id"],
+            "turn": 1,
+            "reason": 0,
+            "frm": current_index,
+            "to": current_to,
+            "wait": current_wait,
+        }
+    )
+    sim.capture_timeline_units = updated
+    return moves
+
+
 def build_panel(turn: int, panel_id: int | None) -> bytes:
     out = bytearray(write_field(1, 0, turn))
     if panel_id is not None:
@@ -3756,6 +4084,40 @@ def build_selection_timeline_move(
     """Estimate the wait-valued timeline move shown in skill previews."""
     if sim is None:
         return b""
+    captured_units = getattr(sim, "capture_timeline_units", None)
+    if captured_units:
+        future_index = next(
+            (
+                index
+                for index, unit in enumerate(captured_units)
+                if int(unit.get("member_id", 0) or 0) == int(actor["id"])
+                and int(unit.get("number", 0) or 0) == 2
+            ),
+            None,
+        )
+        if future_index is not None:
+            timeline_wait = max(
+                effective_wait(eff_speed(actor), int(skill.get("wait", 0) or 0)),
+                0,
+            )
+            to = sum(
+                1
+                for index, unit in enumerate(captured_units)
+                if index != future_index
+                and (_raw_int(unit.get("wait"), 0) or 0) <= timeline_wait
+            )
+            return (
+                write_field(1, 0, actor["id"])
+                + write_field(
+                    2,
+                    0,
+                    int(captured_units[future_index].get("number", 2) or 2),
+                )
+                + write_field(3, 0, 4)
+                + write_optional_wrapped_varint(4, future_index)
+                + write_optional_wrapped_varint(5, to)
+                + write_optional_wrapped_varint(6, timeline_wait)
+            )
     frm = next(
         (i for i, (member_id, _) in enumerate(sim.order) if member_id == actor["id"]),
         0,
@@ -3791,45 +4153,64 @@ def projected_cycle_wait(sim: "BattleSim", member: dict) -> int:
 
 def build_state(sim: "BattleSim") -> bytes:
     out = bytearray(write_field(1, 0, sim.battle_id))
-    for wave_id in sim.wave_ids:
-        out.extend(write_field(2, 0, wave_id))
+    out.extend(write_packed_varints(2, sim.wave_ids))
     out.extend(write_field(3, 0, sim.wave_index + 1))
     out.extend(write_field(4, 0, sim.total_turn))
     for member in sim.members.values():
         out.extend(write_field(5, 2, build_member(member)))
-    timeline_units = []
-    for slot, (member_id, turn) in enumerate(sim.order):
-        member = sim.members.get(member_id)
-        if member is None or not member["alive"]:
-            continue
-        count = 3 if member["side"] == 1 else 2
-        base_wait = sim.timeline_waits.get(member_id, 0)
-        cycle_wait = projected_cycle_wait(sim, member)
-        for cycle in range(count):
-            timeline_units.append(
-                (base_wait + cycle * cycle_wait, slot, cycle, member_id, turn, member)
-            )
-    timeline_units.sort(key=lambda item: (item[0], item[1], item[2]))
-    for wait, _, cycle, member_id, turn, member in timeline_units:
-        out.extend(
-            write_field(
-                6,
-                2,
-                build_unit(
-                    member_id,
-                    turn + cycle,
-                    wait,
-                    member.get("next_enemy_skill"),
-                    member.get("strong_next", False),
-                    bool(member.get("extra_turn")) and cycle == 0,
-                ),
-            )
+    captured_units = getattr(sim, "capture_timeline_units", None)
+    if captured_units is None:
+        captured_units = _raw_messages(
+            getattr(sim, "capture_state_template", {}).get("timeline_units")
         )
+    if captured_units:
+        for unit in captured_units:
+            out.extend(write_field(6, 2, build_captured_unit(unit)))
+    else:
+        timeline_units = []
+        for slot, (member_id, turn) in enumerate(sim.order):
+            member = sim.members.get(member_id)
+            if member is None or not member["alive"]:
+                continue
+            count = 3 if member["side"] == 1 else 2
+            base_wait = sim.timeline_waits.get(member_id, 0)
+            cycle_wait = projected_cycle_wait(sim, member)
+            for cycle in range(count):
+                timeline_units.append(
+                    (base_wait + cycle * cycle_wait, slot, cycle, member_id, turn, member)
+                )
+        timeline_units.sort(key=lambda item: (item[0], item[1], item[2]))
+        for wait, _, cycle, member_id, turn, member in timeline_units:
+            out.extend(
+                write_field(
+                    6,
+                    2,
+                    build_unit(
+                        member_id,
+                        turn + cycle,
+                        wait,
+                        member.get("next_enemy_skill"),
+                        member.get("strong_next", False),
+                        bool(member.get("extra_turn")) and cycle == 0,
+                    ),
+                )
+            )
     for tool in sim.tools:
         out.extend(write_field(8, 2, build_tool_blob(tool)))
-    panel_start = sim.request_count + 1
-    for turn in range(panel_start, panel_start + PANEL_COUNT):
-        out.extend(write_field(15, 2, build_panel(turn, panel_for_turn(sim.game_dir, sim.battle_id, turn))))
+    captured_panels = _raw_messages(
+        getattr(sim, "capture_state_template", {}).get("timeline_panels")
+    )
+    if captured_panels:
+        for index, panel in enumerate(captured_panels):
+            turn = (_raw_int(panel.get("turn"), 0) or 0) + sim.request_count
+            panel_id = _raw_int(panel.get("panel_id"))
+            if sim.request_count and index == len(captured_panels) - 1 and panel_id is None:
+                panel_id = panel_for_turn(sim.game_dir, sim.battle_id, turn)
+            out.extend(write_field(15, 2, build_panel(turn, panel_id)))
+    else:
+        panel_start = sim.request_count + 1
+        for turn in range(panel_start, panel_start + PANEL_COUNT):
+            out.extend(write_field(15, 2, build_panel(turn, panel_for_turn(sim.game_dir, sim.battle_id, turn))))
     if sim.party_gauge:
         out.extend(write_field(14, 0, sim.party_gauge))
     if sim.field_effect is not None:
@@ -3839,11 +4220,18 @@ def build_state(sim: "BattleSim") -> bytes:
         if count > 1:
             group.extend(write_wrapped_varint(2, count))
         out.extend(write_field(17, 2, bytes(group)))
-    # Japanese BattleState includes this empty message in captures; keep
-    # presence so the client initializes start-perform state consistently.
-    out.extend(write_field(19, 2, b""))
+    # Japanese BattleState includes a ship message in captures. Preserve its
+    # populated snapshot when available, and retain the empty presence for
+    # battles without ship data.
+    ship_state = getattr(sim, "capture_ship_state", None)
+    if isinstance(ship_state, dict):
+        out.extend(write_field(19, 2, build_ship_state(ship_state)))
+    else:
+        out.extend(write_field(19, 2, b""))
     for cannon in sim.cannons:
         out.extend(write_field(21, 2, build_cannon_blob(cannon)))
+    if getattr(sim, "capture_bomb_gauge_present", False) or sim.request_count > 0:
+        out.extend(write_field(20, 0, int(getattr(sim, "bomb_gauge", 0) or 0)))
     return bytes(out)
 
 
@@ -3923,8 +4311,6 @@ def build_selection_target(
                 write_field(8, 2, build_selection_timeline_move(sim, actor, skill))
             )
         return bytes(out)
-    if preview:
-        out.extend(write_field(12, 2, b""))
     if skill.get("effect") == 2 and target["side"] == 0:
         heal = compute_heal(
             None, skill.get("power", 0), attack_stat,
@@ -3999,8 +4385,28 @@ def build_selection_target(
         )
         if multi:
             out.extend(write_field(16, 0, 1))
-        if multi or (sim is not None and sim.request_count == 0):
-            out.extend(write_field(17, 5, struct.pack("<f", PREVIEW_DAMAGE_RATE)))
+        if sim is not None:
+            skill_id = int(skill.get("id", 0) or 0)
+            ctx = mod_context(
+                sim,
+                actor,
+                target,
+                skill,
+                is_aoe=skill.get("target") in (4, 5),
+                is_burst=skill_id == int((actor.get("skills") or {}).get(3, 0) or 0),
+                weak=weak,
+            )
+            ctx["skill_id"] = skill_id
+            local = {
+                "skill_id": skill_id,
+                "behaviors": resolve_attack_local_mods(sim, actor, skill_id),
+            }
+            slots = damage_slot_mults(sim, actor, target, skill, None, local, ctx)
+            base_crit = ALLY_CRIT_RATE if actor["side"] == 0 else ENEMY_CRIT_RATE
+            if actor.get("pooled") or actor.get("mixer"):
+                base_crit = ITEM_CRIT_RATE
+            critical_rate = max(base_crit + slots["crit_rate"], 0.0)
+            out.extend(write_field(17, 5, struct.pack("<f", critical_rate * 100)))
     if critical and not preview:
         out.extend(write_field(11, 0, 1))
     return bytes(out)
@@ -4110,6 +4516,8 @@ def build_setup(
                 )
             out.extend(write_field(9, 2, bytes(selection)))
     out.extend(write_field(12, 2, b""))
+    if sim.total_dealt_hp_damage:
+        out.extend(write_field(14, 0, sim.total_dealt_hp_damage))
     return bytes(out)
 
 def rebuild_order(sim: BattleSim) -> None:
@@ -4196,6 +4604,18 @@ def build_action(
         main_target = skill_results[0].get("target")
     if action_type is None:
         action_type = 1 if tool_number is not None else 0
+    standard_ally_skill = action_type == 0 and actor["side"] == 0 and bool(skill_id)
+    if (
+        standard_ally_skill
+        and sim.request_count > int(getattr(sim, "capture_timeline_request_count", 0) or 0)
+    ):
+        captured_moves = transition_captured_timeline(sim, actor, skill_id)
+        if captured_moves is not None:
+            moves = captured_moves
+            sim.capture_timeline_request_count = sim.request_count
+    if standard_ally_skill:
+        sim.bomb_gauge = int(getattr(sim, "bomb_gauge", 0) or 0) + 40
+        sim.party_gauge = min(sim.party_gauge + 100, GAUGE_MAX)
     out = bytearray(write_field(1, 0, number))
     out.extend(write_field(2, 2, build_state(sim)))
     if action_type:
@@ -4251,9 +4671,9 @@ def build_action(
             critical_damage = result.get("critical_damage")
             if critical_damage is not None:
                 res.extend(write_wrapped_varint(18, critical_damage))
-            damage_rate = result.get("damage_rate")
-            if damage_rate is not None:
-                res.extend(write_field(19, 5, struct.pack("<f", float(damage_rate))))
+            critical_rate = result.get("critical_rate")
+            if critical_rate is not None:
+                res.extend(write_field(19, 5, struct.pack("<f", float(critical_rate))))
             if result.get("killed"):
                 res.extend(write_field(6, 0, 1))
         out.extend(write_field(8, 2, bytes(res)))
@@ -4272,16 +4692,25 @@ def build_action(
                 ),
             )
         )
-    action_effects = list(effect_blobs)
-    if action_type == 0 and actor["side"] == 0 and skill_id:
+    action_effects = []
+    if standard_ally_skill:
         action_effects.append(
             {
                 "effector": actor["id"],
                 "target": actor["id"],
                 "effect_id": 2000392,
-                "motion": 70,
+                "add_bomb_gauge": 40,
             }
         )
+        action_effects.append(
+            {
+                "effector": actor["id"],
+                "target": actor["id"],
+                "effect_id": 120000239,
+                "party_gauge_heal": 100,
+            }
+        )
+    action_effects.extend(effect_blobs)
     for effect in action_effects:
         out.extend(write_field(11, 2, build_effect_result(effect)))
     if total_dealt:
@@ -4290,34 +4719,44 @@ def build_action(
 
 
 def build_effect_result(effect: dict) -> bytes:
-    """Serialize a captured skill-motion or applied state-change result."""
+    """Serialize an effect result, including its typed gauge/state payload."""
     effector_id = int(effect["effector"])
     target_id = int(effect["target"])
     effect_id = int(effect["effect_id"])
     out = bytearray(write_wrapped_varint(1, target_id))
     out.extend(write_field(2, 0, effect_id))
-    if effect.get("value") is not None:
-        out.extend(write_field(3, 0, 1))
-    out.extend(write_field(14, 0, effector_id))
-    if effect.get("value") is not None:
-        state = (
-            write_field(1, 0, effect_id)
-            + write_field(3, 0, int(effect.get("rest", 1)))
-            + write_field(4, 0, int(effect["value"]))
-        )
-        out.extend(write_field(21, 2, state))
-        if effect.get("is_skill"):
-            out.extend(write_field(23, 0, 1))
-        out.extend(write_wrapped_varint(24, effect_id))
     dealt = effect.get("dealt_state_change")
     if dealt is not None:
+        out.extend(write_field(3, 0, 1))
+    out.extend(write_field(14, 0, effector_id))
+    if dealt is not None:
         out.extend(write_field(21, 2, build_state_change(dealt)))
+        if effect.get("is_skill"):
+            out.extend(write_field(23, 0, 1))
+        state_change_id = int(dealt.get("id", dealt.get("state_change_id", effect_id)) or effect_id)
+        out.extend(write_wrapped_varint(24, state_change_id))
     if effect.get("counter"):
         out.extend(write_field(15, 0, 1))
     if effect.get("motion") is not None:
-        out.extend(
-            write_field(35, 2, write_field(1, 0, int(effect["motion"])))
-        )
+        out.extend(write_wrapped_varint(16, int(effect["motion"])))
+    if effect.get("party_gauge_heal") is not None:
+        out.extend(write_wrapped_varint(11, int(effect["party_gauge_heal"])))
+    if effect.get("add_bomb_gauge") is not None:
+        out.extend(write_wrapped_varint(35, int(effect["add_bomb_gauge"])))
+    return bytes(out)
+
+
+def build_battle_record(record: dict | None) -> bytes:
+    if not isinstance(record, dict):
+        return b""
+    out = bytearray()
+    for field_number, name in (
+        (1, "quest_max_dealt_hp_damage"),
+        (3, "episode_max_total_dealt_hp_damage"),
+    ):
+        value = record.get(name)
+        if value is not None:
+            out.extend(write_field(field_number, 0, int(value)))
     return bytes(out)
 
 
@@ -4350,7 +4789,13 @@ def build_history(
         out.extend(write_field(10, 2, sim.previous_state))
     if include_formation and sim.previous_formation is not None:
         out.extend(write_field(9, 2, sim.previous_formation))
-    out.extend(write_field(13, 2, b""))
+    out.extend(
+        write_field(
+            13,
+            2,
+            build_battle_record(getattr(sim, "capture_record_template", None)),
+        )
+    )
     return bytes(out)
 
 
@@ -4390,6 +4835,15 @@ def default_formation(sim: "BattleSim") -> bytes:
 
 def snapshot_state(sim: "BattleSim") -> bytes:
     return build_state(sim)
+
+
+def clear_snapshot_status_overrides(sim: "BattleSim", actor_id: int | None = None) -> None:
+    for member in sim.members.values():
+        if actor_id is None:
+            member.pop("initial_status_override", None)
+            member.pop("current_status_override", None)
+        elif int(member.get("id", 0) or 0) == int(actor_id):
+            member.pop("current_status_override", None)
 
 
 def check_battle_end(sim: "BattleSim") -> int:
@@ -4816,6 +5270,9 @@ def advance_round(sim: BattleSim, actor: dict, kind: str, skill_type: int | None
     by the caller, never here.
     """
     sim.previous_state = snapshot_state(sim)
+    clear_snapshot_status_overrides(sim, actor["id"])
+    sim.request_count += 1
+    sim.party_gauge = min(sim.party_gauge + GAUGE_PER_REQUEST, GAUGE_MAX)
     do_action(sim, actor, kind, skill_type, main_target, tool_number)
     if check_battle_end(sim) != 0:
         return
@@ -5958,7 +6415,6 @@ def attack_battle(
         sim.previous_formation = formation
     else:
         sim.previous_formation = sim.previous_formation or default_formation(sim)
-    sim.request_count += 1
     actor = sim.current_actor()
     if actor is None:
         raise ValueError("no living actor")
@@ -5972,6 +6428,8 @@ def attack_battle(
             actor = held
     if tool_numbers:
         sim.previous_state = snapshot_state(sim)
+        clear_snapshot_status_overrides(sim, actor["id"])
+        sim.request_count += 1
         sim.party_gauge = 0
         for tool_number in tool_numbers:
             do_action(sim, actor, "tool", None, main_target, tool_number)
@@ -5983,6 +6441,8 @@ def attack_battle(
             next_setup(sim)
     elif cannon_numbers:
         sim.previous_state = snapshot_state(sim)
+        clear_snapshot_status_overrides(sim, actor["id"])
+        sim.request_count += 1
         for cannon_number in cannon_numbers:
             do_cannon_action(sim, actor, cannon_number)
         if sim.status == 0:
@@ -5990,6 +6450,8 @@ def attack_battle(
             next_setup(sim)
     elif mix_numbers:
         sim.previous_state = snapshot_state(sim)
+        clear_snapshot_status_overrides(sim, actor["id"])
+        sim.request_count += 1
         do_mix_action(sim, actor, mix_numbers)
         fire_triggers(sim, "item_use", actor, {})
         if sim.status == 0:
@@ -5997,6 +6459,8 @@ def attack_battle(
             next_setup(sim)
     elif active_skill_type:
         sim.previous_state = snapshot_state(sim)
+        clear_snapshot_status_overrides(sim, actor["id"])
+        sim.request_count += 1
         do_active_action(
             sim,
             actor,
@@ -6008,16 +6472,15 @@ def attack_battle(
             next_setup(sim)
     elif mode != 0 or sim.auto or skill_type in (None, 0):
         sim.command_actor_id = None
-        sim.party_gauge = min(sim.party_gauge + GAUGE_PER_REQUEST, GAUGE_MAX)
         advance_round(sim, actor, "auto", None, main_target, None)
     else:
         sim.command_actor_id = None
-        sim.party_gauge = min(sim.party_gauge + GAUGE_PER_REQUEST, GAUGE_MAX)
         advance_round(sim, actor, "skill", skill_type, main_target, None)
     if free_action and sim.status == 0:
         sim.command_actor_id = actor["id"]
     since = (sim.sent_waves, sim.sent_setups, sim.sent_actions)
     response = write_field(1, 2, build_history(sim, include_prev=True, since=since))
+    clear_snapshot_status_overrides(sim)
     new_waves = len(sim.wave_starts) - since[0]
     new_setups = len(sim.setups) - since[1]
     new_actions = len(sim.actions) - since[2]
