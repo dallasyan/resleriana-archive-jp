@@ -1399,6 +1399,10 @@ def main() -> int:
 SHARE_REPLACEMENTS: list[tuple[str, str]] = []
 SHARE_PATTERNS = [
     (re.compile(r"C:\\Users\\[^`\s]+"), "<user dir>"),
+    (
+        re.compile(r"[A-Za-z]:\\[^`\n]*?contract-dump\\fields\.txt", re.IGNORECASE),
+        "installed contract-dump/fields.txt",
+    ),
     (re.compile(r"(?:[A-Za-z0-9_-]+[\\/])*decrypted-session-[A-Za-z0-9_-]+"), "local decrypted captures"),
     (re.compile(r"(?:[A-Za-z0-9_-]+[\\/])*session-[0-9]{8}-[0-9]+-[0-9]+"), "local battle captures"),
     (re.compile(r"(?:[A-Za-z0-9_-]+[\\/])*session_[A-Za-z0-9_-]+"), "local battle captures"),

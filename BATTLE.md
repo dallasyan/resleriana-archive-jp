@@ -77,17 +77,17 @@ tables) models, what it estimates, and what it ignores. Confidence scale:
   Lit counts track battle-start and event lighting (capped, rank-variant
   resolved) with per-lamp damage tiers, lamp-scaled pre-attack buffs, and
   full-lamp transform flags. Transformed numeric deltas stay unmapped.
-- [x] Burst gauge and ship Memoria on members - **Medium** shape. Every
-  member carries `burst_gauge` with current gauge and `max_gauge` 100;
-  allies also carry `ship_main_memoria` (support Memoria id, top unlocked
-  ability, computed level, limit break) resolved from the selected ship
-  party. The support value coefficient (augmented by supporting Memoria,
-  e.g. 4400/2600 observed) and the one-off enabled 300 gauge in an older
-  session are not modeled. `ship_support_ability` and bomb gauge never
-  appear in captures and are omitted, as are state-change summaries
-  (field 24), whose per-type aggregation formula is still open (entries
-  demonstrably track live buffs/debuffs, including negative values).
-  Barriers emit fields 21/22 with absorb and broken flags.
+- [x] Burst gauge, ship Memoria, and ship support wire shapes - **Medium**.
+  Members carry `burst_gauge`; allies carry `ship_main_memoria` and the battle
+  state can include ship support ability IDs and their value coefficient.
+  `BattleAction` also reports bomb-gauge gains (`effect_id=2000392`) with
+  observed values 10, 20, 30, 40, 50, 70, and 100. The per-skill source,
+  support scaling, and trigger are not modeled; the current fixed 40-point
+  standard-skill placeholder does not match every capture. Supporting Memoria
+  coefficients (e.g. 4400/2600) and one-off enabled 300 gauge remain open.
+  State-change summaries (field 24) also need their per-type aggregation
+  formula; entries demonstrably track live buffs/debuffs, including negative
+  values. Barriers emit fields 21/22 with absorb and broken flags.
 - [x] Unknown characters - **Medium**. Work if their character/skill master
   rows exist (stats + generic damage math). Missing rows degrade to zero
   stats/skills, which is not a usable fallback.

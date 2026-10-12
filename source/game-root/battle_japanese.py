@@ -29,13 +29,23 @@ from pathlib import Path
 BATTLE_MASTER_DIRNAME = "battle-master"
 PROGRESSION_MASTER_DIRNAME = "progression-master"
 
-# attack_attributes ids: 1 slash, 2 strike(impact), 3 stab(piercing),
-# 4 wind, 5 fire, 6 ice, 7 bolt. Element ids 2/4/6 are estimated from game
-# knowledge (no capture preview used them); physical ids use attack/defense
-# with slashing/impact/piercing resistance, magic ids use magic/mental.
+# Japanese attack_attributes ids: 1 slash, 2 strike(impact), 3 stab(piercing),
+# 4 wind, 5 fire, 6 ice, 7 bolt, and 8 wind (the legacy Air-affinity code).
+# Japanese skill 11001208 uses attribute 8 with magic attack category 2.
+# Physical ids use attack/defense and their physical resistance slots; magic
+# ids use magic/mental and elemental resistance slots.
 PHYSICAL_ATTRS = {1, 2, 3}
-MAGIC_ATTRS = {4, 5, 6, 7}
-ATTR_ELEMENT = {1: "slashing", 2: "impact", 3: "piercing", 4: "wind", 5: "fire", 6: "ice", 7: "lightning"}
+MAGIC_ATTRS = {4, 5, 6, 7, 8}
+ATTR_ELEMENT = {
+    1: "slashing",
+    2: "impact",
+    3: "piercing",
+    4: "wind",
+    5: "fire",
+    6: "ice",
+    7: "lightning",
+    8: "wind",
+}
 ATTR_ALIASES = {"slash": "slashing", "pierce": "piercing"}
 
 
@@ -1484,7 +1494,16 @@ def fire_triggers(sim: "BattleSim", event: str, owner: dict, ctx: dict | None = 
     return fired
 
 
-ATTR_ID_TO_ELEMENT = {1: "slashing", 2: "impact", 3: "piercing", 4: "wind", 5: "fire", 6: "ice", 7: "lightning"}
+ATTR_ID_TO_ELEMENT = {
+    1: "slashing",
+    2: "impact",
+    3: "piercing",
+    4: "wind",
+    5: "fire",
+    6: "ice",
+    7: "lightning",
+    8: "wind",
+}
 ROLE_ID_TO_NAME = {1: "attacker", 2: "breaker", 3: "defender", 4: "supporter"}
 
 
@@ -4407,6 +4426,13 @@ def build_selection_target(
                 base_crit = ITEM_CRIT_RATE
             critical_rate = max(base_crit + slots["crit_rate"], 0.0)
             out.extend(write_field(17, 5, struct.pack("<f", critical_rate * 100)))
+        elif multi:
+            base_crit = (
+                ALLY_CRIT_RATE
+                if int(actor.get("side", 0) or 0) == 0
+                else ENEMY_CRIT_RATE
+            )
+            out.extend(write_field(17, 5, struct.pack("<f", base_crit * 100)))
     if critical and not preview:
         out.extend(write_field(11, 0, 1))
     return bytes(out)

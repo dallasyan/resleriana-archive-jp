@@ -13,7 +13,7 @@ Simulator: `tools/JapaneseOffline/battle_japanese.py`.
 Derived data: `tools/JapaneseOffline/build_combat_map.py` plus
 `battle-master/combat_map.json` (built from
 `resleriana-db-main/data/master/jp`, ASCII-coded, no private data).
-Contract oracle: `C:\Program Files (x86)\Steam\steamapps\common\AtelierResleriana\contract-dump\fields.txt`.
+Contract oracle: `installed contract-dump/fields.txt`.
 
 ## How to read implementation status
 
