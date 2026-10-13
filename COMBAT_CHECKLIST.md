@@ -54,8 +54,10 @@ Contract oracle: `installed contract-dump/fields.txt`.
   - Implement: `activeN_skill_id` plus skill-master limits; member field 7,
     setup field 15, mode-7 field 8, action field 28. Most are free actions;
     captured Totori timeline-swap active emits timeline moves and advances
-    other waits, which the simulator does not yet reproduce.
-  - Data: Totori active-skill timeline capture; active skill 14002908.
+    other waits, which the simulator does not yet reproduce. All 10 active
+    slots on non-sentinel released characters have generated action tests;
+    captures directly cover 5/10 slots.
+  - Data: active-skill master rows and local combat captures; active skill 14002908.
 - [x] Additional attacks (Done)
   - Description: conditional follow-up after a triggering skill.
   - Implement: hyperlink skills resolve free with `post_hooks=False` on
@@ -64,27 +66,38 @@ Contract oracle: `installed contract-dump/fields.txt`.
   - Data: ability descriptions with additional-attack hyperlinks;
     combat cases under `local battle captures`.
 - [x] Skill ranks and evolution (Done)
-  - Description: profile ranks pick normal rows; evolve flags switch tables.
-  - Implement: existing rank/evolve selection with normal1 fallback.
-  - Data: `progression-master/character.json`.
+  - Description: profile ranks pick normal1/normal2 rows; flags 31/32/33
+    independently select evolved normal1/normal2/burst tables.
+  - Implement: matching profile records feed combat skill selection; the
+    all-skills-evolved ability subset is gated on rarity 8 and all three flags.
+    Resna Innocent Dreamer's Skill 1 resolves the evolved rank's power/break,
+    all-ally healing, capped Magic ATK, and item-gauge behavior; its +50%
+    critical-damage passive merges to 250% and is only registered after all
+    three flags.
+  - Data: `progression-master/character.json`; 45 local evolution operations
+    across 15 characters; skill masters and ability 1990325.
 - [x] Skill lamps (Done)
   - Description: conditional lamp counts enhance skills at maximum.
   - Implement: battle-start and event lighting (skill/item/heal/panel/
     attacked/weak/ailment triggers, use caps, rank-variant resolution,
     max capping); per-lamp damage tiers and lamp-scaled pre-attack buffs;
-    full-lamp transform flag with post-attack charging.
+    full-lamp Skill 2 return to base form for the captured Resna/Valeria
+    changes, using the base rank-matched Skill 2 before the hit.
   - Data: 15 lamp abilities; `battle-master/skill.json lamp` maxima.
 - [x] Penetration (Done, hooks)
   - Description: ignores part of defense and damage-taken reduction.
   - Implement: `(10x+3000)/(3x+3000)` and per-reduction
     `(x+2000)/(10x+2000)`; sources default to 0 until mapped.
   - Data: `https://atelier.xxsakixx.com/resleri/damage.html`.
-- [x] Transformation (Done, estimated effect)
-  - Description: full-lamp skills transform pre-attack, keep status effects.
-  - Implement: `transformed` flag set at lamp max; post-attack lamp charge
-    below max. Transformed numeric deltas are unmapped, so resolution is
-    unchanged; flag only.
-  - Data: 10 transform skill descriptions.
+- [x] Transformation (Partial, capture-backed return)
+  - Description: two-lamp Skill 2 returns captured Awakened Resna/Valeria to
+    their base character forms before attacking.
+  - Implement: full-lamp setup/action selects the base rank-matched skill,
+    restores the base current-character ID, and clears the temporary form.
+    Character-sourced passive mods/triggers are replaced from the destination
+    form's master on return. Captured transformed battle starts use the current
+    form's ability IDs. Base-to-awakened entry remains open.
+  - Data: Resna 43106/43107 and Valeria 43205/43206 skill/master captures.
 - [x] Range switching (Done)
   - Description: in-range/out-range toggle changes usable skills.
   - Implement: bidirectional `skill_destination` links; out-range members
@@ -119,12 +132,14 @@ Contract oracle: `installed contract-dump/fields.txt`.
 
 ## Passive abilities
 
-- [x] Character passives (Done)
+- [ ] Character passives (Partial)
   - Description: always-on behavior without grant text.
-  - Implement: all 7131 ability descriptions parsed to battle-long mods
-    (quoted/unquoted values resolved positionally); scope fan-out;
-    condition-gated; immune to buff wipe.
-  - Data: `character.json ability_ids`; `ability_parsed` map.
+  - Implement: all 7,131 ability rows are emitted in `ability_parsed`; released
+    characters link 432 distinct ability IDs, of which 374 currently have
+    nonempty parsed mods/triggers. Parsed party tag-count and owner-speed ranges
+    resolve dynamically; party-scoped stat passives fan out at battle start.
+    Fifty-eight released linked IDs still have no parsed behavior.
+  - Data: `character.json ability_ids`; `ability_parsed` map and parser tests.
 - [x] Board abilities (Done)
   - Description: growboard-derived passives.
   - Implement: same parsed-ability pipeline as character passives.
@@ -136,18 +151,28 @@ Contract oracle: `installed contract-dump/fields.txt`.
   - Data: ship support captures; `ship_level.json`, `ship_part.json`.
 - [ ] Ability conditions and caps (Partial)
   - Description: conditional triggers, stacks, hard upper limits.
-  - Implement: condition evaluation plus stacking/cap tables; never exceed
-    hard caps. `combat_map.json` effects carry parsed conditions.
-  - Data: status cases; permanent-debuff listings.
+  - Implement: capped trigger buffs merge into one value and obey the parsed
+    limit; `stack_max` state effects retain separate entries up to their stack
+    count. An absent value and stack cap keeps repeated entries separate.
+    Japanese `N回行動開始/終了するまで` wording selects owner-turn start/end;
+    `N回攻撃を受けるまで` uses a hit counter, serialized as remaining
+    `rest_count`. Evasion and nullified attacks consume hit-limited effects.
+    Capped no-duration effects persist; stack-overflow semantics and other
+    effect families still need auditing.
+  - Data: Resna ability 1990325 (50% critical damage, cap 250%); Liebe states
+    610465/610466 (two separate defense stacks); state 610119's 50% cap;
+    duration and uncapped-entry regressions.
 
 ## Leader aura
 
 - [x] Leader skill (Done)
   - Description: global party buff from the leader slot.
   - Implement: read leader `leader_skill`; parsed ability mods filtered by
-    the condition table per member; leader trigger registration with
-    scope-aware firing.
-  - Data: party records; `character.json leader_skill`.
+    tag, role, attribute, and series conditions per member; leader trigger
+    registration with scope-aware firing. Valeria Awakened Past's Carefree
+    condition (tag 25) grants Pioneer only to matching members; initial order
+    places a low-speed Pioneer before faster non-Pioneers.
+  - Data: `character.json leader_skill`; leader-condition and Pioneer tests.
 - [ ] Leader position and role aggro (Partial)
   - Description: formation order and Defender bias affect targeting.
   - Implement: leader flag kept; add Defender-biased enemy targeting unless
@@ -345,10 +370,12 @@ Contract oracle: `installed contract-dump/fields.txt`.
     and conditional state effects with durations.
   - Implement: parsed state descriptions map known slots; relative stat/damage
     modifiers and separate taken-down multipliers apply. Unknown state rows are
-    inert instead of defaulting to generic outgoing/taken damage. Generic
-    stacking caps, several trigger families, and some status categories remain
-    incomplete.
-  - Data: status cases under `status`; `state_change.json`.
+    inert instead of defaulting to generic outgoing/taken damage. Explicit
+    action-start/end durations tick on the owner's action; hit-count durations
+    tick when an attack reaches its target. Generic stacking caps, several
+    trigger families, and some status categories remain incomplete.
+  - Data: Japanese `skill.json` / `state_change.json` duration text; regression
+    tests for start/end, hit limits, evades, and nullification.
 - [x] Ailments (Done, rates estimated)
   - Description: poison, burn, paralysis, sleep, frozen, darkness, stun, taunt.
   - Implement: `combat_map.json` state tags drive ticks, action-fail rolls,
@@ -440,8 +467,10 @@ in `COMBAT_CHECKLISTS/`.
   variants, re-grant chains.
 - Panel skills: Implemented. Hyperlink resolution, free actions, use caps.
   Unsure: exact client history shapes for panel-skill actions.
-- Active abilities: Partial. Use limits and request/response shapes are
-  implemented; active timeline-swap timing/move records remain incomplete.
+- Active abilities: Partial. All 10 released active-skill slots have generated
+  action coverage; captures directly cover 5/10. Use limits and request/response
+  shapes are implemented; active timeline-swap timing/move records remain
+  incomplete.
 - Additional attacks: Implemented, including 200%+ overdrive with gauge
   consume. Unsure: whether bonus actions trigger their own post effects.
 - Skill ranks/evolution: Implemented.
@@ -449,8 +478,11 @@ in `COMBAT_CHECKLISTS/`.
   Unsure: transformed numeric deltas; lit-count client display.
 - Penetration: Implemented with hooks; sources default 0. Unsure: additional
   penetration sources in unmapped text.
-- Transformation: Implemented as flag only. Missing: transformed numeric
-  behavior. Unsure: lamp reset/consumption on transform.
+- Transformation: Partial. Captured full-lamp Skill 2 return-to-base is
+  modeled for Resna and Valeria, including form-specific passive replacement.
+  Captured starts select the current form's passive IDs. Missing: base-to-
+  awakened entry and other transformed numeric behavior. Unsure: lamp
+  reset/consumption outside these two captured transitions.
 - Range switching: Implemented with bidirectional links and display states.
   Unsure: default range for non-crossover characters; Memoria range-swap
   edge cases.
@@ -459,18 +491,20 @@ in `COMBAT_CHECKLISTS/`.
   remain open.
 - Burst selection/gauge/stocks: Implemented, including per-member stocked
   caps. Unsure: stock display fields; burst-panel forcing details.
-- Character/board passives: Implemented via description parsing (2,881
-  abilities with mods, 1,264 with triggers). Missing: unmapped-description
-  abilities (1,087). Unsure: positional value mapping on multi-clause
-  abilities; tag-count value scaling.
+- Character/board passives: Partial. All 7,131 ability rows are mapped; 374/432
+  distinct abilities linked by released characters have nonempty parsed
+  behavior, including tag-count/speed scaling. Missing: 58 released linked
+  ability IDs with empty parser output and other complex state/passive systems.
 - Support abilities: Partial. Stats/blob support done; 648/784 ability
   effects parsed but trigger timing/level selection unmodeled. Unsure:
   support-ability firing rules and level mapping.
-- Ability conditions/caps: Implemented for parsed conditions (role, attr,
-  scope, weak, crit, ko, boss, HP, panel, skill, tag-count, gauge).
-  Unsure: personality-count and character-specific conditions.
-- Leader skill/aura: Implemented with condition table. Unsure: combat-power
-  coefficients; gender/series edge conditions.
+- Ability conditions/caps: Partial. Parsed role, attribute, scope, weak, crit,
+  KO, boss, HP, panel, skill, tag-count, and gauge conditions; separate value
+  caps, stack limits, uncapped entries, and action/hit expiry are tested.
+  Unsure: stack overflow refresh policy and personality-count conditions.
+- Leader skill/aura: Implemented with tag/role/attribute/series condition
+  filtering; Valeria's Carefree/Pioneer condition is regression-tested. Unsure:
+  combat-power coefficients and unobserved leader conditions.
 - Equipment stats/traits: Implemented (1,234/1,282 fully). Missing: 48
   partially parsed. Unsure: duplicate-assignment and filter semantics.
 - Fixed trait effects: Implemented via parsed `fixed` flags. Unsure:
@@ -499,9 +533,10 @@ in `COMBAT_CHECKLISTS/`.
   naturally: Implemented.
 - Status conditions: mapped state slots cover common stat/damage/resistance,
   ailment, item/cannon, healing, barrier, evade, cover, reflect, and null paths.
+  Action-start/end and hit-count lifetimes follow Japanese master descriptions.
   Counter damage, general effect block, panel-null behavior, revival, and many
   complex state triggers are missing. Unknown state rows stay inert. Unsure:
-  effect-specific duration, potency, caps, and some trigger timing.
+  uncaptured stack-overflow behavior, potency edge cases, and some trigger timing.
 - Enemy attacks: stats/AI/bursts/targeting and one break gauge implemented
   (growth estimated). Missing: multi-gauge depletion, telegraphs, forced
   actions, death rattles. A capture confirms a five-gauge 3000-point break

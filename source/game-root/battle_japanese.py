@@ -829,6 +829,19 @@ CAPTURED_STATE_EFFECT_LINKS = {
     (11001208, 91001270): {"state_id": 910039, "target": "self"},
     (14002180, 91001270): {"state_id": 910039, "target": "self"},
 }
+# Liebe's captured Skill 2 reports these defense effect IDs as the two visible
+# state rows; both rows allow two separately timed instances.
+for _liebe_skill_id in range(12003638, 12003643):
+    CAPTURED_STATE_EFFECT_LINKS[(_liebe_skill_id, 91002175)] = {
+        "state_id": 610465,
+        "target": "all_allies",
+        "dur_hits": 2,
+    }
+    CAPTURED_STATE_EFFECT_LINKS[(_liebe_skill_id, 91002177)] = {
+        "state_id": 610466,
+        "target": "all_allies",
+        "dur_hits": 2,
+    }
 
 
 def effect_magnitude(parsed: dict, runtime_value: int) -> int:
@@ -938,6 +951,39 @@ def conds_pass(conds: list | None, ctx: dict) -> bool:
         else:
             return False
     return True
+
+
+def modifier_value(mod: dict, ctx: dict | None) -> int:
+    """Resolve fixed or party/speed-scaled values from parsed passives."""
+    base = int(mod.get("value", 0) or 0)
+    scale = mod.get("scale") or {}
+    kind = scale.get("kind")
+    if not kind or ctx is None:
+        return base
+    if kind == "tag_count":
+        tag = int(scale.get("tag", 0) or 0)
+        observed = sum(
+            1 for member in ctx.get("party", []) if tag in (member.get("tags") or [])
+        )
+    elif kind == "speed":
+        owner = ctx.get("owner_member") or {}
+        observed = int(
+            owner.get("speed")
+            or (owner.get("stats") or {}).get("speed", 0)
+            or 0
+        )
+    else:
+        return base
+    low_count = int(scale.get("min_count", 1) or 1)
+    high_count = max(int(scale.get("max_count", low_count) or low_count), low_count)
+    observed = min(max(int(observed), low_count), high_count)
+    low_value = int(scale.get("min_value", base) or 0)
+    high_value = int(scale.get("max_value", low_value) or 0)
+    if high_count == low_count:
+        return high_value
+    return low_value + (high_value - low_value) * (observed - low_count) // (
+        high_count - low_count
+    )
 
 
 def buff_matches_context(buff: dict, ctx: dict | None) -> bool:
@@ -1075,7 +1121,7 @@ def sum_slot_mods(mods: list[dict], codes: set[str], ctx: dict,
         if not conds_pass(mod.get("conds"), ctx):
             continue
         direction = mod.get("direction", 1)
-        total += direction * int(mod.get("value", 0) or 0)
+        total += direction * modifier_value(mod, ctx)
     return total
 
 
@@ -1095,11 +1141,20 @@ def collect_owner_mods(game_dir: Path, parsed_list: list[tuple[dict, int]]) -> l
             "cap": parsed.get("cap", 0),
             "fixed": bool(parsed.get("fixed")),
             "dur_actions": parsed.get("dur_actions", 0),
+            "dur_action_phase": parsed.get("dur_action_phase"),
             "dur_hits": parsed.get("dur_hits", 0),
             "perm": bool(parsed.get("perm")),
             "foe": bool(parsed.get("foe")),
             "slot": parsed.get("slot"),
             "attr": parsed.get("attr"),
+            "stat": {
+                "patk": "attack",
+                "matk": "magic",
+                "pdef": "defense",
+                "mdef": "mental",
+                "spd": "speed",
+            }.get(parsed.get("stat"), parsed.get("stat")),
+            "scale": parsed.get("scale"),
         })
     return mods
 
@@ -1253,13 +1308,30 @@ def resolve_trigger_owners(sim: "BattleSim", owner: dict, scope: str, target: st
     return [owner]
 
 
+def buff_rest(
+    dur_actions: int, dur_hits: int, permanent: bool = False, default: int = 2
+) -> int | None:
+    """Resolve mutually exclusive or combined action/hit duration counters."""
+    if permanent:
+        return None
+    if dur_actions:
+        return int(dur_actions)
+    if dur_hits:
+        return None
+    return default
+
+
 def grant_trigger_buff(sim: "BattleSim", giver: dict, owner: dict, entry: dict) -> None:
-    """Apply a trigger payload buff as a hidden member buff."""
+    """Apply a trigger payload buff, accumulating capped values in place."""
     code = entry.get("code")
-    value = int(entry.get("value", 0) or 0)
+    value = modifier_value(entry, mod_context(sim, giver, owner, None))
     direction = int(entry.get("direction", 1))
-    rest = int(entry.get("dur_actions", 0) or 0) or 2
+    dur_actions = int(entry.get("dur_actions", 0) or 0)
+    dur_hits = int(entry.get("dur_hits", 0) or 0)
+    permanent = bool(entry.get("perm"))
+    rest = buff_rest(dur_actions, dur_hits, permanent)
     buff = {"id": 0, "value": direction * value, "rest": rest,
+            "duration_phase": entry.get("dur_action_phase") or "end",
             "display": False}
     if code in ("skill_damage", "skill_power", "crit_rate", "crit_damage",
                 "break_damage", "taken_break", "penetration"):
@@ -1301,10 +1373,62 @@ def grant_trigger_buff(sim: "BattleSim", giver: dict, owner: dict, entry: dict) 
                 buff[key] = entry[key]
     else:
         return
-    if entry.get("dur_hits"):
-        buff["hits"] = int(entry["dur_hits"])
-    if entry.get("perm"):
-        buff["rest"] = None
+    if dur_hits:
+        buff["hits"] = dur_hits
+    cap = int(entry.get("cap", 0) or 0)
+    stack_max = int(entry.get("stack_max", 0) or 0)
+    if stack_max:
+        stack_key = entry.get("_cap_key") or (
+            int(giver.get("id", 0) or 0),
+            code,
+            entry.get("slot"),
+            entry.get("attr"),
+            entry.get("scope"),
+        )
+        buff["stack_max"] = stack_max
+        buff["stack_key"] = stack_key
+        if cap:
+            buff["value"] = max(min(direction * value, cap), -cap)
+        existing_stacks = [
+            current
+            for current in owner.get("buffs", [])
+            if current.get("stack_key") == stack_key
+        ]
+        if len(existing_stacks) >= stack_max:
+            oldest = existing_stacks[0]
+            owner["buffs"][owner["buffs"].index(oldest)] = buff
+        else:
+            owner["buffs"].append(buff)
+        return
+    if cap:
+        cap_key = entry.get("_cap_key") or (
+            int(giver.get("id", 0) or 0),
+            code,
+            entry.get("slot"),
+            entry.get("attr"),
+            entry.get("scope"),
+        )
+        existing = next(
+            (
+                current
+                for current in owner.get("buffs", [])
+                if current.get("cap_key") == cap_key
+            ),
+            None,
+        )
+        if existing is not None:
+            current_value = int(existing.get("value", 0) or 0)
+            buff["value"] = max(
+                min(current_value + direction * value, cap),
+                -cap,
+            )
+            existing.update(buff)
+            existing["cap"] = cap
+            existing["cap_key"] = cap_key
+            return
+        buff["value"] = max(min(direction * value, cap), -cap)
+        buff["cap"] = cap
+        buff["cap_key"] = cap_key
     owner["buffs"].append(buff)
 
 
@@ -1440,7 +1564,9 @@ def fire_triggers(sim: "BattleSim", event: str, owner: dict, ctx: dict | None = 
                 int(trig.get("hi_value", 0) or 0) - int(trig.get("lo_value", 0) or 0)
             ) * (lit - 1) // span
             buff = {"id": 0, "value": int(trig.get("direction", 1)) * value,
-                    "rest": int(trig.get("dur_actions", 0) or 0) or 1, "display": False}
+                    "rest": int(trig.get("dur_actions", 0) or 0) or 1,
+                    "duration_phase": trig.get("dur_action_phase") or "end",
+                    "display": False}
             code = trig.get("code")
             if code in ("skill_damage", "skill_power", "crit_rate", "crit_damage",
                         "break_damage", "taken_break", "penetration"):
@@ -1453,7 +1579,8 @@ def fire_triggers(sim: "BattleSim", event: str, owner: dict, ctx: dict | None = 
         elif op == "range_swap":
             execute_trigger_code(sim, owner, [owner], "range_swap", 0)
         elif op == "buff":
-            buff = trig.get("buff", {})
+            buff = dict(trig.get("buff") or {})
+            buff["_cap_key"] = (int(owner.get("id", 0) or 0), index)
             if buff.get("code") in ("heal", "item_gauge", "burst_gauge", "cleanse",
                                     "turn_swap", "turn_erase", "delay_turn", "hasten_turn",
                                     "field", "revive", "panel_generate", "panel_convert",
@@ -1514,6 +1641,8 @@ def character_elements(master: dict) -> list[str]:
 def start_mod_context(entry: dict) -> dict:
     """Condition context at battle start (no target yet)."""
     return {
+        "owner_member": entry,
+        "party": entry.get("party") or [],
         "role": entry.get("role"),
         "owner_attrs": entry.get("attrs") or [],
         "attrs": entry.get("attrs") or [],
@@ -1537,17 +1666,25 @@ def apply_start_stat_mods(stats: dict, mods: list[dict], ctx: dict) -> dict:
     """Apply battle-long percentage stat modifiers (traits, research)."""
     out = dict(stats)
     for mod in mods:
-        if mod.get("code") not in ("stat_up", "stat_down"):
+        code = mod.get("code")
+        if code not in ("stat_up", "stat_down", "stat_flat"):
             continue
         if not conds_pass(mod.get("conds"), ctx):
             continue
         stat = mod.get("stat")
         if stat not in out:
             continue
-        value = int(mod.get("value", 0) or 0)
-        if mod.get("code") == "stat_down":
-            value = -value
-        out[stat] = max(int(out.get(stat, 0) * (1 + value / 10000)), MIN_BATTLE_STAT)
+        value = modifier_value(mod, ctx)
+        direction = int(mod.get("direction", 1) or 1)
+        if code == "stat_flat":
+            out[stat] = max(int(out.get(stat, 0) + direction * value), MIN_BATTLE_STAT)
+        else:
+            if code == "stat_down":
+                direction = -1
+            out[stat] = max(
+                int(out.get(stat, 0) * (1 + direction * value / 10000)),
+                MIN_BATTLE_STAT,
+            )
     return out
 
 
@@ -1846,6 +1983,18 @@ class BattleSim:
         self.profile_plaintext = profile_plaintext
         self.field_effect: int | None = None
         self.finish_bundle: dict = {}
+        self.party_context = [
+            {
+                "tags": list(
+                    entry.get("tags")
+                    or (entry.get("master") or {}).get("tag_ids")
+                    or []
+                ),
+                "role": entry.get("role"),
+                "attrs": list(entry.get("attrs") or []),
+            }
+            for entry in party_members
+        ]
         self.leader_master: dict = {}
         for entry in party_members:
             if entry.get("leader"):
@@ -1856,6 +2005,29 @@ class BattleSim:
         for member in self.members.values():
             if member["side"] == 0:
                 member["mods"].extend(self.staged_party_mods)
+        party_stat_mods = [
+            mod
+            for mod in self.staged_party_mods
+            if mod.get("code") in ("stat_up", "stat_down", "stat_flat")
+        ]
+        if party_stat_mods:
+            for member in self.members.values():
+                if member["side"] != 0:
+                    continue
+                ctx = mod_context(self, member, None, None)
+                updated = apply_start_stat_mods(
+                    {
+                        "speed": member["speed"],
+                        "attack": member["attack"],
+                        "magic": member["magic"],
+                        "defense": member["defense"],
+                        "mental": member["mental"],
+                    },
+                    party_stat_mods,
+                    ctx,
+                )
+                for stat in ("speed", "attack", "magic", "defense", "mental"):
+                    member[stat] = updated[stat]
         self.staged_party_mods = []
         for member in self.members.values():
             if member["side"] == 0:
@@ -1935,16 +2107,29 @@ class BattleSim:
         triggers: list[dict] = []
         for equipped in entry.get("equipment", []):
             mods.extend(trait_mods(self.game_dir, entry.get("equipment_trait_rows") or {}, equipped.get("traits") or []))
-        own, party, trigs = ability_parsed_parts(
-            self.game_dir, (entry.get("memoria_ability_ids") or []) + (entry.get("character_ability_ids") or []))
-        mods.extend(own)
-        staged_party.extend(party)
-        triggers.extend(trigs)
+        memoria_ability_ids = list(
+            entry.get("memoria_ability_ids") or entry.get("abilities") or []
+        )
+        character_ability_ids = list(entry.get("character_ability_ids") or [])
+        memoria_own, memoria_party, memoria_triggers = ability_parsed_parts(
+            self.game_dir, memoria_ability_ids
+        )
+        character_own, character_party, character_triggers = ability_parsed_parts(
+            self.game_dir, character_ability_ids
+        )
+        mods.extend(memoria_own)
+        mods.extend(character_own)
+        staged_party.extend(memoria_party)
+        staged_party.extend(character_party)
+        triggers.extend(memoria_triggers)
+        triggers.extend(character_triggers)
         leader_mods, leader_trigs = leader_mods_for_member(self.game_dir, self.leader_master, entry)
         mods.extend(leader_mods)
         triggers.extend(leader_trigs)
         self.staged_party_mods.extend(staged_party)
-        start_stats = apply_start_stat_mods(stats, mods, start_mod_context(entry))
+        start_context = start_mod_context(entry)
+        start_context["party"] = self.party_context
+        start_stats = apply_start_stat_mods(stats, mods, start_context)
         start_stats = apply_start_stat_mods(
             start_stats,
             research_start_mods(self.game_dir, self.profile_plaintext, entry), start_mod_context(entry))
@@ -1964,6 +2149,9 @@ class BattleSim:
             "id": member_id,
             "side": 0,
             "character_id": entry["character_id"],
+            "character_record": record,
+            "base_master": entry.get("base_master") or master,
+            "current_master": master,
             "current_character_id": int(
                 entry.get("current_character_id", entry["character_id"])
                 or entry["character_id"]
@@ -1995,6 +2183,11 @@ class BattleSim:
             "mods": mods,
             "triggers": triggers,
             "trigger_uses": {},
+            "memoria_ability_ids": memoria_ability_ids,
+            "character_ability_ids": character_ability_ids,
+            "character_ability_mods": character_own,
+            "character_ability_party_mods": character_party,
+            "character_ability_triggers": character_triggers,
             "lamp_lit": {},
             "lamp_bonus": collect_lamp_bonus(triggers, rank2),
             "pioneer": any(m.get("code") == "pioneer" for m in mods),
@@ -2097,7 +2290,9 @@ def skill_ids_for_character(record: bytes, master: dict) -> dict[int, int]:
     profile fields 8/9 (1-based index into the 5-entry tables). Burst
     follows rarity: the 7-entry tables hold the same id three times for
     rarity 1-3, then one id per rarity 4/5/6/7, so index rarity-1 (capped).
-    Season2 captures confirm rarity 7 uses the last entry.
+    Evolution flags are independent: fields 31/32/33 select normal1/normal2/
+    burst evolved tables respectively. Season2 captures confirm rarity 7 uses
+    the last burst entry.
     """
     normal1 = master.get("normal1_skill_ids") or []
     normal2 = master.get("normal2_skill_ids") or []
@@ -2108,16 +2303,105 @@ def skill_ids_for_character(record: bytes, master: dict) -> dict[int, int]:
     rank1 = max(varint_field(record, 8, 1), 1)
     rank2 = max(varint_field(record, 9, 1), 1)
     rarity = max(varint_field(record, 11, 1), 1)
-    use_evolved = bool(varint_field(record, 33, 0))
-    table1 = evolved1 if (use_evolved and evolved1) else normal1
-    table2 = evolved2 if (use_evolved and evolved2) else normal2
-    table3 = evolved_burst if (use_evolved and evolved_burst) else burst
+    use_evolved1 = bool(varint_field(record, 31, 0))
+    use_evolved2 = bool(varint_field(record, 32, 0))
+    use_evolved_burst = bool(varint_field(record, 33, 0))
+    table1 = evolved1 if (use_evolved1 and evolved1) else normal1
+    table2 = evolved2 if (use_evolved2 and evolved2) else normal2
+    table3 = evolved_burst if (use_evolved_burst and evolved_burst) else burst
     burst_index = min(max(rarity - 1, 0), len(table3) - 1) if table3 else 0
     return {
         1: table1[min(rank1, len(table1)) - 1] if table1 else 0,
         2: table2[min(rank2, len(table2)) - 1] if table2 else 0,
         3: table3[burst_index] if table3 else 0,
     }
+
+
+def character_ability_ids_for_record(record: bytes, master: dict) -> list[int]:
+    """Return base abilities and gate the evolved passive on a 6-star record.
+
+    Characters with ``all_skill_evolved_ability_ids`` place those IDs in the
+    ordinary ability list as well. They become active only at rarity 8 after
+    normal1, normal2, and burst have each been evolved.
+    """
+    ability_ids = list(dict.fromkeys(int(value) for value in master.get("ability_ids") or []))
+    evolved_ability_ids = list(
+        dict.fromkeys(
+            int(value) for value in master.get("all_skill_evolved_ability_ids") or []
+        )
+    )
+    if not evolved_ability_ids:
+        return ability_ids
+
+    all_skills_evolved = int(varint_field(record, 11, 1) or 1) >= 8 and all(
+        bool(varint_field(record, field_number, 0))
+        for field_number in (31, 32, 33)
+    )
+    if not all_skills_evolved:
+        return [ability_id for ability_id in ability_ids if ability_id not in evolved_ability_ids]
+    return list(dict.fromkeys([*ability_ids, *evolved_ability_ids]))
+
+
+def refresh_character_ability_state(
+    sim: "BattleSim", actor: dict, master: dict
+) -> list[int]:
+    """Replace character-sourced passives when an actor changes form.
+
+    Memoria, equipment, emblem, and leader effects are kept intact. Party-wide
+    character passives are replaced on every ally, while the transformed
+    actor receives the new form's own mods and triggers.
+    """
+    record = actor.get("character_record") or b""
+    ability_ids = character_ability_ids_for_record(record, master)
+    own, party, triggers = ability_parsed_parts(sim.game_dir, ability_ids)
+
+    old_own_ids = {
+        id(mod) for mod in actor.get("character_ability_mods", [])
+    }
+    old_party_ids = {
+        id(mod) for mod in actor.get("character_ability_party_mods", [])
+    }
+    actor["mods"] = [
+        mod for mod in actor.get("mods", []) if id(mod) not in old_own_ids
+    ]
+    for member in sim.members.values():
+        if member.get("side") != 0:
+            continue
+        member["mods"] = [
+            mod for mod in member.get("mods", []) if id(mod) not in old_party_ids
+        ]
+        member["mods"].extend(party)
+    actor["mods"].extend(own)
+
+    old_trigger_ids = {
+        id(trigger) for trigger in actor.get("character_ability_triggers", [])
+    }
+    old_uses = actor.get("trigger_uses", {})
+    new_triggers = []
+    new_uses = {}
+    for index, trigger in enumerate(actor.get("triggers", [])):
+        if id(trigger) in old_trigger_ids:
+            continue
+        new_index = len(new_triggers)
+        new_triggers.append(trigger)
+        if index in old_uses:
+            new_uses[new_index] = old_uses[index]
+    new_triggers.extend(triggers)
+
+    actor["character_ability_ids"] = ability_ids
+    actor["character_ability_mods"] = own
+    actor["character_ability_party_mods"] = party
+    actor["character_ability_triggers"] = triggers
+    actor["triggers"] = new_triggers
+    actor["trigger_uses"] = new_uses
+    actor["lamp_bonus"] = collect_lamp_bonus(
+        new_triggers, max(int(actor.get("skill_rank2", 1) or 1), 1)
+    )
+    actor["pioneer"] = any(
+        mod.get("code") == "pioneer" for mod in actor.get("mods", [])
+    )
+    actor["current_master"] = master
+    return ability_ids
 
 
 def extra_skill_for_character(master: dict, rank2: int) -> int:
@@ -2151,6 +2435,115 @@ def active_skill_ids_for_character(master: dict) -> dict[int, int]:
         if skill_id:
             out[slot] = int(skill_id)
     return out
+
+
+FORM_SKILL_TABLES = {
+    1: ("normal1_skill_ids", "evolved_normal1_skill_ids"),
+    2: ("normal2_skill_ids", "evolved_normal2_skill_ids"),
+    3: ("burst_skill_ids", "evolved_burst_skill_ids"),
+}
+
+
+def lamp_transform_return_details(
+    sim: "BattleSim",
+    actor: dict,
+    skill_type: int,
+    skill_id: int,
+) -> dict | None:
+    """Resolve a captured full-lamp Skill 2 return to its base character form.
+
+    The awakened character master stores the destination in the base row's
+    ``change`` record. Captures show that when the transformed-form Skill 2
+    reaches its lamp maximum, the next Skill 2 resolves with the base form's
+    rank-matched skill and clears ``after_change_character_id``.
+    """
+    if int(skill_type) != 2:
+        return None
+    base_id = int(actor.get("after_change_character_id", 0) or 0)
+    current_id = int(actor.get("current_character_id", 0) or 0)
+    if not base_id or current_id == base_id:
+        return None
+
+    characters = prog_table(sim.game_dir, "character")
+    base_master = actor.get("base_master") or characters.get(str(base_id), {})
+    current_master = actor.get("current_master") or characters.get(str(current_id), {})
+    change = base_master.get("change") or {}
+    if (
+        int(change.get("character_id", 0) or 0) != current_id
+        or int(change.get("skill_type", 0) or 0) != int(skill_type)
+        or not bool(change.get("before_skill"))
+    ):
+        return None
+
+    skill_info = combat_map(sim.game_dir).get("skills", {}).get(str(skill_id), {})
+    lamp_max = int(skill_info.get("lamp_max", 0) or 0)
+    lamp_count = int((actor.get("lamp_lit") or {}).get(skill_id, 0) or 0)
+    if not skill_info.get("transform") or lamp_max <= 0 or lamp_count < lamp_max:
+        return None
+
+    record = actor.get("character_record") or b""
+    base_skills = skill_ids_for_character(record, base_master)
+    current_skills = actor.get("skills") or {}
+    for current_type, (normal_name, evolved_name) in FORM_SKILL_TABLES.items():
+        current_skill_id = int(current_skills.get(current_type, 0) or 0)
+        if not current_skill_id:
+            continue
+        for current_table_name, base_table_name in (
+            (evolved_name, evolved_name),
+            (normal_name, normal_name),
+        ):
+            current_table = current_master.get(current_table_name) or []
+            base_table = base_master.get(base_table_name) or []
+            try:
+                rank_index = [int(value) for value in current_table].index(
+                    current_skill_id
+                )
+            except ValueError:
+                continue
+            if rank_index < len(base_table):
+                base_skills[current_type] = int(base_table[rank_index])
+                break
+
+    base_skill_id = int(base_skills.get(skill_type, 0) or 0)
+    if not base_skill_id:
+        return None
+    return {
+        "base_id": base_id,
+        "base_master": base_master,
+        "base_skills": base_skills,
+        "base_skill_id": base_skill_id,
+    }
+
+
+def apply_lamp_transform_return(
+    sim: "BattleSim", actor: dict, details: dict
+) -> int:
+    """Switch the actor back to its base form before resolving the charged skill."""
+    base_master = details["base_master"]
+    base_skills = details["base_skills"]
+    actor["current_character_id"] = int(details["base_id"])
+    actor["after_change_character_id"] = None
+    actor["current_master"] = base_master
+    actor["base_master"] = base_master
+    actor["skills"] = dict(base_skills)
+    actor["active_skills"] = active_skill_ids_for_character(base_master)
+    skill_table = battle_table(sim.game_dir, "skill")
+    actor["active_rest"] = {
+        int(slot): int(skill_table.get(str(skill_id), {}).get("limit", 0) or 0)
+        for slot, skill_id in actor["active_skills"].items()
+        if int(skill_table.get(str(skill_id), {}).get("limit", 0) or 0) > 0
+    }
+    actor["extra_skill"] = extra_skill_for_character(
+        base_master, max(int(actor.get("skill_rank2", 1) or 1), 1)
+    )
+    actor["role"] = base_master.get("role", actor.get("role"))
+    actor["attrs"] = character_elements(base_master)
+    actor["tags"] = list(base_master.get("tag_ids") or [])
+    refresh_character_ability_state(sim, actor, base_master)
+    actor["lamp_lit"] = {}
+    actor["skill_lamps"] = {}
+    actor["transformed"] = False
+    return int(details["base_skill_id"])
 
 
 def skill_targets(skill: dict, actor: dict, sim: "BattleSim", main_target: int | None) -> list[dict]:
@@ -2343,18 +2736,28 @@ def apply_skill_effects(
                 eligible.append(target)
 
         applied: dict[int, dict | None] = {}
-        code = parsed.get("code")
         effect_record_targets = list(targets)
+        code = parsed.get("code")
+        if eligible and parsed.get("target") in ("self", "all_allies", "all_enemies"):
+            eligible = skill_effect_targets(sim, actor, eligible, parsed)
+            effect_record_targets = eligible
         if effect_id in (6001150, 6001151):
             # Captured Battle Tool effects increase defense against two hits.
             for target in eligible:
-                target["buffs"].append({"id": effect_id, "value": -value,
-                                        "rest": 2, "kind": "taken", "display": False})
+                target["buffs"].append({
+                    "id": effect_id,
+                    "value": -value,
+                    "rest": None,
+                    "hits": 2,
+                    "kind": "taken",
+                    "display": False,
+                })
                 applied[target["id"]] = None
         elif effect_id == 6001256:
             for target in eligible:
                 target["buffs"].append({"id": effect_id, "value": value,
-                                        "rest": 2, "kind": "out", "display": False})
+                                        "rest": 2, "duration_phase": "end",
+                                        "kind": "out", "display": False})
                 applied[target["id"]] = None
         elif info is not None:
             state_info = state_kind(sim.game_dir, effect_id)
@@ -2516,13 +2919,18 @@ def grant_parsed_slot_buff(sim: "BattleSim", actor: dict, target: dict,
             buff["attr"] = parsed.get("attr", "unknown")
         if kind == "reflect":
             buff["reflect"] = parsed.get("reflect", "any")
-    owner = target if parsed.get("foe") else actor
+    owner = (
+        target
+        if parsed.get("foe")
+        or parsed.get("target") in ("self", "all_allies", "all_enemies")
+        else actor
+    )
     if not owner.get("alive"):
         return None
     dur_actions = int(parsed.get("dur_actions", 0) or 0)
     dur_hits = int(parsed.get("dur_hits", 0) or 0)
-    if dur_actions:
-        buff["rest"] = dur_actions
+    buff["rest"] = buff_rest(dur_actions, dur_hits, default=2)
+    buff["duration_phase"] = parsed.get("dur_action_phase") or "end"
     if dur_hits:
         buff["hits"] = dur_hits
     owner["buffs"].append(buff)
@@ -2535,10 +2943,11 @@ def direction_sign(parsed: dict) -> int:
 
 def grant_state_buff(sim: "BattleSim", actor: dict, target: dict, state_id: int,
                      value: int, parsed: dict | None = None) -> dict | None:
-    """Grant one state-table buff with potency, duration, and ailment rolls.
+    """Grant a state-table buff with potency, duration, and stack limits.
 
     Returns the granted buff dict for effect-result linkage, or None when
-    the application roll fails (ailments) or the state is unknown.
+    the application roll fails (ailments) or the state is unknown. Value caps
+    merge into an existing instance; stack_max keeps separate instances.
     """
     kind_info = state_kind(sim.game_dir, state_id)
     kind = kind_info.get("kind", "special")
@@ -2547,7 +2956,15 @@ def grant_state_buff(sim: "BattleSim", actor: dict, target: dict, state_id: int,
     state_effect = kind_info.get("effect", {})
     parsed = parsed if parsed is not None else parsed_effect(sim.game_dir, state_id)
     metadata = dict(state_effect)
-    for key in ("rate", "cap", "stack_max", "dur_actions", "dur_hits", "perm"):
+    for key in (
+        "rate",
+        "cap",
+        "stack_max",
+        "dur_actions",
+        "dur_action_phase",
+        "dur_hits",
+        "perm",
+    ):
         if parsed.get(key):
             metadata[key] = parsed[key]
     metadata["fixed"] = bool(state_effect.get("fixed") or parsed.get("fixed"))
@@ -2567,6 +2984,7 @@ def grant_state_buff(sim: "BattleSim", actor: dict, target: dict, state_id: int,
         "id": state_id,
         "value": direction * magnitude,
         "rest": 2,
+        "duration_phase": metadata.get("dur_action_phase") or "end",
         "kind": kind,
         "display": True,
         "unremovable": bool(kind_info.get("unremovable")),
@@ -2586,19 +3004,60 @@ def grant_state_buff(sim: "BattleSim", actor: dict, target: dict, state_id: int,
         buff["conds"] = state_effect["conds"]
     dur_actions = int(metadata.get("dur_actions", 0) or 0)
     dur_hits = int(metadata.get("dur_hits", 0) or 0)
-    if dur_actions:
-        buff["rest"] = dur_actions
+    buff["rest"] = buff_rest(
+        dur_actions,
+        dur_hits,
+        permanent=bool(metadata.get("perm")),
+        default=2,
+    )
     if dur_hits:
         buff["hits"] = dur_hits
-    if metadata.get("perm"):
-        buff["rest"] = None
-    cap = int(metadata.get("cap", 0) or 0)
+    stack_max = int(metadata.get("stack_max", 0) or 0)
+    if stack_max:
+        buff["stack_max"] = stack_max
+    cap = int(metadata.get("cap", 0) or 0) * 100
     if cap:
         buff["cap"] = cap
     if kind == "delay_turn_attack":
         buff["delay_turns"] = timeline_shift_count(magnitude, state_effect)
         buff["rest"] = None
-    target["buffs"].append(buff)
+    summary_delta = int(buff["value"])
+    if stack_max:
+        existing_stacks = [
+            current
+            for current in target.get("buffs", [])
+            if int(current.get("id", 0) or 0) == state_id
+        ]
+        if len(existing_stacks) >= stack_max:
+            replaced = existing_stacks[0]
+            summary_delta -= int(replaced.get("value", 0) or 0)
+            target["buffs"][target["buffs"].index(replaced)] = buff
+        else:
+            target["buffs"].append(buff)
+    elif cap:
+        existing = next(
+            (
+                current
+                for current in target.get("buffs", [])
+                if int(current.get("id", 0) or 0) == state_id
+            ),
+            None,
+        )
+        if existing is None:
+            buff["value"] = max(min(int(buff["value"]), cap), -cap)
+            summary_delta = int(buff["value"])
+            target["buffs"].append(buff)
+        else:
+            old_value = int(existing.get("value", 0) or 0)
+            existing["value"] = max(
+                min(old_value + int(buff["value"]), cap),
+                -cap,
+            )
+            summary_delta = int(existing["value"]) - old_value
+            existing.update({key: value for key, value in buff.items() if key != "value"})
+            buff = existing
+    else:
+        target["buffs"].append(buff)
     summary_id = {"skill_damage": 1}.get(kind)
     if summary_id is not None:
         summaries = target.setdefault("state_change_summaries", [])
@@ -2615,7 +3074,7 @@ def grant_state_buff(sim: "BattleSim", actor: dict, target: dict, state_id: int,
             summaries.append(summary)
             summaries.sort(key=lambda item: int(item.get("id", 0) or 0))
         else:
-            summary["value"] = int(summary.get("value", 0) or 0) + int(buff["value"])
+            summary["value"] = int(summary.get("value", 0) or 0) + summary_delta
     return buff
 
 
@@ -2769,9 +3228,13 @@ def apply_attack_delay_states(sim: BattleSim, actor: dict, targets: list[dict],
     return shifted
 
 
-def tick_buffs(member: dict) -> None:
+def tick_buffs(member: dict, phase: str = "end") -> None:
+    """Consume action-count durations at their master-specified phase."""
     kept = []
     for buff in member.get("buffs", []):
+        if buff.get("duration_phase", "end") != phase:
+            kept.append(buff)
+            continue
         rest = buff.get("rest", 1)
         if rest is None:
             kept.append(buff)
@@ -2784,7 +3247,7 @@ def tick_buffs(member: dict) -> None:
 
 
 def tick_hit_buffs(member: dict) -> None:
-    """Consume use-limited (N hits taken) buffs after the owner takes a hit."""
+    """Consume use-limited buffs after an attack reaches the owner."""
     kept = []
     for buff in member.get("buffs", []):
         hits = buff.get("hits")
@@ -2896,6 +3359,7 @@ def apply_hit(
             chance = chance / 100 if chance > 1000 else chance
             if sim.rng.uniform(0, 100) < chance:
                 result["miss"] = True
+                tick_hit_buffs(target)
                 return result
             break
     force_crit = panel == 30 or has_ailment(target, "frozen")
@@ -2964,6 +3428,7 @@ def apply_hit(
         if buff.get("kind") == "null_damage":
             if damage <= target.get("max_hp", 0) * 0.25:
                 result["invalid"] = True
+                tick_hit_buffs(target)
                 return result
             break
     barrier_blocked = 0
@@ -3033,8 +3498,18 @@ def apply_hit(
                 continue
             if not conds_pass(mod.get("conds"), ctx):
                 continue
-            grant = {"id": 0, "value": int(mod.get("value", 0) or 0), "rest": 2,
-                     "kind": "resist_elem", "attr": mod.get("attr", "unknown"), "display": False}
+            grant = {
+                "id": 0,
+                "value": int(mod.get("value", 0) or 0),
+                "rest": buff_rest(
+                    int(mod.get("dur_actions", 0) or 0),
+                    int(mod.get("dur_hits", 0) or 0),
+                ),
+                "duration_phase": mod.get("dur_action_phase") or "end",
+                "kind": "resist_elem",
+                "attr": mod.get("attr", "unknown"),
+                "display": False,
+            }
             if int(mod.get("dur_hits", 0) or 0):
                 grant["hits"] = int(mod["dur_hits"])
             target["buffs"].append(grant)
@@ -3043,9 +3518,18 @@ def apply_hit(
                 continue
             if not conds_pass(mod.get("conds"), ctx):
                 continue
-            target["buffs"].append({"id": 0, "value": int(mod.get("value", 0) or 0), "rest": 2,
-                                    "kind": "resist_down", "attr": mod.get("attr", "unknown"),
-                                    "display": False})
+            target["buffs"].append({
+                "id": 0,
+                "value": int(mod.get("value", 0) or 0),
+                "rest": buff_rest(
+                    int(mod.get("dur_actions", 0) or 0),
+                    int(mod.get("dur_hits", 0) or 0),
+                ),
+                "duration_phase": mod.get("dur_action_phase") or "end",
+                "kind": "resist_down",
+                "attr": mod.get("attr", "unknown"),
+                "display": False,
+            })
         for mod in actor.get("mods", []):
             if mod.get("code") not in ("target_debuff", "taken_break", "taken_crit_damage"):
                 continue
@@ -3058,8 +3542,20 @@ def apply_hit(
                             "taken_break", "taken_crit_damage"):
                 continue
             value = int(mod.get("direction", -1) or -1) * abs(int(mod.get("value", 0) or 0))
-            target["buffs"].append({"id": 0, "value": value, "rest": 2,
-                                    "kind": kind, "display": False})
+            grant = {
+                "id": 0,
+                "value": value,
+                "rest": buff_rest(
+                    int(mod.get("dur_actions", 0) or 0),
+                    int(mod.get("dur_hits", 0) or 0),
+                ),
+                "duration_phase": mod.get("dur_action_phase") or "end",
+                "kind": kind,
+                "display": False,
+            }
+            if int(mod.get("dur_hits", 0) or 0):
+                grant["hits"] = int(mod["dur_hits"])
+            target["buffs"].append(grant)
     if has_ailment(target, "sleep"):
         remove_ailments(target, {"sleep"})
     if target["side"] == 0 and damage > 0:
@@ -3247,12 +3743,96 @@ def apply_post_behaviors(sim: "BattleSim", actor: dict, skill_id: int,
             for member in sim.alive_allies():
                 heal = heal_member(sim, member, int(member.get("max_hp", 0) * pct_heal_fraction(value)))
                 extra_results.append({"target": member["id"], "heal": heal})
+        elif code == "post_magic_up_allies":
+            stat = behavior.get("stat", "magic")
+            effect_id = int(behavior.get("effect_id", 0) or 0)
+            cap = int(behavior.get("cap", 0) or 0)
+            for member in sim.alive_allies():
+                current = sum(
+                    int(buff.get("value", 0) or 0)
+                    for buff in member.get("buffs", [])
+                    if buff.get("kind") == "stat"
+                    and buff.get("stat") == stat
+                    and int(buff.get("source_effect_id", 0) or 0) == effect_id
+                )
+                applied = min(value, max(cap - current, 0)) if cap else value
+                if applied > 0:
+                    existing = next(
+                        (
+                            buff for buff in member.get("buffs", [])
+                            if buff.get("kind") == "stat"
+                            and buff.get("stat") == stat
+                            and int(buff.get("source_effect_id", 0) or 0) == effect_id
+                        ),
+                        None,
+                    )
+                    if existing is not None and cap:
+                        existing["value"] = current + applied
+                        if (
+                            behavior.get("perm")
+                            or behavior.get("dur_actions")
+                            or behavior.get("dur_hits")
+                        ):
+                            existing["rest"] = buff_rest(
+                                int(behavior.get("dur_actions", 0) or 0),
+                                int(behavior.get("dur_hits", 0) or 0),
+                                permanent=bool(behavior.get("perm")),
+                            )
+                            existing["duration_phase"] = (
+                                behavior.get("dur_action_phase") or "end"
+                            )
+                        if behavior.get("dur_hits"):
+                            existing["hits"] = int(behavior["dur_hits"])
+                    else:
+                        buff = {
+                            "id": 0,
+                            "source_effect_id": effect_id,
+                            "value": applied,
+                            "rest": buff_rest(
+                                int(behavior.get("dur_actions", 0) or 0),
+                                int(behavior.get("dur_hits", 0) or 0),
+                                permanent=bool(behavior.get("perm")),
+                            ),
+                            "duration_phase": behavior.get("dur_action_phase") or "end",
+                            "kind": "stat",
+                            "stat": stat,
+                            "display": False,
+                        }
+                        if behavior.get("dur_hits"):
+                            buff["hits"] = int(behavior["dur_hits"])
+                        member["buffs"].append(buff)
         elif code == "post_break_up_self":
-            actor["buffs"].append({"id": 0, "value": value, "rest": 2, "kind": "break_up", "display": False})
+            buff = {
+                "id": 0,
+                "value": value,
+                "rest": buff_rest(
+                    int(behavior.get("dur_actions", 0) or 0),
+                    int(behavior.get("dur_hits", 0) or 0),
+                ),
+                "duration_phase": behavior.get("dur_action_phase") or "end",
+                "kind": "break_up",
+                "display": False,
+            }
+            if behavior.get("dur_hits"):
+                buff["hits"] = int(behavior["dur_hits"])
+            actor["buffs"].append(buff)
         elif code == "post_taken_up_target":
             for target in targets:
                 if target.get("alive"):
-                    target["buffs"].append({"id": 0, "value": value, "rest": 2, "kind": "taken", "display": False})
+                    buff = {
+                        "id": 0,
+                        "value": value,
+                        "rest": buff_rest(
+                            int(behavior.get("dur_actions", 0) or 0),
+                            int(behavior.get("dur_hits", 0) or 0),
+                        ),
+                        "duration_phase": behavior.get("dur_action_phase") or "end",
+                        "kind": "taken",
+                        "display": False,
+                    }
+                    if behavior.get("dur_hits"):
+                        buff["hits"] = int(behavior["dur_hits"])
+                    target["buffs"].append(buff)
         elif code == "item_gauge":
             sim.party_gauge = min(sim.party_gauge + int(GAUGE_MAX * pct_heal_fraction(value)), GAUGE_MAX)
         elif code == "turn_swap" and targets:
@@ -3380,31 +3960,47 @@ def grant_panel_op(sim: "BattleSim", actor: dict, owners: list[dict], op: dict) 
     if code in (None, "unmapped", "unmapped_panel"):
         return
     value = int(op.get("text_value", 0) or 0) * 100
-    rest = int(op.get("dur_actions", 0) or 0) or 2
     hits = int(op.get("dur_hits", 0) or 0)
+    rest = buff_rest(int(op.get("dur_actions", 0) or 0), hits)
     for owner in owners:
         if not owner.get("alive"):
             continue
         if code in ("skill_damage", "skill_power", "crit_rate", "crit_damage",
                     "break_damage", "taken_break", "penetration"):
             owner["buffs"].append({"id": 0, "value": value, "rest": rest,
+                                   "duration_phase": op.get("dur_action_phase") or "end",
                                    "kind": code, "display": False})
             if hits:
                 owner["buffs"][-1]["hits"] = hits
         elif code == "taken_damage":
             direction = int(op.get("direction", -1))
             owner["buffs"].append({"id": 0, "value": direction * value, "rest": rest,
+                                   "duration_phase": op.get("dur_action_phase") or "end",
                                    "kind": "taken", "display": False})
             if hits:
                 owner["buffs"][-1]["hits"] = hits
         elif code in ("stat_up", "stat_down"):
-            stat = op.get("stat")
-            if stat == "spd":
-                owner["buffs"].append({"id": 0, "value": value if code == "stat_up" else -value,
-                                       "rest": rest, "kind": "speed", "display": False})
-            elif stat:
-                mult = 1 + (value if code == "stat_up" else -value) / 10000
-                owner[stat] = max(int(owner.get(stat, 0) * mult), MIN_BATTLE_STAT)
+            stat = {
+                "patk": "attack",
+                "matk": "magic",
+                "pdef": "defense",
+                "mdef": "mental",
+                "spd": "speed",
+            }.get(op.get("stat"), op.get("stat"))
+            if stat in ("attack", "magic", "defense", "mental", "speed"):
+                buff = {
+                    "id": 0,
+                    "value": value if code == "stat_up" else -value,
+                    "rest": rest,
+                    "duration_phase": op.get("dur_action_phase") or "end",
+                    "kind": "speed" if stat == "speed" else "stat",
+                    "display": False,
+                }
+                if stat != "speed":
+                    buff["stat"] = stat
+                if hits:
+                    buff["hits"] = hits
+                owner["buffs"].append(buff)
         elif code == "heal":
             frac = (value / 10000) if value else 0.25
             heal_member(sim, owner, int(owner.get("max_hp", 0) * frac))
@@ -3413,10 +4009,12 @@ def grant_panel_op(sim: "BattleSim", actor: dict, owners: list[dict], op: dict) 
             chance = ailment_application_chance(sim, actor, owner, ailment, int(op.get("rate", 95) or 95))
             if sim.rng.randint(1, 100) <= chance:
                 owner["buffs"].append({"id": 0, "value": value, "rest": rest,
+                                       "duration_phase": op.get("dur_action_phase") or "end",
                                        "kind": "ailment", "ailment": ailment, "display": False})
         elif code == "ailment_dot":
             ailment = op.get("ailment", "burn")
             owner["buffs"].append({"id": 0, "value": value, "rest": rest,
+                                   "duration_phase": op.get("dur_action_phase") or "end",
                                    "kind": "ailment", "ailment": ailment, "display": False})
 
 
@@ -3471,7 +4069,13 @@ def resolve_ally_action(
         for target in targets:
             if target.get("alive"):
                 target.setdefault("buffs", []).append({
-                    "id": 0, "value": value, "rest": 2,
+                    "id": 0,
+                    "value": value,
+                    "rest": buff_rest(
+                        int(behavior.get("dur_actions", 0) or 0),
+                        int(behavior.get("dur_hits", 0) or 0),
+                    ),
+                    "duration_phase": behavior.get("dur_action_phase") or "end",
                     "kind": "resist_down", "attr": attr, "display": False,
                 })
     category, elements = affinity_elements(skill.get("attrs") or [])
@@ -3630,8 +4234,13 @@ def build_resistance(res: dict) -> bytes:
 
 def build_state_change(buff: dict) -> bytes:
     out = bytearray(write_field(1, 0, buff["id"]))
-    if buff.get("rest"):
-        out.extend(write_field(3, 0, buff["rest"]))
+    remaining = [
+        int(buff[key])
+        for key in ("rest", "hits")
+        if buff.get(key) is not None and int(buff[key]) > 0
+    ]
+    if remaining:
+        out.extend(write_field(3, 0, min(remaining)))
     if buff.get("has_value", True):
         out.extend(write_field(4, 0, buff.get("value", 0)))
     if buff.get("target_id") is not None:
@@ -4454,6 +5063,12 @@ def build_setup(
             skill_id = effective_skill1(sim.game_dir, actor) or skill_id
         if skill_type == 2 and actor.get("extra_turn") and actor.get("extra_skill"):
             skill_id = actor["extra_skill"]
+        if skill_type == 2 and skill_id:
+            transform_return = lamp_transform_return_details(
+                sim, actor, skill_type, int(skill_id)
+            )
+            if transform_return is not None:
+                skill_id = int(transform_return["base_skill_id"])
         if not skill_id:
             continue
         if skill_type == 3 and int(actor.get("burst_gauge", 0) or 0) < burst_max(actor):
@@ -4917,6 +5532,7 @@ def do_action(
     tick_start_of_turn(sim, actor)
     if actor.get("alive"):
         fire_triggers(sim, "turn_start", actor, {})
+        tick_buffs(actor, phase="start")
     if not actor.get("alive"):
         blob = build_action(
             sim, sim.action_no + 1, actor, 0, skill_type, main_target,
@@ -5021,6 +5637,14 @@ def do_action(
                 skill_type = 1
             else:
                 burst_fired = True
+        if skill_type == 2 and skill_id:
+            transform_return = lamp_transform_return_details(
+                sim, actor, skill_type, int(skill_id)
+            )
+            if transform_return is not None:
+                skill_id = apply_lamp_transform_return(
+                    sim, actor, transform_return
+                )
         skill_info = combat_map(sim.game_dir).get("skills", {}).get(str(skill_id), {})
         lamp_max = max(int(skill_info.get("lamp_max", 0) or 0), 1)
         if skill_info.get("transform") and (actor.get("lamp_lit") or {}).get(skill_id, 0) >= lamp_max:
@@ -5933,7 +6557,9 @@ def load_party(game_dir: Path, profile_plaintext: bytes, party_number: int) -> t
                 "abilities": abilities,
                 "memoria_ability_ids": list(abilities),
                 "memoria_limit_break": varint_field(memoria_record, 3, 0) if memoria_record else 0,
-                "character_ability_ids": list(master.get("ability_ids") or []),
+                "character_ability_ids": character_ability_ids_for_record(
+                    char_record, master
+                ),
                 "equipment": equipment,
                 "equipment_abilities": equipment_abilities,
                 "equipment_trait_rows": equipment_trait_master,

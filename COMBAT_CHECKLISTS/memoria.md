@@ -34,9 +34,9 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 20006 | 世界を変える力 | The Power to Change the World | r2 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 20007 | わたしの目指すもの | What I'm Striving For | r2 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 20008 | 黄昏の大地を歩んで | Walking the Lands of Dusk | r2 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
-| 20009 | 黄昏の空を見上げて | Looking up At the Dusk Skies | r2 | Partial | done: growth+6 start stat buffs; 0/5 abilities parsed; missing: abilities not fully implemented 4990186, 4990182, 4990183, 4990184, 4990185; unsure: limit-break growth scaling unconfirmed |
+| 20009 | 黄昏の空を見上げて | Looking up At the Dusk Skies | r2 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 20010 | 黄昏の海に抱かれて | Embraced by the Dusk Sea | r2 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
-| 20011 | 私たちが紡ぐ物語 | The Tales We Weave | r2 | Partial | done: growth+6 start stat buffs; 0/5 abilities parsed; missing: abilities not fully implemented 4990123, 4990119, 4990120, 4990121, 4990122; unsure: limit-break growth scaling unconfirmed |
+| 20011 | 私たちが紡ぐ物語 | The Tales We Weave | r2 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 20012 | どこまでも続く世界 | The Infinite Horizon | r2 | Partial | done: growth+6 start stat buffs; 0/5 abilities parsed; missing: abilities not fully implemented 4990129, 4990125, 4990126, 4990127, 4990128; unsure: limit-break growth scaling unconfirmed |
 | 20013 | 双子が描く夢 | The Twins' Dream | r2 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 20014 | ひと夏の冒険へ | A Summer Adventure | r2 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
@@ -65,7 +65,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 30022 | 只今お仕事中！ | Hard at Work! | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30023 | パーティーにようこそ！ | Welcome to the Party! | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30024 | 花火を見上げて | Watching Fireworks | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
-| 30025 | 仮装でおでかけ！ | Dress-Up Outing! | r3 | Partial | done: growth+6 start stat buffs; 0/5 abilities parsed; missing: abilities not fully implemented 4990323, 4990324, 4990325, 4990326, 4990327; unsure: limit-break growth scaling unconfirmed |
+| 30025 | 仮装でおでかけ！ | Dress-Up Outing! | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30026 | イタズラの時間です | Time for Mischief | r3 | Partial | done: growth+6 start stat buffs; 0/5 abilities parsed; missing: abilities not fully implemented 4990328, 4990329, 4990330, 4990331, 4990332; unsure: limit-break growth scaling unconfirmed |
 | 30027 | 一日姉妹の休日 | Sisters for a Day | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30028 | 私たちのマスターピース | Our Masterpiece | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
@@ -73,7 +73,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 30030 | 新発見は止まらない | Endless Discoveries | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30031 | 星誕祭の夜に | Starbirth Festival Night | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30032 | 星の導きで運命を辿る者 | Destined by the Stars | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
-| 30033 | 月夜に暗躍する漆黒の影 | Ebony Shadows of a Moonlit Night | r3 | Partial | done: growth+6 start stat buffs; 0/5 abilities parsed; missing: abilities not fully implemented 4990363, 4990364, 4990365, 4990366, 4990367; unsure: limit-break growth scaling unconfirmed |
+| 30033 | 月夜に暗躍する漆黒の影 | Ebony Shadows of a Moonlit Night | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30034 | 冒険者たちの羽休め | Adventurer's Feathered Respite | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30035 | 新春に舞い踊る | Dance into the New Year | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |
 | 30036 | 初売りですよ！ | New Year Sale! | r3 | Implemented | done: growth+6 start stat buffs; 5/5 abilities parsed; unsure: limit-break growth scaling unconfirmed |

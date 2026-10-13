@@ -78,7 +78,7 @@ The package's `game-root\gacha-snapshot.json` carries the public banner/rate dat
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" "tools\JapaneseOffline\build_gacha_snapshot.py" "<private-session>" "resleriana-db-main\data\master\jp" "tools\JapaneseToolkit\share\game-root\gacha-snapshot.json"
 ```
 
-`progression-master` also contains Japanese `battle_tool.json`, `battle_tool_trait.json`, `equipment_tool.json`, `equipment_tool_trait.json`, `memoria_level.json`, `memoria_buff_growth.json`, `memoria.json`, `memoria_rarity.json`, `memoria_sp_bonus.json`, `trait_rank_total.json`, `ship_part.json`, `ship_level.json`, `ship_tool.json`, and `ship_tool_level.json` tables used by generated battle, tool-conversion, Memoria, and ship handlers. Keep these files synchronized across `dist`, share runtime/source, and the installed game.
+`progression-master` also contains Japanese `battle_tool.json`, `battle_tool_trait.json`, `character_skill_evolve.json`, `equipment_tool.json`, `equipment_tool_trait.json`, `memoria_level.json`, `memoria_buff_growth.json`, `memoria.json`, `memoria_rarity.json`, `memoria_sp_bonus.json`, `trait_rank_total.json`, `ship_part.json`, `ship_level.json`, `ship_tool.json`, and `ship_tool_level.json` tables used by generated battle, skill-evolution, tool-conversion, Memoria, and ship handlers. Keep these files synchronized across `dist`, share runtime/source, and the installed game.
 
 ## Non-Combat Gameplay Master
 

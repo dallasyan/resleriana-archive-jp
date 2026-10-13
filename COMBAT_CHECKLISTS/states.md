@@ -808,8 +808,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 610462 | 物防UP | P.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610463 | 魔防UP | M.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610464 | HP上限UP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 610465 | 物防UP | P.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610466 | 魔防UP | M.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 610465 | 物防UP | P.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; captured as two separate 4000-value stacks with rest counts 1/2; unsure: potency/stack refresh after the second stack is not captured |
+| 610466 | 魔防UP | M.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; captured as two separate 4000-value stacks with rest counts 1/2; unsure: potency/stack refresh after the second stack is not captured |
 | 610467 | 物防UP | P.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610468 | 魔防UP | M.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610469 | 物攻UP | P.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |

@@ -151,12 +151,18 @@ def parse_conditions(text: str) -> list:
 
 
 def parse_duration(text: str) -> dict:
-    out = {"dur_actions": 0, "dur_hits": 0, "perm": False}
+    out = {
+        "dur_actions": 0,
+        "dur_action_phase": None,
+        "dur_hits": 0,
+        "perm": False,
+    }
     if "永続" in text:
         out["perm"] = True
     match = re.search(r"([0-9]+)回行動(開始|終了)するまで", text)
     if match:
         out["dur_actions"] = int(match.group(1))
+        out["dur_action_phase"] = "start" if match.group(2) == "開始" else "end"
     match = re.search(r"([0-9]+)回攻撃を受けるまで", text)
     if match:
         out["dur_hits"] = int(match.group(1))
@@ -784,6 +790,9 @@ def parse_panel(row: dict) -> dict:
 
 QUOTED_BONUS_RE = re.compile(r"「([^」]*?)([+\-]){(\d+)}%?」?")
 UNQUOTED_BONUS_RE = re.compile(r"([^\s、；「」]+?)([+\-]){(\d+)}%?")
+RANGE_BONUS_RE = re.compile(
+    r"([^;；「」]*?)([+\-])([0-9]+)(%)?[～〜~]([0-9]+)(%)?"
+)
 UNQUOTED_HEAL_RE = re.compile(r"HPを{(\d+)}%回復")
 UNQUOTED_GAUGE_RE = re.compile(r"(アイテム|バースト)ゲージを{(\d+)}%?(回復|上昇)")
 HYPERLINK_RE = re.compile(r"\{hyperlink_id ([0-9]+)\}")
@@ -877,11 +886,12 @@ def parse_effect_en(text: str) -> dict:
     """
     raw = text or ""
     base: dict = {"rate": 100, "cap": 0, "stack_max": 0, "fixed": False,
-                  "text_value": 0, "conds": [], "dur_actions": 0, "dur_hits": 0,
-                  "perm": False}
+                  "text_value": 0, "conds": [], "dur_actions": 0,
+                  "dur_action_phase": None, "dur_hits": 0, "perm": False}
     match = re.search(r"for ([0-9]+) turns?", raw)
     if match:
         base["dur_actions"] = int(match.group(1))
+        base["dur_action_phase"] = "end"
     for role, code in EN_ROLES.items():
         if re.search(r"\b%s\b" % role, raw):
             base["conds"].append({"cond": "role", "role": code})
@@ -996,7 +1006,8 @@ def parse_ability_row(ability: dict, name_index: dict, hyperlinks: dict,
         for branch in branches:
             _parse_ability_branch(branch, conds_base=[], mods=mods, triggers=triggers,
                                   name_index=name_index, hyperlinks=hyperlinks,
-                                  lamp_ids=lamp_ids, value_at=value_at)
+                                  lamp_ids=lamp_ids, value_at=value_at,
+                                  scale_source=chunk)
     lamp_skills = [t.get("skill_variants") or [] for t in triggers if t.get("op") == "lamp_light"]
     for trigger in triggers:
         if trigger.get("op") == "lamp_bonus" and not trigger.get("skill_variants"):
@@ -1081,8 +1092,49 @@ def expand_or_branches(chunk: str) -> list:
     return branches
 
 
+def dynamic_range_scale(branch: str, conds: list) -> dict | None:
+    """Describe common passive ranges driven by party tags or owner speed."""
+    tag_condition = next(
+        (condition for condition in conds if condition.get("cond") == "tag_count"),
+        None,
+    )
+    people = re.search(r"([0-9]+)[～〜~]([0-9]+)人で多いほど増加", branch)
+    if tag_condition:
+        return {
+            "kind": "tag_count",
+            "tag": int(tag_condition.get("tag", 0) or 0),
+            "min_count": int(people.group(1)) if people else 1,
+            "max_count": int(people.group(2)) if people else 5,
+        }
+    speed = re.search(r"素早さ([0-9]+)[～〜~]([0-9]+)で多いほど増加", branch)
+    if speed:
+        return {
+            "kind": "speed",
+            "min_count": int(speed.group(1)),
+            "max_count": int(speed.group(2)),
+        }
+    return None
+
+
+def expand_dual_stat_entry(entry: dict, text: str) -> list[dict]:
+    """Split combined physical/magic stat bonuses into both stat slots."""
+    if entry.get("code") not in ("stat_up", "stat_down", "stat_flat"):
+        return [entry]
+    for first, second, first_stat, second_stat in (
+        ("物攻", "魔攻", "attack", "magic"),
+        ("物防", "魔防", "defense", "mental"),
+    ):
+        if first in text and second in text:
+            return [
+                {**entry, "stat": first_stat},
+                {**entry, "stat": second_stat},
+            ]
+    return [entry]
+
+
 def _parse_ability_branch(branch: str, conds_base: list, mods: list, triggers: list,
-                          name_index: dict, hyperlinks: dict, lamp_ids, value_at) -> None:
+                          name_index: dict, hyperlinks: dict, lamp_ids, value_at,
+                          scale_source: str | None = None) -> None:
     event, event_conds = detect_event(branch)
     conds = list(conds_base) + parse_conditions(branch) + event_conds
     scope = "self"
@@ -1130,10 +1182,11 @@ def _parse_ability_branch(branch: str, conds_base: list, mods: list, triggers: l
             triggers.append({"event": detect_event(branch)[0] or "pre_attack",
                              "conds": conds, "op": "lamp_scaled",
                              "skill_variants": variants, "code": parsed["code"],
-                             "direction": parsed.get("direction", 1),
-                             "lo_value": int(lo) * 100, "hi_value": int(hi) * 100,
-                             "dur_actions": parsed.get("dur_actions", 0) or 1,
-                             "dur_hits": parsed.get("dur_hits", 0)})
+                              "direction": parsed.get("direction", 1),
+                              "lo_value": int(lo) * 100, "hi_value": int(hi) * 100,
+                              "dur_actions": parsed.get("dur_actions", 0) or 1,
+                              "dur_action_phase": parsed.get("dur_action_phase"),
+                              "dur_hits": parsed.get("dur_hits", 0)})
     for link_id in HYPERLINK_RE.findall(branch):
         skill_id = hyperlinks.get(str(link_id))
         if not skill_id:
@@ -1155,9 +1208,17 @@ def _parse_ability_branch(branch: str, conds_base: list, mods: list, triggers: l
     if "パネル無効" in branch and "スキルランプ" not in branch:
         entry = {"code": "panel_null", "value": 0, "conds": conds, "scope": scope}
         if event is None:
-            mods.append(entry)
+            mods.extend(expand_dual_stat_entry(entry, branch))
         else:
-            triggers.append({"event": event, "conds": conds, "op": "buff", "buff": entry})
+            for variant in expand_dual_stat_entry(entry, branch):
+                triggers.append({
+                    "event": event,
+                    "conds": conds,
+                    "op": "buff",
+                    "buff": variant,
+                })
+    if "先駆け" in branch:
+        mods.append({"code": "pioneer", "value": 0, "conds": conds, "scope": scope})
     seen_segments = set()
     segments = [(s, g, n) for s, g, n in QUOTED_BONUS_RE.findall(branch)]
     for match in UNQUOTED_BONUS_RE.finditer(branch):
@@ -1176,22 +1237,128 @@ def _parse_ability_branch(branch: str, conds_base: list, mods: list, triggers: l
         parsed = mark_foe(parse_effect(seg + hint), branch)
         if parsed.get("code") in (None, "unmapped"):
             continue
+        cap_percent = find_number(r"上限([0-9]+)%", branch)
+        stack_max = find_number(r"上限([0-9]+)個", branch)
+        duration = parse_duration(branch)
+        if cap_percent:
+            parsed["cap"] = cap_percent * 100
+        elif parsed.get("cap"):
+            parsed["cap"] = int(parsed["cap"]) * 100
+        if stack_max:
+            parsed["stack_max"] = stack_max
+        for duration_field in (
+            "dur_actions", "dur_action_phase", "dur_hits", "perm"
+        ):
+            if duration.get(duration_field):
+                parsed[duration_field] = duration[duration_field]
+        if (cap_percent or stack_max) and not parsed.get("dur_actions") and not parsed.get("dur_hits"):
+            parsed["perm"] = True
         direction = -1 if sign == "-" else parsed.get("direction", 1)
         entry = {"code": parsed["code"], "value": value_at(int(num)),
-                 "conds": conds + (parsed.get("conds") or []),
-                 "direction": direction,
-                 "scope": scope,
-                 "foe": parsed.get("foe", False),
-                 "slot": parsed.get("slot"), "attr": parsed.get("attr"),
-                 "rate": parsed.get("rate", 100), "cap": parsed.get("cap", 0),
-                 "fixed": bool(parsed.get("fixed")),
-                 "dur_actions": parsed.get("dur_actions", 0),
-                 "dur_hits": parsed.get("dur_hits", 0),
-                 "perm": bool(parsed.get("perm"))}
+                  "conds": conds + (parsed.get("conds") or []),
+                  "direction": direction,
+                  "scope": scope,
+                  "stat": {
+                      "patk": "attack",
+                      "matk": "magic",
+                      "pdef": "defense",
+                      "mdef": "mental",
+                      "spd": "speed",
+                  }.get(parsed.get("stat"), parsed.get("stat")),
+                  "foe": parsed.get("foe", False),
+                  "slot": parsed.get("slot"), "attr": parsed.get("attr"),
+                  "rate": parsed.get("rate", 100), "cap": parsed.get("cap", 0),
+                  "stack_max": parsed.get("stack_max", 0),
+                  "fixed": bool(parsed.get("fixed")),
+                  "dur_actions": parsed.get("dur_actions", 0),
+                  "dur_action_phase": parsed.get("dur_action_phase"),
+                  "dur_hits": parsed.get("dur_hits", 0),
+                  "perm": bool(parsed.get("perm"))}
         if event is None:
             mods.append(entry)
         else:
             triggers.append({"event": event, "conds": conds, "op": "buff", "buff": entry})
+    for match in RANGE_BONUS_RE.finditer(branch):
+        source_text = scale_source or branch
+        source_conds = parse_conditions(source_text)
+        scale = dynamic_range_scale(source_text, conds + source_conds)
+        if scale is None:
+            continue
+        segment, sign, minimum, low_percent, maximum, high_percent = match.groups()
+        minimum_value = int(minimum)
+        maximum_value = int(maximum)
+        hint = "アップ" if sign == "+" else "ダウン"
+        parsed = mark_foe(parse_effect(segment + hint), branch)
+        if parsed.get("code") in (None, "unmapped"):
+            continue
+        if "基礎" in segment and parsed.get("code") in ("stat_up", "stat_down"):
+            parsed["code"] = "stat_flat"
+            parsed["stat"] = {
+                "patk": "attack",
+                "matk": "magic",
+                "pdef": "defense",
+                "mdef": "mental",
+            }.get(parsed.get("stat"), parsed.get("stat"))
+        multiplier = (
+            100
+            if (low_percent or high_percent) and parsed.get("code") != "stat_flat"
+            else 1
+        )
+        scale["min_value"] = minimum_value * multiplier
+        scale["max_value"] = maximum_value * multiplier
+        duration = parse_duration(branch)
+        if not (
+            duration.get("dur_actions")
+            or duration.get("dur_hits")
+            or duration.get("perm")
+        ):
+            duration = parse_duration(source_text)
+        cap_percent = find_number(r"上限([0-9]+)%", branch + source_text)
+        stack_max = find_number(r"上限([0-9]+)個", branch)
+        range_conds = list(conds)
+        for condition in source_conds:
+            if condition.get("cond") == "tag_count" and condition not in range_conds:
+                range_conds.append(condition)
+        entry = {
+            "code": parsed["code"],
+            "value": scale["min_value"],
+            "scale": scale,
+            "conds": range_conds + (parsed.get("conds") or []),
+            "direction": -1 if sign == "-" else parsed.get("direction", 1),
+            "scope": scope,
+            "stat": {
+                "patk": "attack",
+                "matk": "magic",
+                "pdef": "defense",
+                "mdef": "mental",
+                "spd": "speed",
+            }.get(parsed.get("stat"), parsed.get("stat")),
+            "foe": parsed.get("foe", False),
+            "slot": parsed.get("slot"),
+            "attr": parsed.get("attr"),
+            "rate": parsed.get("rate", 100),
+            "cap": cap_percent * 100 if cap_percent else 0,
+            "stack_max": stack_max,
+            "fixed": bool(parsed.get("fixed")),
+            "dur_actions": duration.get("dur_actions", 0),
+            "dur_action_phase": duration.get("dur_action_phase"),
+            "dur_hits": duration.get("dur_hits", 0),
+            "perm": bool(duration.get("perm")),
+        }
+        if (cap_percent or stack_max) and not entry["dur_actions"] and not entry["dur_hits"]:
+            entry["perm"] = True
+        range_event = event or detect_event(source_text)[0]
+        entries = expand_dual_stat_entry(entry, segment)
+        if range_event is None:
+            mods.extend(entries)
+        else:
+            for variant in entries:
+                triggers.append({
+                    "event": range_event,
+                    "conds": range_conds,
+                    "op": "buff",
+                    "buff": variant,
+                })
     for num in UNQUOTED_HEAL_RE.findall(branch):
         entry = {"code": "heal", "value": value_at(int(num)), "conds": list(conds),
                  "direction": 1, "scope": scope}
@@ -1407,10 +1574,11 @@ def main() -> int:
     # applies a family behavior only when the skill summary contains the
     # confirming clause keywords below.
     families = {
-        "91000925": ("post_heal_allies", ["攻撃後", "味方全員", "HPを回復"]),
+        "91000925": ("post_heal_allies", ["味方全員", "HPを回復"]),
         "91001007": ("cleanse_self_pre", ["攻撃前", "自身", "解除"]),
         "91001607": ("cleanse_self_pre", ["攻撃前", "自身", "解除"]),
-        "91002004": ("item_gauge", ["攻撃後", "アイテムゲージ"]),
+        "91001587": ("post_magic_up_allies", ["味方全員", "魔攻"]),
+        "91002004": ("item_gauge", ["アイテムゲージ"]),
         "91000904": ("atk_crit_damage", ["この攻撃の", "クリティカルダメージ"]),
         "91001378": ("atk_crit_damage", ["この攻撃の", "クリティカルダメージ"]),
         "91000907": ("weak_break_up", ["WEAK", "ブレイクダメージ"]),
@@ -1439,6 +1607,7 @@ def main() -> int:
         if not str(row.get("id"))[0] in "12":
             continue
         summary = row.get("summary") or ""
+        description = row.get("description") or ""
         behaviors = []
         effects_list = [{"id": str(e.get("id")), "value": e.get("value") or 0}
                         for e in row.get("effects") or []]
@@ -1460,7 +1629,34 @@ def main() -> int:
                 continue
             code, keywords = family
             if all(keyword in summary for keyword in keywords):
-                entry: dict = {"code": code, "value": effect.get("value") or 0}
+                full_text = summary + description
+                duration = parse_duration(full_text)
+                entry: dict = {
+                    "code": code,
+                    "value": effect.get("value") or 0,
+                    "effect_id": int(effect.get("id") or 0),
+                }
+                for duration_field in (
+                    "dur_actions",
+                    "dur_action_phase",
+                    "dur_hits",
+                    "perm",
+                ):
+                    if duration.get(duration_field):
+                        entry[duration_field] = duration[duration_field]
+                if code == "post_magic_up_allies":
+                    cap_match = re.search(r"上限([0-9]+)%", full_text)
+                    entry.update({
+                        "stat": "magic",
+                        "effect_id": int(effect.get("id") or 0),
+                        "cap": int(cap_match.group(1)) * 100 if cap_match else 0,
+                        "dur_actions": duration["dur_actions"],
+                        "dur_action_phase": duration["dur_action_phase"],
+                        "dur_hits": duration["dur_hits"],
+                        "perm": duration["perm"] or bool(
+                            cap_match and not duration["dur_actions"] and not duration["dur_hits"]
+                        ),
+                    })
                 if code == "pre_resist_down_target":
                     for name, attr in ATTRS.items():
                         if len(name) > 1 and name in summary:

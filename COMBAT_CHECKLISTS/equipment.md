@@ -215,8 +215,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 207 | メタルターナー | Metal Stirrer | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 208 | 羽根飾り | Feather Pin | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 209 | 羽根飾り | Feather Pin | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 210 | 神秘のタリスマン | Mystic Talisman | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300300; unsure: flat start stats, growth scaling unconfirmed |
-| 211 | 神秘のタリスマン | Mystic Talisman | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 300301; unsure: flat start stats, growth scaling unconfirmed |
+| 210 | 神秘のタリスマン | Mystic Talisman | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
+| 211 | 神秘のタリスマン | Mystic Talisman | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 212 | さすらい人の服 | Wanderer's Clothes | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 213 | さすらい人の服 | Wanderer's Clothes | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 214 | 薬草のポンチョ | Herbal Poncho | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |

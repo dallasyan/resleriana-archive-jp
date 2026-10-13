@@ -527,7 +527,7 @@ def main() -> int:
         "crit_damage", "break_damage", "taken_break", "taken_crit_damage",
         "penetration", "taken_damage", "burst_damage", "heal_given",
         "heal_received", "ailment", "resist_up", "resist_down",
-        "target_debuff",
+        "target_debuff", "stat_up", "stat_down",
     }
     KNOWN_COND_NAMES = {
         "role", "attr", "target_state", "target_broken", "hp_above",
@@ -640,13 +640,26 @@ def main() -> int:
                     handled.append("%s executes %s" % (label, code))
                 elif code in TRIGGER_GRANT_CODES:
                     handled.append("%s grants %s" % (label, code))
+                    if int(buff.get("cap", 0) or 0):
+                        handled.append("%s accumulates to cap %s" % (code, buff["cap"]))
+                    if int(buff.get("stack_max", 0) or 0):
+                        handled.append("%s stack limit %s" % (code, buff["stack_max"]))
                 else:
                     missing.append("%s buff %s ignored" % (label, code))
             elif not trigger_handled(trig):
                 missing.append("%s op ignored" % label)
             if event not in KNOWN_TRIGGER_EVENTS and event is not None:
                 unsure.append("%s event never fired" % label)
-            for flag in unsure_flags(trig.get("buff", {}) if isinstance(trig.get("buff"), dict) else {}):
+            buff = trig.get("buff", {}) if isinstance(trig.get("buff"), dict) else {}
+            flags = unsure_flags(buff)
+            if op == "buff" and buff.get("code") in TRIGGER_GRANT_CODES:
+                flags = [
+                    flag for flag in flags
+                    if not flag.startswith("cap ")
+                    and flag != "permanence"
+                    and flag != "durations"
+                ]
+            for flag in flags:
                 unsure.append("%s %s" % (label, flag))
             for cond in cond_names(trig.get("conds")):
                 if cond not in KNOWN_COND_NAMES:
@@ -685,14 +698,33 @@ def main() -> int:
             note = note[:cap_chars].rstrip() + "…"
         return note
 
-    # Full means every effect mapped, every parsed mod/trigger handled by
-    # the sim, AND any description parsed; anything less is Partial so
-    # missing parts stay visible per item.
+    def parsed_ability_covers_effect_values(aid: str, parsed: dict) -> bool:
+        """Recognize blank effect IDs whose values are parsed from the full description."""
+        ability = abilities.get(str(aid)) or {}
+        effect_rows = ability.get("effects") or []
+        if not effect_rows or not (ability.get("description") or "").strip():
+            return False
+        effect_values = sorted(int(row.get("value", 0) or 0) for row in effect_rows)
+        parsed_values = [
+            int(mod.get("value", 0) or 0)
+            for mod in parsed.get("mods", [])
+            if mod.get("value") is not None
+        ]
+        for trigger in parsed.get("triggers", []):
+            buff = trigger.get("buff") or {}
+            if buff.get("value") is not None:
+                parsed_values.append(int(buff.get("value", 0) or 0))
+            elif trigger.get("value") is not None:
+                parsed_values.append(int(trigger.get("value", 0) or 0))
+        return effect_values == sorted(parsed_values)
+
+    # Full means every effect is mapped or represented by a parsed description,
+    # every parsed mod/trigger is handled, and no description text is unparsed.
     def ability_full(aid: str) -> bool:
         parsed = ability_parsed.get(str(aid), {})
         fx = (abilities.get(str(aid)) or {}).get("effects") or []
         fx_mapped = sum(1 for e in fx if effects.get(str(e.get("id")), {}).get("code") != "unmapped")
-        if fx_mapped != len(fx):
+        if fx_mapped != len(fx) and not parsed_ability_covers_effect_values(aid, parsed):
             return False
         if any(not mod_handled(m) for m in parsed.get("mods", [])):
             return False
@@ -781,20 +813,48 @@ def main() -> int:
     BEHAVIOR_POST_CODES = {
         "post_heal_self", "post_heal_allies", "post_break_up_self",
         "post_taken_up_target", "pre_resist_down_target", "item_gauge",
-        "turn_swap", "cleanse_self_pre", "extra_turn_grant",
+        "post_magic_up_allies", "turn_swap", "cleanse_self_pre",
+        "extra_turn_grant",
     }
+    # Keep captured effect-to-state links in sync with battle_japanese.py.
+    CAPTURED_STATE_EFFECT_LINKS = {
+        (11001208, 91001270): (910039, "self"),
+        (14002180, 91001270): (910039, "self"),
+    }
+    for liebe_skill_id in range(12003638, 12003643):
+        CAPTURED_STATE_EFFECT_LINKS[(liebe_skill_id, 91002175)] = (610465, "all_allies")
+        CAPTURED_STATE_EFFECT_LINKS[(liebe_skill_id, 91002177)] = (610466, "all_allies")
     rows = []
     for sid in sorted([k for k in skills if k[:2] in ("11", "12", "14")], key=int):
         row = skills[sid]
         fx = row.get("effects") or []
+        beh = behaviors.get(sid, [])
         done, missing, unsure = [], [], []
         for e in fx:
             eid = str(e.get("id"))
             parsed = effects.get(eid, {})
             code = parsed.get("code", "unmapped")
             label = "%s:%s" % (eid, code)
+            captured_link = CAPTURED_STATE_EFFECT_LINKS.get((int(sid), int(eid)))
+            if captured_link is not None:
+                done.append(
+                    "%s grants captured state %s to %s"
+                    % (eid, captured_link[0], captured_link[1])
+                )
+                continue
             if code == "unmapped":
-                missing.append("%s unmapped" % eid)
+                covering_behavior = next(
+                    (
+                        behavior.get("code")
+                        for behavior in beh
+                        if str(behavior.get("effect_id")) == eid
+                    ),
+                    None,
+                )
+                if covering_behavior:
+                    done.append("%s resolved by behavior %s" % (eid, covering_behavior))
+                else:
+                    missing.append("%s unmapped" % eid)
                 continue
             if eid in states:
                 kind = (states.get(eid) or {}).get("kind", "special")
@@ -821,7 +881,6 @@ def main() -> int:
                     unsure.append("%s %s" % (label, flag))
             else:
                 missing.append("%s %s records-only" % (eid, code))
-        beh = behaviors.get(sid, [])
         for b in beh:
             code = b.get("code")
             if code in BEHAVIOR_DAMAGE_CODES:
@@ -878,6 +937,7 @@ def main() -> int:
         fx_ids = [str(e.get("id")) for e in fx]
         fx_unmapped = [i for i in fx_ids if effects.get(i, {}).get("code") == "unmapped"]
         fx_mapped = len(fx_ids) - len(fx_unmapped)
+        effects_from_description = parsed_ability_covers_effect_values(aid, parsed)
         done, missing, unsure = mod_gaps(mods)
         t_done, t_missing, t_unsure = trigger_gaps(trigs)
         done.extend(t_done)
@@ -885,7 +945,9 @@ def main() -> int:
         unsure.extend(t_unsure)
         if fx_mapped:
             done.append("%d/%d description effects mapped" % (fx_mapped, len(fx_ids)))
-        if fx_unmapped:
+        if fx_unmapped and effects_from_description:
+            done.append("blank effect IDs represented by parsed description values")
+        elif fx_unmapped:
             missing.append("unmapped effect ids %s" % fmt_ids(fx_unmapped))
         desc = ((abilities.get(str(aid)) or {}).get("description") or "").strip()
         if desc and not mods and not trigs:
@@ -1156,6 +1218,10 @@ def main() -> int:
     states = load(args.master, "state_change")
     state_rows = states if isinstance(states, list) else list(states.values())
     states_by_id = {str(row.get("id")): row for row in state_rows}
+    captured_stack_states = {
+        "610465": "captured as two separate 4000-value stacks with rest counts 1/2",
+        "610466": "captured as two separate 4000-value stacks with rest counts 1/2",
+    }
     rows = []
     for row in state_rows:
         sid = str(row.get("id"))
@@ -1194,7 +1260,11 @@ def main() -> int:
             "cleanse_turn_start",
         ):
             done.append("kind=%s applies its mapped combat slot/trigger" % kind)
-            unsure.append("grant value, remaining duration, and potency need capture confirmation")
+            if sid in captured_stack_states:
+                done.append(captured_stack_states[sid])
+                unsure.append("potency/stack refresh after the second stack is not captured")
+            else:
+                unsure.append("grant value, remaining duration, and potency need capture confirmation")
             if kind == "ailment":
                 unsure.append("ailment %s application roll" % (ailment or "unknown"))
             status = "Partial" if unsure else "Implemented"

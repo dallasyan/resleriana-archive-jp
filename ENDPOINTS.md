@@ -118,6 +118,14 @@ A separate local upgrade session added 23 progression operations. The raw sessio
 | `/character/level_limit_release` | 4 |
 | `/character/rarity_enhance` | 1 |
 
+## Supplemental Skill Evolution Capture
+
+Two local sessions recorded 45 `/character/skill_evolve` operations across 15 rarity-8 characters: 15 each for skill types 1, 2, and 3. The raw requests and profile snapshots remain private.
+
+| Endpoint | Captured operations |
+|---|---:|
+| `/character/skill_evolve` | 45 |
+
 ## Supplemental Ship and Equipment Progression Capture
 
 A local three-session Japanese capture on 2026-09-25 covered ship/subspace equipment and character/equipment/Memoria configuration. The captured profile snapshots remain private; only endpoint names and operation counts are tracked here.
@@ -185,6 +193,7 @@ A local Japanese session on 2026-09-25 recorded 24 pulls from one banner, three 
 | `/character/rarity_enhance` | Generated | Uses Japanese rarity/piece/additional-cost tables; updates character, pieces, Neo maximum page, items, Cole, awaken totals, and character-specific awaken tasks. |
 | `/character/enhancement_reset` | Generated | Captured level-only/full reset refunds EXP items, Cole, released panel costs, and mission progress. Resetting after level-limit release uses the Japanese step-cost table; that combined case is not separately captured. |
 | `/character/level_limit_release` | Generated | Applies the four Japanese item-cost steps and advances `level_limit_increase_value` by 2/3/2/3; persists changes. |
+| `/character/skill_evolve` | Generated (Japanese capture) | Requires raw rarity 8, validates skill type 1/2/3 and duplicate flags, consumes the character-specific Japanese master costs, updates only the selected skill flag, returns character/items in `ChangedResourcesResponse`, and persists. |
 | `/character/growboard_page_release` | Generated | Releases the next completed normal/EX/Neo page using wrapped Japanese `board_type` and `is_ex` fields. Normal and Neo page-release requests are captured. |
 | `/character/growboard_bulk_release` | Generated | Captured all three selections: normal `(1,false)`, EX `(1,true)`, Neo `(2,false)`. Applies 7/6/8-bit panels, costs, stats, role rates, Neo ability rank, and task progress. |
 | `/memoria/enhance` | Generated | Consumes EXP items/Memoria, applies Cole and EXP changes, reports deleted entities, and persists. |
@@ -384,6 +393,7 @@ Names below come from the installed client `contract-dump/fields.txt`. Shared re
 | `/exploration/skip` | `blend.api.ExplorationSkipRequest` | `blend.api.ExplorationSkipResponse` |
 | `/character/enhancement_reset` | `blend.api.CharacterEnhancementResetRequest` | `blend.api.CharacterEnhancementResetResponse` |
 | `/character/level_limit_release` | `blend.api.CharacterLevelLimitReleaseRequest` | `blend.api.ChangedResourcesResponse` |
+| `/character/skill_evolve` | `blend.api.CharacterSkillEvolveRequest` | `blend.api.ChangedResourcesResponse` |
 | `/character/bulk_set` | `blend.api.CharacterBulkSetRequest` | `blend.api.ChangedResourcesResponse` |
 | `/character/equip` | `blend.api.CharacterEquipRequest` | `blend.api.ChangedResourcesResponse` |
 | `/character/memoria_set` | `blend.api.CharacterMemoriaSetRequest` | `blend.api.ChangedResourcesResponse` |
@@ -428,7 +438,6 @@ These API messages are present in `fields.txt` but are not selected by the route
 - `blend.api.AuthSignUpGoogleResponse`
 - `blend.api.AuthSignUpPasscodeRequest`
 - `blend.api.AuthSignUpPasscodeResponse`
-- `blend.api.CharacterSkillEvolveRequest`
 - `blend.api.CharacterSkillLockReleaseRequest`
 - `blend.api.CharacterStoryClearRequest`
 - `blend.api.CharacterStoryClearResponse`

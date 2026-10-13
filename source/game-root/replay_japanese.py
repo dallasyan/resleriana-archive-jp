@@ -1806,6 +1806,23 @@ def is_character_rarity_enhance_request(data: bytes) -> bool:
     )
 
 
+def is_character_skill_evolve_request(data: bytes) -> bool:
+    try:
+        fields = read_wire_fields(data)
+    except ValueError:
+        return False
+    values: dict[int, int] = {}
+    for number, wire_type, value in fields:
+        if number not in (1, 2) or wire_type != 0 or number in values:
+            return False
+        values[number] = int(value)
+    return (
+        len(fields) == 2
+        and values.get(1, 0) > 0
+        and values.get(2, 0) in (1, 2, 3)
+    )
+
+
 def is_character_enhancement_reset_request(data: bytes) -> bool:
     try:
         fields = read_wire_fields(data)
@@ -2047,6 +2064,7 @@ def captured_response_material(
             "/ship/create": is_ship_create_request,
             "/character/enhance": is_character_enhance_request,
             "/character/rarity_enhance": is_character_rarity_enhance_request,
+            "/character/skill_evolve": is_character_skill_evolve_request,
             "/character/enhancement_reset": is_character_enhancement_reset_request,
             "/character/level_limit_release": is_character_level_limit_release_request,
             "/character/growboard_page_release": is_growboard_page_release_request,
@@ -3665,6 +3683,7 @@ class Replay:
         validators = {
             "/character/enhance": is_character_enhance_request,
             "/character/rarity_enhance": is_character_rarity_enhance_request,
+            "/character/skill_evolve": is_character_skill_evolve_request,
             "/character/enhancement_reset": is_character_enhancement_reset_request,
             "/character/level_limit_release": is_character_level_limit_release_request,
             "/character/growboard_page_release": is_growboard_page_release_request,
@@ -3860,6 +3879,81 @@ class Replay:
                 items=changed_items,
                 status=status,
                 total_task_counts=task_counts,
+            )
+
+        if path == "/character/skill_evolve":
+            character_id = varint_field(request_plaintext, 1, 0)
+            skill_type = varint_field(request_plaintext, 2, 0)
+            character = profile_resource_records(profile_plaintext, 2).get(character_id)
+            if character is None:
+                raise ValueError(f"profile has no character {character_id}")
+            character_master = progression_master_index("character").get(character_id)
+            if character_master is None:
+                raise ValueError(f"progression master has no character {character_id}")
+            current_rarity = varint_field(
+                character,
+                11,
+                int(character_master.get("initial_rarity", 1)),
+            )
+            if int(character_master.get("max_rarity", 0)) < 8 or current_rarity < 8:
+                raise ValueError(
+                    f"character {character_id} must reach rarity 8 before skill evolution"
+                )
+
+            evolution_master = next(
+                (
+                    record
+                    for record in progression_master_index("character_skill_evolve").values()
+                    if int(record.get("character_id", 0)) == character_id
+                ),
+                None,
+            )
+            if evolution_master is None:
+                raise ValueError(f"character {character_id} has no skill-evolution master row")
+            evolution_fields = {
+                1: (31, "normal1_skill_evolve_costs"),
+                2: (32, "normal2_skill_evolve_costs"),
+                3: (33, "burst_skill_evolve_costs"),
+            }
+            evolution = evolution_fields.get(skill_type)
+            if evolution is None:
+                raise ValueError(f"unsupported character skill type {skill_type}")
+            flag_field, cost_field = evolution
+            if varint_field(character, flag_field, 0):
+                raise ValueError(
+                    f"character {character_id} skill type {skill_type} is already evolved"
+                )
+
+            item_costs: dict[int, int] = {}
+            for cost in evolution_master.get(cost_field) or []:
+                item_id = int(cost.get("id", 0))
+                quantity = int(cost.get("quantity", 0))
+                if item_id <= 0 or quantity <= 0:
+                    raise ValueError(
+                        f"character {character_id} has an invalid {cost_field} cost"
+                    )
+                item_costs[item_id] = item_costs.get(item_id, 0) + quantity
+            if not item_costs:
+                raise ValueError(f"character {character_id} has no {cost_field} costs")
+
+            changed_items = updated_consumed_item_records(
+                profile_resource_records(profile_plaintext, 3),
+                item_costs,
+            )
+            new_character = replace_varint_field(character, flag_field, 1)
+            if self.character_records is not None:
+                self.character_records[character_id] = new_character
+            self.log(
+                f"LOCAL-CHARACTER-SKILL-EVOLVE path={path} status=200 "
+                f"character_id={character_id} skill_type={skill_type} "
+                f"items={len(changed_items)}"
+            )
+            return self.changed_resources_encrypted_response(
+                response_key,
+                response_iv,
+                response_marker,
+                characters=[new_character],
+                items=changed_items,
             )
 
         if path == "/character/enhancement_reset":
@@ -7392,6 +7486,7 @@ class Replay:
         if method == "POST" and path in {
             "/character/enhance",
             "/character/rarity_enhance",
+            "/character/skill_evolve",
             "/character/enhancement_reset",
             "/character/level_limit_release",
             "/character/growboard_page_release",

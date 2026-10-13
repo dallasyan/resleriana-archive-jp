@@ -62,21 +62,47 @@ tables) models, what it estimates, and what it ignores. Confidence scale:
   timeline turn available.
 - [x] Leader aura - **Medium**. The leader skill's ability effects apply to
   party members matching its tag/role/attribute/series conditions; the
-  leader position/flag is still recorded.
-- [x] Character passives - **Medium**. All ability descriptions parse into
-  battle-long mods (positional placeholder values) and event triggers
-  (battle/skill/panel/item/weak/ko/crit/break starts and hits) with
-  conditions, scopes, use caps, and OR-branching; unmapped IDs stay
-  neutral and unlisted in responses.
+  leader position/flag is still recorded. Valeria Awakened Past's condition 41
+  filters on Carefree tag 25 and grants Pioneer to matching members; role
+  conditions are checked against the role list.
+- [ ] Character passives - **Medium**. All 7,131 ability rows are emitted in
+  the combat map; 374/432 distinct abilities linked by released characters
+  currently have nonempty parsed mods/triggers. Parsed party tag-count and
+  owner-speed ranges resolve dynamically, and party-scoped stat passives fan
+  out at battle start. Fifty-eight released linked IDs remain unmapped.
 - [x] Skill ranks and evolution - **High**. Profile ranks pick normal1/normal2
-  rows; evolve flags switch to evolved tables.
+  rows; profile flags 31/32/33 independently select evolved normal1/normal2/
+  burst tables. `all_skill_evolved_ability_ids` are gated on rarity 8 and all
+  three flags. Resna Innocent Dreamer's evolved Skill 1 uses its master power,
+  break, all-ally heal, capped Magic ATK, and item-gauge behavior; ability
+  1990325 is +50% all-ally critical damage per skill use, capped at 250%, and
+  gated on all three flags. Master descriptions and local skill-evolution
+  records back the implementation; no unevolved 43102 battle action is in the
+  evolution capture.
+- [x] Awakened-form skill tables - **Medium**. Four starts and 66 attacks cover
+  Resna 43106/43107 and Valeria 43205/43206; the suite splits nested session
+  battles and checks all three base/transformed skill IDs for both characters.
+  Their form-specific passive IDs are selected from the current form; return to
+  base replaces character mods/triggers while keeping other ability sources.
+- [x] Capped/stacked buffs - **Medium**. Capped values merge into one effect up
+  to their limit; `stack_max` state buffs remain separate entries. The Liebe
+  46102 Skill 2 capture shows two separate physical/magic defense states
+  (610465/610466) with remaining hit counts 1 and 2 after reapplication.
+  Uncapped applications remain separate. Overflow refresh behavior beyond two
+  captured stacks is not confirmed.
+- [x] Buff/debuff expiry phases - **Medium**. Japanese master text preserves
+  owner action-start/action-end counters and received-hit counters. Hit-only
+  state counters serialize as `rest_count`; evaded and nullified attacks still
+  consume the targeted buff's hit count.
 - [x] Burst skill selection - **High**. Rarity-indexed into the burst table
   (rarity-1, capped); Season2 captures confirm rarity 7 uses the last entry.
 - [x] Skill lamp - **Medium**. BattleMember skills carry `lamp` from the
   skill master when `max_lamp > 0` (Season2 captures show lamp 3 at start).
   Lit counts track battle-start and event lighting (capped, rank-variant
   resolved) with per-lamp damage tiers, lamp-scaled pre-attack buffs, and
-  full-lamp transform flags. Transformed numeric deltas stay unmapped.
+  the captured two-lamp Skill 2 return to base form for Awakened Resna and
+  Valeria. Base-to-awakened entry, other transform forms, and transformed
+  numeric deltas remain unmapped.
 - [x] Burst gauge, ship Memoria, and ship support wire shapes - **Medium**.
   Members carry `burst_gauge`; allies carry `ship_main_memoria` and the battle
   state can include ship support ability IDs and their value coefficient.
