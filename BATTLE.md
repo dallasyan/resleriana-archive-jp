@@ -47,19 +47,27 @@ tables) models, what it estimates, and what it ignores. Confidence scale:
   Level/limit-break growth, status buffs, and unlocked ability IDs come from
   profile + Memoria masters; exact battle formulas remain approximate.
 - [x] Atelier Research levels - **Medium**. Profile research groups apply
-  role-scoped stat bonuses from the derived combat map; equipment research
-  rows stay unmapped.
+  role-scoped stat bonuses plus dealt-damage, damage-resistance, and item
+  damage/heal slots from the derived combat map (latest unlocked tier per
+  effect); HP folds into base stats, the rest ride silent battle-long mods.
+  Equipment-stat and item-potency rows stay unmapped.
 - [x] Emblems - **Medium**. Owned profile emblems apply rarity-scaled stat
   bonuses and parsed conditional combat mods from the derived combat map.
-- [x] Subspace Support characters/Memoria - **Low**. Profile support roster
+- [x] Subspace Support characters/Memoria - **Medium**. Profile support roster
   stats and selected subspace Memoria contribute estimated status bonuses
-  using ship-level support rate.
+  using ship-level support rate. Support characters also auto-fire gated
+  abilities: ladder index rarity-1 (maximum assumed without a record),
+  snapshot battles use start-message ability ids and coefs, generated
+  battles scale by the ship-level apply rate. Main-memoria abilities spill
+  to the party at message coef (snapshot only).
 - [x] Atelier Cannon availability and firing - **High** request/response
   shape. Selected ship tools emit cannon slot, skill ID, and uses in
   `BattleState` field 21. Japanese cannon attacks use mode 9 with a repeated
   field 10 slot command; the response uses action type 3 and field 31 for the
   selected slot. A firing consumes one use and leaves the acting character's
-  timeline turn available.
+  timeline turn available. The cannon gauge (base 10 per ally skill use plus
+  ship cannon-boost triggers, fire at 100, reset) is tracked silently: no
+  wire field carries it in captures.
 - [x] Leader aura - **Medium**. The leader skill's ability effects apply to
   party members matching its tag/role/attribute/series conditions; the
   leader position/flag is still recorded. Valeria Awakened Past's condition 41
@@ -106,10 +114,14 @@ tables) models, what it estimates, and what it ignores. Confidence scale:
 - [x] Burst gauge, ship Memoria, and ship support wire shapes - **Medium**.
   Members carry `burst_gauge`; allies carry `ship_main_memoria` and the battle
   state can include ship support ability IDs and their value coefficient.
-  `BattleAction` also reports bomb-gauge gains (`effect_id=2000392`) with
-  observed values 10, 20, 30, 40, 50, 70, and 100. The per-skill source,
-  support scaling, and trigger are not modeled; the current fixed 40-point
-  standard-skill placeholder does not match every capture. Supporting Memoria
+  `BattleAction` also reports bomb-gauge gains (`effect_id=2000392`).
+  Battle state field 20 starts at 0 (omitted from the start snapshot), caps
+  at 1000, and each standard ally skill action adds a silent 100 plus the
+  2000392 event value. Captures show the event constant within a battle but
+  scaling across accounts and time (40, 70, 80, 100 observed); the simulator
+  emits the verified base 70. Enemy actions and tool uses add nothing.
+  Skill-use item-gauge ability triggers emit a separate 72001085 event that
+  raises the party gauge, not the bomb gauge. Supporting Memoria
   coefficients (e.g. 4400/2600) and one-off enabled 300 gauge remain open.
   State-change summaries (field 24) also need their per-type aggregation
   formula; entries demonstrably track live buffs/debuffs, including negative
@@ -180,6 +192,12 @@ tables) models, what it estimates, and what it ignores. Confidence scale:
 - [x] Buff potency - **Medium**. Granted amounts scale with giver
   given-plus/minus and receiver received potency; caps and fixed flags are
   honored where parsed; permanent raid-style debuffs never expire.
+- [x] Skill cleanse ordering and boss immunity - **Medium**. Skills remove
+  capture-mined states before granting (`battle-master/skill_effect_map.json`;
+  e.g. 14003647 clears battle-start markers via 91001967), serialized as
+  `removed_state_changes` with before_skill entries on field 20. Boss aura
+  810224 blocks every cross-side state grant silently; skills that later
+  debuff such holders remove it first.
 
 ## Timeline, panels, gauge, break
 
@@ -201,9 +219,12 @@ tables) models, what it estimates, and what it ignores. Confidence scale:
 - [x] Timeline-order enemy turns - **Low**. Enemies act in head-of-timeline
   order between player turns (not ID order); initial order, speeds, and
   wait slots remain estimated.
-- [x] Panel schedule and effects - **Medium**. The master battle row lists
-  panel ids in turn order and captures match per-battle fixed schedules, so
-  turns cycle that list (hash fallback only when empty). Panels 12/13 feed
+- [x] Panel schedule and effects - **Medium**. Captured battles use
+  majority-vote schedules (`battle-master/panel_schedules.json`, 59
+  battles); turns past the captured range (and battles without data) use a
+  deterministic hash draw from the battle row's available panel list
+  weighted by the measured distribution (empty dominant, then 12/14/13/17).
+  Panel 11 is the empty display id and never emits. Panels 12/13 feed
   the skill-damage slot (1.4/0.6); panel 30 forces crits; panels 14/17 gate
   burst use. Acquisition applies exact parsed effects (break/heal/taken/
   crit/ailment/stat/panel ops with durations and caps) to the holder side.

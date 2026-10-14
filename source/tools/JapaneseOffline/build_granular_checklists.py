@@ -509,7 +509,7 @@ def main() -> int:
     TRIGGER_ACTION_OPS = {"panel_skill", "extra_attack"}
     # Trigger buff payloads executed immediately rather than granted.
     TRIGGER_EXEC_BUFF_CODES = {
-        "heal", "item_gauge", "burst_gauge", "cleanse", "turn_swap",
+        "heal", "item_gauge", "burst_gauge", "cannon_gauge", "cleanse", "turn_swap",
         "turn_erase", "delay_turn", "hasten_turn", "field", "revive",
         "panel_generate", "panel_convert", "panel_enhance", "extra_attack",
         "transform", "lamp", "pioneer", "drain", "accuracy_down", "resist_down",
@@ -532,7 +532,7 @@ def main() -> int:
     KNOWN_COND_NAMES = {
         "role", "attr", "target_state", "target_broken", "hp_above",
         "hp_below", "crit", "ko", "boss", "weak_hit", "scope", "skill_ids",
-        "panel", "tag_count", "gauge_above",
+        "panel", "tag", "tag_count", "gauge_above",
     }
     KNOWN_TRIGGER_EVENTS = {
         "heal_received", "skill_use", "post_attack", "weak_hit", "crit",
@@ -814,7 +814,7 @@ def main() -> int:
         "post_heal_self", "post_heal_allies", "post_break_up_self",
         "post_taken_up_target", "pre_resist_down_target", "item_gauge",
         "post_magic_up_allies", "turn_swap", "cleanse_self_pre",
-        "extra_turn_grant",
+        "cleanse_allies_pre", "extra_turn_grant",
     }
     # Keep captured effect-to-state links in sync with battle_japanese.py.
     CAPTURED_STATE_EFFECT_LINKS = {
@@ -897,6 +897,20 @@ def main() -> int:
                     done.append("behavior %s post-attack" % code)
             elif code == "burst_gauge":
                 missing.append("behavior burst_gauge ignored by post-attack handler")
+            elif code == "state_grant":
+                done.append(
+                    "behavior state_grant applied %s-attack with scope filters"
+                    % ("pre" if b.get("pre") else "post")
+                )
+                if b.get("target_tags") or b.get("target_attrs") or b.get("target_roles"):
+                    unsure.append("behavior state_grant OR-joined tag/attr/role filters")
+                if int(b.get("rate", 100) or 100) != 100:
+                    unsure.append(
+                        "behavior state_grant non-ailment rate %s not rolled" % b.get("rate")
+                    )
+            elif code in ("force_break", "break_gauge_heal_pct", "overdrive_consume",
+                          "overdrive_power", "delay_turn"):
+                missing.append("behavior %s records-only" % code)
             else:
                 missing.append("behavior %s ignored" % code)
         info = cmap_skills.get(sid, {})

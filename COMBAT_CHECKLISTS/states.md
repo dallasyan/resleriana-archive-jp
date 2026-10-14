@@ -68,7 +68,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 510063 | 盛り上がり上昇中！ | Rising Excitement! | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510064 | イッツ・ショータイム | It's Showtime | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510065 | ブレイクダメージUP | Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 510067 | ここは師匠に任せなさい | Leave This to Your Mentor | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 510067 | ここは師匠に任せなさい | Leave This to Your Mentor | Partial | done: kind=ailment_immune applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510068 | へこたれません！ | I Won't Give Up! | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510069 | 王の前にひれ伏しなさい！ | Kneel before the Queen! | Partial | done: kind=ailment applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation; ailment paralysis application roll |
 | 510070 | 柔軟な受け流し | Flexible Parry | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1265,7 +1265,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 810212 | 強化状態 | Enhanced State | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810213 | 雪嵐の奔流 | Snowstorm Rush | Partial | done: kind=evade applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810214 | 被ダメージDOWN | Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 810215 | マイナス効果無効 | Negative Effect Immunity | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 810215 | マイナス効果無効 | Negative Effect Immunity | Partial | done: kind=ailment_immune applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810216 | 全属性耐性UP | All Elemental Resistance Up | Partial | done: kind=resist_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810217 | 全属性耐性UP | All Elemental Resistance Up | Partial | done: kind=resist_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810224 | 相手からの効果無効 | Enemy Effect Immunity | Partial | missing: kind=special has no runtime behavior; effect records only |
@@ -1288,7 +1288,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 810338 | 斬耐性UP(上限50％) | Slash Resistance Up (MAX 50%) | Partial | done: kind=resist_elem applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810339 | 打耐性UP(上限50％) | Strike Resistance Up (MAX 50%) | Partial | done: kind=resist_elem applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810373 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 810374 | マイナス効果無効 | Negative Effect Immunity | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 810374 | マイナス効果無効 | Negative Effect Immunity | Partial | done: kind=ailment_immune applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810378 | WEAK攻撃以外反射 | Non-Weakness Attack Reflection | Partial | done: reflect state is applied on received hits; missing: reflect amount/type behavior needs capture validation |
 | 810380 | 氷耐性UP(上限10％) | Ice Resistance Up (MAX 10%) | Partial | done: kind=resist_elem applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810381 | 雷耐性UP(上限10％) | Bolt Resistance Up (MAX 10%) | Partial | done: kind=resist_elem applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1481,7 +1481,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 850395 | 残り1ターン | Remaining 1 Turn | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 850415 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910001 | 被ブレイクダメージDOWN | Received Stun Damage Down | Partial | done: kind=taken_break applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 910002 | マイナス効果無効 | Negative Effects Immunity | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 910002 | マイナス効果無効 | Negative Effects Immunity | Partial | done: kind=ailment_immune applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910003 | 状態異常無効 | Status Effect Immunity | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 910004 | 全属性耐性UP | All Attribute Resistance Up | Partial | done: kind=resist_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910005 | 魔法被ダメージDOWN | Received M. Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |

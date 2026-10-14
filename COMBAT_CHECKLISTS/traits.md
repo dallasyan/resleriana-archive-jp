@@ -122,8 +122,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | equipment:42 | 魔法耐性上昇【D】 | Magic Resistance Up [D] | Missing | missing: unparsed abilities 7000122, 7000123, 7000124, 7000125, 7000126; unsure: trait filter matching vs item seed unconfirmed |
 | equipment:43 | 物理耐性上昇【D】 | Physical Resistance Up [D] | Missing | missing: unparsed abilities 7000117, 7000118, 7000119, 7000120, 7000121; unsure: trait filter matching vs item seed unconfirmed |
 | equipment:44 | 物理/魔法耐性アップ強化【D】 | Enhanced P./M. Resistance Up [D] | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |
-| equipment:45 | ダメージバフ強化【A】 | Enhanced Damage Buff [A] | Missing | missing: unparsed abilities 7000242, 7000243, 7000244, 7000245, 7000246; unsure: trait filter matching vs item seed unconfirmed |
-| equipment:46 | ダメージバフ強化【B】 | Enhanced Damage Buff [B] | Missing | missing: unparsed abilities 7000247, 7000248, 7000249, 7000250, 7000251; unsure: trait filter matching vs item seed unconfirmed |
+| equipment:45 | ダメージバフ強化【A】 | Enhanced Damage Buff [A] | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |
+| equipment:46 | ダメージバフ強化【B】 | Enhanced Damage Buff [B] | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |
 | equipment:47 | 回復量上昇【D】 | Recovery Boost [D] | Missing | missing: unparsed abilities 7000177, 7000178, 7000179, 7000180, 7000181; unsure: trait filter matching vs item seed unconfirmed |
 | equipment:48 | 物理/魔法耐性ダウン強化 | Enhanced P./M. Resistance Down | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |
 | equipment:49 | 物理/魔法耐性アップ強化 | Enhanced P./M. Resistance Up | Implemented | done: 5/5 trait abilities parsed; unsure: trait filter matching vs item seed unconfirmed |

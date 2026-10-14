@@ -1265,7 +1265,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1261 | 花の耳飾り | Flower Earrings | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1262 | ユンゲルス | Youngers | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1263 | 魔彩ナル傾国ノ瞳・凶華 | Bewitching Eyes of a Fallen Nation: Ominous Splendor | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
-| 1264 | 星導きの杖 | Star-Guiding Staff | Partial | done: 1 start stat buffs; 0/1 abilities parsed; missing: abilities not fully implemented 301346; unsure: flat start stats, growth scaling unconfirmed |
+| 1264 | 星導きの杖 | Star-Guiding Staff | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1265 | ヴェールキュイール | Veil Quille | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1266 | ヴェールキュイール | Veil Quille | Implemented | done: 2 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |
 | 1267 | 堅甲の護符 | Solid Armor Talisman | Implemented | done: 1 start stat buffs; 1/1 abilities parsed; unsure: flat start stats, growth scaling unconfirmed |

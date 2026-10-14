@@ -118,6 +118,24 @@ The package's `game-root\battle-master\*.json` carries the slim battle tables us
 
 Character/rarity/level/memoria tables are reused from `progression-master` at runtime.
 
+`panel_schedules.json` (same directory) is not built from masters: it stores
+majority-vote per-battle timeline panel schedules derived from private capture
+sessions (battle/turn/panel master IDs plus observation counts only). Refresh
+it from additional captures without bundling any capture or profile data:
+
+```powershell
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" "tools\JapaneseOffline\build_panel_schedules.py" "<private-capture-root>" "tools\JapaneseToolkit\share\game-root\battle-master"
+```
+
+`skill_effect_map.json` (same directory) is likewise capture-derived: it stores
+per-skill removal effects mined from `removed_state_changes` effect results
+(skill/effect/state master IDs plus observation counts only). Refresh it from
+additional captures the same way:
+
+```powershell
+& "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" "tools\JapaneseOffline\build_skill_effect_map.py" "<private-capture-root>" "tools\JapaneseToolkit\share\game-root\battle-master"
+```
+
 ## Combat Map and Checklists
 
 `build_combat_map.py` translates Japanese effect/state/panel descriptions into
@@ -209,6 +227,10 @@ $checklistBuilder = "tools\JapaneseOffline\build_granular_checklists.py"
 Copy-Item $checklistBuilder "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\build_granular_checklists.py" -Force
 $battleBuilder = "tools\JapaneseOffline\build_battle_master.py"
 Copy-Item $battleBuilder "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\build_battle_master.py" -Force
+$panelScheduleBuilder = "tools\JapaneseOffline\build_panel_schedules.py"
+Copy-Item $panelScheduleBuilder "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\build_panel_schedules.py" -Force
+$skillEffectBuilder = "tools\JapaneseOffline\build_skill_effect_map.py"
+Copy-Item $skillEffectBuilder "tools\JapaneseToolkit\share\source\tools\JapaneseOffline\build_skill_effect_map.py" -Force
 $battleMaster = "tools\JapaneseToolkit\share\game-root\battle-master"
 Copy-Item $battleMaster "tools\JapaneseOffline\dist" -Recurse -Force
 Copy-Item $battleMaster "tools\JapaneseToolkit\share\source\game-root" -Recurse -Force

@@ -256,12 +256,14 @@ Contract oracle: `installed contract-dump/fields.txt`.
   - Description: ship cannon tools scale by tool level/EXP.
   - Implement: existing ship-party/tool-level resolution.
   - Data: `ship_tool.json`, `ship_tool_level.json`; cannon captures.
-- [ ] Cannon gauge and turn cost (Partial)
+- [x] Cannon gauge and turn cost (Done, boost estimated)
   - Description: cannon gauge fills per ally action; firing costs a turn.
-  - Implement: separate cannon identity/use tracking; gauge is not modeled.
-    Captured cannon commands have no timeline move; the panel/request counter
-    advances, while general guides describe a turn cost.
-  - Data: cannon captures in `local battle captures`.
+  - Implement: `cannon_gauge` starts at 0, gains a base 10 plus ship
+    cannon-boost triggers per ally skill use (ship-level abilities such as
+    7000852/7000859 parsed as `cannon_gauge` triggers), fires one cannon at
+    100 and resets. No wire field carries it in captures, so it is tracked
+    silently. Free-action accrual scope is an estimate.
+  - Data: cannon captures in `local battle captures`; cannon reference page.
 - [x] Cannon-only bonuses (Done, formulas estimated)
   - Description: only cannon damage/crit bonuses apply, never item bonuses.
   - Implement: pooled-mod filtering has separate cannon damage/crit slots from
@@ -290,17 +292,39 @@ Contract oracle: `installed contract-dump/fields.txt`.
   - Description: pooled support-character and Memoria stats.
   - Implement: existing pooled support pipeline.
   - Data: ship-party profile records.
-- [ ] Support level/cannon frame bonuses (Missing)
+- [x] Character support abilities (Done, caps estimated)
+  - Description: support characters auto-fire gated abilities in battle.
+  - Implement: ladder index rarity-1 (maximum assumed without a record);
+    snapshot battles use start-message ability ids and coefs, generated
+    battles scale by the ship-level apply rate. Passive stat effects apply
+    at build (snapshot stats already final); slot effects ride member mods;
+    pre-attack debuffs, reactive heals, and cannon-gauge accrual fire
+    through member triggers with per-ally use caps.
+  - Data: character `support_ability_ids`; start `ship.support_ability_ids`
+    and `support_ability_value_coef`.
+- [x] Main-memoria party spillover (Done, snapshot only)
+  - Description: main-memoria abilities reach the party at message coef.
+  - Implement: start-message ability ids scale party mods; generated coef
+    needs the unverified sub-memoria bonus formula.
+  - Data: start `ship.main_memoria_ability_ids` and `main_memoria_value_coef`.
+- [ ] Support level/cannon frame bonuses (Partial)
   - Description: support level affects multipliers, cannon gauge, frames.
-  - Implement: `support_ability_apply_rate` and level bonus tables.
+  - Implement: `support_ability_apply_rate` scales support values; ship
+    cannon-boost abilities parsed as `cannon_gauge` triggers. Cannon frames
+    stay unmodeled.
   - Data: `ship_level.json`.
 
 ## Atelier research level
 
-- [ ] Battle/alchemy/growth research (Missing)
-  - Description: damage/HP/resist, item/equipment, and floor-level bonuses.
-  - Implement: load profile field 30 research groups; map
-    `combat_map.json` research tables; research is never potency-boosted.
+- [x] Battle/alchemy research (Done, equipment/nurturing deferred)
+  - Description: HP/dealt-damage/resistance plus item damage/heal slots.
+  - Implement: profile field 30 levels select the latest unlocked tier per
+    effect (verified Lv200 totals: attacker HP 2500, dealt 2020, defender
+    resist 1500); HP folds into base stats at build (max-HP parity on all
+    five Score 33-1 allies), damage/resistance/item slots ride silent
+    battle-long mods; research is never potency-boosted. Equipment-stat and
+    item-potency rows plus nurturing floor levels stay out (applicability
+    unverified, moot at level cap).
   - Data: research reference pages; `research*.json` masters.
 
 ## Subspace ship level
@@ -317,9 +341,16 @@ Contract oracle: `installed contract-dump/fields.txt`.
 ## Timeline panels and adjustments
 
 - [x] Fixed panel schedules (Done)
-  - Description: per-battle panel schedules cycled per turn.
-  - Implement: existing `battle.json` panel cycling.
-  - Data: `battle.json`; captured starts.
+  - Description: per-battle panel schedules fixed per battle, same every run.
+  - Implement: `battle-master/panel_schedules.json` carries majority-vote
+    schedules from 879 starts and 10646 captured attacks (80 battles);
+    turns past the captured range (and battles without data) use a
+    deterministic hash draw from the battle row's available panel list
+    weighted by the measured distribution (empty dominant, then
+    14/12/13/30/42/15/17). Panel 11 is the empty display id and never
+    emits. Showcase training battles show per-instance variance, so
+    generated tails can diverge from any single attempt by construction.
+  - Data: `battle.json` available lists; captured setup forecast windows.
 - [ ] Panel categories and effects (Partial)
   - Description: burst/plus/negative/recovery/empty panels with exact values.
   - Implement: `combat_map.json` panels carry parsed ops; apply acquisition
@@ -393,9 +424,13 @@ Contract oracle: `installed contract-dump/fields.txt`.
 - [ ] Immunity, cleanse, block (Partial)
   - Description: prevention and removal mechanics.
   - Implement: ailment immunity/resistance and explicit cleanse/dispel paths;
-    turn-start cleanse states are modeled. General positive-effect blocking and
-    resistance emission (contract field 18) are incomplete.
-  - Data: status captures.
+    turn-start cleanse states are modeled. Capture-mined skill removal
+    effects run before grants (`skill_effect_map.json`; intrinsic skill
+    effects only, before_skill entries serialize to field 20) and boss aura
+    810224 blocks every cross-side state grant silently. General
+    positive-effect blocking and resistance emission (contract field 18)
+    are incomplete.
+  - Data: status captures; skill removed_state_changes mining.
 - [x] Permanent debuffs (Done)
   - Description: raid-style persistent stacks with caps.
   - Implement: no-expiry stacks with caps from parsed data.
