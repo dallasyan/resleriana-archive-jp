@@ -66,7 +66,7 @@ AILMENTS = {
     "毒": "poison", "猛毒": "venom", "火傷": "burn", "麻痺": "paralysis",
     "眠り": "sleep", "ねむり": "sleep", "睡眠": "sleep", "凍結": "frozen", "カチコチ": "frozen",
     "スタン": "stun", "気絶": "stun", "暗闇": "darkness", "挑発": "taunt",
-    "王の威光": "high_dominance",
+    "王の威光": "high_dominance", "ハイ・ドミナンス": "high_dominance",
 }
 
 
@@ -412,6 +412,12 @@ def parse_effect(text: str) -> dict:
     if "バーストスキルダメージ" in raw:
         direction = -1 if ("ダウン" in raw or "減少" in raw or "-" in raw) else 1
         return {"code": "burst_damage", "direction": direction, **base}
+    if ("受ける物理攻撃スキルダメージ" in raw
+            or "受ける魔法攻撃スキルダメージ" in raw):
+        direction = 1 if ("アップ" in raw or "上昇" in raw or "+" in raw) else -1
+        attack_type = "physical" if "受ける物理攻撃スキルダメージ" in raw else "magic"
+        return {"code": "taken_damage", "direction": direction,
+                "attack_type": attack_type, **base}
     if "スキルダメージ" in raw:
         direction = -1 if ("ダウン" in raw or "減少" in raw or "-" in raw) else 1
         return {"code": "skill_damage", "direction": direction, **base}
@@ -460,7 +466,7 @@ def parse_effect(text: str) -> dict:
         direction = -1 if ("ダウン" in raw or "減少" in raw or "-" in raw) else 1
         return {"code": "dealt_damage", "direction": direction, **base}
     if "与ダメージ" in raw or "与えるダメージ" in raw:
-        direction = -1 if ("ダウン" in raw or "減少" in raw) else 1
+        direction = -1 if ("ダウン" in raw or "減少" in raw or "-" in raw) else 1
         return {"code": "dealt_damage", "direction": direction, **base}
     if "受けるダメージ" in raw or "被ダメージ" in raw:
         direction = 1 if ("アップ" in raw or "上昇" in raw or "増加" in raw or "+" in raw) else -1
@@ -516,11 +522,12 @@ def parse_effect(text: str) -> dict:
         return {"code": "heal", **base}
     if "先駆け" in raw:
         return {"code": "pioneer", **base}
-    if "与える強化効果量" in raw:
+    if re.search(r"与える強化効果(の効果)?量", raw):
         return {"code": "potency_given_plus", **base}
-    if "与えるマイナス効果量" in raw:
+    if re.search(r"与えるマイナス効果(の効果)?量", raw):
         return {"code": "potency_given_minus", **base}
-    if "受ける強化効果量" in raw or "受けるマイナス効果量" in raw:
+    if (re.search(r"受ける強化効果(の効果)?量", raw)
+            or re.search(r"受けるマイナス効果(の効果)?量", raw)):
         return {"code": "potency_received", **base}
     if "与える効果量" in raw:
         return {"code": "potency_given_plus", **base}
@@ -614,6 +621,7 @@ def detect_target(text: str) -> str:
 
 STATE_KEYWORDS = [
     ("再生", "regen"), ("バリア", "barrier"), ("回避", "evade"),
+    ("回復無効", "heal_block"),
     ("カウンター", "counter"), ("反射", "reflect"), ("かばう", "cover"),
     ("身代わり", "cover"), ("ダメージ無効", "null_damage"), ("無敵", "null_damage"),
     ("蘇生", "revive"), ("復活", "revive"),
@@ -642,8 +650,17 @@ def classify_state(row: dict) -> dict:
 
     if name in AILMENT_STATES:
         out["kind"] = "ailment"
-        out["ailment"] = AILMENT_STATES[name]
+        out["ailment"] = AILMENTS[name]
         out["potency_kind"] = "ailment"
+        return out
+
+    # Effect-immunity markers (プラス効果無効 etc.) carry no buff slot but
+    # the game grants them as states (enemy burst 22002371 deals 920002),
+    # and their presence drives grant_blocked_by_immunity. Classify them as
+    # inert-but-grantable immunity instead of leaving them special/inert.
+    if name in ("プラス効果無効", "相手からの効果無効"):
+        out.update({"kind": "immunity", "direction": 1,
+                    "potency_kind": "none"})
         return out
 
     if "耐性UP" in name or "耐性+" in name:
@@ -672,6 +689,10 @@ def classify_state(row: dict) -> dict:
 
     code = parsed.get("code")
     direction = int(parsed.get("direction", -1 if code == "stat_down" else 1) or 1)
+    if code in ("potency_received", "potency_given_plus", "potency_given_minus"):
+        direction = -1 if ("DOWN" in text or "ダウン" in text
+                           or "減少" in text or "低下" in text
+                           or re.search(r"-\s*(?:\{value\}|\{[0-9]+\})", text)) else 1
     if code == "delay_turn" and text.startswith("攻撃後、対象のターンを"):
         out.update({"kind": "delay_turn_attack", "direction": 1,
                     "potency_kind": "none"})
@@ -696,6 +717,9 @@ def classify_state(row: dict) -> dict:
         "reflect": "reflect", "reflect_magic": "reflect", "reflect_phys": "reflect",
         "cover": "cover", "null_damage": "null_damage", "counter": "counter",
         "break_power": "break_power", "panel_null": "panel_null",
+        "potency_given_plus": "potency_given_plus",
+        "potency_given_minus": "potency_given_minus",
+        "potency_received": "potency_received",
     }
 
     if code in ("stat_up", "stat_down"):
@@ -704,6 +728,12 @@ def classify_state(row: dict) -> dict:
             "mdef": "mental", "spd": "speed",
         }.get(parsed.get("stat"), parsed.get("stat"))
         if stat in ("attack", "magic", "defense", "mental"):
+            out.update({"kind": "stat", "stat": stat, "direction": direction,
+                        "potency_kind": "out" if direction > 0 else "taken"})
+            return out
+        if stat == "hp":
+            # Max-HP grants ride a present-but-inert buff: no battle stat
+            # slot consumes hp, and mid-battle max-HP raising stays unmodeled.
             out.update({"kind": "stat", "stat": stat, "direction": direction,
                         "potency_kind": "out" if direction > 0 else "taken"})
             return out
@@ -752,6 +782,10 @@ def classify_state(row: dict) -> dict:
             potency_kind = "ailment"
         elif code == "taken_damage":
             potency_kind = "taken" if direction > 0 else "out"
+        elif code == "potency_received":
+            potency_kind = "taken" if direction < 0 else "out"
+        elif code == "potency_given_minus":
+            potency_kind = "taken"
         elif direction < 0:
             potency_kind = "taken"
         out.update({"kind": kind, "direction": direction,
@@ -1442,7 +1476,76 @@ def _parse_ability_branch(branch: str, conds_base: list, mods: list, triggers: l
             mods.append(entry)
         else:
             triggers.append({"event": event, "conds": list(conds), "op": "buff", "buff": entry})
+    for target_text, payload_text, num in re.findall(
+            r"(?:(.+?)へ)?与える(.+?)の効果量\{([0-9]+)\}[%％]?アップ", branch):
+        entry = parse_grant_potency(target_text or "", payload_text,
+                                    value_at(int(num)))
+        if entry is not None:
+            entry["conds"] = list(conds)
+            entry["scope"] = scope
+            mods.append(entry)
     return {"mods": mods, "triggers": triggers}
+
+
+# Combat buff kinds amplified by generic buff-enhancement traits. Granted
+# values scale uniformly across stat and damage slots (verified: one
+# skill's 物攻/魔攻/スキルダメージ grants share one factor), so combat
+# traits match broadly here; barrier/evade/heal/ailment/cleanse/immunity
+# and potency bookkeeping stay excluded (barriers match base values).
+GRANT_POTENCY_COMBAT_KINDS = [
+    "stat", "speed", "skill_damage", "dealt_damage", "skill_power",
+    "crit_rate", "crit_damage", "break_up", "break_power", "taken",
+    "taken_break", "taken_crit_damage", "penetration", "burst_damage",
+    "resist_down", "resist_up", "resist_elem", "recovery_given",
+    "recovery_received", "regen", "reflect", "reflect_magic",
+    "reflect_phys", "cover", "null_damage",
+]
+GRANT_POTENCY_DAMAGE_KINDS = [
+    "skill_damage", "dealt_damage", "skill_power", "crit_damage",
+    "crit_rate", "break_up", "break_power",
+]
+
+
+def parse_grant_potency(target_text: str, payload_text: str, value: int) -> dict | None:
+    """Parse equipment buff-enhancement traits (Xへ与えるY強化の効果量アップ).
+
+    The holder amplifies buffs it grants to X-gated targets. Combat
+    traits (damage/stat/resist wording) match broadly across grant kinds;
+    item/cannon traits stay narrow. Returns a grant_potency mod.
+    """
+    if not value:
+        return None
+    gate: dict = {}
+    for role, code in (("アタッカー", "attacker"), ("ブレイカー", "breaker"),
+                       ("ディフェンダー", "defender"), ("サポーター", "supporter")):
+        if role in (target_text or ""):
+            gate["role"] = code
+            break
+    attrs = []
+    for name, code in sorted(ATTRS.items(), key=lambda item: -len(item[0])):
+        if len(name) > 1 and ("得意属性が%s" % name) in (target_text or ""):
+            if code not in attrs:
+                attrs.append(code)
+    if attrs:
+        gate["attrs"] = attrs
+    tags = []
+    for quoted in re.findall(r"「([^」]+)」", target_text or ""):
+        tag_id = TAG_INDEX.get(quoted, 0)
+        if tag_id and tag_id not in tags:
+            tags.append(tag_id)
+    if tags:
+        gate["tags"] = tags
+    kinds: list = []
+    if "戦闘アイテム" in payload_text:
+        kinds.append("item_damage")
+    elif "アトリエ砲" in payload_text:
+        kinds.append("cannon_damage")
+    else:
+        kinds.extend(GRANT_POTENCY_COMBAT_KINDS)
+    if not kinds:
+        return None
+    return {"code": "grant_potency", "value": int(value), "kinds": kinds,
+            "stats": [], "gate": gate, "direction": 1, "scope": "self"}
 
 
 def detect_all_events(chunk: str) -> list:
@@ -1479,6 +1582,11 @@ GRANT_CORE_SYNONYMS = {
     "魔攻": ["魔法攻撃"],
     "物防": ["物理防御"],
     "魔防": ["魔法防御"],
+    "受ける物理攻撃ダメージ": ["受ける物理攻撃スキルダメージ"],
+    "受ける魔法攻撃ダメージ": ["受ける魔法攻撃スキルダメージ"],
+    "与える強化効果DOWN": ["与える強化効果量DOWN"],
+    "受ける強化効果DOWN": ["受ける強化効果量DOWN"],
+    "強化効果DOWN": ["強化効果量DOWN"],
 }
 
 # Capture-verified pins for mechanically identical duplicate states.
@@ -1489,6 +1597,20 @@ GRANT_STATE_OVERRIDES = {
     (14003647, "魔防", 0): 610468,
     (12003229, "クリティカルダメージ", 60): 610361,
     (12001748, "火属性耐性", 0): 920030,
+    # Identical 被ダメージDOWN duplicates: the wire shows the older row.
+    (22001725, "被ダメージDOWN", 0): 910045,
+    (24001562, "被ダメージDOWN", 0): 910045,
+    (20010058, "被ダメージDOWN", 0): 910045,
+    # Crit/vulnerability grants whose text order differs from effect order.
+    (11003560, "カチコチ", 0): 610052,
+    (11003560, "クリティカルダメージ", 15): 610431,
+    (11003637, "物防", 30): 610462,
+    (11003637, "魔防", 30): 610463,
+    # Stack/cap era duplicates where the wire keeps the older row.
+    (12003017, "魔防", 0): 610301,
+    (11003124, "魔防", 30): 610327,
+    (12003072, "魔攻", 100): 610303,
+    (14003130, "魔防", 0): 610322,
 }
 
 STAT_PART_WORDS = [
@@ -1516,21 +1638,28 @@ def build_grant_state_index(state_rows: list) -> dict:
 # 910132:1772, 610467/610468:2262, 910171:3138, 940006:1624.
 GRANT_STATE_PRIOR = frozenset({
     910049, 910048, 910039, 910040, 910007, 910132, 610467, 610468,
-    910171, 940006,
+    910171, 940006, 910045,
 })
 
 
 def match_grant_state(core: str, direction: int, clause: str,
                       state_index: dict, states_map: dict | None = None,
-                      skill_id_hint: int = 0, alt_cores: tuple = ()) -> dict | None:
+                      skill_id_hint: int = 0, alt_cores: tuple = (),
+                      cap_override=None) -> dict | None:
     """Resolve a grant core (e.g. 物防, 回避, 暗闇) to a state_change row.
 
     Scores exact/prefix/substring name matches with direction, stack, and
     cap agreement plus a frequency prior for the game's workhorse grant
     rows; ties fall back to the newest id. Returns None when nothing
-    scores.
+    scores. cap_override carries a segment-local cap percent when one
+    clause grants several capped stats (e.g. 上限30% defenses with an
+    上限10% HP grant).
     """
-    cap_match = re.search(r"上限([0-9]+)[%％]", clause)
+    if cap_override is not None:
+        cap_match = re.search(
+            r"上限([0-9]+)[%％]", "上限%d%%" % int(cap_override // 100))
+    else:
+        cap_match = re.search(r"上限([0-9]+)[%％]", clause)
     stack_match = re.search(r"上限([0-9]+)個", clause)
     # Kindle kinds carry buff slots; special/dummy/counter states are never
     # granted as combat buffs (they are markers, judgments, or panels).
@@ -1544,8 +1673,9 @@ def match_grant_state(core: str, direction: int, clause: str,
         "cannon_crit", "ailment", "regen", "barrier", "evade", "reflect",
         "reflect_magic", "reflect_phys", "cover", "null_damage",
         "counter", "break_power", "reactive_heal", "post_skill_heal",
-        "cleanse_turn_start", "ailment_immune", "panel_null",
-        "potency_given", "potency_received",
+        "cleanse_turn_start", "ailment_immune", "heal_block", "panel_null",
+        "potency_given", "potency_given_plus", "potency_given_minus",
+        "potency_received", "immunity",
     }
     best = None
     best_key = None
@@ -1560,24 +1690,52 @@ def match_grant_state(core: str, direction: int, clause: str,
             cores.append(squashed)
         if spelling not in cores:
             cores.append(spelling)
+    direct_spellings = {core, core.replace("属性", "")}
     for name, rows in state_index.items():
-        base = 0
-        for variant in cores:
-            if name == variant:
-                base = 3
-                break
-            elif variant and name.startswith(variant):
-                base = max(base, 2)
-            elif variant and variant in name:
-                base = max(base, 1)
-            elif name and variant and name in variant:
-                # Reversed containment for prefixed cores (受ける強化効果量DOWN).
-                base = max(base, 2)
-        if not base:
-            continue
         for row in rows:
-            score = base
             desc = row.get("description") or ""
+            # Resistance grants name an ailment/element only to select the
+            # resisted axis; non-resistance rows must not win on the bare
+            # keyword (e.g. 火傷耐性- must pick 910086, never burn 940006).
+            if "耐性" in core and "耐性" not in name and "耐性" not in desc:
+                continue
+            # Counter grants name the mechanic; damage rows whose text
+            # merely mentions countering must not win (810001's カウンター状態,
+            # not 710030's conditional damage buff).
+            if core == "カウンター" and "カウンター" not in name:
+                continue
+            base = 0
+            name_prefix = False
+            for variant in cores:
+                # Cross-word synonym matches (与ダメージ for a スキルダメージ
+                # core) score below same-wording matches: eras reuse words
+                # per slot, but the skill's own word is stronger evidence.
+                synonym = variant not in direct_spellings
+                for text in (name, desc):
+                    hit = 0
+                    if text == variant:
+                        hit = 3
+                    elif variant and text.startswith(variant):
+                        hit = 2
+                        if text is name:
+                            name_prefix = True
+                    elif variant and variant in text:
+                        hit = 1
+                    elif text and variant and text in variant:
+                        # Reversed containment for prefixed cores
+                        # (受ける強化効果量DOWN).
+                        hit = 2
+                    if hit and synonym:
+                        hit = max(hit - 1, 0)
+                    base = max(base, hit)
+            if not base:
+                continue
+            score = base
+            # A state NAME beginning with the core is near-exact evidence
+            # (カウンター状態 for カウンター); this carries directionless
+            # mechanic states over the grant threshold.
+            if name_prefix:
+                score += 1
             classified = (states_map or {}).get(str(row.get("id", 0) or 0)) or {}
             if classified.get("kind") not in GRANTABLE_KINDS:
                 continue
@@ -1595,10 +1753,21 @@ def match_grant_state(core: str, direction: int, clause: str,
                 # Foe-targeted debuffs (resist_down etc.) classify with a
                 # positive direction; the clause target marks agreement.
                 score += 2
+            elif (direction < 0 and classified.get("kind") == "recovery_received"
+                    and any(word in clause for word in ("対象", "敵", "相手"))):
+                # Healing-received reductions are foe debuffs with the same
+                # conventional direction split (720011, not 920005).
+                score += 2
             else:
                 score -= 2
             if bool(row.get("is_unremovable")) != ("解除不可" in clause):
                 score -= 2
+            # No-duplicate rows (重複不可) lose plain grants (800232 over
+            # 800236 for an unmarked skill2-taken grant).
+            if "(重複不可)" in desc and "重複不可" not in clause:
+                score -= 2
+            elif "(重複不可)" in desc and "重複不可" in clause:
+                score += 1
             # Conditional states ((突), (火), ...) only match clauses naming
             # the same condition.
             conditional = re.search(r"[(（]([^)）]*属性[^)）]*)[)）]", name + desc)
@@ -1607,6 +1776,44 @@ def match_grant_state(core: str, direction: int, clause: str,
                     score += 2
                 else:
                     score -= 3
+            # の時 conditional prefixes (攻撃対象がブレイク状態の時、) are
+            # decisive when the clause names them, and disqualifying when
+            # it does not (e.g. 910064 vs generic skill-damage rows).
+            desc_prefix = desc.split("、", 1)[0] if "の時" in desc.split("、", 1)[0] else ""
+            if not desc_prefix:
+                for text in (name, desc):
+                    found = re.search(r"(.+の時)(?:、|$)", text)
+                    if found:
+                        desc_prefix = found.group(1)
+                        break
+            if desc_prefix:
+                if desc_prefix in clause:
+                    score += 6
+                else:
+                    score -= 4
+            # Role-qualified rows (アタッカー与ダメージUP) win clauses naming
+            # the role; generic rows lose some specificity there (610021).
+            role_words = ("アタッカー", "ディフェンダー", "サポーター", "ブレイカー")
+            row_roles = {word for word in role_words if word in name or word in desc}
+            clause_roles = {word for word in role_words if word in clause}
+            if row_roles & clause_roles:
+                score += 4
+            elif row_roles:
+                score -= 3
+            elif clause_roles:
+                score -= 2
+            # Mechanic-qualified rows lose clauses that never name each
+            # mechanic (カウンターかばう needs かばう in text, not just
+            # カウンター, so plain counter grants pick 810001).
+            for mechanic in ("かばう", "身代わり", "カウンター"):
+                if ((mechanic in name or mechanic in desc)
+                        and mechanic not in clause and mechanic not in core):
+                    score -= 2
+            # Probabilistic rows need textual probability: a plain grant
+            # picks the deterministic row (810001 over chance-based 810110).
+            if (("確率" in name or "確率" in desc) and "確率" not in clause
+                    and "付与率" not in clause):
+                score -= 2
             desc_flat = desc.replace("％", "%")
             if cap_match:
                 if ("上限%s%%" % cap_match.group(1)) in desc_flat:
@@ -1614,8 +1821,18 @@ def match_grant_state(core: str, direction: int, clause: str,
             elif re.search(r"上限[0-9]+%", desc_flat):
                 score -= 2
             if stack_match:
+                row_stack = None
+                try:
+                    row_stack = (classified.get("effect") or {}).get("stack_max")
+                    row_stack = int(row_stack) if row_stack is not None else None
+                except (TypeError, ValueError):
+                    row_stack = None
                 if ("上限%s個" % stack_match.group(1)) in desc:
                     score += 2
+                elif row_stack is not None and row_stack != int(stack_match.group(1)):
+                    # Same slot reissued with different stack caps resolves
+                    # by stack agreement (上限2個 MDEF 610301/610322).
+                    score -= 2
             elif re.search(r"上限[0-9]+個", desc):
                 score -= 2
             try:
@@ -1630,6 +1847,10 @@ def match_grant_state(core: str, direction: int, clause: str,
                     score += 1
                 else:
                     score -= 1
+            # Era-duplicate fixed rows (910193) lose to the observed
+            # workhorse twin (910045) through the frequency prior above;
+            # inherently fixed slots with no ordinary twin (最大HPUP)
+            # keep full name agreement.
             # Duplicate states are re-issued per era; prefer the newest
             # candidate when scores tie (verified across the Score 33-1 set).
             key = (score, int(row.get("id", 0) or 0))
@@ -1641,8 +1862,14 @@ def match_grant_state(core: str, direction: int, clause: str,
     return best
 
 
-def match_grant_ailment(core: str, clause: str, states_map: dict) -> int | None:
-    """Resolve an ailment core to a grantable state id."""
+def match_grant_ailment(core: str, clause: str, states_map: dict,
+                        state_index: dict | None = None) -> int | None:
+    """Resolve an ailment core to a grantable state id.
+
+    Grantor rows (their description hands the ailment out, e.g. 毒攻撃's
+    攻撃後、対象に「毒」を付与) are excluded: granting the ailment itself
+    needs the dot state (e.g. 940007).
+    """
     ailment = next((code for keyword, code in sorted(
         AILMENTS.items(), key=lambda item: -len(item[0])
     ) if keyword in core), None)
@@ -1652,9 +1879,28 @@ def match_grant_ailment(core: str, clause: str, states_map: dict) -> int | None:
     candidates = []
     for key, entry in (states_map or {}).items():
         effect = entry.get("effect") or {}
-        if effect.get("ailment") != ailment:
+        if (effect.get("ailment") or entry.get("ailment")) != ailment:
             continue
         if entry.get("kind") != "ailment":
+            continue
+        raw_desc = None
+        if state_index:
+            for _rows in (state_index or {}).values():
+                for _row in _rows:
+                    try:
+                        if int(_row.get("id", 0) or 0) == int(key):
+                            raw_desc = str(_row.get("description") or "")
+                            break
+                    except (TypeError, ValueError):
+                        continue
+                if raw_desc is not None:
+                    break
+        if raw_desc and ("を付与" in raw_desc or "で付与" in raw_desc):
+            continue
+        # Conditional-on-ailment rows (対象にXが付与されている時、...) are
+        # payoffs for the ailment, not the ailment itself (e.g. 510258's
+        # frozen-conditional crit buff is never a frozen grant).
+        if raw_desc and "が付与されている時" in raw_desc:
             continue
         score = 1
         if duration.get("dur_actions") and effect.get("dur_actions") == duration["dur_actions"]:
@@ -1679,6 +1925,8 @@ def skill_grant_scope(clause: str) -> tuple:
     roles: list = []
     if "物攻が最も高い味方" in clause:
         return "extreme_ally_patk_max", tags, attrs, roles, True
+    if "魔攻が最も高い味方" in clause or "魔法攻撃が最も高い味方" in clause:
+        return "extreme_ally_matk_max", tags, attrs, roles, True
     for tag_name, tag_id in sorted(TAG_INDEX.items(), key=lambda item: -len(item[0])):
         if tag_name and ("「%s」の" % tag_name) in clause:
             if tag_id not in tags:
@@ -1690,6 +1938,8 @@ def skill_grant_scope(clause: str) -> tuple:
     if "ディフェンダー" in clause and "味方" in clause:
         roles.append(3)
     if "対象に" in clause or "対象の" in clause:
+        return "selected", tags, attrs, roles, False
+    if "敵単体" in clause or "味方単体" in clause:
         return "selected", tags, attrs, roles, False
     if "敵全体" in clause or "相手全員" in clause or "敵対象" in clause:
         return "all_enemies", tags, attrs, roles, False
@@ -1773,10 +2023,17 @@ def parse_skill_state_grants(row: dict, state_index: dict,
     # that named the allies). Phase stays per-fragment (post default).
     inherit_scope, inherit_tags, inherit_attrs, inherit_roles = "self", [], [], []
     inherit_extra = []
+    # Mechanic words that are also skill names (カウンター) must still grant:
+    # skip the skill-name guard when the core appears in a state name.
+    state_name_blob = "\n".join(state_index or {})
+    # Placeholder-less grants attach to the last skill effect, except in
+    # placeholder-free skills (usually tools) where successive clauses map
+    # positionally onto the effect list (e.g. 20010058's three clauses).
+    has_placeholders = bool(re.search(r"\{[0-9]+\}", description))
     for clause in clauses:
         if "この攻撃の" in clause and "付与" not in clause:
             continue
-        fragments = [f.strip() for f in re.split(r"[、，,]", clause) if f.strip()] or [clause]
+        fragments = [f.strip() for f in split_grant_fragments(clause) if f.strip()] or [clause]
         # Pre-attack timing inherits across fragments: 攻撃前 leads the
         # clause while the grant fragment omits it (攻撃後 wins when present).
         clause_pre = (("攻撃前" in clause or "スキル使用前" in clause)
@@ -1789,13 +2046,11 @@ def parse_skill_state_grants(row: dict, state_index: dict,
                     or "敵" in frag or "相手" in frag):
                 inherit_scope, inherit_tags, inherit_attrs, inherit_roles = scope, tags, attrs, roles
                 if extreme:
-                    inherit_scope = "extreme_ally_patk_max"
+                    inherit_scope = scope
                 # Self + role-filtered allies (自身とディフェンダーの味方全員).
                 inherit_extra = ["self"] if (inherit_scope == "all_allies"
                                              and "自身と" in frag and inherit_roles) else []
             scope, tags, attrs, roles = inherit_scope, inherit_tags, inherit_attrs, inherit_roles
-            if extreme:
-                scope = "extreme_ally_patk_max"
             extra_scopes = list(inherit_extra)
 
             def emit(entry: dict, grant_scope: str) -> None:
@@ -1810,13 +2065,16 @@ def parse_skill_state_grants(row: dict, state_index: dict,
 
             process_skill_grant_fragment(
                 frag, clause, phase, scope, tags, attrs, roles, extra_scopes,
-                effects, effect_value, emit_all, existing_codes, state_index,
-                states_map, sid_hint, skill_names, behaviors)
+                effects, effect_value, next_effect_index, emit_all,
+                existing_codes, state_index,
+                states_map, sid_hint, skill_names, behaviors,
+                state_name_blob, has_placeholders)
     return behaviors
 
 
 def _skill_grant_base_entry(clause: str, phase: str, scope_tags: list = (),
-                              scope_attrs: list = (), scope_roles: list = ()) -> dict:
+                              scope_attrs: list = (), scope_roles: list = (),
+                              cap_override=None, stack_override=None) -> dict:
     duration = parse_duration(clause)
     cap_match = re.search(r"上限([0-9]+)%", clause)
     stack_match = re.search(r"上限([0-9]+)個", clause)
@@ -1833,8 +2091,10 @@ def _skill_grant_base_entry(clause: str, phase: str, scope_tags: list = (),
         "dur_action_phase": duration.get("dur_action_phase"),
         "dur_hits": duration.get("dur_hits", 0),
         "perm": bool(duration.get("perm")),
-        "cap": int(cap_match.group(1)) * 100 if cap_match else 0,
-        "stack_max": int(stack_match.group(1)) if stack_match else 0,
+        "cap": cap_override if cap_override is not None
+        else (int(cap_match.group(1)) * 100 if cap_match else 0),
+        "stack_max": stack_override if stack_override is not None
+        else (int(stack_match.group(1)) if stack_match else 0),
         "merge": bool("重複不可" in clause),
         "rate": rate,
         "fixed": bool("固定" in clause or "強化効果量変化の効果を受けない" in clause),
@@ -1843,6 +2103,60 @@ def _skill_grant_base_entry(clause: str, phase: str, scope_tags: list = (),
         "target_attrs": list(scope_attrs),
         "target_roles": list(scope_roles),
     }
+
+
+def split_grant_fragments(clause: str) -> list:
+    """Split a clause on commas outside 「」 quotes.
+
+    Grant text routinely nests 、 inside quoted state names (e.g.
+    「攻撃対象がブレイク状態の時、スキルダメージ+{0}%」); a naive split
+    tears the grant across fragments so neither half matches.
+    """
+    parts: list = []
+    depth = 0
+    current: list = []
+    chars = list(clause)
+    for pos, char in enumerate(chars):
+        if char == "「":
+            depth += 1
+            current.append(char)
+        elif char == "」":
+            depth = max(depth - 1, 0)
+            current.append(char)
+        elif depth == 0 and char in ("、", "，", ","):
+            # A 、 before a bare count continues the value (被ダメージ
+            # UP25%、2回); splitting there orphans the count and the grant.
+            rest = "".join(chars[pos + 1:pos + 6])
+            if re.match(r"[0-9]+回", rest):
+                current.append(char)
+            else:
+                parts.append("".join(current))
+                current = []
+        else:
+            current.append(char)
+    parts.append("".join(current))
+    return parts
+
+
+def trailing_segment_cap(frag: str, segment: str) -> int | None:
+    """Cap percent attached to one grant segment (上限30% / 上限10%).
+
+    Clauses often carry different caps per grant
+    (物防・魔防+{0}%(上限30%)と最大HP+{1}%(上限10%)); the clause-wide
+    first cap would misattribute them, so read the cap trailing the
+    segment itself (e.g. 510207 over cap-30 800156 for the HP grant).
+    """
+    try:
+        index = frag.find(segment)
+    except (AttributeError, TypeError):
+        return None
+    if index < 0:
+        return None
+    tail = frag[index + len(segment):]
+    match = re.match(r"[\s」」]*[（(]?上限([0-9]+)[%％][）)]?", tail)
+    if match:
+        return int(match.group(1)) * 100
+    return None
 
 
 def _split_grant_pairs(segment: str) -> list:
@@ -1859,13 +2173,17 @@ def _split_grant_pairs(segment: str) -> list:
 def process_skill_grant_fragment(frag: str, clause: str, phase: str, scope: str,
                                  tags: list, attrs: list, roles: list,
                                  extra_scopes: list, effects: list,
-                                 effect_value, emit_all, existing_codes,
+                                 effect_value, next_effect_index, emit_all,
+                                 existing_codes,
                                  state_index: dict, states_map: dict,
                                  sid_hint: int, skill_names: set | None,
-                                 behaviors: list) -> None:
+                                 behaviors: list,
+                                 state_name_blob: str = "",
+                                 has_placeholders: bool = True) -> None:
     """Parse one comma-fragment of a skill description for granted states."""
-    def base_entry():
-        return _skill_grant_base_entry(clause, phase, tags, attrs, roles)
+    def base_entry(cap_override=None, stack_override=None):
+        return _skill_grant_base_entry(clause, phase, tags, attrs, roles,
+                                       cap_override, stack_override)
 
     # Cleanse clauses.
     if "解除" in frag and ("マイナス効果" in frag or "状態異常" in frag):
@@ -1873,6 +2191,17 @@ def process_skill_grant_fragment(frag: str, clause: str, phase: str, scope: str,
         if code not in existing_codes:
             existing_codes.add(code)
             emit_all({"code": code, "value": 0, "pre": phase == "pre"})
+        return
+    if "解除" in frag and "プラス効果" in frag:
+        # Foe/ally plus-effect dispel (e.g. enemy burst 22002371) is covered
+        # at runtime by captured removals; this records-only entry reserves
+        # its positional effect slot so following grants stay aligned.
+        if "dispel_plus" not in existing_codes:
+            existing_codes.add("dispel_plus")
+            emit_all({"code": "dispel_plus", "value": 0,
+                      "effect_index": next_effect_index(),
+                      "target": scope, "foe": scope == "all_enemies",
+                      "pre": phase == "pre"})
         return
     # Forced break of one gauge.
     if "ブレイクゲージを0にする" in frag:
@@ -1923,8 +2252,11 @@ def process_skill_grant_fragment(frag: str, clause: str, phase: str, scope: str,
                           "effect_index": number,
                           "direction": 1, "foe": False, **base_entry()})
                 return
-    if "カウンター" in frag or "蘇生" in frag or "復活" in frag:
-        # Counter retaliation and revival stay records-only gaps.
+    if "蘇生" in frag or "復活" in frag:
+        # Revival stays a records-only gap.
+        return
+    if "カウンター" in frag and "付与" not in frag and "付与" not in clause:
+        # Counter retaliation stays a records-only gap.
         return
     if "パネル" in frag and ("変換" in frag or "生成" in frag):
         return
@@ -1960,52 +2292,185 @@ def process_skill_grant_fragment(frag: str, clause: str, phase: str, scope: str,
                       "value": int((effects[index] or {}).get("value") or 0) if index is not None else 0,
                       "effect_index": index, "foe": False, **base_entry()})
         return
-    # Quoted and bare grant segments.
+    # Quoted and bare grant segments. Explanatory notes (e.g. ※ clauses
+    # describing what a state does) name states without granting them, so
+    # quoted names only count when the fragment or clause grants something.
     segments: list = []
     for quoted in SKILL_GRANT_QUOTED_RE.findall(frag):
-        segments.append(quoted)
-    for bare in re.findall(r"(?:対象|自身|相手全員|敵全体|味方全員)に(.+?)を付与", frag):
+        if "付与" in frag or "付与" in clause:
+            segments.append(quoted)
+    for bare in re.findall(r"(?:対象|自身|相手全員|敵全体|味方全員|敵単体|味方単体)に(.+?)を付与", frag):
         if "「" not in bare:
             segments.append(bare)
-    match = re.search(r"(.+?)を付与$", frag.strip())
-    if match:
-        candidate = match.group(1).strip()
-        if candidate and "付与" not in candidate and "「" not in frag:
-            segments.append(candidate)
+    if not segments and "付与" in clause:
+        targeted_fragment = re.search(
+            r"(?:自身|対象|相手全員|敵全体|味方全員|味方全体|敵単体|味方単体)に(.+)$", frag
+        )
+        if targeted_fragment:
+            segments.append(targeted_fragment.group(1))
+    # Prefix-less parenthesized grants inherit their target from earlier
+    # fragments (自身にカウンター(3回)、被ダメージDOWN(30%/3回)); without a
+    # segment they vanish, so the fragment itself becomes the segment.
+    if (not segments and "付与" in clause
+            and re.search(r"\([0-9]+[%％]?/[0-9]+回\)", frag)):
+        segments.append(frag)
+    # State-change になる grants (かばう状態(3回)になる) name no 付与;
+    # without this the cover grant vanishes (32005798).
+    if not segments:
+        become = re.search(r"(.+?)になる$", frag.strip())
+        if become:
+            candidate = become.group(1).strip()
+            if candidate and "付与" not in candidate:
+                segments.append(candidate)
+    # Timed/bare fallbacks overlap the targeted forms above (both match
+    # 「...」-free grants ending in 付与), so they only run when no target
+    # prefix is present; otherwise one grant emits twice (e.g. 毒8つ5回).
+    has_target_prefix = bool(re.search(
+        r"(?:対象|自身|相手全員|敵全体|味方全員|味方全体|敵単体|味方単体)に", frag))
+    if "「" not in frag and not has_target_prefix:
+        timed_bare = re.search(
+            r"(.+?)を(?:[0-9]+回(?:行動開始|行動終了)するまで|"
+            r"[0-9]+回攻撃を受けるまで)?付与$",
+            frag.strip(),
+        )
+        if timed_bare:
+            segments.append(timed_bare.group(1))
+        match = re.search(r"(.+?)を付与$", frag.strip())
+        if match:
+            candidate = match.group(1).strip()
+            if candidate and "付与" not in candidate:
+                segments.append(candidate)
+    segments = [
+        re.sub(r"^(?:対象|自身|相手全員|敵全体|味方全員|味方全体|敵単体|味方単体)に", "", segment)
+        for segment in segments
+    ]
+    # Parallel extraction paths (targeted/bare/timed forms) yield the same
+    # grant with and without its trailing を付与 suffix; normalize before
+    # dedup so one behavior is emitted (e.g. 毒8つ5回を付与 vs 毒8つ5回).
+    segments = [
+        re.sub(
+            r"を(?:[0-9]+回(?:行動開始|行動終了)するまで|"
+            r"[0-9]+回攻撃を受けるまで)?付与$",
+            "",
+            segment,
+        )
+        for segment in segments
+    ]
+    segments = list(dict.fromkeys(seg for seg in segments if seg))
     seen_parts: set = set()
     for segment in segments:
+        # For unquoted grants the generic "...を付与" form includes the
+        # duration between the state name and 付与. Remove it before looking
+        # for the state's literal/value so e.g. 回復無効状態を2回行動終了
+        # するまで付与 resolves to state 920001 with value 0, not value 200.
+        segment = re.sub(
+            r"[0-9]+回(?:行動開始|行動終了)するまで|[0-9]+回攻撃を受けるまで",
+            "", segment,
+        )
         if "変換" in segment:
             continue  # handled at fragment level above
-        pairs = _split_grant_pairs(segment)
+        # The middle dot is both a Japanese compound separator (物攻・魔攻)
+        # and part of named effects such as ハイ・ドミナンス. Keep an ailment
+        # name intact before applying the compound-stat split.
+        if any(name in segment for name in AILMENTS):
+            pairs = [segment]
+        else:
+            pairs = _split_grant_pairs(segment)
         seg_numbers = [int(n) for n in re.findall(r"\{([0-9]+)\}", segment)]
         seg_shared = seg_numbers[0] if len(set(seg_numbers)) == 1 else None
+        # Segment-local caps (物防・魔防+{0}%(上限30%)と最大HP+{1}%(上限10%)):
+        # the clause-wide first cap would misattribute them.
+        seg_cap = trailing_segment_cap(frag, segment)
         for pair in pairs:
             part = re.sub(r"^(?:と|、|，|,|・|を|に)+", "", pair.strip())
             if not part or part in seen_parts:
                 continue
             seen_parts.add(part)
-            value_match = re.search(r"([+\-−])?(?:\{([0-9]+)\}|([0-9]+))[%％]?", part)
+            # Tag-count scaled ranges (魔攻+10～50%, 基礎魔攻+100～300):
+            # keep the range floor as the literal value; the master effect
+            # (via reconcile) carries the battle value since text scales.
+            part = re.sub(r"([+\-−][0-9]+)[～〜~][0-9]+[%％]?",
+                          lambda m: m.group(1), part)
+            # Parenthesized and trailing-count value forms carry literal
+            # values with hit/action counts instead of placeholders
+            # (与える強化効果DOWN(50%/3回), 被ダメージUP25%、2回,
+            # カウンター(3回)). Claim the next positional effect slot so
+            # multi-grant tools stay aligned with their effect list.
+            positional_value = None
+            paren = re.search(r"\(([0-9]+)[%％]/([0-9]+)回\)", part)
+            if paren:
+                positional_value = int(paren.group(1)) * 100
+                part = re.sub(r"\([0-9]+[%％]/[0-9]+回\)", "", part)
+            else:
+                tail = re.search(r"([0-9]+)[%％]?、([0-9]+)回$", part)
+                if tail:
+                    positional_value = int(tail.group(1)) * 100
+                    part = re.sub(r"[0-9]+[%％]?、[0-9]+回$", "", part)
+                else:
+                    count_only = re.search(r"\([0-9]+回\)", part)
+                    if count_only:
+                        part = re.sub(r"\([0-9]+回\)", "", part)
+            positional_index = None
+            if positional_value is not None:
+                positional_index = next_effect_index()
+            # Skill-rank references (スキル2から受けるダメージ) are not
+            # values: shield their digits before numeric matching, then
+            # restore the rank word for state matching (800232).
+            rank_num = None
+            rank_hit = re.search(r"スキル([0-9]+)", part)
+            if rank_hit:
+                rank_num = rank_hit.group(1)
+            shielded = re.sub(r"スキル[0-9]+", "スキルRANK", part) if rank_num else part
+            value_match = re.search(r"([+\-−])?(?:\{([0-9]+)\}|([0-9]+))[%％]?", shielded)
             sign = value_match.group(1) if value_match else None
             placeholder = value_match.group(2) if value_match else None
             literal = value_match.group(3) if value_match else None
-            core = re.sub(r"([+\-−])?(?:\{[0-9]+\}|[0-9]+)[%％]?", "", part)
+            core = re.sub(r"([+\-−])?(?:\{[0-9]+\}|[0-9]+)[%％]?", "", shielded)
+            if rank_num:
+                core = core.replace("スキルRANK", "スキル" + rank_num)
+            # Tag-count scaled ranges (魔攻+10～50%, 基礎魔攻+100～300):
+            # the slot core precedes the range; values resolve from the
+            # master effect (reconcile) since the text scales by roster.
+            core = re.sub(r"[+＋]?[0-9]*[～〜~][0-9]+[%％]?$", "", core)
             core = re.sub(r"\([^)]*\)", "", core).strip()
+            core = re.sub(r"(?:[0-9]+回)?行動(?:開始|終了)するまで$", "", core)
+            core = re.sub(r"(?:[0-9]+回)?攻撃を受けるまで$", "", core)
+            core = re.sub(r"を$", "", core)
+            core = re.sub(r"状態$", "", core)
+            # Conditional prefixes (自身がアタッカーの時、 / 攻撃対象が
+            # ブレイク状態の時、) select when the grant applies; the slot
+            # core follows the 、 (e.g. 910064, 610021).
+            core = re.sub(r"^.*の時、", "", core)
             core = re.sub(r"^(?:と|、|，|,|・|を|に)+", "", core)
-            if (not core or "スキルランプ" in core or "上限" in core or "Lv" in core
+            # Orphaned counters (2回を付与 split from its value) carry no
+            # slot; without this they match any state mentioning 回.
+            if (not core or core in ("回", "つ", "個")
+                    or "スキルランプ" in core or "上限" in core or "Lv" in core
                     or core in TAG_INDEX
-                    or (skill_names is not None and core in skill_names)):
+                    or (skill_names is not None and core in skill_names
+                        and core not in state_name_blob)):
                 continue
             number = int(placeholder) if placeholder is not None else seg_shared
             if placeholder is not None or seg_shared is not None:
                 # Reserve positional effect slots even when skipped, so
                 # later fallbacks stay aligned.
                 effect_value(int(number))
+            elif positional_index is not None:
+                number = positional_index
+            elif "カウンター" in core or not has_placeholders:
+                # Self-granted counter states are positional (tools list
+                # them first); placeholder-less grants otherwise attach to
+                # the last effect. Placeholder-free skills map successive
+                # grants onto successive effects instead.
+                number = next_effect_index()
             direction = -1 if (sign in ("-", "−") or "ダウン" in part
                                or "減少" in part or "低下" in part or "DOWN" in part) else 1
             if "回避" in core:
                 prob = re.search(r"確率([0-9]+)%", segment)
                 value = int(prob.group(1)) * 100 if prob else 10000
-                state_row = match_grant_state("回避", direction, clause, state_index,
+                # Qualified evasion (魔法攻撃回避) must keep its qualifier;
+                # matching bare 回避 loses it (22001966 needs 710035).
+                state_row = match_grant_state(core, direction, clause, state_index,
                                               states_map, sid_hint)
                 if state_row is None:
                     continue
@@ -2025,27 +2490,33 @@ def process_skill_grant_fragment(frag: str, clause: str, phase: str, scope: str,
                           "effect_index": number,
                           "direction": direction, "foe": False, **base_entry()})
                 continue
-            ailment_id = match_grant_ailment(core, clause, states_map)
-            if ailment_id is not None or any(
-                    keyword in core for keyword in AILMENTS):
-                if ailment_id is None:
-                    continue
-                emit_all({"code": "state_grant", "state_id": ailment_id,
-                          "value": 0, "effect_index": None,
-                          "direction": 1, "foe": "対象" in clause or "敵" in clause,
-                          **base_entry()})
-                continue
             state_row = None
             cap_key = re.search(r"上限([0-9]+)%", clause)
             cap_value = int(cap_key.group(1)) if cap_key else 0
+            if seg_cap is not None:
+                cap_value = seg_cap // 100
             override_id = GRANT_STATE_OVERRIDES.get((sid_hint, core, cap_value))
-            if override_id is not None:
-                state_row = {"id": override_id}
-            else:
+            if override_id is None:
+                ailment_id = match_grant_ailment(core, clause, states_map, state_index)
+                # Resistance grants (火傷耐性-, 全属性耐性-) name an ailment
+                # only to select the resisted element; they resolve through
+                # state matching below, never through the ailment path.
+                if "耐性" not in core and (ailment_id is not None or any(
+                        keyword in core for keyword in AILMENTS)):
+                    if ailment_id is None:
+                        continue
+                    emit_all({"code": "state_grant", "state_id": ailment_id,
+                              "value": 0, "effect_index": None,
+                              "direction": 1, "foe": "対象" in clause or "敵" in clause,
+                              **base_entry()})
+                    continue
                 state_row = match_grant_state(
                     core, direction, clause, state_index,
                     states_map, sid_hint,
-                    alt_cores=tuple(GRANT_CORE_SYNONYMS.get(core, ())))
+                    alt_cores=tuple(GRANT_CORE_SYNONYMS.get(core, ())),
+                    cap_override=seg_cap)
+            else:
+                state_row = {"id": override_id}
             if state_row is None:
                 continue
             if number is not None:
@@ -2054,6 +2525,14 @@ def process_skill_grant_fragment(frag: str, clause: str, phase: str, scope: str,
                 value = int(literal) * 100
             else:
                 value = 0
+            if positional_index is not None:
+                # Positional literal-value grants read the master effect
+                # value at their claimed slot (it agrees with the text).
+                number = positional_index
+                try:
+                    value = int((effects[number] or {}).get("value", 0) or 0)
+                except (IndexError, TypeError, ValueError):
+                    value = positional_value or 0
             hostile = direction < 0 or any(
                 word in core for word in ("耐性", "ダメージ", "防御", "素早さ"))
             emit_all({"code": "state_grant",
@@ -2062,7 +2541,7 @@ def process_skill_grant_fragment(frag: str, clause: str, phase: str, scope: str,
                       "direction": direction,
                       "foe": bool(hostile and ("対象" in clause or "敵" in clause
                                               or "相手" in clause)),
-                      **base_entry()})
+                      **base_entry(cap_override=seg_cap)})
 
 
 

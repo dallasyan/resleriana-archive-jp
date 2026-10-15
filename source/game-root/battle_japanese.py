@@ -1200,13 +1200,14 @@ NEGATIVE_VALUE_KINDS = {
     "crit_rate", "crit_damage", "break_up", "penetration", "recovery_given",
     "recovery_received", "item_damage", "item_crit", "item_heal",
     "cannon_damage", "cannon_crit", "burst_damage",
+    "potency_received",
 }
 
 
 def is_negative_effect_buff(buff: dict) -> bool:
     kind = buff.get("kind")
     value = int(buff.get("value", 0) or 0)
-    if kind == "ailment":
+    if kind in ("ailment", "heal_block"):
         return True
     if kind in ("taken", "resist_down", "taken_break", "taken_crit_damage"):
         return value > 0
@@ -1223,34 +1224,40 @@ def negative_effect_count(member: dict | None) -> int:
     )
 
 
-# Grant-immunity states. Only 810224 (boss aura "immune to effects received
-# from opponents", battle_hint battle-start aura on e.g. score boss 10282002)
-# is capture-corroborated: holders never receive cross-side grants, and
-# skills that go on to debuff them remove 810224 first (see skill_effect_map
-# removals such as 14003891/81264003). The block covers every cross-side
-# state grant, hostile or not: skill 11003896 deals 510209/910078/910079/
-# 820074/610535 to foes in other battles, yet the score-battle capture shows
-# none of those deals against the 810224-holding boss. Broader minus/plus/
-# heal immunity sets were dropped: corpus-wide mining (466 attacks, 8789
-# deals, zero failures) shows allies holding battle-start markers such as
-# 920002 still receive ally grants, and no capture evidences the other
-# candidate states blocking. Blocked grants are silent: captures show no
-# effect result for them.
+# Grant-immunity states. State master descriptions explicitly distinguish
+# plus/minus-effect immunity, healing immunity, and immunity to effects from
+# opponents. 810224 blocks every cross-side grant (corroborated by score
+# boss 10282002); the remaining states block only their named effect class.
+# 920002 on Marie's party at battle start is removed by her pre-skill cleanse
+# (captured 91001967 before-skill results), which is why her later ally buffs
+# land; that removal does not make the immunity itself inert.
 OPPONENT_EFFECT_IMMUNITY_STATES = frozenset({810224})
+MINUS_EFFECT_IMMUNITY_STATES = frozenset({810215, 810374, 910002})
+PLUS_EFFECT_IMMUNITY_STATES = frozenset({720028, 920002})
+HEAL_IMMUNITY_STATES = frozenset({720001, 920001})
 
 
 def grant_blocked_by_immunity(giver: dict | None, target: dict | None,
                               kind: str | None, value: int = 0,
                               ailment: str | None = None) -> bool:
-    """Whether a grant fails on target immunity (self-grants always land)."""
+    """Whether a grant fails on target immunity.
+
+    Opponent-effect immunity is source-relative; plus/minus immunity applies
+    regardless of who grants the effect, including a self-grant.
+    """
     if not isinstance(giver, dict) or not isinstance(target, dict):
-        return False
-    if giver.get("id") == target.get("id"):
         return False
     ids = {int(buff.get("id", 0) or 0) for buff in target.get("buffs", [])}
     if not ids:
         return False
-    if giver.get("side") != target.get("side") and ids & OPPONENT_EFFECT_IMMUNITY_STATES:
+    hostile = is_negative_effect_buff({"kind": kind, "value": value, "ailment": ailment})
+    if (giver.get("id") != target.get("id")
+            and giver.get("side") != target.get("side")
+            and ids & OPPONENT_EFFECT_IMMUNITY_STATES):
+        return True
+    if ids & MINUS_EFFECT_IMMUNITY_STATES and hostile:
+        return True
+    if ids & PLUS_EFFECT_IMMUNITY_STATES and not hostile:
         return True
     return False
 
@@ -1490,6 +1497,11 @@ def lamp_damage_bonus(game_dir: Path, actor: dict, skill_id: int) -> int:
 def heal_member(sim: "BattleSim", member: dict, amount: int, fire: bool = True) -> int:
     """Heal with optional heal-received trigger firing. Returns HP restored."""
     if not member.get("alive") or amount <= 0:
+        return 0
+    buff_ids = {int(buff.get("id", 0) or 0) for buff in member.get("buffs", [])}
+    if buff_ids & HEAL_IMMUNITY_STATES or any(
+        buff.get("kind") == "heal_block" for buff in member.get("buffs", [])
+    ):
         return 0
     before = member["hp"]
     member["hp"] = min(before + amount, member.get("max_hp", before))
@@ -3583,9 +3595,23 @@ def apply_potency(
         return int(value)
     actor_mods = actor.get("mods", []) if isinstance(actor, dict) else []
     target_mods = target.get("mods", []) if isinstance(target, dict) else []
-    given_plus = sum_slot_mods(actor_mods, {"potency_given_plus"}, _potency_ctx(actor)) // 100
-    given_minus = sum_slot_mods(actor_mods, {"potency_given_minus"}, _potency_ctx(actor)) // 100
-    received = sum_slot_mods(target_mods, {"potency_received"}, _potency_ctx(target)) // 100
+    actor_buffs = actor.get("buffs", []) if isinstance(actor, dict) else []
+    target_buffs = target.get("buffs", []) if isinstance(target, dict) else []
+    given_plus = (
+        sum_slot_mods(actor_mods, {"potency_given_plus"}, _potency_ctx(actor))
+        + sum(int(buff.get("value", 0) or 0) for buff in actor_buffs
+              if buff.get("kind") == "potency_given_plus")
+    ) // 100
+    given_minus = (
+        sum_slot_mods(actor_mods, {"potency_given_minus"}, _potency_ctx(actor))
+        + sum(int(buff.get("value", 0) or 0) for buff in actor_buffs
+              if buff.get("kind") == "potency_given_minus")
+    ) // 100
+    received = (
+        sum_slot_mods(target_mods, {"potency_received"}, _potency_ctx(target))
+        + sum(int(buff.get("value", 0) or 0) for buff in target_buffs
+              if buff.get("kind") == "potency_received")
+    ) // 100
     if kind in ("out", "regen", "barrier", "evade", "heal"):
         factor = 1.0 + given_plus / 100 + received / 100
     elif kind in ("taken", "ailment", "ailment_dot"):
@@ -3804,6 +3830,9 @@ def grant_scope_targets(sim: "BattleSim", actor: dict, targets: list[dict],
     elif scope == "extreme_ally_patk_max":
         pool = sim.alive_allies() if actor["side"] == 0 else sim.alive_foes()
         pool = [max(pool, key=lambda m: int(m.get("attack", 0) or 0))] if pool else []
+    elif scope == "extreme_ally_matk_max":
+        pool = sim.alive_allies() if actor["side"] == 0 else sim.alive_foes()
+        pool = [max(pool, key=lambda m: int(m.get("magic", 0) or 0))] if pool else []
     else:
         pool = [t for t in (targets or []) if t.get("alive")]
     want_attrs = {
@@ -3893,6 +3922,228 @@ def skill_removals_for_skill(game_dir: Path, skill_id: int) -> list[dict]:
             if isinstance(entry, dict) and int(entry.get("effect_id", 0) or 0) in intrinsic]
 
 
+def reconcile_captured_skill_grants(game_dir: Path, skill_id: int,
+                                   behaviors: list[dict]) -> list[dict]:
+    """Bind parsed state grants to captured effect/state master-ID pairs.
+
+    Skill-description placeholders don't always correspond one-to-one with
+    ``skill.effects`` positions: a shared placeholder can feed several
+    effects, and the master array can interleave grants from different text
+    segments. The capture-derived ``skill_effect_map.state_grants`` records
+    successful intrinsic (effect_id, state_id) pairs. Prefer an exact state
+    match to correct its effect index; if state-row text matching selected a
+    duplicate, use the observed state for that parsed effect index when the
+    capture has a unique winning state.
+    """
+    try:
+        table = battle_table(game_dir, "skill_effect_map") or {}
+        skill = battle_table(game_dir, "skill").get(str(int(skill_id or 0)), {})
+    except (OSError, ValueError):
+        return behaviors
+    effects = skill.get("effects") or []
+    effect_indexes: dict[int, list[int]] = {}
+    for index, effect in enumerate(effects):
+        try:
+            effect_id = int(effect.get("id", 0) or 0)
+        except (AttributeError, TypeError, ValueError):
+            continue
+        if effect_id:
+            effect_indexes.setdefault(effect_id, []).append(index)
+    raw = (table.get("state_grants") or {}).get(str(int(skill_id or 0)), [])
+    observed = []
+    for entry in raw if isinstance(raw, list) else []:
+        if not isinstance(entry, dict):
+            continue
+        try:
+            effect_id = int(entry.get("effect_id", 0) or 0)
+        except (TypeError, ValueError):
+            continue
+        indexes = effect_indexes.get(effect_id) or []
+        states: dict[int, int] = {}
+        for state in entry.get("states", []) or []:
+            try:
+                state_id = int(state.get("id", 0) or 0)
+                count = int(state.get("count", 0) or 0)
+            except (AttributeError, TypeError, ValueError):
+                continue
+            if state_id:
+                states[state_id] = states.get(state_id, 0) + count
+        if indexes and states:
+            for index in indexes:
+                observed.append({"effect_id": effect_id, "index": index,
+                                 "states": states})
+    if not observed:
+        return behaviors
+
+    result = [dict(behavior) if isinstance(behavior, dict) else behavior
+              for behavior in behaviors]
+    used: set[int] = set()
+
+    def choose(candidates: list[int], current_index,
+               preferred_state: int | None = None) -> int | None:
+        available = [index for index in candidates if index not in used]
+        if not available:
+            return None
+        if isinstance(current_index, int):
+            same_index = [index for index in available
+                          if observed[index]["index"] == current_index]
+            if same_index:
+                available = same_index
+        return max(
+            available,
+            key=lambda index: (
+                observed[index]["states"].get(
+                    preferred_state,
+                    max(observed[index]["states"].values()),
+                ),
+                -observed[index]["index"],
+                -observed[index]["effect_id"],
+            ),
+        )
+
+    pending = []
+    # Exact state-ID evidence is strongest and lets shared placeholders fan
+    # out to their distinct wire effect IDs without duplicating results.
+    for position, behavior in enumerate(result):
+        if not isinstance(behavior, dict) or behavior.get("code") != "state_grant":
+            continue
+        try:
+            state_id = int(behavior.get("state_id", 0) or 0)
+        except (TypeError, ValueError):
+            state_id = 0
+        exact = [index for index, entry in enumerate(observed)
+                 if state_id in entry["states"]]
+        selected = choose(exact, behavior.get("effect_index"), state_id) if exact else None
+        if selected is None:
+            pending.append(position)
+        else:
+            used.add(selected)
+            entry = observed[selected]
+            behavior["effect_index"] = entry["index"]
+            behavior["state_id"] = state_id
+            behavior["value"] = int((effects[entry["index"]] or {}).get("value", 0) or 0)
+
+    for position in pending:
+        behavior = result[position]
+        current_index = behavior.get("effect_index")
+        if not isinstance(current_index, int) or not 0 <= current_index < len(effects):
+            continue
+        try:
+            current_effect_id = int((effects[current_index] or {}).get("id", 0) or 0)
+        except (AttributeError, TypeError, ValueError):
+            continue
+        candidates = [index for index, entry in enumerate(observed)
+                      if entry["effect_id"] == current_effect_id]
+        selected = choose(candidates, current_index) if candidates else None
+        if selected is None:
+            continue
+        used.add(selected)
+        entry = observed[selected]
+        states = entry["states"]
+        highest = max(states.values())
+        winners = [state_id for state_id, count in states.items() if count == highest]
+        # A tied cross-capture mapping is not strong enough to replace the
+        # parser's chosen row; effect-index reconciliation is still safe.
+        if len(winners) == 1:
+            behavior["state_id"] = winners[0]
+        behavior["effect_index"] = entry["index"]
+        behavior["value"] = int((effects[entry["index"]] or {}).get("value", 0) or 0)
+    # Fan out: one parsed behavior can own several identical wire effects
+    # (12003720's burst lands from both 91002223 and 91002224; 20010018's
+    # poison repeats eight times). Duplicate the bound behavior for each
+    # otherwise-unbound observed index sharing its state.
+    bound_indexes = set()
+    for position in range(len(result)):
+        behavior = result[position]
+        if isinstance(behavior, dict) and behavior.get("code") == "state_grant":
+            try:
+                bound_indexes.add(int(behavior.get("effect_index", -1)))
+            except (TypeError, ValueError):
+                pass
+    state_source: dict[int, dict] = {}
+    for position, behavior in enumerate(result):
+        if not isinstance(behavior, dict) or behavior.get("code") != "state_grant":
+            continue
+        try:
+            state_id = int(behavior.get("state_id", 0) or 0)
+        except (TypeError, ValueError):
+            continue
+        if state_id and state_id not in state_source:
+            state_source[state_id] = behavior
+    for entry in observed:
+        if entry["index"] in bound_indexes:
+            continue
+        dominant = max(entry["states"].items(), key=lambda item: (item[1], -item[0]))[0]
+        template = state_source.get(dominant)
+        if template is None:
+            # Capture-derived fallback: the wire shows this effect granting
+            # a state no description parser produced (textless tools like
+            # 20000014/20000127, role-split tools like 20007180). Synthesize
+            # a selected-scope behavior; link-owned effects stay with the
+            # runtime link path, and inert marker kinds stay ungranted.
+            if (int(skill_id or 0), entry["effect_id"]) in CAPTURED_STATE_EFFECT_LINKS:
+                continue
+            kind_info = state_kind(game_dir, dominant)
+            if kind_info.get("kind") in ("special", "dummy", "counter_state"):
+                continue
+            try:
+                direction = int(kind_info.get("direction", 1) or 1)
+            except (TypeError, ValueError):
+                direction = 1
+            side_counts: dict[int, int] = {}
+            for state_entry in raw:
+                if not isinstance(state_entry, dict):
+                    continue
+                try:
+                    if int(state_entry.get("effect_id", 0) or 0) != entry["effect_id"]:
+                        continue
+                except (TypeError, ValueError):
+                    continue
+                for seen in state_entry.get("states", []) or []:
+                    try:
+                        if int(seen.get("id", 0) or 0) != dominant:
+                            continue
+                    except (TypeError, ValueError):
+                        continue
+                    for side_key, side_count in (seen.get("sides", {}) or {}).items():
+                        try:
+                            side_counts[int(side_key)] = side_counts.get(int(side_key), 0) + int(side_count)
+                        except (TypeError, ValueError):
+                            continue
+            foe_side = (side_counts.get(1, 0) >= side_counts.get(0, 0)
+                        and (side_counts.get(1, 0) or side_counts.get(0, 0)))
+            try:
+                fallback_value = int((effects[entry["index"]] or {}).get("value", 0) or 0)
+            except (IndexError, TypeError, ValueError):
+                fallback_value = 0
+            result.append({
+                "code": "state_grant", "state_id": dominant,
+                "value": fallback_value, "effect_index": entry["index"],
+                "direction": direction, "foe": bool(foe_side),
+                "target": "selected", "pre": False,
+                "dur_actions": 0, "dur_action_phase": None, "dur_hits": 0,
+                "perm": False, "cap": 0, "stack_max": 0, "merge": False,
+                "rate": 100, "fixed": False,
+                "target_tags": [], "target_attrs": [], "target_roles": [],
+            })
+            bound_indexes.add(entry["index"])
+            state_source.setdefault(dominant, result[-1])
+            continue
+        clone = dict(template)
+        clone["effect_index"] = entry["index"]
+        try:
+            clone["value"] = int((effects[entry["index"]] or {}).get("value", 0) or 0)
+        except (IndexError, TypeError, ValueError):
+            pass
+        result.append(clone)
+        bound_indexes.add(entry["index"])
+        try:
+            state_source.setdefault(int(clone.get("state_id", 0) or 0), clone)
+        except (TypeError, ValueError):
+            pass
+    return result
+
+
 def apply_skill_removals(sim: "BattleSim", actor: dict, skill_id: int,
                          effect_blobs: list[dict]) -> None:
     """Apply capture-verified skill cleanse effects before map grants.
@@ -3954,7 +4205,11 @@ def apply_grant_behaviors(sim: "BattleSim", actor: dict, skill_id: int,
     """
     skills = battle_table(sim.game_dir, "skill")
     skill = skills.get(str(skill_id), {})
-    for behavior in resolve_attack_local_mods(sim, actor, skill_id):
+    behaviors = reconcile_captured_skill_grants(
+        sim.game_dir, skill_id,
+        resolve_attack_local_mods(sim, actor, skill_id),
+    )
+    for behavior in behaviors:
         if behavior.get("code") != "state_grant":
             continue
         if bool(behavior.get("pre")) != pre:
@@ -5234,6 +5489,14 @@ def build_member(member: dict) -> bytes:
         foe.extend(write_packed_varints(9, member.get("break_waits", []) or []))
         out.extend(write_field(13, 2, bytes(foe)))
     for buff in member.get("buffs", []):
+        try:
+            buff_id = int(buff.get("id", 0) or 0)
+        except (TypeError, ValueError):
+            buff_id = 0
+        if not buff_id:
+            # Internal markers (id 0) drive sim slots but never appear on
+            # the wire: captures carry no zero-id state changes.
+            continue
         out.extend(write_field(14, 2, build_state_change(buff)))
     initial_hp = member.get("initial_hp")
     if initial_hp is not None:

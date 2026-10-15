@@ -129,8 +129,13 @@ it from additional captures without bundling any capture or profile data:
 
 `skill_effect_map.json` (same directory) is likewise capture-derived: it stores
 per-skill removal effects mined from `removed_state_changes` effect results
-(skill/effect/state master IDs plus observation counts only). Refresh it from
-additional captures the same way:
+plus per-skill state-grant pairs mined from `dealt_state_change` results
+(skill/effect/state master IDs, target sides, and observation counts only).
+The runtime reconciles parsed description grants against the grant pairs
+(correcting effect indexes and duplicate rows), fans one behavior out onto
+repeated identical wire effects, and synthesizes selected-scope behaviors
+for textless or role-split effects. Refresh it from additional captures the
+same way:
 
 ```powershell
 & "C:\Users\Dallas Yan\AppData\Local\Programs\Python\Python310\python.exe" "tools\JapaneseOffline\build_skill_effect_map.py" "<private-capture-root>" "tools\JapaneseToolkit\share\game-root\battle-master"

@@ -124,7 +124,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 510123 | 飛剣Lv5以上時貫通力UP | Penetration Up at Flying Sword Lv5+ | Partial | done: kind=penetration applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510124 | 飛剣Lv10以上時貫通力UP | Penetration Up at Flying Sword Lv10+ | Partial | done: kind=penetration applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510125 | スタン状態の対象への与ダメージUP | Damage Up vs. Stunned | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 510126 | プラスパネルから受ける効果量UP | Boost Panel Effect Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 510126 | プラスパネルから受ける効果量UP | Boost Panel Effect Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 510127 | ショウタイムだ――！ | Showtime! | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510128 | ショウタイムだ――！ | Showtime! | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510129 | 学ぶことは尽きないわね | There's Always More to Learn | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -169,7 +169,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 510171 | ブレイク状態の敵を攻撃時2回回避付与 | Grant 2-Hit Evasion When Attacking Stunned Enemy | Partial | done: kind=evade applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510172 | ブレイク状態の敵を攻撃時上限設定用ダミーバフ(上限3個_ララ_水着_ABL2)付与 | Grant Dummy Buff for Limit Setting When Attacking Stunned Enemy (MAX 3 stacks_Lara_Swimsuit_ABL2) | Partial | missing: kind=dummy has no runtime behavior; effect records only |
 | 510173 | バーストスキル以外の貫通力UP | Non-Burst Skill Penetration Up | Partial | done: kind=penetration applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 510175 | マイナスパネルから受けるマイナス効果量UP | Received Negative Effects Up (Negative Panel) | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 510175 | マイナスパネルから受けるマイナス効果量UP | Received Negative Effects Up (Negative Panel) | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 510176 | 対象が麻痺・ねむり・スタン・王の威光の時与ダメージUP | Paralysis/Sleep/Daze/Regal Aura Target: Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510177 | 精一杯、応援します！ | I'll Give My All to Support You! | Partial | done: kind=recovery_given applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510178 | 物防UP | P.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -198,10 +198,10 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 510201 | 物攻UP | P.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510202 | 魔攻UP | M.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510203 | 回復力UP | Recovery Power Up | Partial | done: kind=recovery_given applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 510204 | 強化系パネルから受ける効果量UP | Boost-Type Panel Effect Potency Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 510204 | 強化系パネルから受ける効果量UP | Boost-Type Panel Effect Potency Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 510205 | 受けるダメージDOWN | Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510206 | 与えるダメージDOWN | Damage Dealt Down | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 510207 | 最大HPUP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 510207 | 最大HPUP | Max HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510208 | ブレイクダメージUP | Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510209 | 受けるダメージUP | Received Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510210 | 受けるクリティカルダメージUP | Received Critical Damage Up | Partial | done: kind=taken_crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -240,7 +240,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 510253 | ブレイクダメージUP | Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510254 | ブレイクダメージUP | Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510255 | 冥き追憶 | Dark Reminiscence | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 510256 | 与える強化効果量UP | Positive Effect Potency Given Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 510256 | 与える強化効果量UP | Positive Effect Potency Given Up | Unsure | missing: kind=potency_given_plus has no validated runtime handler |
 | 510257 | 判定用ダミーバフ | Dummy Buff for Judgment | Partial | missing: kind=dummy has no runtime behavior; effect records only |
 | 510258 | クリティカルダメージUP | Critical Damage Up | Partial | done: kind=ailment applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation; ailment frozen application roll |
 | 510259 | スキル威力UP | Skill Power Up | Partial | done: kind=skill_power applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -268,11 +268,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 510281 | 基礎物防DOWN | Base P.DEF Down | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510282 | 基礎魔防UP | Base M.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510283 | 基礎魔防DOWN | Base M.DEF Down | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 510284 | 基礎HPUP | Base HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 510284 | 基礎HPUP | Base HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510285 | アルケミチャンス | Alchemichance | Partial | done: kind=crit_rate applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510286 | 奮うこと雷霆の如し | Strive Like Thunder | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510287 | 奮うこと雷霆の如し | Strive Like Thunder | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 510288 | 一気に仕掛けよう！ | Let's Go All Out! | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 510288 | 一気に仕掛けよう！ | Let's Go All Out! | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510291 | 基礎物防UP | Base P.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510292 | 基礎魔防UP | Base M.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 510293 | 戦闘アイテムクリティカルダメージUP | Battle Item Critical Damage Up | Partial | done: kind=item_crit applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -380,7 +380,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 560080 | 基礎魔攻UP | Base M.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 560081 | 挑発状態の敵から受けるダメージDOWN | Damage Received Down (Provoke) | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 560082 | スキル威力UP | Skill Power Up | Partial | done: kind=skill_power applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610001 | HP上限UP | HP Limit Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 610001 | HP上限UP | HP Limit Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610002 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610003 | バーストダメージUP | Burst Damage Up | Partial | done: kind=burst_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610004 | クリティカル確率UP | Critical Rate Up | Partial | done: kind=crit_rate applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -449,12 +449,12 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 610091 | 与える回復量UP | Dealt Recovery Up | Partial | done: kind=recovery_given applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610092 | クリティカルダメージUP | Critical Damage Up | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610093 | パネル無効 | Panel Immunity | Partial | done: kind=panel_null granted and serialized; missing: state-specific battle behavior is not fully connected |
-| 610096 | 強化系パネルから受ける強化効果量UP | Received Buff Effects Up (Boost-Type Panel) | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 610096 | 強化系パネルから受ける強化効果量UP | Received Buff Effects Up (Boost-Type Panel) | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 610097 | クリティカル確率UP | Critical Rate Up | Partial | done: kind=crit_rate applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610098 | クリティカルダメージUP | Critical Damage Up | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610099 | 物攻UP | P. ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610100 | バーストダメージUP | Burst Damage Up | Partial | done: kind=burst_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610101 | 魔法被ダメージUP | Received M. Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 610101 | 魔法被ダメージUP | Received M. Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610102 | クリティカル確率UP | Critical Rate Up | Partial | done: kind=crit_rate applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610103 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610104 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -472,7 +472,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 610117 | 魔攻UP | M. ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610118 | WEAK攻撃時与ダメージUP | Weakness Attack Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610119 | 火耐性DOWN付与 | Inflicts Fire Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610120 | HP上限UP | HP Limit Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 610120 | HP上限UP | HP Limit Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610121 | 魔攻UP | M. ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610122 | 魔攻UP | M. ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610123 | 魔攻UP | M. ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -487,7 +487,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 610132 | 物防UP | P. DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610133 | 魔防UP | M. DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610134 | 被ダメージDOWN | Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610135 | 物理被ダメージUP | Received P. Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 610135 | 物理被ダメージUP | Received P. Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610136 | クリティカル確率UP | Critical Rate Up | Partial | done: kind=crit_rate applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610137 | クリティカルダメージUP | Critical Damage Up | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610138 | 物攻UP | P. ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -496,7 +496,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 610141 | 麻痺を超高確率で付与 | Inflict Paralysis (Very High Chance) | Partial | done: kind=ailment applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation; ailment paralysis application roll |
 | 610143 | 物攻UP | P. ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610144 | 被ダメージ：突UP | Received Damage: Stab Up | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610145 | 強化系パネルから受ける強化効果量UP | Received Buff Effects Up (Boost-Type Panel) | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 610145 | 強化系パネルから受ける強化効果量UP | Received Buff Effects Up (Boost-Type Panel) | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 610146 | 状態異常耐性DOWN | Status Effect Resist Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610147 | 喧嘩屋の一撃 | Brawl Master's Blow | Partial | done: kind=ailment applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation; ailment stun application roll |
 | 610148 | スキル威力UP | Skill Power Up | Partial | done: kind=skill_power applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -507,7 +507,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 610153 | 物攻UP | P. ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610155 | WEAK時与ダメージアップ | Damage Up Vs. Weakness | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610157 | 被ダメージ：雷UP | Received Damage: Bolt Up | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610159 | 魔法被ダメージUP | Received M. Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 610159 | 魔法被ダメージUP | Received M. Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610160 | 被クリティカルダメージUP | Received Critical Damage Up | Partial | done: kind=taken_crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610162 | 魔攻UP | M. ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610163 | 風ダメージUP | Air Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -517,24 +517,24 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 610167 | 魔攻UP | M. ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610168 | ブレイクダメージUP | Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610169 | 被ダメージ雷：UP | Received Damage: Bolt Up | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610170 | 強化系パネルから受ける強化効果量UP | Strengthened Panel Effect Potency Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 610170 | 強化系パネルから受ける強化効果量UP | Strengthened Panel Effect Potency Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 610171 | 素早さUP | Speed Up | Partial | done: kind=speed applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610172 | 開運招来 | Fortune Beckons | Partial | done: kind=item_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610173 | 被クリティカルダメージUP | Received Critical Damage Up | Partial | done: kind=taken_crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610174 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610175 | 強化系パネルから受ける強化効果量UP | Strengthened Panel Effect Potency Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 610175 | 強化系パネルから受ける強化効果量UP | Strengthened Panel Effect Potency Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 610176 | クリティカルダメージUP | Critical Damage Up | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610177 | 氷耐性DOWN | Ice Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610178 | 被ダメージ：氷UP | Received Damage: Ice Up | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610179 | クリティカル確率UP | Critical Rate Up | Partial | done: kind=crit_rate applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610180 | クリティカルダメージUP | Critical Damage Up | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610181 | 魔攻UP | M.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610182 | 絡まりリボン | Binding Ribbon | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 610182 | 絡まりリボン | Binding Ribbon | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610183 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610184 | 魔攻UP | M.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610185 | 魔法被ダメージDOWN | Magical Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610186 | 物理被ダメージDOWN | Physical Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610187 | HP上限UP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 610187 | HP上限UP | Max HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610188 | ダメージ無効 | Damage Nullification | Partial | done: kind=null_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610189 | ダメージ無効 | Damage Nullification | Partial | done: kind=null_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610190 | 物攻UP | P.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -556,7 +556,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 610207 | 受ける攻撃の貫通力UP | Received Attack Penetration Up | Partial | done: kind=penetration applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610208 | ブレイクダメージUP | Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610209 | 被ダメージ：火UP | Received Damage: Fire Up | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610210 | 魔法被ダメージUP | Magical Damage Received Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 610210 | 魔法被ダメージUP | Magical Damage Received Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610211 | バーストダメージUP | Burst Damage Up | Partial | done: kind=burst_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610212 | 魔攻UP | M.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610213 | 与ダメージUP | Damage Dealt Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -579,7 +579,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 610230 | アウトレンジ状態 | Out of Range | Partial | done: kind=range_out granted and serialized; missing: state-specific battle behavior is not fully connected |
 | 610231 | アウトレンジ状態 | Long Range | Partial | done: kind=range_out granted and serialized; missing: state-specific battle behavior is not fully connected |
 | 610232 | 火耐性DOWN | Fire Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610233 | 魔法被ダメージUP | Magical Damage Received Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 610233 | 魔法被ダメージUP | Magical Damage Received Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610234 | ブレイクダメージUP | Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610235 | ブレイクダメージUP | Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610236 | アウトレンジ状態 | Outer Range State | Partial | done: kind=range_out granted and serialized; missing: state-specific battle behavior is not fully connected |
@@ -593,21 +593,21 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 610244 | ブレイクダメージUP | Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610245 | 分解レポート | Analysis Report | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 610246 | 魔攻UP | M.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610247 | 強化系パネルから受ける効果量UP | Boost Panel Effect Up | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 610248 | 強化系パネルから受ける効果量UP | Boost-type Panel Effect Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 610247 | 強化系パネルから受ける効果量UP | Boost Panel Effect Up | Unsure | missing: kind=potency_received has no validated runtime handler |
+| 610248 | 強化系パネルから受ける効果量UP | Boost-type Panel Effect Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 610249 | 魔攻UP | M.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610250 | 風耐性DOWN | Air Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610251 | 状態異常耐性DOWN | Status Effect Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610252 | 物防UP | P.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610253 | 魔防UP | M.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610254 | 強化系パネルから受ける効果量UP | Boost-type Panel Effect Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 610254 | 強化系パネルから受ける効果量UP | Boost-type Panel Effect Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 610255 | 魔攻UP | M.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610256 | 物防UP | P.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610257 | 魔防UP | M.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610258 | 被弾時自身HP回復 | HP Recovery When Hit | Partial | done: kind=reactive_heal applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610259 | 物防UP | P.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610260 | 魔防UP | M.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610261 | 魔法被ダメージUP | Magic Damage Received Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 610261 | 魔法被ダメージUP | Magic Damage Received Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610262 | 上限設定用ダミーバフ | Dummy Buff for Limit Settings | Partial | missing: kind=dummy has no runtime behavior; effect records only |
 | 610263 | ブレイクダメージUP | Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610264 | バーストダメージUP | Burst Damage Up | Partial | done: kind=burst_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -682,10 +682,10 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 610333 | 魔攻UP | M.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610334 | 魔攻UP | M.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610335 | 雷ダメージUP | Bolt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610336 | HP上限UP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 610336 | HP上限UP | Max HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610337 | 被ダメージDOWN | Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610338 | 被ダメージDOWN | Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610339 | HP上限UP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 610339 | HP上限UP | Max HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610340 | 物攻UP | P.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610341 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610342 | バーストダメージUP | Burst Damage Up | Partial | done: kind=burst_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -741,7 +741,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 610392 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610393 | 貫通力UP | Penetration Up | Partial | done: kind=penetration applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610394 | クリティカルダメージUP | Critical Damage Up | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610395 | 強化系パネルから受ける強化効果量UP | Boost-Type Panel Effect Potency Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 610395 | 強化系パネルから受ける強化効果量UP | Boost-Type Panel Effect Potency Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 610396 | WEAK攻撃時貫通力UP | Penetration Up on Weak Attack | Partial | done: kind=penetration applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610397 | 受ける攻撃の貫通力UP | Received Attack Penetration Up | Partial | done: kind=penetration applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610398 | クリティカルダメージUP | Critical Damage Up | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -807,7 +807,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 610461 | ブレイクダメージUP | Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610462 | 物防UP | P.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610463 | 魔防UP | M.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610464 | HP上限UP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 610464 | HP上限UP | Max HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610465 | 物防UP | P.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; captured as two separate 4000-value stacks with rest counts 1/2; unsure: potency/stack refresh after the second stack is not captured |
 | 610466 | 魔防UP | M.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; captured as two separate 4000-value stacks with rest counts 1/2; unsure: potency/stack refresh after the second stack is not captured |
 | 610467 | 物防UP | P.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -817,7 +817,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 610471 | 貫通力UP | Penetration Up | Partial | done: kind=penetration applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610472 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610473 | 被バーストダメージUP | Received Burst Damage Up | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 610474 | HP上限UP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 610474 | HP上限UP | Max HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610475 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610476 | 雷耐性DOWN | Bolt Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610477 | 基礎魔攻UP | Base M.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -843,7 +843,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 610498 | スキル発動後、挑発を超高確率で付与 | Post-Skill Provoke (Very High Chance) | Partial | done: kind=ailment applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation; ailment taunt application roll |
 | 610499 | 物防UP | P.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610500 | 魔防UP | M.DEF Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610505 | HP上限UP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 610505 | HP上限UP | Max HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610506 | 魔攻UP | M.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610507 | クリティカル確率UP | Critical Rate Up | Partial | done: kind=crit_rate applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610508 | クリティカル確率UP | Critical Rate Up | Partial | done: kind=crit_rate applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -857,7 +857,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 610516 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610517 | リヒトルーメン | Rehtoloumen | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 610518 | 余剰クリティカル確率スキル威力変換 | Excess Critical Rate to Skill Power Conversion | Partial | done: kind=crit_rate applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 610519 | マイナスパネルから受けるマイナス効果量UP | Negative Effect Potency from Negative Panels Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 610519 | マイナスパネルから受けるマイナス効果量UP | Negative Effect Potency from Negative Panels Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 610520 | 条件付き被ダメージUP | Received Damage Up (Cond.) | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610522 | ブレイクダメージUP | Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 610523 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -910,7 +910,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 710025 | スキル回避 | Skill Evasion | Partial | done: kind=evade applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 710026 | 条件付きダメージUP | Damage Up (Cond.) | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 710027 | 魔攻UP | M.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 710028 | HP上限UP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 710028 | HP上限UP | Max HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 710029 | クリティカル確率UP | Critical Rate Up | Partial | done: kind=crit_rate applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 710030 | 条件付き与ダメージUP | Damage Dealt Up (Conditional) | Partial | done: counter state is detected on hit; missing: counter damage/targeting is not resolved |
 | 710031 | 回避 | Evade | Partial | done: kind=evade applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -924,10 +924,10 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 710079 | 行動するたびに与ダメージ増加 | Dealt Damage Boost Each Turn | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 710200 | 追加攻撃状態 | Follow-Up Attack | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 710278 | 物理攻撃被ダメージDOWN | P. Atk. Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 720001 | 回復無効 | Nullify HP Recovery | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 720001 | 回復無効 | Nullify HP Recovery | Unsure | missing: kind=heal_block has no validated runtime handler |
 | 720003 | クリティカルダメージDOWN | Critical Damage Down | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 720004 | 自身の状態異常耐性DOWN | Status Effect Resist Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 720005 | 受けるマイナス効果量増加 | Received Negative Effects Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 720005 | 受けるマイナス効果量増加 | Received Negative Effects Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 720006 | 被クリティカルダメージUP | Received Critical Damage Up | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 720007 | 物理ダメージDOWN | P. Damage Down | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 720008 | 被ダメージUP | Received Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -938,7 +938,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 720015 | 与える回復量DOWN | Given Recovery Down | Partial | done: kind=recovery_given applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 720016 | 受ける強化効果の効果量ダウン | Received Buff Effects Down | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 720017 | 受ける強化効果の効果量ダウン | Received Buff Effects Down | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 720018 | 与えるマイナス効果量DOWN | Given Negative Effect Potency Down | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 720018 | 与えるマイナス効果量DOWN | Given Negative Effect Potency Down | Unsure | missing: kind=potency_given_minus has no validated runtime handler |
 | 720019 | 条件付きマイナス効果回数増加 | Conditional Negative Effect Duration Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 720020 | アイテムゲージ回復量DOWN | Item Gauge Recovery Down | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 720021 | 雷耐性DOWN | Bolt Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -948,10 +948,10 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 720025 | 雷耐性DOWN | Bolt Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 720026 | 打耐性DOWN | Strike Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 720027 | 氷耐性DOWN | Ice Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 720028 | プラス効果無効 | Nullify Positive Effects | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 720028 | プラス効果無効 | Nullify Positive Effects | Unsure | missing: kind=immunity has no validated runtime handler |
 | 720077 | 行動するたびに被ダメージ増加 | Received Damage Increase Per Turn | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 800001 | HP上限UP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 800002 | HP上限UP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 800001 | HP上限UP | Max HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 800002 | HP上限UP | Max HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800003 | HP70%以上時物理ダメージUP | Phys. Damage Up if HP >= 70% | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800004 | ブレイクダメージUP | Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800005 | ブレイクダメージUP | Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -978,7 +978,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 800057 | 全体ダメージUP | [All] Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800059 | 奮励努力の防具 | Armor of Endeavor | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 800060 | 奮励努力のスパイク | Spiked Shoes of Endeavor | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 800061 | 与えるマイナス効果量UP | Inflicted Negative Effects Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 800061 | 与えるマイナス効果量UP | Inflicted Negative Effects Up | Unsure | missing: kind=potency_given_minus has no validated runtime handler |
 | 800062 | 一意専心の学ラン | Uniform of Dedication | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 800063 | 一意専心の消しゴム | Eraser of Dedication | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 800064 | 清廉潔白のワイシャツ | Immaculate Dress Shirt | Partial | missing: kind=special has no runtime behavior; effect records only |
@@ -1052,7 +1052,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 800133 | アタッカークリティカルダメージUP | Attacker Critical Damage Up | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800134 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800135 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 800136 | プラスパネルから受ける効果量UP | Positive Panel Effect Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 800136 | プラスパネルから受ける効果量UP | Positive Panel Effect Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 800137 | 条件付きクリティカル確率UP | Conditional Critical Rate Up | Partial | done: kind=crit_rate applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800138 | WEAK攻撃時与ダメージUP | Weakness Attack Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800139 | WEAK攻撃時与ダメージUP | Weakness Attack Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1071,9 +1071,9 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 800152 | 被ダメージDOWN | Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800153 | アタッカークリティカル確率UP | Attacker Critical Rate Up | Partial | done: kind=crit_rate applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800154 | 魔法被ダメージUP | Received Magic Damage Up | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 800155 | HP上限UP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 800156 | HP上限UP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 800157 | HP上限UP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 800155 | HP上限UP | Max HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 800156 | HP上限UP | Max HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 800157 | HP上限UP | Max HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800158 | 単体被ダメージDOWN | Single Target Damage Received Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800159 | 全体被ダメージDOWN | Area Attack Damage Received Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800160 | 被ダメージUP | Damage Received Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1084,7 +1084,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 800165 | WEAK攻撃時スキル威力UP | Skill Power Up When Attacking Weakness | Partial | done: kind=skill_power applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800166 | 物理被ダメージUP | Physical Received Damage Up | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 800167 | 被ダメージDOWN | Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 800168 | HP上限UP | HP Limit Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 800168 | HP上限UP | HP Limit Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800169 | 魔法被ダメージUP | Magical Damage Received Up | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 800170 | 被ダメージUP | Received Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800171 | 被ダメージUP | Received Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1100,16 +1100,16 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 800181 | 条件付きクリティカルダメージアップ | Conditional Critical Damage Up | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800182 | 斬耐性DOWN | Slash Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800183 | 被バーストダメージUP | Received Burst Damage Up | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 800184 | 物理被ダメージUP | Physical Damage Received Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 800184 | 物理被ダメージUP | Physical Damage Received Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800185 | 被クリティカルダメージUP | Critical Damage Received Up | Partial | done: kind=taken_crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800186 | 全体魔法被ダメージUP | All Mag. Atk. Received Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800187 | 全体魔法被ダメージUP | All Mag. Atk. Received Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800188 | 状態異常耐性DOWN | Status Effect Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800189 | スキル威力UP | Skill Power Up | Partial | done: kind=skill_power applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800190 | WEAK攻撃時与ダメージUP | Damage Up on Weak Attack | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 800191 | 受ける強化効果量UP | Positive Effect Potency Up | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 800192 | HP上限UP | HP Limit Up | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 800193 | HP上限UP | HP Limit Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 800191 | 受ける強化効果量UP | Positive Effect Potency Up | Unsure | missing: kind=potency_received has no validated runtime handler |
+| 800192 | HP上限UP | HP Limit Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 800193 | HP上限UP | HP Limit Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800194 | 火耐性DOWN | Fire Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800195 | 氷耐性DOWN | Ice Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800196 | 風耐性DOWN | Air Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1140,13 +1140,13 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 800221 | 条件付き被ダメージDOWN | Received Damage Down (Cond.) | Partial | done: kind=barrier applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800222 | スキル威力UP | Skill Power Up | Partial | done: kind=skill_power applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800223 | 判定用ダミーバフ | Dummy Buff for Determination | Partial | missing: kind=dummy has no runtime behavior; effect records only |
-| 800224 | 与える強化効果量UP | Given Positive Effect Potency Up | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 800225 | 与えるマイナス効果量UP | Dealt Negative Effects Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 800224 | 与える強化効果量UP | Given Positive Effect Potency Up | Unsure | missing: kind=potency_given_plus has no validated runtime handler |
+| 800225 | 与えるマイナス効果量UP | Dealt Negative Effects Up | Unsure | missing: kind=potency_given_minus has no validated runtime handler |
 | 800226 | 被ダメージUP | Received Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800227 | 被バーストスキルダメージUP | Received Burst Skill Damage Up | Partial | done: kind=burst_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800228 | 条件付きクリティカル確率UP | Critical Rate Up (Cond.) | Partial | done: kind=crit_rate applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 800229 | 強化系パネルから受ける強化効果量UP | Buff Effect Potency from Boost-Type Panels Up | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 800230 | 強化系パネルから受ける強化効果量UP | Buff Effect Potency from Boost-Type Panels Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 800229 | 強化系パネルから受ける強化効果量UP | Buff Effect Potency from Boost-Type Panels Up | Unsure | missing: kind=potency_received has no validated runtime handler |
+| 800230 | 強化系パネルから受ける強化効果量UP | Buff Effect Potency from Boost-Type Panels Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 800231 | 条件付きスキル威力UP | Skill Power Up (Cond.) | Partial | done: kind=skill_power applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800232 | 条件付き被ダメージUP | Received Damage Up (Cond.) | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 800233 | 判定用ダミーバフ | Calculation Dummy Buff | Partial | missing: kind=dummy has no runtime behavior; effect records only |
@@ -1165,9 +1165,9 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 810000 | クリティカル確率UP | Critical Rate Up | Partial | done: kind=crit_rate applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810001 | カウンター状態 | Counter Status | Partial | done: counter state is detected on hit; missing: counter damage/targeting is not resolved |
 | 810002 | 強化パネル獲得時追加効果 | Boost Panel Bonus Effect | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 810003 | 受ける強化効果量UP | Received Buff Effects Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 810003 | 受ける強化効果量UP | Received Buff Effects Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 810004 | 被ダメージDOWN | Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 810005 | 受ける強化効果量UP | Received Buff Effects Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 810005 | 受ける強化効果量UP | Received Buff Effects Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 810006 | 条件付きプラス効果量UP | Positive Effects Up (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 810007 | 被ダメージDOWN | Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810008 | 条件付き与ダメージ効果量UP | Dealt Damage Up (Cond.) | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1220,8 +1220,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 810100 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810101 | 被ダメージDOWN | Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810102 | 素早さUP | SPD Up | Partial | done: kind=speed applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 810107 | マイナス効果量DOWN | Negative Effect Potency Down | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 810108 | マイナス効果量DOWN | Negative Effect Potency Down | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 810107 | マイナス効果量DOWN | Negative Effect Potency Down | Unsure | missing: kind=potency_received has no validated runtime handler |
+| 810108 | マイナス効果量DOWN | Negative Effect Potency Down | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 810109 | カウンター状態 | Counter State | Partial | done: counter state is detected on hit; missing: counter damage/targeting is not resolved |
 | 810110 | カウンター状態 | Counter Status | Partial | done: counter state is detected on hit; missing: counter damage/targeting is not resolved |
 | 810128 | 条件付き与ダメージUP | Conditional Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1268,7 +1268,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 810215 | マイナス効果無効 | Negative Effect Immunity | Partial | done: kind=ailment_immune applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810216 | 全属性耐性UP | All Elemental Resistance Up | Partial | done: kind=resist_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810217 | 全属性耐性UP | All Elemental Resistance Up | Partial | done: kind=resist_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 810224 | 相手からの効果無効 | Enemy Effect Immunity | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 810224 | 相手からの効果無効 | Enemy Effect Immunity | Unsure | missing: kind=immunity has no validated runtime handler |
 | 810225 | submotion | submotion | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 810227 | 特殊回避状態 | Special Evade Status | Partial | done: kind=evade applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810319 | 与ダメージアップ | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1276,7 +1276,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 810321 | 与ダメージアップ(上限100%) | Dealt Damage Up (MAX 100%) | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810322 | 回復を受けるたび与ダメージUP(上限100%) | Damage Up after Recovery (MAX 100%) | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810323 | 条件付き被ダメージDOWN | Received Damage Down (Cond.) | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 810325 | 条件付きデバフ効果量DOWN | Debuff Effects Down (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 810325 | 条件付きデバフ効果量DOWN | Debuff Effects Down (Cond.) | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 810329 | 素早さUP | Speed Up | Partial | done: kind=speed applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810330 | 被ダメージDOWN | Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810332 | 被ダメージDOWN | Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1312,20 +1312,20 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 810406 | 突耐性DOWN付与無効 | Stab Resistance Down Immunity | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810407 | 魔法スキルダメージUP | Magic Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810408 | 物理スキルダメージUP | Physical Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 810409 | HP上限UP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 810409 | HP上限UP | Max HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810410 | 魔法スキルダメージUP | Magic Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810411 | 物理スキルダメージUP | Physical Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 810412 | HP上限UP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 810412 | HP上限UP | Max HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810413 | 被ダメージDOWN | Damage Received Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810414 | 条件付きスキル威力UP | Skill Power Up (Cond.) | Partial | done: kind=skill_power applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810416 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 810417 | 条件付き与強化効果量UP | Positive Effect Potency Up (Conditional) | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 810418 | 被ダメージDOWN | Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 820000 | 受けるマイナス効果量UP | Received Negative Effect Potency Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 820000 | 受けるマイナス効果量UP | Received Negative Effect Potency Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 820001 | 被ダメージUP | Received Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 820002 | 与ダメージDOWN | Dealt Damage Down | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 820003 | 魔法被ダメージUP | Received M. Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 820005 | 受けるマイナス効果量UP | Received Negative Effects Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 820003 | 魔法被ダメージUP | Received M. Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 820005 | 受けるマイナス効果量UP | Received Negative Effects Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 820006 | 斬耐性DOWN | Slash Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 820007 | 斬耐性DOWN | Slash Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 820008 | 斬耐性DOWN | Slash Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1437,14 +1437,14 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 820133 | 条件付き被ブレイクダメージUP | Received Stun Damage Up (Cond.) | Partial | done: kind=taken_break applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 820134 | 被クリティカル率UP | Critical Rate Received Up | Partial | done: kind=crit_rate applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 820135 | 被ダメージUP | Received Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 820136 | 与える強化効果量DOWN | Positive Effect Potency Down | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 820136 | 与える強化効果量DOWN | Positive Effect Potency Down | Unsure | missing: kind=potency_given_plus has no validated runtime handler |
 | 820137 | 与ダメージDOWN | Dealt Damage Down | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 820138 | 条件付き被ブレイクダメージUP | Conditional Received Stun Damage Up | Partial | done: kind=taken_break applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 820139 | 条件付き被クリティカルダメージUP | Conditional Received Critical Damage Up | Partial | done: kind=taken_crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 820141 | 条件付き被マイナス効果量UP | Received Negative Effect Potency Up (Cond.) | Partial | done: kind=cleanse_turn_start applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 820200 | 状態異常耐性DOWN | Status Effect Resist Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 820210 | 被ダメージUP | Damage Received Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 820211 | 与える強化効果量DOWN | Granted Positive Effect Potency Down | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 820211 | 与える強化効果量DOWN | Granted Positive Effect Potency Down | Unsure | missing: kind=potency_given_plus has no validated runtime handler |
 | 820222 | 被ダメージUP | Received Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 820300 | 条件付き被ダメージUP | Received Damage Up (Cond.) | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 820301 | 被ダメージUP | Damage Received Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1542,8 +1542,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 910060 | 単体スキルダメージUP | Single-Target Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910063 | 毒耐性DOWN | Poison Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910064 | ブレイク中ダメージUP | Damage Up During Stun | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 910066 | 受けるマイナス効果量UP | Negative Effect Potency Up | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 910068 | 与える強化効果量UP | Given Buff Effects Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 910066 | 受けるマイナス効果量UP | Negative Effect Potency Up | Unsure | missing: kind=potency_received has no validated runtime handler |
+| 910068 | 与える強化効果量UP | Given Buff Effects Up | Unsure | missing: kind=potency_given_plus has no validated runtime handler |
 | 910069 | HP最大時与ダメージUP | Dealt Damage Up if HP Full | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910070 | 単体ブレイクダメージUP | Single-Target Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910071 | 全体ブレイクダメージUP | Attack All Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1553,11 +1553,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 910075 | 攻撃対象状態異常時与ダメージUP | Damage Up to Status Effects | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910076 | 単体クリティカルダメージUP | Single-target Critical Damage Up | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910077 | スキル2ダメージUP | Skill 2 Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 910078 | 物理被ダメージUP | Received P. Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 910079 | 魔法被ダメージUP | Received M. Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 910078 | 物理被ダメージUP | Received P. Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 910079 | 魔法被ダメージUP | Received M. Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910080 | 全体被ダメージDOWN | All Atk. Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910081 | HP70%以上時与ダメージUP | Skill Damage Up if HP >= 70% | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 910082 | HP上限UP | HP Limit Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 910082 | HP上限UP | HP Limit Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910083 | 被クリティカルダメージUP | Received Critical Damage Up | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910085 | 全体被ブレイクダメージUP | All Atk. Received Stun Damage Up | Partial | done: kind=taken_break applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910086 | 火傷耐性DOWN | Burn Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1569,7 +1569,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 910094 | スキル2ブレイクダメージUP | Skill 2 Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910095 | HP70%以上時被ダメージDOWN | Auto HP Recovery | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910097 | WEAK攻撃時与ダメージUP | Weakness Attack Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 910099 | 受けるマイナス効果量DOWN | Stun Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 910099 | 受けるマイナス効果量DOWN | Stun Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 910100 | クリティカル時ブレイクダメージUP | CRIT Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910102 | 魔法ブレイクダメージUP | Magic Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910103 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1577,7 +1577,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 910105 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910106 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910107 | ブレイクダメージUP | Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 910108 | 強化系パネルから受ける強化効果量UP | Received Buff Effects Up (Boost-Type Panel) | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 910108 | 強化系パネルから受ける強化効果量UP | Received Buff Effects Up (Boost-Type Panel) | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 910109 | 火氷雷風耐性DOWN | Fire/Ice/Bolt/Air Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910110 | ボス攻撃時ブレイクダメージUP | Stun Damage Up When Attacking Boss | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910111 | 自身のHPが70%以上時与えるHP回復量UP | HP Recovery Given Up When Own HP >= 70% | Partial | done: kind=recovery_given applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1594,7 +1594,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 910123 | 水棲からの被ダメージDOWN | Received Damage Down from Aquatic | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910124 | クリティカルダメージUP | Critical Damage Up | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910125 | 自身のHP50%以下時クリティカルダメージUP | Critical Damage Up When Own HP <= 50% | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 910126 | 受ける強化効果量UP | Received Buff Effects Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 910126 | 受ける強化効果量UP | Received Buff Effects Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 910127 | 自身のHP50%以上時クリティカルダメージUP | Critical Damage Up if Own HP>=50% | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910128 | 受ける攻撃のクリティカル率UP | Received Attack Critical Rate Up | Partial | done: kind=crit_rate applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910129 | スキル威力UP | Skill Power Up | Partial | done: kind=skill_power applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1617,14 +1617,14 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 910162 | アッチェレランド | Accelerando | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910163 | 魔攻UP | M.ATK Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910164 | 風属性かつWEAK攻撃時与ダメージUP | Air Affinity Weakness Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 910167 | 与える強化効果量UP | Granted Positive Effect Potency Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 910167 | 与える強化効果量UP | Granted Positive Effect Potency Up | Unsure | missing: kind=potency_given_plus has no validated runtime handler |
 | 910169 | 被ダメージDOWN | Damage Received Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910170 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910171 | バリア | Barrier | Partial | done: kind=barrier applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910172 | 被ダメージDOWN | Damage Received Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910173 | 魔法被ダメージUP | Received Magic Damage Up | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910174 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 910175 | HP上限UP | Max HP Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 910175 | HP上限UP | Max HP Up | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910176 | 受ける攻撃の貫通力UP | Received Attack Penetration Up | Partial | done: kind=penetration applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910177 | 被ダメージDOWN | Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910178 | 素早さDOWN | SPD Down | Partial | done: kind=speed applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1666,8 +1666,8 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 910220 | クリティカルダメージUP | Critical Damage Up | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910221 | 与ダメージUP | Dealt Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 910222 | クリティカルダメージUP | Critical Damage Up | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 920001 | 回復無効 | Nullify Recovery | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 920002 | プラス効果無効 | Nullify Positive Effects | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 920001 | 回復無効 | Nullify Recovery | Unsure | missing: kind=heal_block has no validated runtime handler |
+| 920002 | プラス効果無効 | Nullify Positive Effects | Unsure | missing: kind=immunity has no validated runtime handler |
 | 920003 | 魔法耐性DOWN | Magic Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 920004 | 物理耐性DOWN | Physical Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 920005 | 被回復量DOWN | Received Recovery Down | Partial | done: kind=recovery_received applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1791,7 +1791,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1210093 | ブレイクダメージUP(火) | Fire: Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210094 | 条件付きダメージUP(火) | Fire: Damage Up (Cond.) | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210095 | 条件付きプラス効果効果量UP(火) | Fire: Pos Effects Up (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 1210096 | 条件付きマイナス効果効果量UP(火) | Fire: Neg Effects Up (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 1210096 | 条件付きマイナス効果効果量UP(火) | Fire: Neg Effects Up (Cond.) | Unsure | missing: kind=potency_given_minus has no validated runtime handler |
 | 1210097 | 被回復量UP(火) | Fire: Received Recovery Up | Partial | done: kind=recovery_received applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210098 | 単体スキルダメージUP(火) | Fire: Single Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210099 | スキルダメージUP(火) | Fire: Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1805,7 +1805,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1210109 | ブレイクダメージUP(風) | Air: Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210110 | 条件付きダメージUP(風) | Air: Damage Up (Cond.) | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210111 | 条件付きプラス効果効果量UP(風) | Air: Pos Effects Up (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 1210112 | 条件付きマイナス効果効果量UP(風) | Air: Neg Effects Up (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 1210112 | 条件付きマイナス効果効果量UP(風) | Air: Neg Effects Up (Cond.) | Unsure | missing: kind=potency_given_minus has no validated runtime handler |
 | 1210113 | 被回復量UP(風) | Air: Received Recovery Up | Partial | done: kind=recovery_received applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210114 | 単体スキルダメージUP(風) | Air: Single Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210115 | スキルダメージUP(風) | Air: Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1819,7 +1819,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1210124 | ブレイクダメージUP(氷) | Ice: Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210125 | 条件付きダメージUP(氷) | Ice Damage Up (Cond.) | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210126 | 条件付きプラス効果効果量UP(氷) | Ice: Pos Effects Up (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 1210127 | 条件付きマイナス効果効果量UP(氷) | Ice: Neg Effects Up (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 1210127 | 条件付きマイナス効果効果量UP(氷) | Ice: Neg Effects Up (Cond.) | Unsure | missing: kind=potency_given_minus has no validated runtime handler |
 | 1210128 | 被回復量UP(氷) | Ice: Received Recovery Up | Partial | done: kind=recovery_received applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210129 | 単体スキルダメージUP(氷) | Ice: Single Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210130 | スキルダメージUP(氷) | Ice: Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1835,7 +1835,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1210141 | ブレイクダメージUP(雷) | Bolt: Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210142 | 条件付きダメージUP(雷) | Bolt: Damage Up (Cond.) | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210143 | 条件付きプラス効果効果量UP(雷) | Bolt: Pos Effects Up (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 1210144 | 条件付きマイナス効果効果量UP(雷) | Bolt: Neg Effects Up (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 1210144 | 条件付きマイナス効果効果量UP(雷) | Bolt: Neg Effects Up (Cond.) | Unsure | missing: kind=potency_given_minus has no validated runtime handler |
 | 1210145 | 被回復量UP(雷) | Bolt: Received Recovery Up | Partial | done: kind=recovery_received applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210146 | 単体スキルダメージUP(雷) | Bolt: Single Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210147 | スキルダメージUP(雷) | Bolt: Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1845,14 +1845,14 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1210152 | 条件付きダメージUP(雷) | Bolt: Damage Up (Cond.) | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210153 | クリティカルダメージUP(雷) | Bolt: Critical Damage Up | Partial | done: kind=crit_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210154 | 条件付き被ダメージDOWN | Received DMG Down (Cond.) | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 1210155 | 条件付きマイナス効果量UP | Neg Effects Up (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 1210155 | 条件付きマイナス効果量UP | Neg Effects Up (Cond.) | Unsure | missing: kind=potency_given_minus has no validated runtime handler |
 | 1210156 | 条件付きダメージUP | Damage Up (Cond.) | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210157 | ブレイク時スキルダメージUP | Skill Damage Up on Stun | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210158 | スキルダメージUP(斬) | Slash: Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210159 | ブレイクダメージUP(斬) | Slash: Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210160 | 条件付きダメージUP(斬) | Slash: Damage Up (Cond.) | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210161 | 条件付きプラス効果効果量UP(斬) | Slash: Pos Effects Up (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 1210162 | 条件付きマイナス効果効果量UP(斬) | Slash: Neg Effects Up (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 1210162 | 条件付きマイナス効果効果量UP(斬) | Slash: Neg Effects Up (Cond.) | Unsure | missing: kind=potency_given_minus has no validated runtime handler |
 | 1210163 | 被回復量UP(斬) | Slash: Received Recovery Up | Partial | done: kind=recovery_received applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210164 | 単体スキルダメージUP(斬) | Slash: Single Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210165 | スキルダメージUP(斬) | Slash: Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1867,7 +1867,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1210175 | ブレイクダメージUP(打) | Strike: Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210176 | 条件付きダメージUP(打) | Strike: Damage Up (Cond.) | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210177 | 条件付きプラス効果効果量UP(打) | Strike: Pos Effects Up (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 1210178 | 条件付きマイナス効果効果量UP(打) | Strike: Neg Effects Up (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 1210178 | 条件付きマイナス効果効果量UP(打) | Strike: Neg Effects Up (Cond.) | Unsure | missing: kind=potency_given_minus has no validated runtime handler |
 | 1210179 | 被回復量UP(打) | Strike: Received Recovery Up | Partial | done: kind=recovery_received applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210180 | 単体スキルダメージUP(打) | Strike: Single Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210181 | スキルダメージUP(打) | Strike: Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1883,7 +1883,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1210192 | ブレイクダメージUP(突) | Stab: Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210193 | 条件付きダメージUP(突) | Stab: Damage Up (Cond.) | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210194 | 条件付きプラス効果効果量UP(突) | Stab: Pos Effects Up (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 1210195 | 条件付きマイナス効果効果量UP(突) | Stab: Neg Effects Up (Cond.) | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 1210195 | 条件付きマイナス効果効果量UP(突) | Stab: Neg Effects Up (Cond.) | Unsure | missing: kind=potency_given_minus has no validated runtime handler |
 | 1210196 | 被回復量UP(突) | Stab: Received Recovery Up | Partial | done: kind=recovery_received applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210197 | 単体スキルダメージUP(突) | Stab: Single Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210198 | スキルダメージUP(突) | Stab: Skill Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1901,10 +1901,10 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1210211 | 条件付きダメージUP | Damage Up (Cond.) | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210212 | スキル威力UP | Skill Power Up | Partial | done: kind=skill_power applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210213 | ブレイク時追加効果 | Additional Effect on Stun | Partial | done: kind=cleanse_turn_start applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 1210214 | WEAK攻撃時、自身HP上限UP | Max HP Up on Weakness | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 1210215 | WEAK攻撃時、自身HP上限UP | Max HP Up on Weakness | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 1210216 | WEAK攻撃時、自身HP上限UP | Max HP Up on Weakness | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 1210217 | 受ける強化効果量UP | Received Buff Effects Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 1210214 | WEAK攻撃時、自身HP上限UP | Max HP Up on Weakness | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 1210215 | WEAK攻撃時、自身HP上限UP | Max HP Up on Weakness | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 1210216 | WEAK攻撃時、自身HP上限UP | Max HP Up on Weakness | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
+| 1210217 | 受ける強化効果量UP | Received Buff Effects Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 1210218 | 風ダメージUP | Air Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210219 | 全体回復量UP | All Recovery Up | Partial | done: kind=recovery_given applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210220 | 再生 | Regen | Partial | done: kind=regen applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1949,7 +1949,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1210261 | 条件付き強化効果量UP | Buff Effects Up (Cond.) | Partial | done: kind=item_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210262 | 条件付きクリティカルダメージUP | Critical Damage Up (Cond.) | Partial | done: kind=item_crit applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210263 | 条件付きHP回復 | HP Recovery (Cond.) | Partial | done: kind=item_heal applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 1210264 | 回復無効解除 | Remove Nullify Recovery | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 1210264 | 回復無効解除 | Remove Nullify Recovery | Unsure | missing: kind=heal_block has no validated runtime handler |
 | 1210265 | バーストダメージUP | Burst Damage Up | Partial | done: kind=burst_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210266 | アイテムダメージUP(突) | Item Damage Up (Stab) | Partial | done: kind=item_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210267 | アイテムダメージUP(打) | Item Damage Up (Strike) | Partial | done: kind=item_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1964,7 +1964,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1210276 | 条件付きブレイクダメージUP | Stun Damage Up (Cond.) | Partial | done: kind=item_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210277 | WEAKダメージUP | Weakness Damage Up | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210278 | アイテムダメージUP | Item Damage Up | Partial | done: kind=item_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 1210279 | WEAK攻撃時、自身HP上限UP | Max HP Up on Weakness | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 1210279 | WEAK攻撃時、自身HP上限UP | Max HP Up on Weakness | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210280 | カウンターダメージUP | Counter Damage Up | Partial | done: counter state is detected on hit; missing: counter damage/targeting is not resolved |
 | 1210281 | 被パネル効果量UP | Received Panel Effect Up | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 1210298 | アタッカーの被ダメージDOWN | Received Damage Down (Attacker) | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -1990,7 +1990,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1210319 | サポーターの行動時状態異常解除 | Supporter Remove Status Effects After Turn | Partial | done: kind=cleanse_turn_start applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210320 | ブレイクダメージUP | Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210321 | ブレイカーの行動時ブレイクダメージUP | Breaker Stun Damage Up After Turn | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 1210322 | 受ける強化効果量UP | Received Buff Effects Up | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 1210322 | 受ける強化効果量UP | Received Buff Effects Up | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 1210323 | 被ダメージDOWN | Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210324 | 被ダメージDOWN | Received Damage Down | Partial | done: kind=taken applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1210325 | WEAK攻撃時ブレイクダメージUP | Weakness Stun Damage Up | Partial | done: kind=break_up applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
@@ -2130,11 +2130,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 1220069 | アタッカー与ダメージDOWN | Attacker Dealt Damage Down | Partial | done: kind=skill_damage applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1220313 | スリップダメージ | Damage over Time | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 1220314 | アイテムゲージ回復低下 | Item Gauge Recovery Down | Partial | missing: kind=special has no runtime behavior; effect records only |
-| 1220316 | 強化効果量ダウン | Buff Effects Down | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 1220316 | 強化効果量ダウン | Buff Effects Down | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 1220326 | 魔防DOWN | M. DEF Down | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1220327 | 物防DOWN | P. DEF Down | Partial | done: kind=stat applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
 | 1220328 | 雷耐性DOWN | Bolt Resistance Down | Partial | done: kind=resist_down applies its mapped combat slot/trigger; unsure: grant value, remaining duration, and potency need capture confirmation |
-| 1220341 | 強化効果量DOWN | Positive Effect Potency Down | Partial | missing: kind=special has no runtime behavior; effect records only |
+| 1220341 | 強化効果量DOWN | Positive Effect Potency Down | Unsure | missing: kind=potency_received has no validated runtime handler |
 | 1250002 | 戦艦バトル | Battleship Battle | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 1250003 | 戦艦バトル | Battleship Battle | Partial | missing: kind=special has no runtime behavior; effect records only |
 | 1250004 | 戦艦バトル | Battleship Battle | Partial | missing: kind=special has no runtime behavior; effect records only |

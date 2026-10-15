@@ -3064,11 +3064,11 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 4990320 | WAVE開始時、自身に「ブレイクダメージ+{0}%」を2回行動終了するまで付与 | Stun Up Tempo III | Implemented | done: buff@wave_start grants break_damage; 1/1 description effects mapped |
 | 4990321 | WAVE開始時、自身に「ブレイクダメージ+{0}%」を2回行動終了するまで付与 | Stun Up Tempo III | Implemented | done: buff@wave_start grants break_damage; 1/1 description effects mapped |
 | 4990322 | WAVE開始時、自身に「ブレイクダメージ+{0}%」を2回行動終了するまで付与 | Stun Up Tempo III | Implemented | done: buff@wave_start grants break_damage; 1/1 description effects mapped |
-| 4990323 | 与える強化効果量+{0}% | Enhancer Up III | Implemented | done: potency_given_plus; blank effect IDs represented by parsed description values |
-| 4990324 | 与える強化効果量+{0}% | Enhancer Up III | Implemented | done: potency_given_plus; blank effect IDs represented by parsed description values |
-| 4990325 | 与える強化効果量+{0}% | Enhancer Up III | Implemented | done: potency_given_plus; blank effect IDs represented by parsed description values |
-| 4990326 | 与える強化効果量+{0}% | Enhancer Up III | Implemented | done: potency_given_plus; blank effect IDs represented by parsed description values |
-| 4990327 | 与える強化効果量+{0}% | Enhancer Up III | Implemented | done: potency_given_plus; blank effect IDs represented by parsed description values |
+| 4990323 | 与える強化効果量+{0}% | Enhancer Up III | Implemented | done: potency_given_plus; 1/1 description effects mapped |
+| 4990324 | 与える強化効果量+{0}% | Enhancer Up III | Implemented | done: potency_given_plus; 1/1 description effects mapped |
+| 4990325 | 与える強化効果量+{0}% | Enhancer Up III | Implemented | done: potency_given_plus; 1/1 description effects mapped |
+| 4990326 | 与える強化効果量+{0}% | Enhancer Up III | Implemented | done: potency_given_plus; 1/1 description effects mapped |
+| 4990327 | 与える強化効果量+{0}% | Enhancer Up III | Implemented | done: potency_given_plus; 1/1 description effects mapped |
 | 4990328 | 自身がサポーターの時、突属性攻撃を受ける時、回避する(確率{0}%) | Supporter Stab Dodge Up III | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 4990329 | 自身がサポーターの時、突属性攻撃を受ける時、回避する(確率{0}%) | Supporter Stab Dodge Up III | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 4990330 | 自身がサポーターの時、突属性攻撃を受ける時、回避する(確率{0}%) | Supporter Stab Dodge Up III | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
@@ -5639,7 +5639,7 @@ Status: Implemented = resolves fully in the sim; Partial = resolves generically 
 | 26250001 | 特定のスキル使用後、自身に与ダメージUP(80％/1回)を付与し、自身のターンを２ターン遅らせ行動再抽選 ブレイク時、自身が「与ダメージUP(ハイドシャーク_高速潜水艦)」のバフをもっているなら自身のバフをすべて解除し、行動再抽選 |  | Partial | done: 2/5 description effects mapped; missing: unmapped effect ids 86250002, 86250003, 81179045; description text unparsed |
 | 26250002 | 攻撃をうけるたび自身に受けるマイナス効果量UP(10%/累積1000％)を付与 |  | Partial | done: 1/1 description effects mapped; missing: description text unparsed |
 | 26250003 | 火・斬・打以外の属性耐性DOWN無効 |  | Partial | done: 4/4 description effects mapped; missing: description text unparsed |
-| 26250004 | wave開始時、自身に「非ブレイク状態の時、受ける攻撃のクリティカル確率-{0}%」と「ブレイク状態の時、受けるマイナス効果の効果量+{1}%」を付与 |  | Partial | done: buff@break_hit grants crit_rate; buff@break_hit grants crit_rate; 1/2 description effects mapped; missing: unmapped effect ids 86250011; unsure: buff@break_hit conditions: target_broken |
+| 26250004 | wave開始時、自身に「非ブレイク状態の時、受ける攻撃のクリティカル確率-{0}%」と「ブレイク状態の時、受けるマイナス効果の効果量+{1}%」を付与 |  | Partial | done: buff@break_hit grants crit_rate; buff@break_hit grants crit_rate; 2/2 description effects mapped; missing: buff@break_hit buff potency_received ignored; buff@break_hit buff potency_received ignored; unsure: buff@break_hit conditions: target_broken |
 | 26250005 | 特定のスキル使用後、自身に与ダメージUP({0}％/1回)を付与し、自身のターンを{1}ターン遅らせ行動再抽選 ブレイク時、自身が「強化状態(ハイドシャーク_高速潜水艦)」のバフをもっているなら自身のバフをすべて解除し、行動再抽選 |  | Partial | done: 3/6 description effects mapped; missing: unmapped effect ids 86250002, 86250003, 81179045; description text unparsed |
 | 26250006 | 特定のスキル使用後、自身に与ダメージUP({0}％/1回)を付与し、自身のターンを{1}ターン遅らせ行動再抽選 ブレイク時、自身が「強化状態(ハイドシャーク_高速潜水艦)」のバフをもっているなら自身のバフをすべて解除し、行動再抽選 |  | Partial | done: 3/6 description effects mapped; missing: unmapped effect ids 86250002, 86250003, 81179045; description text unparsed |
 | 26252009 | ララ【Seaside Queen】の被ダメージ-20% | Lara [Seaside Queen] Damage Received Down | Partial | done: 1/1 description effects mapped; missing: description text unparsed |

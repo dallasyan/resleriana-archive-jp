@@ -197,7 +197,11 @@ tables) models, what it estimates, and what it ignores. Confidence scale:
   e.g. 14003647 clears battle-start markers via 91001967), serialized as
   `removed_state_changes` with before_skill entries on field 20. Boss aura
   810224 blocks every cross-side state grant silently; skills that later
-  debuff such holders remove it first.
+  debuff such holders remove it first. Minus/plus/heal immunity states block
+  their named class regardless of source. Parsed grants reconcile against
+  mined state/effect pairs at runtime (fan-out onto repeated effects,
+  synthesis for textless tool effects); zero-id internal buffs never
+  serialize.
 
 ## Timeline, panels, gauge, break
 

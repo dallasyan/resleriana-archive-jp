@@ -426,11 +426,17 @@ Contract oracle: `installed contract-dump/fields.txt`.
   - Implement: ailment immunity/resistance and explicit cleanse/dispel paths;
     turn-start cleanse states are modeled. Capture-mined skill removal
     effects run before grants (`skill_effect_map.json`; intrinsic skill
-    effects only, before_skill entries serialize to field 20) and boss aura
-    810224 blocks every cross-side state grant silently. General
-    positive-effect blocking and resistance emission (contract field 18)
-    are incomplete.
-  - Data: status captures; skill removed_state_changes mining.
+    effects only, before_skill entries serialize to field 20). Grant
+    immunity follows the state masters: opponent aura 810224 blocks every
+    cross-side grant; minus/plus/heal immunity states block their named
+    class regardless of source (zero cross-corpus deals land on 920002
+    holders); healing immunity gates heals and heal_block counts as
+    negative for cleanse. Parsed grants reconcile/fan-out/synthesize
+    against mined state/effect pairs (6877/6877 exact). Zero-id internal
+    buffs never serialize. Resistance emission (contract field 18) is
+    incomplete.
+  - Data: status captures; skill removed_state_changes and dealt_state_change
+    mining.
 - [x] Permanent debuffs (Done)
   - Description: raid-style persistent stacks with caps.
   - Implement: no-expiry stacks with caps from parsed data.
