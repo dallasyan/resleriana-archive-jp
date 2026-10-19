@@ -43,6 +43,21 @@ class CompleteCollectionTests(unittest.TestCase):
         self.assertEqual(stats[7], 62)
 
         characters = {character.character_id: character for character in message.resources.characters}
+        evolved = characters[10101]
+        self.assertEqual(evolved.rarity, 8)
+        self.assertTrue(evolved.is_normal1_skill_evolved)
+        self.assertTrue(evolved.is_normal2_skill_evolved)
+        self.assertTrue(evolved.is_burst_skill_evolved)
+        unevolved_rarity8 = characters[10199]
+        self.assertEqual(unevolved_rarity8.rarity, 8)
+        self.assertFalse(unevolved_rarity8.is_normal1_skill_evolved)
+        self.assertFalse(unevolved_rarity8.is_normal2_skill_evolved)
+        self.assertFalse(unevolved_rarity8.is_burst_skill_evolved)
+        five_star = characters[10102]
+        self.assertLess(five_star.rarity, 8)
+        self.assertFalse(five_star.is_normal1_skill_evolved)
+        self.assertFalse(five_star.is_normal2_skill_evolved)
+        self.assertFalse(five_star.is_burst_skill_evolved)
         self.assertEqual(characters[10101].exp, 65212424)
         self.assertEqual(characters[10101].growboard_level_limit, 90)
         self.assertEqual(characters[10101].level_limit_increase_value, 10)

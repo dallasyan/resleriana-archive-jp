@@ -4826,6 +4826,86 @@ class Replay:
             response_iv,
         )
 
+    def character_story_clear_response(self, flow: http.HTTPFlow) -> bytes:
+        request_plaintext, response_key, response_iv, response_marker = (
+            decrypt_request_with_response_material(
+                flow.request.raw_content or b"",
+                is_api_message,
+                "/character_story/clear",
+            )
+        )
+        story_id = varint_field(request_plaintext, 1, 0)
+        if story_id <= 0:
+            raise ValueError("character story clear request has no character_story_id")
+        condition_message = message_field(request_plaintext, 2)
+        condition = (
+            varint_field(condition_message, 1, 2)
+            if condition_message is not None
+            else 2
+        )
+        if condition <= 0:
+            raise ValueError("character story clear request has an invalid condition")
+        stories = progression_master_index("character_story")
+        story = stories.get(story_id)
+        if not isinstance(story, dict):
+            raise ValueError(f"unknown character_story_id={story_id}")
+        profile_plaintext = decrypt_profile_plaintext((GAME_DIR / "profile.bin").read_bytes())
+        existing = profile_resource_records(profile_plaintext, 47).get(story_id)
+        if existing is None:
+            first_clear = True
+            clear_count = 0
+            conditions: set[int] = set()
+        else:
+            first_clear = False
+            clear_count = varint_field(existing, 2, 0)
+            conditions = set(varint_values(existing, 3))
+        conditions.add(condition)
+        clear_count = max(clear_count, len(conditions))
+        record = write_field(1, 0, story_id)
+        record += write_field(2, 0, clear_count)
+        record += write_packed_varints(3, sorted(conditions))
+        rewards: list[bytes] = []
+        items: list[bytes] = []
+        if first_clear:
+            item_grants: dict[int, int] = {}
+            for reward in story.get("rewards") or []:
+                if not isinstance(reward, dict):
+                    continue
+                resource_type = int(reward.get("type") or 0)
+                resource_id = int(reward.get("id") or 0)
+                quantity = int(reward.get("quantity") or 0)
+                if resource_type <= 0 or quantity <= 0:
+                    continue
+                rewards.append(resource_reward(resource_type, quantity, resource_id or None))
+                if resource_type == 5 and resource_id > 0:
+                    item_grants[resource_id] = item_grants.get(resource_id, 0) + quantity
+            if item_grants:
+                items = updated_reward_item_records(
+                    profile_resource_records(profile_plaintext, 3),
+                    item_grants,
+                )
+        persist_plaintext = make_changed_resources_plaintext(
+            items=items,
+            extra_resource_fields=[(47, 2, record)],
+        )
+        changed_resources = message_field(persist_plaintext, 1)
+        if changed_resources is None:
+            raise ValueError("character story clear produced no changed resources")
+        response_plaintext = write_field(1, 2, changed_resources)
+        for reward in rewards:
+            response_plaintext += write_field(2, 2, reward)
+        self.persist_profile_update(persist_plaintext, "/character_story/clear")
+        self.log(
+            f"LOCAL-CHARACTER-STORY-CLEAR path=/character_story/clear status=200 "
+            f"story_id={story_id} condition={condition} first_clear={int(first_clear)}"
+        )
+        return encrypt_api_response(
+            response_marker,
+            response_plaintext,
+            response_key,
+            response_iv,
+        )
+
     def synthesis_combination_ranking_response(self, flow: http.HTTPFlow) -> bytes:
         request_plaintext, response_key, response_iv, response_marker = (
             decrypt_request_with_response_material(
@@ -7013,6 +7093,27 @@ class Replay:
                     if path == "/recipe/favorite"
                     else self.dish_order_response(flow)
                 )
+            except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
+                self.log(f"GAMEPLAY-ENDPOINT-FAILED path={path} reason={type(error).__name__}:{error}")
+                flow.response = http.Response.make(
+                    503,
+                    b"",
+                    {"Content-Type": "application/octet-stream", "x-server-timestamp": str(int(time.time()))},
+                )
+                return
+            flow.response = http.Response.make(
+                200,
+                response_body,
+                {
+                    "Content-Type": "application/octet-stream",
+                    "X-Content-Encoding": "gzip",
+                    "x-server-timestamp": str(int(time.time())),
+                },
+            )
+            return
+        if method == "POST" and path == "/character_story/clear":
+            try:
+                response_body = self.character_story_clear_response(flow)
             except (OSError, RuntimeError, ValueError, StopIteration, KeyError, TypeError, IndexError) as error:
                 self.log(f"GAMEPLAY-ENDPOINT-FAILED path={path} reason={type(error).__name__}:{error}")
                 flow.response = http.Response.make(

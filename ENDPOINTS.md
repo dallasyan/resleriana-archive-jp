@@ -214,6 +214,7 @@ A local Japanese session on 2026-09-25 recorded 24 pulls from one banner, three 
 | `/recipe/learn` | Partial/stub | Returns a fixed successful no-op response; its captured 17-byte envelope omits `X-Content-Encoding: gzip`. |
 | `/recipe/favorite` | Generated | Updates the learned recipe's favorite flag in profile resources and persists it. |
 | `/dish/order` | Generated | Uses Japanese dish rewards, consumes one available order, updates dish refresh time, task counts, and profile resources. |
+| `/character_story/clear` | Generated (approximate) | Validates the story against `character_story.json`, upserts its profile state (clear count plus condition set, matching complete-collection parity), and persists it. Master first-clear rewards are returned; only item rewards are credited to the profile, currency/special rewards are response-only. |
 | `/synthesis/bulk_execute` | Generated (approximate) | Consumes recipe costs, Mana, and optional ingredient; creates Battle/Equipment Tools from Japanese character/item trait pools. Selected eligible traits are forced into output slots; ranks use the requested 60% rank-5 / 10% rank-1–4 distribution. Persists tools, items, Mana, and recipe history. |
 | `/synthesis/execute_easy` | Generated (profile-local fallback) | Uses the recipe's most recent local character/material combination, or an owned-character/material fallback, then runs generated synthesis. |
 | `/synthesis/combination_ranking` | Partial (local history) | Returns the profile's most recent local combination for each ranking period; empty lists when the recipe has no history. No public leaderboard is bundled. |
@@ -411,6 +412,7 @@ Names below come from the installed client `contract-dump/fields.txt`. Shared re
 | `/profile/update_favorite_character` | `blend.api.ProfileUpdateFavoriteCharacterRequest` | `blend.api.ChangedResourcesResponse` |
 | `/profile/update_favorite_party` | `blend.api.ProfileUpdateFavoritePartyRequest` | `blend.api.ChangedResourcesResponse` |
 | `/profile/update_favorite_battle_tools` | `blend.api.ProfileUpdateFavoriteBattleToolsRequest` | `blend.api.ChangedResourcesResponse` |
+| `/character_story/clear` | `blend.api.CharacterStoryClearRequest` | `blend.api.CharacterStoryClearResponse` |
 | `/synthesis/execute_easy` | `blend.api.SynthesisExecuteEasyRequest` | `blend.api.SynthesisExecuteEasyResponse` |
 | `/exploration/update_party` | `blend.api.ExplorationUpdatePartyRequest` | `blend.api.ChangedResourcesResponse` |
 | `/master_data/*` | `CDN/asset request` | `CDN asset payload (not protobuf)` |
@@ -439,8 +441,6 @@ These API messages are present in `fields.txt` but are not selected by the route
 - `blend.api.AuthSignUpPasscodeRequest`
 - `blend.api.AuthSignUpPasscodeResponse`
 - `blend.api.CharacterSkillLockReleaseRequest`
-- `blend.api.CharacterStoryClearRequest`
-- `blend.api.CharacterStoryClearResponse`
 - `blend.api.CommunicationStoryClearRequest`
 - `blend.api.CommunicationStoryClearResponse`
 - `blend.api.CommunicationStoryReleaseRequest`

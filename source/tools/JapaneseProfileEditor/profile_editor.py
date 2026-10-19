@@ -788,6 +788,7 @@ def maximize_character(
     boards: dict[int, dict[str, Any]],
     pages: dict[int, dict[str, Any]],
     panels: dict[int, dict[str, Any]],
+    skill_evolvable_ids: set[int] | None = None,
 ) -> bool:
     before = character.SerializeToString()
     maximum_rarity = int(master.get("max_rarity") or master.get("initial_rarity") or 1)
@@ -817,6 +818,12 @@ def maximize_character(
     )
 
     character.rarity = max(character.rarity, maximum_rarity)
+    if character.rarity >= 8 and skill_evolvable_ids is not None and int(master.get("id", 0) or 0) in skill_evolvable_ids:
+        # 6-star skill evolution unlocks the all-skills-evolved passive
+        # (battle gating requires rarity 8 plus all three evolve flags).
+        character.is_normal1_skill_evolved = True
+        character.is_normal2_skill_evolved = True
+        character.is_burst_skill_evolved = True
     character.exp = max(character.exp, max_exp)
     character.normal1_skill_rank = max(
         character.normal1_skill_rank,
@@ -1036,6 +1043,10 @@ def apply_complete_collection(
         int(record.get("value") or 0) for record in character_level_limit_releases
     )
     character_common_rarity_by_id = index_master_records(character_common_rarities)
+    skill_evolvable_ids = {
+        int(record["character_id"])
+        for record in load_master_records(master_root, "character_skill_evolve")
+    }
     growboards_by_id = index_master_records(growboards)
     growboard_pages_by_id = index_master_records(growboard_pages)
     growboard_panels_by_id = index_master_records(growboard_panels)
@@ -1065,6 +1076,7 @@ def apply_complete_collection(
             growboards_by_id,
             growboard_pages_by_id,
             growboard_panels_by_id,
+            skill_evolvable_ids,
         ):
             if not is_new:
                 updated_characters += 1

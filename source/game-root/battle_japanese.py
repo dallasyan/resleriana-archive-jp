@@ -19,6 +19,7 @@ from __future__ import annotations
 import gzip
 import hashlib
 import json
+import os
 import random
 import struct
 import time
@@ -29,6 +30,20 @@ from pathlib import Path
 
 BATTLE_MASTER_DIRNAME = "battle-master"
 PROGRESSION_MASTER_DIRNAME = "progression-master"
+
+EASY_WIN_ENV_VAR = "JAPANESE_EASY_WIN"
+
+
+def easy_win_enabled() -> bool:
+    """Launcher opt-in (`-easywin`) that makes battles trivially clearable.
+
+    Living allies always act before foes, ally hits are lethal, and
+    foe-inflicted damage (hits and ailment ticks) is capped at 1 per
+    instance so the party cannot be worn down. This exists so battles
+    remain clearable where the estimated combat model is wrong; normal
+    launches never enable it.
+    """
+    return os.environ.get(EASY_WIN_ENV_VAR, "0").strip() == "1"
 
 # Japanese attack_attributes ids: 1 slash, 2 strike(impact), 3 stab(piercing),
 # 4 wind, 5 fire, 6 ice, 7 bolt, and 8 wind (the legacy Air-affinity code).
@@ -2404,6 +2419,7 @@ class BattleSim:
                 fire_triggers(self, "battle_start", member, {})
         self.start_wave(0)
         self.order = self.initial_order()
+        sort_timeline(self)
         self.turn = 2
 
     def initial_order(self) -> list[tuple[int, int]]:
@@ -3669,6 +3685,12 @@ def apply_parsed_skill_effect(sim: "BattleSim", actor: dict, targets: list[dict]
 
 def sort_timeline(sim: "BattleSim") -> None:
     """Keep the event list ordered by each member's remaining wait."""
+    if easy_win_enabled():
+        sim.order.sort(key=lambda entry: (
+            sim.members.get(entry[0], {}).get("side", 1),
+            sim.timeline_waits.get(entry[0], 0),
+        ))
+        return
     sim.order.sort(key=lambda entry: sim.timeline_waits.get(entry[0], 0))
 
 
@@ -4274,6 +4296,8 @@ def tick_start_of_turn(sim: "BattleSim", member: dict) -> None:
     for buff in list(member.get("buffs", [])):
         if buff.get("kind") == "regen":
             heal_member(sim, member, int(max_hp * pct_heal_fraction(buff.get("value", 0))))
+    if easy_win_enabled() and member.get("side") == 0 and member.get("alive"):
+        member["hp"] = max(member["hp"], 1)
     if member["hp"] <= 0 and member["alive"]:
         member["hp"] = 0
         member["alive"] = False
@@ -4403,6 +4427,11 @@ def apply_hit(
                 target["buffs"].remove(buff)
                 result["barrier_broken"] = True
             break
+    if easy_win_enabled():
+        if actor.get("side") == 0 and target.get("side") == 1:
+            damage = max(damage, target.get("hp", 0))
+        elif actor.get("side") == 1 and target.get("side") == 0:
+            damage = max(0, min(damage, 1))
     target["hp"] -= damage
     tick_hit_buffs(target)
     break_hit = 0

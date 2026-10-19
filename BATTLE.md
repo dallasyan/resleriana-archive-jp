@@ -33,6 +33,11 @@ tables) models, what it estimates, and what it ignores. Confidence scale:
 - [x] Retire / resume - **High** shape, **Medium** behavior. Retire clears
   state with an empty response; resume echoes the active battle or 503s.
 - [ ] Total-battle / solo-raid / rental-party starts - **Missing** (503).
+- [x] Easy-win launcher flag (`-easywin`) - opt-in assist, not a simulation
+  claim. Living allies always sort before foes, ally hits are lethal, and
+  foe-inflicted damage (hits and ailment ticks) is capped at 1, so battles
+  stay clearable where the estimated model is wrong. Off unless
+  `JAPANESE_EASY_WIN=1`.
 
 ## Stats and skills
 

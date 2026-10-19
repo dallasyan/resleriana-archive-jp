@@ -3,29 +3,13 @@ set "ROOT=%~dp0"
 set "GAME_ROOT=%ROOT:~0,-1%"
 cd /d "%ROOT%"
 set "JAPANESE_REPLAY_MODE=hybrid"
+set "JAPANESE_CAPTURE_SESSION=%ROOT%embedded-handshake"
 if /I "%~1"=="-generated" set "JAPANESE_REPLAY_MODE=generated"
 if /I "%~1"=="-replay" set "JAPANESE_REPLAY_MODE=replay"
-if /I "%~2"=="-generated" set "JAPANESE_REPLAY_MODE=generated"
-if /I "%~2"=="-replay" set "JAPANESE_REPLAY_MODE=replay"
-set "JAPANESE_GACHA_TIMELINE_TRACE="
-set "GACHA_TRACE_ARGUMENT="
-if /I "%~1"=="-gacha-timeline-trace" set "JAPANESE_GACHA_TIMELINE_TRACE=1"
-if /I "%~2"=="-gacha-timeline-trace" set "JAPANESE_GACHA_TIMELINE_TRACE=1"
-if defined JAPANESE_GACHA_TIMELINE_TRACE set "GACHA_TRACE_ARGUMENT=-japanese-gacha-timeline-trace"
-if /I "%JAPANESE_REPLAY_MODE%"=="replay" (
-    set "JAPANESE_CAPTURE_SESSION="
-) else (
-    set "JAPANESE_CAPTURE_SESSION=%ROOT%embedded-handshake"
-)
+if /I "%~1"=="-easywin" set "JAPANESE_EASY_WIN=1"
+if /I "%~2"=="-easywin" set "JAPANESE_EASY_WIN=1"
 set "JAPANESE_GAME_DIR=%ROOT%"
 set "JAPANESE_OFFLINE=1"
-if /I "%JAPANESE_REPLAY_MODE%"=="replay" goto profile_seed_done
-if exist "%GAME_ROOT%\profile.bin" goto profile_seed_done
-if not exist "%ROOT%starter-profile.bin" goto starter_profile_missing
-copy /b "%ROOT%starter-profile.bin" "%GAME_ROOT%\profile.bin" >nul
-if errorlevel 1 goto starter_profile_copy_failed
-echo Installed the sanitized pre-tutorial starter profile.
-:profile_seed_done
 set "OBSERVER_LAUNCHED=0"
 set "OBSERVER_STOP_FILE=%GAME_ROOT%\japanese-capture\offline-observer-stop.txt"
 set "OBSERVER_OUTPUT=%GAME_ROOT%\japanese-capture\native-observer-offline-%RANDOM%-%RANDOM%"
@@ -35,7 +19,6 @@ taskkill /IM JapaneseCaptureObserver.exe /T >nul 2>&1
 for /f "tokens=5" %%P in ('netstat -ano ^| findstr /R /C:":8080 .*LISTENING"') do taskkill /PID %%P /T /F >nul 2>&1
 
 echo Starting Japanese offline mode: %JAPANESE_REPLAY_MODE%...
-if defined JAPANESE_GACHA_TIMELINE_TRACE echo Gacha timeline tracing enabled.
 start "Atelier Resleriana Japanese replay" /b "%ROOT%StartJapaneseProxy.bat"
 timeout /T 5 /NOBREAK >nul
 netstat -ano | findstr ":8080" | findstr "LISTENING" >nul
@@ -51,7 +34,7 @@ echo Launching Japanese game...
 set "HOME_ICON_ARGUMENT="
 if "%JAPANESE_HOME_ICON_RENDER%"=="1" set "HOME_ICON_ARGUMENT=-japanese-home-icon-render"
 if defined JAPANESE_HOME_ICON_HOME_ID set "HOME_ICON_ARGUMENT=%HOME_ICON_ARGUMENT% -japanese-home-icon-home-id=%JAPANESE_HOME_ICON_HOME_ID%"
-start "Atelier Resleriana" "%ROOT%AtelierResleriana.exe" -japanese-offline %HOME_ICON_ARGUMENT% %GACHA_TRACE_ARGUMENT%
+start "Atelier Resleriana" "%ROOT%AtelierResleriana.exe" -japanese-offline %HOME_ICON_ARGUMENT%
 set "GAME_SEEN=0"
 set /a GAME_PRESENT_CHECKS=0
 set /a GAME_MISSING_CHECKS=0
@@ -93,16 +76,6 @@ exit 0
 :proxy_failed
 echo Japanese offline replay failed to start on port 8080.
 echo Check offline-proxy.log for the proxy startup error.
-pause
-exit 1
-
-:starter_profile_missing
-echo No profile.bin or starter-profile.bin was found in the game directory.
-pause
-exit 1
-
-:starter_profile_copy_failed
-echo Failed to install starter-profile.bin as profile.bin.
 pause
 exit 1
 
